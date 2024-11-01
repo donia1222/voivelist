@@ -23,6 +23,8 @@ const screenWidth = Dimensions.get('window').width;
 
 
 
+
+
 const { width, height } = Dimensions.get('window');
 const HistoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
