@@ -1,6 +1,6 @@
 {
   "name": "voicelist",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "main": "expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -11,10 +11,11 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-community/blur": "^4.4.1",
     "@react-native-community/datetimepicker": "^8.0.1",
     "@react-native-community/push-notification-ios": "^1.11.0",
     "@react-native-community/voice": "^1.1.9",
-    "@react-native-masked-view/masked-view": "^0.3.1",
+    "@react-native-masked-view/masked-view": "^0.3.2",
     "@react-navigation/drawer": "^6.7.0",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",

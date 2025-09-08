@@ -48,6 +48,7 @@ const primerModal = {
       step3: "Notifier Liste",
       createList: "Étendre Liste",
     },
+    
     tr: {
       title: "Listeyi Sil",
       step1: "Listeyi Paylaş",

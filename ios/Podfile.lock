@@ -985,6 +985,27 @@ PODS:
   - react-native-appsflyer (6.14.3):
     - AppsFlyerFramework (= 6.14.3)
     - React
+  - react-native-blur (4.4.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-image-picker (7.1.2):
     - DoubleConversion
     - glog
@@ -1246,8 +1267,27 @@ PODS:
   - RevenueCat (4.43.0)
   - RNCAsyncStorage (1.23.1):
     - React-Core
-  - RNCMaskedView (0.3.1):
+  - RNCMaskedView (0.3.2):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNCPushNotificationIOS (1.11.0):
     - React-Core
   - RNDateTimePicker (8.1.1):
@@ -1401,6 +1441,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-appsflyer (from `../node_modules/react-native-appsflyer`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-print (from `../node_modules/react-native-print`)
   - react-native-restart (from `../node_modules/react-native-restart`)
@@ -1536,6 +1577,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   react-native-appsflyer:
     :path: "../node_modules/react-native-appsflyer"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-print:
@@ -1668,6 +1711,7 @@ SPEC CHECKSUMS:
   React-logger: fa92ba4d3a5d39ac450f59be2a3cec7b099f0304
   React-Mapbuffer: 9f68550e7c6839d01411ac8896aea5c868eff63a
   react-native-appsflyer: 37a0053df435bb76c330c5c15488dca29a3baa9b
+  react-native-blur: 30d91a67da86a4d4d924b0c7c36f6e01479a246b
   react-native-image-picker: c3afe5472ef870d98a4b28415fc0b928161ee5f7
   react-native-print: f704aef52d931bfce6d1d84351dbb5232d7ecb89
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
@@ -1698,7 +1742,7 @@ SPEC CHECKSUMS:
   ReactCommon: f00e436b3925a7ae44dfa294b43ef360fbd8ccc4
   RevenueCat: f7b90c52f4b7e322bc9e7adaf734030523534b06
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
-  RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
+  RNCMaskedView: da52ec927af4b4c3f3f6b5b5e816a69be62fe642
   RNCPushNotificationIOS: 64218f3c776c03d7408284a819b2abfda1834bc8
   RNDateTimePicker: 430174392d275f0ffefb627d04f0f8677f667fed
   RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
@@ -1716,4 +1760,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 4db7698562d3de473cba9048cf3aa95c97823c9f
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

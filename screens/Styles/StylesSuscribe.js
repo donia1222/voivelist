@@ -101,11 +101,11 @@ const getStyles = (theme) => StyleSheet.create({
     borderRadius: 20,
   },
   restoreButtonText: {
-    fontSize: 15,
-    fontWeight: 'bold',
+    fontSize: 18,
     textAlign: 'center',
     color: theme.text, // Usa el tema
     fontFamily: 'Poppins-Regular',
+    color:  'green',
   },
   linksContainer: {
     flexDirection: 'row',
@@ -254,10 +254,11 @@ const getStyles = (theme) => StyleSheet.create({
     marginTop: 140,
   },
   bouncingImage: {
-    width: 120,
-    height: 120,
+    width: 160,
+    height: 140,
     alignSelf:'center',
-    marginTop:40,
+    marginTop:80,
+
     
   },
 

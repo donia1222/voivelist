@@ -8,25 +8,22 @@ const carouselData = [
     {
         image: require('../../assets/images/bloqueador-de-anuncios.png'),
         title: {
-            en: 'No ads!',
-            es: 'Sin anuncios!',
-            de: 'Keine Werbung!',
-            fr: 'Pas de publicités!',
-            it: 'Nessuna pubblicità!',
-            tr: 'Reklam yok!',
-            pt: 'Sem anúncios!',
-            ru: 'Без рекламы!',
-            zh: '没有广告!',
-            ja: '広告なし!',
-            pl: 'Bez reklam!',
-            sv: 'Inga annonser!',
-            hu: 'Nincsenek hirdetések!',
-            ar: 'بدون إعلانات!',
-            hi: 'कोई विज्ञापन नहीं!',
-            el: 'Χωρίς διαφημίσεις!',
-            nl: 'Geen advertenties!',
-            sl: 'Brez oglasov!',
-            // ... otros idiomas ...
+            en: "SUBSCRIBE",
+            es: "SUSCRÍBETE",
+            de: "ABONNIEREN ",
+            fr: "S'ABONNER",
+            it: "ISCRIVITI",
+            tr: "ABONE OL",
+            pt: "ASSINAR",
+            ru: "ПОДПИСАТЬСЯ",
+            zh: "订阅",
+            ja: "サブスクライブ", 
+            pl: "SUBSKRYBUJ",
+            sv: "PRENUMERERA",
+            hu: "FELIRATKOZÁS",
+            ar: "اشترك",
+            hi: "सदस्यता लें",
+            el: "ΕΓΓΡΑΦΕΙΤΕ"
           },
           description: {
             en: 'Subscribe to make your shopping lists without distractions.',
@@ -68,7 +65,7 @@ const Carousel = () => {
 
   const renderItem = ({ item }) => (
       <View style={styles.itemContainer}>
-          <Image source={item.image} style={styles.iconStyle} />
+   
           <View style={styles.textContainer}>
               <Text style={styles.titleText}>{item.title[deviceLanguage]}</Text>
               <Text style={styles.descriptionText}>{item.description[deviceLanguage]}</Text>

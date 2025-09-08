@@ -35,6 +35,7 @@ const texts = {
     listSaved: "List saved successfully",
     changeLanguage: "If you want to create shopping lists in another language, please change the language in your device settings.",
     voiceLists: "Create a shopping list with Voice" // Updated text
+    
   },
   es: {
     voice: "Voz",

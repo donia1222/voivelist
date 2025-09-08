@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Voice Shopping list</string>
+	<string>Voice Grocery</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.4</string>
+	<string>1.0.6</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -46,6 +46,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>We need access to the photo library to analyze and create your list</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to the camera so you can upload photos and analyze your shopping list.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -57,8 +59,6 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>It is needed to quickly add items to your shopping list using voice commands.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to the photo library to analyze and create your list</string>
-	<key>NSAppleMusicUsageDescription</key>
 	<string>We need access to the photo library to analyze and create your list</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>It is needed to quickly add items to your shopping list using voice commands.</string>

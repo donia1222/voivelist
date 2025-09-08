@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 const privacyPolicyText = `
 Privacy Policy Voice Shopping list 
 
-Last updated: 10.07.2024
+Last updated: 01.05.2025
 
 Introduction
 

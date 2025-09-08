@@ -18,10 +18,11 @@ const getStyles = (theme) => StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 2,
     elevation: 3,
-    height: 580,
+    height: 495,
     width: width - 10,
     alignSelf: 'center',
     shadowOpacity: 0.2,
+
   
   
 
@@ -266,6 +267,18 @@ favoritesContainer: {
     borderRadius: 10,
     marginTop:40,
   },
+  modalContainerfavo: {
+    width: '90%',
+    height: '60%',
+    backgroundColor: theme.background,
+    padding: 30,
+    borderRadius: 10,
+    marginTop:40,
+    borderBlockColor:'grey',
+    borderWidth:3,
+    
+  },
+  
   
   modalContainerrow: {
     width: '100%',
@@ -633,17 +646,17 @@ favoritesContainer: {
         justifyContent: 'center',
         marginTop:10,
       },
-      row: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginBottom: 10,
-      },
+  
       chip: {
-        backgroundColor: theme.background,
+
         borderRadius: 16,
         paddingVertical: 8,
         paddingHorizontal: 16,
         marginHorizontal: 5,
+        backgroundColor: '#bcbcbc52',
+        padding: 5,
+        borderRadius: 10,
+        marginTop:20,
       },
       chipSelected: {
  
@@ -651,6 +664,7 @@ favoritesContainer: {
       chipText: {
         color: theme.text,
         fontFamily: 'Poppins-Regular',
+     
 
       },
 

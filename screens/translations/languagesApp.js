@@ -1,142 +1,140 @@
 const screenNames = {
   en: {
-    createList: "Create List",
+    createList: "Voice List",
     imageList: "List by Image",
     textList: "List by Text",
     saved: "Saved Lists",
-    subscribe: "Remove Ads",
+    subscribe: "Subscribe",
     information: "How it works?"
   },
   de: {
-    createList: "Liste erstellen",
+    createList: "Sprachliste",
     imageList: "Liste nach Bild",
     textList: "Liste nach Text",
     saved: "Gespeicherte Listen",
-    subscribe: "Werbung entfernen",
+    subscribe: "Abonnieren",
     information: "Wie funktioniert es?"
   },
   es: {
-    createList: "Crear Lista",
+    createList: "Lista por voz",
     imageList: "Lista por Imagen",
     textList: "Lista por Texto",
     saved: "Listas Guardadas",
-    subscribe: "Eliminar Anuncios",
+    subscribe: "Suscribirse",
     information: "Cómo funciona?"
   },
   it: {
-    createList: "Crea Lista",
+    createList: "Lista vocale",
     imageList: "Lista per Immagine",
     textList: "Lista per Testo",
     saved: "Liste Salvate",
-    subscribe: "Rimuovere Annunci",
+    subscribe: "Sottoscrivi",
     information: "Come funziona?"
   },
   fr: {
-    createList: "Créer Liste",
+    createList: "Liste vocale",
     imageList: "Liste par Image",
     textList: "Liste par Texte",
     saved: "Listes Enregistrées",
-    subscribe: "Supprimer les Annonces",
+    subscribe: "S'abonner",
     information: "Comment ça marche?"
   },
   pt: {
-    createList: "Criar Lista",
+    createList: "Lista por voz",
     imageList: "Lista por Imagem",
     textList: "Lista por Texto",
     saved: "Listas Guardadas",
-    subscribe: "Remover Anúncios",
+    subscribe: "Assinar",
     information: "Como funciona?"
   },
   nl: {
-    createList: "Lijst maken",
+    createList: "Spraaklijst",
     imageList: "Lijst op Afbeelding",
     textList: "Lijst op Tekst",
     saved: "Opgeslagen Lijsten",
-    subscribe: "Advertenties verwijderen",
+    subscribe: "Abonneren",
     information: "Hoe werkt het?"
   },
   sv: {
-    createList: "Skapa Lista",
+    createList: "Röstlista",
     imageList: "Lista med Bild",
     textList: "Lista med Text",
     saved: "Sparade Listor",
-    subscribe: "Ta bort annonser",
+    subscribe: "Prenumerera",
     information: "Hur fungerar det?"
   },
   da: {
-    createList: "Opret Liste",
+    createList: "Stemmeliste",
     imageList: "Liste efter Billede",
     textList: "Liste efter Tekst",
     saved: "Gemte Lister",
-    subscribe: "Fjern annoncer",
+    subscribe: "Tilmeld",
     information: "Hvordan fungerer det?"
   },
   fi: {
-    createList: "Luo Lista",
+    createList: "Äänilista",
     imageList: "Lista Kuvan mukaan",
     textList: "Lista Tekstin mukaan",
     saved: "Tallennetut Listat",
-    subscribe: "Poista mainokset",
+    subscribe: "Tilaa",
     information: "Kuinka se toimii?"
   },
   no: {
-    createList: "Lag Liste",
+    createList: "Stemmeliste",
     imageList: "Liste etter Bilde",
     textList: "Liste etter Tekst",
     saved: "Lagrede Lister",
-    subscribe: "Fjern annonser",
+    subscribe: "Abonner",
     information: "Hvordan fungerer det?"
   },
   ru: {
-    createList: "Создать Список",
+    createList: "Голосовой список",
     imageList: "Список по изображению",
     textList: "Список по тексту",
     saved: "Сохраненные списки",
-    subscribe: "Удалить рекламу",
+    subscribe: "Подписаться",
     information: "Как это работает?"
   },
   zh: {
-    createList: "创建列表",
+    createList: "语音列表",
     imageList: "按图列表",
     textList: "按文本列表",
     saved: "保存的列表",
-    subscribe: "删除广告",
+    subscribe: "订阅",
     information: "它是如何工作的?"
   },
   ja: {
-    createList: "リストを作成",
+    createList: "音声リスト",
     imageList: "画像でリスト",
     textList: "テキストでリスト",
     saved: "保存されたリスト",
-    subscribe: "広告を削除する",
+    subscribe: "登録",
     information: "使い方"
   },
   ko: {
-    createList: "리스트 만들기",
+    createList: "음성 목록",
     imageList: "이미지로 리스트",
     textList: "텍스트로 리스트",
     saved: "저장된 목록",
-    subscribe: "광고 제거",
+    subscribe: "구독하기",
     information: "어떻게 작동합니까?"
   },
   ar: {
-    createList: "إنشاء قائمة",
+    createList: "قائمة صوتية",
     imageList: "قائمة بالصور",
     textList: "قائمة بالنص",
     saved: "القوائم المحفوظة",
-    subscribe: "إزالة الإعلانات",
+    subscribe: "اشترك",
     information: "كيف تعمل؟"
   },
   he: {
-    createList: "צור רשימה",
+    createList: "רשימת קולית",
     imageList: "רשימה לפי תמונה",
     textList: "רשימה לפי טקסט",
     saved: "רשימות שמורות",
-    subscribe: "הסר פרסומות",
+    subscribe: "הירשם",
     information: "איך זה עובד?"
   }
 };
-
-
 
 export default screenNames;

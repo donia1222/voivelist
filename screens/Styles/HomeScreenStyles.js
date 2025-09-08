@@ -497,6 +497,7 @@ marginRight:150,
     width: '90%',
     alignSelf:'center',
     borderRadius:20,
+    marginTop:40,
   },
   emptyListImage: {
     width: 160,
@@ -526,9 +527,10 @@ marginRight:150,
   },
 
   emptyListImageImagen: {
-    width: 120,
-    height: 120,
-    marginTop: 40,
+    width: 320,
+    height: 180,
+    marginTop: 30,
+    borderRadius:10,
 
   },
 
@@ -569,7 +571,7 @@ marginRight:150,
     height: 24,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
@@ -577,6 +579,7 @@ marginRight:150,
   circleText: {
     fontSize: 14,
     fontFamily: 'Poppins-Bold',
+    color: 'white',
   },
   emptyListTextsubtitle: {
     fontSize: 15,
@@ -801,7 +804,23 @@ marginRight:150,
     fontFamily: 'Poppins-Regular',
 
   },
-
+  subscriptionBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fdecea',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#f5c2c7',
+    marginTop: 10,
+  },
+  
+  subscriptionBannerText: {
+    color: '#e53935',
+    fontSize: 14,
+    flexShrink: 1,
+  },
   modalButtonTextSettins: {
     color: 'blue',
     fontSize: 16,
@@ -1241,6 +1260,19 @@ backgroundColor: '#009688',
       marginBottom:10,
      
     },
+      voiceButtonWrapper: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  subscribeContainer: {
+    marginTop: 8,
+    alignItems: 'center',
+  },
+  subscribeText: {
+    fontSize: 14,
+    color: theme.textSecondary || '#666',
+    textAlign: 'center',
+  },
     pulseCircle: {
       width: 90,
       height: 90,
@@ -1320,6 +1352,47 @@ backgroundColor: '#009688',
       width: 150,
       height: 150,
 
+    },
+    suscribeButtonContainer: {
+      backgroundColor: '#3b5998', // Color de fondo (por ejemplo, rojo tomate)
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 10,
+      maxWidth: '80%',
+      alignSelf: 'center', // Centrar el contenido horizontalmente
+    },
+    suscribeShareButtonText: {
+      fontSize: 16,
+      color: 'white',
+      textAlign: 'center',
+    
+      fontFamily: 'Poppins-Regular',
+    },
+    chipsContainer: {
+      flexDirection: 'row',
+      flexWrap:      'wrap',
+      justifyContent:'center',
+      marginTop:     10,
+    },
+    
+    chip: {
+      backgroundColor: theme.name === 'dark' ? '#26a69a' : '#b2dfdb',
+      borderRadius: 18,
+      paddingHorizontal: 12,
+      paddingVertical:   6,
+      margin: 4,
+      shadowColor: '#000',
+      shadowOpacity: 0.18,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    
+    chipText: {
+      color: theme.name === 'dark' ? '#e0f2f1' : '#004d40',
+      fontWeight: '600',
     },
     
     

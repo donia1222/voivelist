@@ -4,12 +4,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // Importa
 
 const themes = {
   light: {
-    background: '#dff7f7',
-    backgroundnuevo: '#dff7f7',
-    backgrounddos: '#c1e4e4',
-    backgroundtres: '#c1e4e4',
+    background: '#1d265e',
+    backgroundnuevo: '#1d265e',
+    backgrounddos: '#1d265e',
+    backgroundtres: '#1d265e',
     backgroundtresapp: '#3f51b5',
-    text: '#575757',
+    text: 'black',
     textdos: 'grey',
     textcuatro: '#93b0b0',
     buttonBackground: '#009688',
@@ -19,14 +19,14 @@ const themes = {
     backgroundImage: require('./assets/images/wave.png'), // Añade la ruta de la imagen de fondo para el modo claro
   },
   dark: {
-    background: '#2d2d2d',
-    backgroundnuevo: '#3b3b3b',
-    backgrounddos: '#262626',
-    backgroundtres: '#171717',
-    backgroundtresapp: 'white',
-    text: '#dcdcdc',
-    textdos: 'grey',
-    textcuatro: '#646464',
+    background: '#e7ead2',
+    backgroundnuevo: '#a9cbcb',
+    backgrounddos:'#93b0b0',
+    backgroundtres: '#93b0b0',
+    backgroundtresapp: '#93b0b0',
+    text:'#2c3c3c',
+    textdos: '#2c3c3c',
+    textcuatro:'#2c3c3c',
     buttonBackground: '#00bfad',
     buttonText: '#000000',
     textthum: '#97a6ff',
@@ -38,7 +38,7 @@ const themes = {
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(themes.light);
+  const [theme, setTheme] = useState(themes.dark);
   const [vibrationEnabled, setVibrationEnabled] = useState(false); // Estado para la vibración
 
   useEffect(() => {

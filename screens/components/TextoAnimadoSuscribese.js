@@ -10,22 +10,22 @@ const TextoAnimado = () => {
 
   // Define los textos en diferentes idiomas
   const textTranslations = {
-    en: "REMOVE ADS",
-    es: "ELIMINAR ANUNCIOS",
-    de: "WERBUNG ENTFERNEN",
-    fr: "SUPPRIMER LES ANNONCES",
-    it: "RIMUOVI GLI ANNUNCI",
-    tr: "REKLAMLARI KALDIR",
-    pt: "REMOVER ANÚNCIOS",
-    ru: "УДАЛИТЬ РЕКЛАМУ",
-    zh: "删除广告",
-    ja: "広告を削除",
-    pl: "USUŃ REKLAMY",
-    sv: "TA BORT ANNONSER",
-    hu: "HIRDETÉSEK ELTÁVOLÍTÁSA",
-    ar: "إزالة الإعلانات",
-    hi: "विज्ञापन हटाएं",
-    el: "ΑΦΑΙΡΕΣΤΕ ΔΙΑΦΗΜΙΣΕΙΣ"
+    en: "SUBSCRIBE NOW",
+    es: "SUSCRÍBETE AHORA",
+    de: "JETZT ABONNIEREN",
+    fr: "ABONNEZ-VOUS MAINTENANT",
+    it: "ABBONATI ORA",
+    tr: "ŞİMDİ ABONE OL",
+    pt: "ASSINE AGORA",
+    ru: "ПОДПИШИТЕСЬ СЕЙЧАС",
+    zh: "立即订阅",
+    ja: "今すぐ購読",
+    pl: "ZASUBSKRYBUJ TERAZ",
+    sv: "PRENUMERERA NU",
+    hu: "IRATKOZZ FEL MOST",
+    ar: "اشترك الآن",
+    hi: "अभी सदस्यता लें",
+    el: "ΕΓΓΡΑΦΕΙΤΕ ΤΩΡΑ"
   };
   
   
@@ -57,12 +57,12 @@ const TextoAnimado = () => {
   return (
       <Animated.Text style={{
         color: colorInterpolado,
-        fontSize: 21,
+        fontSize: 18,
         fontFamily: 'Poppins-Regular',
         textAlign: 'center',
         marginTop: 125,
         marginBottom: 10,
-        borderWidth: 2, // Establece el ancho del borde
+        borderWidth: 1, // Establece el ancho del borde
         borderColor: colorInterpolado, // Utiliza el mismo color interpolado para el borde
         borderRadius: 20, // Establece el radio del borde
         padding: 5, // Agrega padding para separar el texto del borde
