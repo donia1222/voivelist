@@ -20,6 +20,7 @@ const getModernStyles = (theme) => StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
   },
+  
 
   categoriesScrollContainer: {
     paddingHorizontal: 16,
