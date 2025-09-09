@@ -18,7 +18,6 @@ import {
   ScrollView,
   Linking,
   StyleSheet,
-  KeyboardAvoidingView,
 } from "react-native"
 import Voice from "@react-native-community/voice"
 import axios from "axios"
@@ -115,8 +114,6 @@ const HomeScreen = ({ navigation }) => {
   const pulseAnim = useRef(new Animated.Value(1)).current
   const pulseAnime = useRef(new Animated.Value(1)).current
   const blinkAnim = useRef(new Animated.Value(1)).current
-  const secondaryPulse = useRef(new Animated.Value(1)).current
-  const shimmerAnim = useRef(new Animated.Value(0)).current
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const currentLabels = texts[deviceLanguage] || texts["en"]
   const [isSubscribed, setIsSubscribed] = useState(false)
@@ -207,7 +204,6 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
   useEffect(() => {
     const startPulsing = () => {
-      // Primary pulse animation
       Animated.loop(
         Animated.sequence([
           Animated.timing(pulseAnim, {
@@ -221,31 +217,6 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
             useNativeDriver: true,
           }),
         ]),
-      ).start()
-
-      // Secondary pulse animation (delayed and different rhythm)
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(secondaryPulse, {
-            toValue: 1.4,
-            duration: 1500,
-            useNativeDriver: true,
-          }),
-          Animated.timing(secondaryPulse, {
-            toValue: 0.8,
-            duration: 1500,
-            useNativeDriver: true,
-          }),
-        ]),
-      ).start()
-
-      // Shimmer animation for glass morphism
-      Animated.loop(
-        Animated.timing(shimmerAnim, {
-          toValue: 1,
-          duration: 3000,
-          useNativeDriver: true,
-        }),
       ).start()
     }
     startPulsing()
@@ -606,29 +577,8 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     return (
       <View style={modernStyles.liveResultsContainer}>
         <View style={modernStyles.liveResultsCard}>
-          {/* Glass morphism background overlay */}
-          <View style={modernStyles.liveResultsGlassBg} />
-          
-          {/* Animated Shimmer effect */}
-          <Animated.View 
-            style={[
-              modernStyles.liveResultsShimmer,
-              {
-                opacity: shimmerAnim,
-                transform: [{
-                  translateX: Animated.multiply(shimmerAnim, 100)
-                }]
-              }
-            ]}
-          />
-          
           <View style={modernStyles.listeningHeader}>
-            <Animated.View 
-              style={[
-                modernStyles.pulsingDot,
-                { opacity: pulseAnim }
-              ]}
-            />
+            <View style={modernStyles.pulsingDot} />
             <Text style={modernStyles.listeningText}> {primerModal.listening}</Text>
           </View>
 
@@ -998,8 +948,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
             {/* Add Button */}
             {shoppingList.length > 0 && !started && !loading && (
               <TouchableOpacity style={modernStyles.addButton} onPress={() => addNewItem()}>
-                <Ionicons name="add-circle" size={20} color="#4a6bff" />
-                <Text style={modernStyles.addButtonText}>{currentLabels.addNewItembutton}</Text>
+                <Ionicons name="add-circle" size={28} color="#6b7280" />
               </TouchableOpacity>
             )}
 
@@ -1016,83 +965,30 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     } else {
       return (
         <View style={modernStyles.voiceButtonContainer}>
-          {/* Ultra Modern Multi-Layer Pulse Rings */}
-          <View style={modernStyles.voiceFloatingContainer}>
-            {started && (
-              <Animated.View 
-                style={[
-                  modernStyles.pulseRingOuter,
-                  { 
-                    opacity: Animated.multiply(pulseAnim, 0.7),
-                    transform: [{ scale: Animated.multiply(pulseAnim, 1.2) }] 
-                  }
-                ]} 
-              />
-            )}
-            {started && (
-              <Animated.View 
-                style={[
-                  modernStyles.pulseRingMiddle,
-                  { 
-                    opacity: Animated.multiply(secondaryPulse, 0.6),
-                    transform: [{ scale: Animated.multiply(secondaryPulse, 0.9) }] 
-                  }
-                ]} 
-              />
-            )}
-            {started && (
-              <Animated.View 
-                style={[
-                  modernStyles.pulseRingInner,
-                  { 
-                    opacity: Animated.subtract(1, Animated.multiply(pulseAnim, 0.5)),
-                    transform: [{ scale: Animated.add(0.8, Animated.multiply(pulseAnim, 0.3)) }] 
-                  }
-                ]} 
-              />
-            )}
-            
-            {/* Additional shimmer pulse ring when active */}
-            {started && (
-              <Animated.View 
-                style={[
-                  modernStyles.pulseRingOuter,
-                  {
-                    opacity: Animated.multiply(shimmerAnim, 0.3),
-                    transform: [{ 
-                      scale: Animated.add(1, Animated.multiply(shimmerAnim, 0.5))
-                    }],
-                    backgroundColor: 'rgba(147, 176, 176, 0.08)',
-                  }
-                ]} 
-              />
-            )}
-
-            {/* Main Voice Button */}
-            <TouchableOpacity
-              onPress={started ? stopRecognizing : startRecognizing}
-              style={modernStyles.voiceButtonWrapper}
-              activeOpacity={0.8}
+          <TouchableOpacity
+            onPress={started ? stopRecognizing : startRecognizing}
+            style={modernStyles.voiceButtonWrapper}
+          >
+            <Animated.View
+              style={[
+                modernStyles.voiceButton,
+                { transform: [{ scale: pulseAnim }] },
+                started ? modernStyles.voiceButtonActive : modernStyles.voiceButtonInactive,
+              ]}
             >
-              <Animated.View
-                style={[
-                  modernStyles.voiceButton,
-                  { transform: [{ scale: started ? 1.05 : pulseAnim }] },
-                  started ? modernStyles.voiceButtonActive : modernStyles.voiceButtonInactive,
-                ]}
-              >
-                <View style={modernStyles.micIconContainer}>
-                  {started ? (
-                    <Ionicons name="pause" size={30} color="white" />
-                  ) : (
-                    <Ionicons name="mic" size={32} color="white" />
-                  )}
-                </View>
-              </Animated.View>
-            </TouchableOpacity>
-          </View>
+              {started ? (
+                <Ionicons name="stop" size={32} color="white" />
+              ) : (
+                <Ionicons name="mic-outline" size={34} color="white" />
+              )}
+            </Animated.View>
 
-          {/* Sin texto debajo del micrófono para diseño más limpio */}
+            {!started && (
+              <Text style={modernStyles.voiceButtonSubtitle}>
+                {currentLabels.voiceLists}
+              </Text>
+            )}
+          </TouchableOpacity>
         </View>
       )
     }
@@ -1119,45 +1015,16 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       {!loading && showEmptyListText && !showCreatingMessage && (
         <View style={modernStyles.emptyStateContainer}>
           <View style={modernStyles.emptyStateContent}>
-            {/* Clean Hero Section - Sin círculo superior */}
-            <View style={modernStyles.heroSection}>
-  
-              {/* Hero Subtitle */}
-             <Text style={modernStyles.heroTitle}>
-                {currentLabels.heroSubtitle}
-              </Text>
-              
-              {/* Feature Highlights */}
-              <View style={modernStyles.featuresContainer}>
-                <View style={modernStyles.featureItem}>
-                  <Ionicons name="flash" size={20} color="#ff6b35" style={modernStyles.featureIcon} />
-                  <Text style={modernStyles.featureText}>{currentLabels.lightningFast}</Text>
-                </View>
-                
-                <View style={modernStyles.featureItem}>
-                  <Ionicons name="shield-checkmark" size={20} color="#4a6bff" style={modernStyles.featureIcon} />
-                  <Text style={modernStyles.featureText}>{currentLabels.aiPowered}</Text>
-                </View>
-                
-                <View style={modernStyles.featureItem}>
-                  <Ionicons name="heart" size={20} color="#ff9500" style={modernStyles.featureIcon} />
-                  <Text style={modernStyles.featureText}>{currentLabels.superEasy}</Text>
-                </View>
-              </View>
-              
-              {/* Call to Action - Más prominente */}
-              <View style={modernStyles.ctaContainer}>
-                <Text style={modernStyles.ctaText}>
-                  Tap the button below to start
-                </Text>
-              
-              </View>
+            <View style={modernStyles.iconContainer}>
+              <Image
+                source={require("../assets/images/56643483-cfa4-4b4e-a5ca-2e751345bad0-1.png")}
+                style={modernStyles.emptyStateIcon}
+              />
             </View>
 
-            {/* Language Selection */}
             {isContentVisible && (
               <TouchableOpacity onPress={handlePress} style={modernStyles.languageButton}>
-                <Ionicons name="globe-outline" size={22} color="#4a6bff" />
+                <Ionicons name="globe-outline" size={20} color="#6366f1" />
                 <Text style={modernStyles.languageButtonText}>
                   {currentLabels.welcomeMessage} {languageName}
                 </Text>
@@ -1169,9 +1036,8 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
       {!loading && showCreatingMessage && (
         <View style={modernStyles.creatingContainer}>
-          {/* Solo mostrar el header cuando NO está grabando y NO hay resultados */}
-          {!started && results.length === 0 && (
-            <View style={modernStyles.creatingHeader}>
+          <View style={modernStyles.creatingHeader}>
+            {results.length === 0 && (
               <View style={modernStyles.micContainer}>
                 <View style={modernStyles.micIconWrapper}>
                   <Ionicons name="mic" size={28} color="white" />
@@ -1179,84 +1045,14 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
                 <Animated.Text style={[modernStyles.creatingTitle, { color: textColor }]}>
                   {currentLabels.pressAndSpeaktext}
                 </Animated.Text>
+               
               </View>
-            </View>
-          )}
+            )}
+          </View>
 
-          {/* Solo mostrar resultados en vivo cuando está grabando */}
-          {started && (
-            <View>
-              {renderLiveResults()}
-              
-              {/* Botón de pausa integrado en los resultados en vivo */}
-              <View style={modernStyles.voiceButtonContainer}>
-                <View style={modernStyles.voiceFloatingContainer}>
-                  {/* Ultra Modern Multi-Layer Pulse Rings */}
-                  <Animated.View 
-                    style={[
-                      modernStyles.pulseRingOuter,
-                      { 
-                        opacity: Animated.multiply(pulseAnim, 0.7),
-                        transform: [{ scale: Animated.multiply(pulseAnim, 1.2) }] 
-                      }
-                    ]} 
-                  />
-                  <Animated.View 
-                    style={[
-                      modernStyles.pulseRingMiddle,
-                      { 
-                        opacity: Animated.multiply(secondaryPulse, 0.6),
-                        transform: [{ scale: Animated.multiply(secondaryPulse, 0.9) }] 
-                      }
-                    ]} 
-                  />
-                  <Animated.View 
-                    style={[
-                      modernStyles.pulseRingInner,
-                      { 
-                        opacity: Animated.subtract(1, Animated.multiply(pulseAnim, 0.5)),
-                        transform: [{ scale: Animated.add(0.8, Animated.multiply(pulseAnim, 0.3)) }] 
-                      }
-                    ]} 
-                  />
-                  <Animated.View 
-                    style={[
-                      modernStyles.pulseRingOuter,
-                      {
-                        opacity: Animated.multiply(shimmerAnim, 0.3),
-                        transform: [{ 
-                          scale: Animated.add(1, Animated.multiply(shimmerAnim, 0.5))
-                        }],
-                        backgroundColor: 'rgba(147, 176, 176, 0.08)',
-                      }
-                    ]} 
-                  />
+          {renderLiveResults()}
 
-                  {/* Botón de pausa */}
-                  <TouchableOpacity
-                    onPress={stopRecognizing}
-                    style={modernStyles.voiceButtonWrapper}
-                    activeOpacity={0.8}
-                  >
-                    <Animated.View
-                      style={[
-                        modernStyles.voiceButton,
-                        { transform: [{ scale: 1.05 }] },
-                        modernStyles.voiceButtonActive,
-                      ]}
-                    >
-                      <View style={modernStyles.micIconContainer}>
-                        <Ionicons name="pause" size={30} color="white" />
-                      </View>
-                    </Animated.View>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          )}
-
-          {/* Solo mostrar el botón "View List" cuando NO está grabando y hay resultados */}
-          {!started && results.length > 0 && (
+          {results.length > 0 && (
             <View style={modernStyles.processingContainer}>
               <View style={modernStyles.processingHeader}>
                 <View style={modernStyles.processingDot} />
@@ -1282,11 +1078,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
               return (
                 <TouchableOpacity onPress={() => setCountryModalVisible(true)} style={modernStyles.costButtonWrapper}>
                   <View style={modernStyles.costButton}>
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-
-                      <Text style={modernStyles.costButtonText}>{estimatedCost || item}</Text>
-                      <Ionicons name="calculator" size={20} color="rgba(255, 255, 255, 0.8)" style={{ marginLeft: 10 }} />
-                    </View>
+                    <Text style={modernStyles.costButtonText}>{estimatedCost || item}</Text>
                   </View>
                 </TouchableOpacity>
               )
@@ -1330,8 +1122,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         />
       )}
 
-      {/* Solo mostrar el botón de voz cuando NO está en modo "creating message" Y NO está grabando */}
-      {!showCreatingMessage && !started && renderVoiceButton()}
+      {renderVoiceButton()}
       <ConfirmationModal />
 
       {/* Rate App Modal */}
@@ -1388,49 +1179,33 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         transparent={true}
       >
         <View style={modernStyles.modalContaineri}>
-          {/* CONTENEDOR MODERNO CON FONDO BLANCO Y TEXTOS TRADUCIDOS */}
-          <View style={modernStyles.countryModalContent}>
-            {/* Close X Button - Arriba derecha */}
-            <TouchableOpacity
-              onPress={() => setCountryModalVisible(false)}
-              style={modernStyles.countryModalCloseButton}
-            >
-              <Ionicons name="close" size={20} color="#6b7280" />
-            </TouchableOpacity>
-
-            {/* Header con icono y títulos TRADUCIDOS */}
-            <View style={modernStyles.countryModalHeader}>
-              <View style={modernStyles.countryModalIconContainer}>
-                <Ionicons name="location" size={28} color="#4a6bff" />
-              </View>
-              <Text style={modernStyles.countryModalTitle}>{currentLabels.selectCountry}</Text>
-              <Text style={modernStyles.countryModalSubtitle}>{currentLabels.cityNamePlaceholder}</Text>
+  
+          {!isSubscribed && (
+            <View style={modernStyles.subscriptionBanner}>
+              <Ionicons name="lock-closed-outline" size={20} color="#e91e63" style={{ marginRight: 6 }} />
+              <Text style={modernStyles.subscriptionBannerText}>Subscription Required</Text>
             </View>
+          )}
 
-            {!isSubscribed && (
-              <View style={modernStyles.subscriptionBanner}>
-                <Ionicons name="lock-closed-outline" size={20} color="#e91e63" style={{ marginRight: 6 }} />
-                <Text style={modernStyles.subscriptionBannerText}>Subscription Required</Text>
-              </View>
-            )}
+          <TextInput
+            style={modernStyles.modalInput}
+            placeholder={currentLabels.cityNamePlaceholder}
+            placeholderTextColor="#b8b8b8ab"
+            value={country}
+            onChangeText={handleCountryChange}
+          />
 
-            <TextInput
-              style={modernStyles.modalInput}
-              placeholder={currentLabels.cityNamePlaceholder}
-              placeholderTextColor="#b8b8b8ab"
-              value={country}
-              onChangeText={handleCountryChange}
-            />
+          <TouchableOpacity
+            style={[modernStyles.modalButton, isCountryEmpty && { backgroundColor: "#ccc" }]}
+            onPress={handleSaveCountry}
+            disabled={isCountryEmpty}
+          >
+            <Text style={modernStyles.modalButtonText}>{`${currentLabels.viewCost} ${country}`}</Text>
+          </TouchableOpacity>
+                  <TouchableOpacity style={modernStyles.closeIconContainer} onPress={() => setCountryModalVisible(false)}>
+            <Ionicons name="close-circle" size={32} color="white" />
+          </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[modernStyles.modalButton, isCountryEmpty && { backgroundColor: "#ccc" }]}
-              onPress={handleSaveCountry}
-              disabled={isCountryEmpty}
-            >
-              <Ionicons name="calculator" size={20} color="white" style={{ marginRight: 8 }} />
-              <Text style={modernStyles.modalButtonText}>{`${currentLabels.viewCost} ${country}`}</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </Modal>
 
@@ -1440,101 +1215,43 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         onRequestClose={() => setEditModalVisible(false)}
         transparent={true}
       >
-        <KeyboardAvoidingView 
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={modernStyles.modalContaineri}
-        >
-          {/* MODAL MODERNO PARA EDITAR PRODUCTO */}
-          <View style={modernStyles.editProductModalContent}>
-            {/* Close X Button - Arriba derecha */}
-            <TouchableOpacity
-              onPress={() => setEditModalVisible(false)}
-              style={modernStyles.editProductModalCloseButton}
-            >
-              <Ionicons name="close" size={20} color="#6b7280" />
-            </TouchableOpacity>
-
-            {/* Header con icono y títulos */}
-            <View style={modernStyles.editProductModalHeader}>
-              <View style={modernStyles.editProductModalIconContainer}>
-                <Ionicons name="pencil" size={35} color="#ff9500" />
-              </View>
-              <Text style={modernStyles.editProductModalTitle}>{currentLabels.editItem}</Text>
-              <Text style={modernStyles.editProductModalSubtitle}>{currentLabels.writeItems}</Text>
-            </View>
-
-            {/* Input de texto mejorado */}
-            <TextInput
-              style={modernStyles.editProductModalInput}
-              placeholder={currentLabels.writeItems}
-              placeholderTextColor="#9ca3af"
-              multiline
-              value={editingText}
-              onChangeText={setEditingText}
-              autoFocus={true}
-              returnKeyType="done"
-              blurOnSubmit={true}
-            />
-
-            {/* Solo botón de guardar - sin cancelar */}
-            <TouchableOpacity 
-              style={modernStyles.editProductSaveButtonFull} 
-              onPress={saveEditedItem}
-            >
-              <Ionicons name="checkmark-circle" size={22} color="white" />
-              <Text style={modernStyles.editProductSaveButtonText}>{currentLabels.save}</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+        <View style={modernStyles.modalContaineris}>
+          <Text style={modernStyles.modalTitle}>{currentLabels.editItem}</Text>
+          <TextInput
+            style={modernStyles.modalInput}
+            placeholder={currentLabels.writeItems}
+            placeholderTextColor="#b8b8b8ab"
+            multiline
+            value={editingText}
+            onChangeText={setEditingText}
+          />
+          <TouchableOpacity style={modernStyles.modalButton} onPress={saveEditedItem}>
+            <Text style={modernStyles.modalButtonText}>{currentLabels.save}</Text>
+          </TouchableOpacity>
+        </View>
       </Modal>
 
       <Modal visible={editModalVisibleadd} animationType="slide" onRequestClose={closeEditModalAdd} transparent={true}>
-        <KeyboardAvoidingView 
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={modernStyles.modalContaineri}
-        >
-          {/* MODAL MODERNO PARA AGREGAR PRODUCTO - SIN TECLADO TAPANDO */}
-          <View style={modernStyles.addProductModalContent}>
-            {/* Close X Button - Arriba derecha */}
-            <TouchableOpacity
-              onPress={closeEditModalAdd}
-              style={modernStyles.addProductModalCloseButton}
-            >
-              <Ionicons name="close" size={20} color="#6b7280" />
-            </TouchableOpacity>
+        <View style={modernStyles.modalContaineris}>
+      
+          <TextInput
+            style={modernStyles.modalInput}
+            placeholder={currentLabels.writeHereWhatToAdd}
+            placeholderTextColor="#b8b8b8ab"
+            multiline
+            value={editingText}
+            onChangeText={setEditingText}
+          />
+          <TouchableOpacity style={modernStyles.modalButton} onPress={saveEditedItemadd}>
+            <Text style={modernStyles.modalButtonText}>{currentLabels.addNewItembutton}</Text>
+          </TouchableOpacity>
 
-            {/* Header con icono y títulos */}
-            <View style={modernStyles.addProductModalHeader}>
-              <View style={modernStyles.addProductModalIconContainer}>
-                <Ionicons name="basket" size={35} color="#4a6bff" />
-              </View>
-              <Text style={modernStyles.addProductModalTitle}>{currentLabels.addNewItembutton}</Text>
-              <Text style={modernStyles.addProductModalSubtitle}>{currentLabels.writeHereWhatToAdd}</Text>
-            </View>
 
-            {/* Input de texto mejorado para productos detallados */}
-            <TextInput
-              style={modernStyles.addProductModalInput}
-              placeholder={currentLabels.writeHereWhatToAdd}
-              placeholderTextColor="#9ca3af"
-              multiline
-              value={editingText}
-              onChangeText={setEditingText}
-              autoFocus={true}
-              returnKeyType="done"
-              blurOnSubmit={true}
-            />
-
-            {/* Solo botón de agregar - sin cancelar */}
-            <TouchableOpacity 
-              style={modernStyles.addProductSaveButtonFull} 
-              onPress={saveEditedItemadd}
-            >
-              <Ionicons name="checkmark-circle" size={22} color="white" />
-              <Text style={modernStyles.addProductSaveButtonText}>{currentLabels.addNewItembutton}</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+         
+                  <TouchableOpacity style={modernStyles.closeIconContainer} onPress={saveEditedItemadd}>
+            <Ionicons name="close-circle" size={32} color="white" />
+          </TouchableOpacity>
+        </View>
       </Modal>
 
       <Modal visible={isIdiomasModalVisible} transparent={true} animationType="slide" onRequestClose={handleCloseModal}>

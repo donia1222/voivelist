@@ -393,11 +393,11 @@ const uiTexts = {
   },
 }
 
-const ImageListScreen = () => {
+const ImageListScreen = ({ route }) => {
   const { theme } = useTheme()
   const navigation = useNavigation()
-  const route = useRoute()
   const initialList = route.params?.initialList
+  const subscriptionFromNav = route.params?.isSubscribed
 
   // States
   const [shoppingList, setShoppingList] = useState([])
@@ -414,7 +414,7 @@ const ImageListScreen = () => {
   const [isCountryEmpty, setIsCountryEmpty] = useState(true)
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(subscriptionFromNav || false)
   const [images, setImages] = useState([])
   const [uploadingImage, setUploadingImage] = useState(null)
 
@@ -423,6 +423,10 @@ const ImageListScreen = () => {
   const bounceAnim = useRef(new Animated.Value(0)).current
   const fadeAnim = useRef(new Animated.Value(0)).current
   const scaleAnim = useRef(new Animated.Value(0)).current
+  // Nueva animación para pulse rings del botón upload
+  const pulseRingOuter = useRef(new Animated.Value(1)).current
+  const pulseRingMiddle = useRef(new Animated.Value(1)).current
+  const pulseRingInner = useRef(new Animated.Value(1)).current
   const flatListRef = useRef(null)
 
   // Language setup
@@ -452,6 +456,58 @@ const ImageListScreen = () => {
     }
     startPulsing()
 
+    // Pulse rings animation - similar al HomeScreen
+    const startPulseRings = () => {
+      // Outer ring - slower pulse
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseRingOuter, {
+            toValue: 1.3,
+            duration: 2000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseRingOuter, {
+            toValue: 1,
+            duration: 2000,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start()
+
+      // Middle ring - medium pulse
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseRingMiddle, {
+            toValue: 1.2,
+            duration: 1600,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseRingMiddle, {
+            toValue: 1,
+            duration: 1600,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start()
+
+      // Inner ring - faster pulse
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseRingInner, {
+            toValue: 1.15,
+            duration: 1200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseRingInner, {
+            toValue: 1,
+            duration: 1200,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start()
+    }
+    startPulseRings()
+
     // Fade in animation
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -464,6 +520,14 @@ const ImageListScreen = () => {
   useEffect(() => {
     const initializePurchases = async () => {
       try {
+        // Si ya tenemos el estado de suscripción de navegación, usarlo
+        if (subscriptionFromNav !== undefined) {
+          setIsSubscribed(subscriptionFromNav)
+          setIsLoading(false)
+          return
+        }
+
+        // Solo verificar si no viene de navegación
         await Purchases.setDebugLogsEnabled(true)
         await Purchases.configure({ apiKey: "appl_bHxScLAZLsKxfggiOiqVAZTXjJX" })
 
@@ -481,7 +545,7 @@ const ImageListScreen = () => {
     }
 
     initializePurchases()
-  }, [])
+  }, [subscriptionFromNav])
 
   // Country management
   useEffect(() => {
@@ -876,7 +940,7 @@ const ImageListScreen = () => {
                 style={modernStyles.emptyStateImage}
               />
             </View>
-            <Text style={modernStyles.emptyStateTitle}>{uiText.uploadImage}</Text>
+            <Text style={modernStyles.emptyStateTitle}>{currentLabels.uploadImageTitle}</Text>
             <Text style={modernStyles.emptyStateSubtitle}>{uiText.uploadImageDescription}</Text>
           </View>
         </Animated.View>
@@ -895,13 +959,33 @@ const ImageListScreen = () => {
         />
       )}
 
-      {/* Main Action Button */}
+      {/* Main Action Button with Pulse Rings */}
       {!loading && isSubscribed && (
-        <TouchableOpacity style={modernStyles.mainActionButton} onPress={() => setImageModalVisible(true)}>
-          <Animated.View style={[modernStyles.buttonContent, { transform: [{ scale: pulseAnim }] }]}>
-            <Ionicons name="cloud-upload-outline" size={28} color="#fff" />
-          </Animated.View>
-        </TouchableOpacity>
+        <View style={modernStyles.uploadButtonContainer}>
+          {/* Outer Pulse Ring - LILA */}
+          <Animated.View style={[
+            modernStyles.pulseRingOuter, 
+            { transform: [{ scale: pulseRingOuter }] }
+          ]} />
+          
+          {/* Middle Pulse Ring - AMARILLO */}
+          <Animated.View style={[
+            modernStyles.pulseRingMiddle, 
+            { transform: [{ scale: pulseRingMiddle }] }
+          ]} />
+          
+          {/* Inner Pulse Ring - LILA */}
+          <Animated.View style={[
+            modernStyles.pulseRingInner, 
+            { transform: [{ scale: pulseRingInner }] }
+          ]} />
+          
+          <TouchableOpacity style={modernStyles.mainActionButton} onPress={() => setImageModalVisible(true)}>
+            <Animated.View style={[modernStyles.buttonContent, { transform: [{ scale: pulseAnim }] }]}>
+              <Ionicons name="cloud-upload-outline" size={24} color="#fff" />
+            </Animated.View>
+          </TouchableOpacity>
+        </View>
       )}
 
       {/* Subscription Button */}
@@ -1056,11 +1140,13 @@ const modernStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 32,
+    position: 'relative',
   },
 
   emptyStateContent: {
     alignItems: "center",
-    maxWidth: 320,
+    maxWidth: 340,
+
   },
 
   emptyIconContainer: {
@@ -1080,27 +1166,30 @@ const modernStyles = StyleSheet.create({
     borderWidth: 4,
     borderColor: "#93b0b0",
     borderRadius: 20,
-    width: 300,
-    height: 350,
-    borderRadius: 20,
-    width: screenWidth * (isTablet ? 0.5 : 0.65),
-  height: screenWidth * (isTablet ? 0.6 : 0.75),
+    width: 240,
+    height: 280,
   },
 
   emptyStateTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#93b0b0",
-    marginBottom: 12,
+    fontSize: 26,
+    fontWeight: "800",
+    color: "#4a6bff",
+    marginBottom: 16,
     textAlign: "center",
-    marginTop: 80,
+    marginTop: 60,
+    letterSpacing: 0.5,
+    textShadowColor: 'rgba(74, 107, 255, 0.3)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
   },
 
   emptyStateSubtitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: "#6b7280",
     textAlign: "center",
-    lineHeight: 24,
+    lineHeight: 26,
+    fontWeight: "500",
+    marginHorizontal: 20,
   },
 
   // List Styles
@@ -1161,17 +1250,19 @@ const modernStyles = StyleSheet.create({
   },
 
   costButton: {
-    backgroundColor: "#8b5cf6",
-    borderRadius: 16,
-    padding: 20,
+    backgroundColor: "#ff9500",
+    borderRadius: 20,
+    padding: 24,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#8b5cf6",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 6,
+    shadowColor: "#ff9500",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
 
   costButtonText: {
@@ -1181,22 +1272,65 @@ const modernStyles = StyleSheet.create({
     marginLeft: 12,
   },
 
-  // Action Buttons
-  mainActionButton: {
+  // Action Buttons with Pulse Rings
+  uploadButtonContainer: {
     position: "absolute",
     bottom: 32,
     right: 32,
-    width: 64,
-    height: 64,
-    backgroundColor: "#93b0b0",
-    borderRadius: 32,
+    width: 70,
+    height: 70,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#3b82f6",
+  },
+  
+  // Outer pulse ring - LILA VIBRANTE
+  pulseRingOuter: {
+    position: 'absolute',
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: 'rgba(74, 107, 255, 0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  // Middle pulse ring - AMARILLO
+  pulseRingMiddle: {
+    position: 'absolute',
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    backgroundColor: 'rgba(255, 149, 0, 0.08)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  // Inner pulse ring - LILA VIBRANTE
+  pulseRingInner: {
+    position: 'absolute',
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    backgroundColor: 'rgba(74, 107, 255, 0.10)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  mainActionButton: {
+    width: 56,
+    height: 56,
+    backgroundColor: "#4a6bff",
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#4a6bff",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 12,
+    shadowRadius: 12,
+    elevation: 8,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    zIndex: 10,
   },
 
   buttonContent: {
@@ -1306,16 +1440,18 @@ const modernStyles = StyleSheet.create({
   },
 
   modalActionButton: {
-    backgroundColor: "#93b0b0",
-    borderRadius: 16,
-    padding: 20,
+    backgroundColor: "#4a6bff",
+    borderRadius: 20,
+    padding: 24,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#3b82f6",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 6,
+    shadowColor: "#4a6bff",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
 
   modalButtonIcon: {
@@ -1415,10 +1551,17 @@ const modernStyles = StyleSheet.create({
   },
 
   countryButton: {
-    backgroundColor: "#93b0b0",
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: "#4a6bff",
+    borderRadius: 16,
+    padding: 18,
     alignItems: "center",
+    shadowColor: "#4a6bff",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
 
   countryButtonDisabled: {

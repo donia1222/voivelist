@@ -15,6 +15,7 @@ const texts = {
     pressAndSpeak: "Press Create New List and start speaking ✨ to add items to your shopping list 🛍️",
     writeShoppingList: "Write your shopping list",
     uploadImage: "📤 Upload an image of your handwritten shopping list to save it in the app 🛍️",
+    uploadImageTitle: "Upload Image",
     welcomeMessagePart1: "✨ Use voice commands to create your shopping list. Say for example: I need to buy tomatoes, onions... and the app will recognize the mentioned items to form your shopping list.",
     welcomeMessagePart2: "You can also say something like: create the shopping list for making a paella and it will create it!",
     selectCountry: "Select Country",
@@ -34,8 +35,15 @@ const texts = {
     deleteList: "Delete",
     listSaved: "List saved successfully",
     changeLanguage: "If you want to create shopping lists in another language, please change the language in your device settings.",
-    voiceLists: "Create a shopping list with Voice" // Updated text
+    voiceLists: "Create a shopping list with Voice",
     
+    // New Hero Section Translations
+    smartVoiceLists: "Smart Voice Lists",
+    heroSubtitle: "Create shopping lists effortlessly with your voice",
+    lightningFast: "Lightning Fast",
+    aiPowered: "AI Powered",
+    superEasy: "Super Easy",
+    tapButtonStart: "Tap the button below to start"
   },
   es: {
     voice: "Voz",
@@ -53,6 +61,7 @@ const texts = {
     pressAndSpeak: "Presiona Crear Nueva Lista y comienza a hablar ✨ para agregar artículos a tu lista de compras 🛍️",
     writeShoppingList: "Escribe tu lista de compras",
     uploadImage: "📤 Carga una imagen de tu lista de compras escrita a mano para guardar en la app 🛍️",
+    uploadImageTitle: "Subir Imagen",
     welcomeMessagePart1: "✨ Usa comandos de voz para crear tu lista de la compra. Di por ejemplo: Necesito comprar tomates, cebollas... y la aplicación reconocerá los alimentos mencionados para formar tu lista de la compra.",
     welcomeMessagePart2: "También puedes decir algo como: crea la lista de la compra para hacer una paella y la creará!",
     selectCountry: "Selecciona País",
@@ -72,7 +81,15 @@ const texts = {
     deleteList: "Eliminar",
     listSaved: "Lista guardada correctamente",
     changeLanguage: "Si deseas crear listas de compras en otro idioma, por favor cambia el idioma en los ajustes de tu dispositivo.",
-    voiceLists: "Crear una lista de la compra con Voz" // Updated text
+    voiceLists: "Crear una lista de la compra con Voz",
+    
+    // New Hero Section Translations
+    smartVoiceLists: "Listas Inteligentes por Voz",
+    heroSubtitle: "Crea listas de compras sin esfuerzo con tu voz",
+    lightningFast: "Súper Rápido",
+    aiPowered: "Con IA",
+    superEasy: "Muy Fácil",
+    tapButtonStart: "Presiona el botón de abajo para empezar"
   },
   de: {
     voice: "Stimme",
@@ -90,6 +107,7 @@ const texts = {
     pressAndSpeak: "Drücke Neue Liste erstellen und beginne zu sprechen ✨ um Artikel zu deiner Einkaufsliste hinzuzufügen 🛍️",
     writeShoppingList: "Schreibe deine Einkaufsliste",
     uploadImage: "📤 Lade ein Bild deiner handgeschriebenen Einkaufsliste hoch, um es in der App zu speichern 🛍️",
+    uploadImageTitle: "Bild Hochladen",
     welcomeMessagePart1: "✨ Verwende Sprachbefehle, um deine Einkaufsliste zu erstellen. Sage zum Beispiel: Ich muss Tomaten, Zwiebeln kaufen... und die App wird die genannten Artikel erkennen, um deine Einkaufsliste zu erstellen.",
     welcomeMessagePart2: "Du kannst auch sagen: erstelle die Einkaufsliste für eine Paella und sie wird erstellt!",
     selectCountry: "Land auswählen",
@@ -109,7 +127,15 @@ const texts = {
     deleteList: "Löschen",
     listSaved: "Liste erfolgreich gespeichert",
     changeLanguage: "Wenn du Einkaufslisten in einer anderen Sprache erstellen möchtest, ändere bitte die Sprache in den Einstellungen deines Geräts.",
-    voiceLists: "Erstelle eine Einkaufsliste mit Stimme" // Updated text
+    voiceLists: "Erstelle eine Einkaufsliste mit Stimme",
+    
+    // New Hero Section Translations
+    smartVoiceLists: "Intelligente Sprach-Listen",
+    heroSubtitle: "Erstelle mühelos Einkaufslisten mit deiner Stimme",
+    lightningFast: "Blitzschnell",
+    aiPowered: "KI-Gestützt",
+    superEasy: "Super Einfach",
+    tapButtonStart: "Tippe unten auf den Button zum Starten"
   },
   it: {
     voice: "Voce",
@@ -146,7 +172,15 @@ const texts = {
     deleteList: "Elimina",
     listSaved: "Lista salvata con successo",
     changeLanguage: "Se desideri creare liste della spesa in un'altra lingua, per favore cambia la lingua nelle impostazioni del tuo dispositivo.",
-    voiceLists: "Crea una lista della spesa con Voce" // Updated text
+    voiceLists: "Crea una lista della spesa con Voce",
+    
+    // New Hero Section Translations
+    smartVoiceLists: "Liste Vocali Intelligenti",
+    heroSubtitle: "Crea liste della spesa facilmente con la tua voce",
+    lightningFast: "Veloce come un Lampo",
+    aiPowered: "Potenziato da IA",
+    superEasy: "Super Facile",
+    tapButtonStart: "Tocca il pulsante qui sotto per iniziare"
   },
   fr: {
     voice: "Voix",
@@ -183,7 +217,15 @@ const texts = {
     deleteList: "Supprimer",
     listSaved: "Liste enregistrée avec succès",
     changeLanguage: "Si vous souhaitez créer des listes de courses dans une autre langue, veuillez changer la langue dans les paramètres de votre appareil.",
-    voiceLists: "Créer une liste de la course avec Voix" // Updated text
+    voiceLists: "Créer une liste de la course avec Voix",
+    
+    // New Hero Section Translations
+    smartVoiceLists: "Listes Vocales Intelligentes",
+    heroSubtitle: "Créez des listes de courses sans effort avec votre voix",
+    lightningFast: "Ultra Rapide",
+    aiPowered: "Alimenté par IA",
+    superEasy: "Super Facile",
+    tapButtonStart: "Appuyez sur le bouton ci-dessous pour commencer"
   },
   pt: {
     voice: "Voz",
@@ -220,7 +262,15 @@ const texts = {
     deleteList: "Excluir",
     listSaved: "Lista salva com sucesso",
     changeLanguage: "Se você deseja criar listas de compras em outro idioma, por favor, mude o idioma nas configurações do seu dispositivo.",
-    voiceLists: "Criar uma lista de compras com Voz" // Updated text
+    voiceLists: "Criar uma lista de compras com Voz",
+    
+    // New Hero Section Translations
+    smartVoiceLists: "Listas Inteligentes por Voz",
+    heroSubtitle: "Crie listas de compras facilmente com sua voz",
+    lightningFast: "Super Rápido",
+    aiPowered: "Com IA",
+    superEasy: "Super Fácil",
+    tapButtonStart: "Toque no botão abaixo para começar"
   },
   ru: {
     voice: "Голос",
@@ -257,7 +307,15 @@ const texts = {
     deleteList: "Удалить",
     listSaved: "Список успешно сохранен",
     changeLanguage: "Если вы хотите создавать списки покупок на другом языке, измените язык в настройках вашего устройства.",
-    voiceLists: "Voice Lists" // New text added
+    voiceLists: "Voice Lists",
+    
+    // New Hero Section Translations
+    smartVoiceLists: "Voice Lists",
+    heroSubtitle: "Create shopping lists with voice",
+    lightningFast: "Fast",
+    aiPowered: "AI Powered", 
+    superEasy: "Easy",
+    tapButtonStart: "Tap button to start"
   },
   ar: {
     voice: "صوت",
@@ -294,7 +352,15 @@ const texts = {
     deleteList: "حذف",
     listSaved: "تم حفظ القائمة بنجاح",
     changeLanguage: "إذا كنت ترغب في إنشاء قوائم التسوق بلغة أخرى، يرجى تغيير اللغة في إعدادات جهازك.",
-    voiceLists: "Voice Lists" // New text added
+    voiceLists: "Voice Lists",
+    
+    // New Hero Section Translations
+    smartVoiceLists: "Voice Lists",
+    heroSubtitle: "Create shopping lists with voice",
+    lightningFast: "Fast",
+    aiPowered: "AI Powered", 
+    superEasy: "Easy",
+    tapButtonStart: "Tap button to start"
   },
   hu: {
     voice: "Hang",
@@ -331,7 +397,15 @@ const texts = {
     deleteList: "Törlés",
     listSaved: "A lista sikeresen mentve",
     changeLanguage: "Ha más nyelven szeretne bevásárlólistákat létrehozni, kérjük, változtassa meg a nyelvet az eszköz beállításaiban.",
-    voiceLists: "Voice Lists" // New text added
+    voiceLists: "Voice Lists",
+    
+    // New Hero Section Translations
+    smartVoiceLists: "Voice Lists",
+    heroSubtitle: "Create shopping lists with voice",
+    lightningFast: "Fast",
+    aiPowered: "AI Powered", 
+    superEasy: "Easy",
+    tapButtonStart: "Tap button to start"
   },
   ja: {
     voice: "声",
@@ -368,7 +442,15 @@ const texts = {
     deleteList: "削除",
     listSaved: "リストが正常に保存されました",
     changeLanguage: "他の言語で買い物リストを作成したい場合は、デバイスの設定で言語を変更してください。",
-    voiceLists: "Voice Lists" // New text added
+    voiceLists: "Voice Lists",
+    
+    // New Hero Section Translations
+    smartVoiceLists: "Voice Lists",
+    heroSubtitle: "Create shopping lists with voice",
+    lightningFast: "Fast",
+    aiPowered: "AI Powered", 
+    superEasy: "Easy",
+    tapButtonStart: "Tap button to start"
   },
   nl: {
     voice: "Stem",
@@ -405,7 +487,15 @@ const texts = {
     deleteList: "Verwijderen",
     listSaved: "Lijst succesvol opgeslagen",
     changeLanguage: "Als je boodschappenlijsten in een andere taal wilt maken, wijzig dan de taal in de instellingen van je apparaat.",
-    voiceLists: "Voice Lists" // New text added
+    voiceLists: "Voice Lists",
+    
+    // New Hero Section Translations
+    smartVoiceLists: "Voice Lists",
+    heroSubtitle: "Create shopping lists with voice",
+    lightningFast: "Fast",
+    aiPowered: "AI Powered", 
+    superEasy: "Easy",
+    tapButtonStart: "Tap button to start"
   },
 
   

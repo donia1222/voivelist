@@ -9,7 +9,9 @@ const configurePushNotifications = (navigationRef) => {
 
     onNotification: function (notification) {
       console.log('NOTIFICATION:', notification);
-      navigationRef.current?.navigate('HistoryScreen');
+      if (navigationRef && navigationRef.current) {
+        navigationRef.current.navigate('HistoryScreen');
+      }
       notification.finish(PushNotificationIOS.FetchResult.NoData);
     },
 
@@ -50,4 +52,5 @@ const requestNotificationPermission = async () => {
   }
 };
 
+export default configurePushNotifications;
 export { configurePushNotifications, requestNotificationPermission };
