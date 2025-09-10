@@ -575,7 +575,11 @@ const ImageListScreen = ({ route }) => {
           Alert.alert(alertText.subscriptionRequired, alertText.subscriptionMessage, [
             {
               text: alertText.subscribe,
-              onPress: () => navigation.navigate("Suscribe"),
+              onPress: () => {
+                if (route.params?.onNavigateToSubscribe) {
+                  route.params.onNavigateToSubscribe();
+                }
+              },
             },
             { text: alertText.cancel, style: "cancel" },
           ])
@@ -962,19 +966,19 @@ const ImageListScreen = ({ route }) => {
       {/* Main Action Button with Pulse Rings */}
       {!loading && isSubscribed && (
         <View style={modernStyles.uploadButtonContainer}>
-          {/* Outer Pulse Ring - LILA */}
+          {/* Outer Pulse Ring - NARANJA */}
           <Animated.View style={[
             modernStyles.pulseRingOuter, 
             { transform: [{ scale: pulseRingOuter }] }
           ]} />
           
-          {/* Middle Pulse Ring - AMARILLO */}
+          {/* Middle Pulse Ring - NARANJA */}
           <Animated.View style={[
             modernStyles.pulseRingMiddle, 
             { transform: [{ scale: pulseRingMiddle }] }
           ]} />
           
-          {/* Inner Pulse Ring - LILA */}
+          {/* Inner Pulse Ring - NARANJA */}
           <Animated.View style={[
             modernStyles.pulseRingInner, 
             { transform: [{ scale: pulseRingInner }] }
@@ -988,11 +992,16 @@ const ImageListScreen = ({ route }) => {
         </View>
       )}
 
-      {/* Subscription Button */}
+      {/* Subscription Banner */}
       {!isSubscribed && (
-        <TouchableOpacity style={modernStyles.subscriptionButton} onPress={() => navigation.navigate("Suscribe")}>
+        <TouchableOpacity style={modernStyles.subscriptionBanner} onPress={() => {
+          // Navigate to Subscribe screen through route params
+          if (route.params?.onNavigateToSubscribe) {
+            route.params.onNavigateToSubscribe();
+          }
+        }}>
           <Ionicons name="lock-closed" size={20} color="#ef4444" />
-          <Text style={modernStyles.subscriptionButtonText}>
+          <Text style={modernStyles.subscriptionBannerText}>
             {suscribeButtonTranslations[deviceLanguage] || suscribeButtonTranslations.en}
           </Text>
         </TouchableOpacity>
@@ -1141,6 +1150,7 @@ const modernStyles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 32,
     position: 'relative',
+    marginTop: -62,
   },
 
   emptyStateContent: {
@@ -1173,10 +1183,10 @@ const modernStyles = StyleSheet.create({
   emptyStateTitle: {
     fontSize: 26,
     fontWeight: "800",
-    color: "#4a6bff",
+    color: "#1d2134a9",
     marginBottom: 16,
     textAlign: "center",
-    marginTop: 60,
+    marginTop: 40,
     letterSpacing: 0.5,
     textShadowColor: 'rgba(74, 107, 255, 0.3)',
     textShadowOffset: { width: 0, height: 2 },
@@ -1276,54 +1286,54 @@ const modernStyles = StyleSheet.create({
   uploadButtonContainer: {
     position: "absolute",
     bottom: 32,
-    right: 32,
-    width: 70,
-    height: 70,
+alignSelf: 'center',
+    width: 94,
+    height: 94,
     alignItems: "center",
     justifyContent: "center",
   },
   
-  // Outer pulse ring - LILA VIBRANTE
+  // Outer pulse ring - NARANJA VIBRANTE
   pulseRingOuter: {
     position: 'absolute',
-    width: 70,
-    height: 70,
+  width: 94,
+    height: 94,
     borderRadius: 35,
-    backgroundColor: 'rgba(74, 107, 255, 0.06)',
+    backgroundColor: 'rgba(255, 149, 0, 0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   
-  // Middle pulse ring - AMARILLO
+  // Middle pulse ring - NARANJA
   pulseRingMiddle: {
     position: 'absolute',
-    width: 62,
-    height: 62,
-    borderRadius: 31,
+    width: 104,
+    height: 104,
+  borderRadius: 80,
     backgroundColor: 'rgba(255, 149, 0, 0.08)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   
-  // Inner pulse ring - LILA VIBRANTE
+  // Inner pulse ring - NARANJA VIBRANTE
   pulseRingInner: {
     position: 'absolute',
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    backgroundColor: 'rgba(74, 107, 255, 0.10)',
+    width: 104,
+    height: 104,
+  borderRadius: 80,
+    backgroundColor: 'rgba(255, 149, 0, 0.10)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   
   mainActionButton: {
-    width: 56,
-    height: 56,
-    backgroundColor: "#4a6bff",
-    borderRadius: 28,
+   width: 84,
+    height: 84,
+    backgroundColor: "#ff9500",
+  borderRadius: 80,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#4a6bff",
+    shadowColor: "#ff9500",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
@@ -1362,7 +1372,7 @@ const modernStyles = StyleSheet.create({
     color: "#10b981",
   },
 
-  subscriptionButton: {
+  subscriptionBanner: {
     position: "absolute",
     bottom: 32,
     left: 32,
@@ -1377,7 +1387,7 @@ const modernStyles = StyleSheet.create({
     borderColor: "#fecaca",
   },
 
-  subscriptionButtonText: {
+  subscriptionBannerText: {
     marginLeft: 8,
     fontSize: 14,
     fontWeight: "600",
@@ -1440,12 +1450,12 @@ const modernStyles = StyleSheet.create({
   },
 
   modalActionButton: {
-    backgroundColor: "#4a6bff",
+    backgroundColor: "#ff9500",
     borderRadius: 20,
     padding: 24,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#4a6bff",
+    shadowColor: "#ff9500",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.4,
     shadowRadius: 16,
@@ -1527,18 +1537,15 @@ const modernStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fef2f2",
-    padding: 12,
+    padding: 22,
     borderRadius: 12,
     marginBottom: 20,
     borderWidth: 1,
     borderColor: "#fecaca",
+    marginTop:-90
   },
 
-  subscriptionBannerText: {
-    marginLeft: 8,
-    color: "#e91e63",
-    fontWeight: "600",
-  },
+
 
   countryInput: {
     borderWidth: 1,
@@ -1551,11 +1558,11 @@ const modernStyles = StyleSheet.create({
   },
 
   countryButton: {
-    backgroundColor: "#4a6bff",
+    backgroundColor: "#ff9500",
     borderRadius: 16,
     padding: 18,
     alignItems: "center",
-    shadowColor: "#4a6bff",
+    shadowColor: "#ff9500",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
     shadowRadius: 12,

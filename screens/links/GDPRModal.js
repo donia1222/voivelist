@@ -304,37 +304,33 @@ const GDPRModal = ({ visible, onClose }) => {
             }}
         >
             <View style={styles.container}>
-                <TouchableOpacity 
-                    style={{ 
-                        alignSelf: 'center',
-                        marginTop: 10, 
-                        height: 30,
-                        justifyContent: 'center',
-                        zIndex: 2 
-                    }} 
-                    activeOpacity={1}
-                >
-                    <View 
-                        style={{
-                            height: 0, 
-                            width: 40, 
-                            backgroundColor: 'white', 
-                            borderRadius: 5,
-                            marginTop:10
-                        }}
-                    />
+                {/* Handle bar */}
+                <View style={styles.handleBar} />
+                
+                {/* Close button */}
+                <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                    <Ionicons name="close" size={24} color="#6b7280" />
                 </TouchableOpacity>
-                <TouchableOpacity 
-                            style={styles.closeIcon}
-                            onPress={onClose}
-                        >
-                            <Ionicons name="close" size={30} color="white" />
-                        </TouchableOpacity>
-                <ScrollView contentContainerStyle={styles.modalContent}>
-                    <Text style={styles.title}>Terms and Conditions (T&C)</Text>
-                    <Text style={styles.privacyPolicyText}>
-                        {privacyPolicyText}
-                    </Text>
+                
+                <ScrollView contentContainerStyle={styles.modalContent} showsVerticalScrollIndicator={false}>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <View style={styles.headerIconContainer}>
+                            <Ionicons name="clipboard" size={32} color="#7c3aed" />
+                        </View>
+                        <Text style={styles.title}>Terms and Conditions (GDPR)</Text>
+                        <Text style={styles.subtitle}>Complete legal terms and conditions</Text>
+                    </View>
+
+                    {/* Content Card */}
+                    <View style={styles.contentCard}>
+                        <Text style={styles.privacyPolicyText}>
+                            {privacyPolicyText}
+                        </Text>
+                    </View>
+                    
+                    {/* Bottom padding */}
+                    <View style={{ height: 40 }} />
                 </ScrollView>
             </View>
         </PanGestureHandler>
@@ -348,36 +344,101 @@ const GDPRModal = ({ visible, onClose }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#faf5ff', // Fondo lila muy suave
+        paddingTop: 30
+    },
+    handleBar: {
+        width: 40,
+        height: 4,
+        backgroundColor: '#e5e7eb',
+        borderRadius: 2,
+        alignSelf: 'center',
+        marginTop: 12,
+        marginBottom: 8
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 16,
+        right: 16,
+        zIndex: 10,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#333',
-        paddingTop:30
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3
     },
     modalContent: {
         padding: 20,
-        paddingTop: 60,  // Agregado espacio adicional en la parte superior para evitar que el texto se superponga con el icono
+        paddingTop: 20
+    },
+    header: {
+        alignItems: 'center',
+        marginBottom: 24
+    },
+    headerIconContainer: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        backgroundColor: '#f3e8ff', // Lila claro
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 12
     },
     title: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
-        marginBottom: 20,
-        marginTop: -20,
-        color: '#06c2b0',
+        color: '#7c3aed', // Lila medio
         textAlign: 'center',
+        marginBottom: 4
+    },
+    subtitle: {
+        fontSize: 16,
+        color: '#6b7280',
+        textAlign: 'center',
+        fontStyle: 'italic',
+        marginBottom: 20
+    },
+    contentCard: {
+        backgroundColor: 'white',
+        borderRadius: 16,
+        padding: 20,
+        shadowColor: '#7c3aed',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 3,
+        borderLeftWidth: 4,
+        borderLeftColor: '#7c3aed'
+    },
+    privacyPolicyText: {
+        fontSize: 15,
+        color: '#4b5563',
+        lineHeight: 22,
+        textAlign: 'justify'
     },
     closeIcon: {
         position: 'absolute',
-        top: 10,
-        left: 10,
-        zIndex: 1,
-        marginTop: 40,
-        marginLeft: 10,
-    },
-    privacyPolicyText: {
-        color: 'white',  // Texto blanco
-        fontSize: 16,    // Tamaño del texto 16px
-
-    },
+        top: 16,
+        right: 16,
+        zIndex: 10,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3
+    }
 });
 
 export default GDPRModal;

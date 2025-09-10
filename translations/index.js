@@ -3,13 +3,14 @@ export const translations = {
     contactUs: "Contact Us",
     mode: "Mode",
     privacyPolicy: "Privacy Policy",
+    termsAndConditions: "Terms & Conditions",
     share: "Recommend",
     shareMessage:
       "Check out this amazing app! Download it here: https://apps.apple.com/app/voice-shopping-list/id6505125372",
     recipes: "List by Recipes",
     createList: "Voice List",
     saved: "Saved",
-    imageList: "Image List",
+    imageList: "Upload Image",
     subscribe: "Subscribe",
     mySubscription: "My Subscription",
     information: "Information",
@@ -24,13 +25,14 @@ export const translations = {
     contactUs: "Contáctenos",
     mode: "Modo",
     privacyPolicy: "Política de privacidad",
+    termsAndConditions: "Términos y Condiciones",
     share: "Recomendar",
     shareMessage:
       "¡Mira esta increíble aplicación! Descárgala aquí: https://apps.apple.com/app/voice-shopping-list/id6505125372",
     recipes: "Lista por recetas",
     createList: "Lista por voz",
     saved: "Guardado",
-    imageList: "Lista de imágenes",
+    imageList: "Subir imagen",
     subscribe: "Suscribirse",
     mySubscription: "Mi suscripción",
     information: "Información",
@@ -45,6 +47,7 @@ export const translations = {
     contactUs: "Kontaktiere uns",
     mode: "Modus",
     privacyPolicy: "Datenschutz",
+    termsAndConditions: "Geschäftsbedingungen",
     share: "App empfehlen",
     shareMessage:
       "Schau dir diese unglaubliche App an! Lade sie hier herunter: https://apps.apple.com/app/voice-shopping-list/id6505125372",
@@ -66,6 +69,7 @@ export const translations = {
     contactUs: "Contattaci",
     mode: "Modalità",
     privacyPolicy: "Informativa sulla privacy",
+    termsAndConditions: "Termini e Condizioni",
     share: "Consiglia",
     shareMessage:
       "Dai un'occhiata a questa fantastica app! Scaricala qui: https://apps.apple.com/app/voice-shopping-list/id6505125372",
@@ -87,6 +91,7 @@ export const translations = {
     contactUs: "Contactez-nous",
     mode: "Mode",
     privacyPolicy: "Politique de confidentialité",
+    termsAndConditions: "Conditions Générales",
     share: "Recommander",
     shareMessage:
       "Découvrez cette application incroyable ! Téléchargez-la ici : https://apps.apple.com/app/voice-shopping-list/id6505125372",
@@ -108,6 +113,7 @@ export const translations = {
     contactUs: "Bize Ulaşın",
     mode: "Mod",
     privacyPolicy: "Gizlilik Politikası",
+    termsAndConditions: "Şartlar ve Koşullar",
     share: "Öner",
     shareMessage:
       "Bu harika uygulamaya göz atın! Buradan indirin: https://apps.apple.com/app/voice-shopping-list/id6505125372",
@@ -129,6 +135,7 @@ export const translations = {
     contactUs: "Contate-Nos",
     mode: "Modo",
     privacyPolicy: "Política de Privacidade",
+    termsAndConditions: "Termos e Condições",
     share: "Recomendar",
     shareMessage:
       "Confira este aplicativo incrível! Baixe aqui: https://apps.apple.com/app/voice-shopping-list/id6505125372",

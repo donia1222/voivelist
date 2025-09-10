@@ -39,16 +39,261 @@ import {
   primerModal,
   settingsModalTexts,
   rateAppTexts,
-  costEstimatePrompts
+  costEstimatePrompts,
+  voiceInfoTexts
 } from "./translations/homeScreenTranslations"
 import Sound from "react-native-sound"
-import Icon from "react-native-vector-icons/MaterialIcons"
+import DeviceService from "../services/DeviceService"
 
 Sound.setCategory("Playback")
 const screenHeight = Dimensions.get("window").height
 const API_KEY_ANALIZE = process.env.API_KEY_ANALIZE
 const API_KEY_CHAT = process.env.API_KEY_CHAT
 const screenWidth = Dimensions.get("window").width
+
+// Mini loader component for bubble loading
+const BubbleLoader = () => {
+  const dot1Anim = useRef(new Animated.Value(0)).current
+  const dot2Anim = useRef(new Animated.Value(0)).current  
+  const dot3Anim = useRef(new Animated.Value(0)).current
+
+  useEffect(() => {
+    const createDotAnimation = (anim, delay) => {
+      return Animated.loop(
+        Animated.sequence([
+          Animated.delay(delay),
+          Animated.timing(anim, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(anim, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ])
+      )
+    }
+
+    const animations = Animated.parallel([
+      createDotAnimation(dot1Anim, 0),
+      createDotAnimation(dot2Anim, 150),
+      createDotAnimation(dot3Anim, 300),
+    ])
+
+    animations.start()
+
+    return () => animations.stop()
+  }, [])
+
+  return (
+    <View style={{
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: 20,
+    }}>
+      {[dot1Anim, dot2Anim, dot3Anim].map((anim, index) => (
+        <Animated.View
+          key={index}
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: 4,
+            backgroundColor: 'rgba(99, 102, 241, 0.7)',
+            marginHorizontal: 4,
+            opacity: anim,
+            transform: [{ 
+              scale: Animated.add(0.5, Animated.multiply(anim, 0.5)) 
+            }],
+          }}
+        />
+      ))}
+    </View>
+  )
+}
+
+// Floating background food icons component
+const FloatingFoodIcon = ({ icon, index, delay = 0 }) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current
+  const translateYAnim = useRef(new Animated.Value(0)).current
+  const rotateAnim = useRef(new Animated.Value(0)).current
+
+  useEffect(() => {
+    // Aparecer inmediatamente
+    Animated.timing(fadeAnim, {
+      toValue: 0.6,
+      duration: 1000,
+      delay: delay,
+      useNativeDriver: true,
+    }).start()
+
+    // Animación continua de flotación
+    const floatAnimation = () => {
+      Animated.sequence([
+        Animated.timing(translateYAnim, {
+          toValue: -20,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateYAnim, {
+          toValue: 20,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ]).start(() => floatAnimation())
+    }
+
+    // Animación continua de rotación
+    const rotateAnimation = () => {
+      Animated.sequence([
+        Animated.timing(rotateAnim, {
+          toValue: 1,
+          duration: 4000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotateAnim, {
+          toValue: 0,
+          duration: 4000,
+          useNativeDriver: true,
+        }),
+      ]).start(() => rotateAnimation())
+    }
+
+    const floatTimeout = setTimeout(floatAnimation, delay + 500)
+    const rotateTimeout = setTimeout(rotateAnimation, delay + 1000)
+
+    return () => {
+      clearTimeout(floatTimeout)
+      clearTimeout(rotateTimeout)
+    }
+  }, [])
+
+  const rotation = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '15deg'],
+  })
+
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        left: `${15 + (index * 12) % 70}%`,
+        top: `${5 + (index * 8) % 20}%`,
+        opacity: fadeAnim,
+        transform: [
+          { translateY: translateYAnim },
+          { rotate: rotation },
+        ],
+      }}
+    >
+      <Ionicons 
+        name={icon} 
+        size={28 + (index % 3) * 6} 
+        color={index % 3 === 0 ? 'rgba(74, 107, 255, 0.5)' : // Azul
+              index % 3 === 1 ? 'rgba(16, 185, 129, 0.5)' : // Verde
+                               'rgba(239, 68, 68, 0.5)'}    // Rojo
+      />
+    </Animated.View>
+  )
+}
+
+// Animated floating item component for detected grocery items
+const AnimatedFloatingItem = ({ text, index, delay = 0 }) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current
+  const scaleAnim = useRef(new Animated.Value(0.3)).current
+  const translateYAnim = useRef(new Animated.Value(20)).current
+
+  useEffect(() => {
+    // Solo animación de entrada - NO desaparece automáticamente
+    const animations = Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        delay: delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        tension: 120,
+        friction: 6,
+        delay: delay,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateYAnim, {
+        toValue: 0,
+        duration: 300,
+        delay: delay,
+        useNativeDriver: true,
+      }),
+    ])
+
+    animations.start()
+
+    return () => animations.stop()
+  }, [text, delay])
+
+  const bubbleColors = [
+    'rgba(99, 102, 241, 0.15)', // Blue
+    'rgba(16, 185, 129, 0.15)', // Green  
+    'rgba(245, 158, 11, 0.15)', // Yellow
+    'rgba(239, 68, 68, 0.15)',  // Red
+    'rgba(139, 92, 246, 0.15)', // Purple
+  ]
+
+  const borderColors = [
+    'rgba(99, 102, 241, 0.4)',
+    'rgba(16, 185, 129, 0.4)',
+    'rgba(245, 158, 11, 0.4)',
+    'rgba(239, 68, 68, 0.4)',
+    'rgba(139, 92, 246, 0.4)',
+  ]
+
+  const colorIndex = index % bubbleColors.length
+
+  return (
+    <Animated.View
+      style={[
+        {
+          backgroundColor: bubbleColors[colorIndex],
+          borderColor: borderColors[colorIndex],
+          borderWidth: 1,
+          borderRadius: 16,
+          paddingHorizontal: 12,
+          paddingVertical: 6,
+          margin: 3,
+          shadowColor: borderColors[colorIndex],
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        },
+        {
+          opacity: fadeAnim,
+          transform: [
+            { scale: scaleAnim },
+            { translateY: translateYAnim },
+          ],
+        },
+      ]}
+    >
+      <Text
+        style={{
+          color: '#1f2937',
+          fontWeight: '600',
+          fontSize: 14,
+          textAlign: 'center',
+        }}
+      >
+        {text}
+      </Text>
+    </Animated.View>
+  )
+}
 
 
 
@@ -119,8 +364,11 @@ const HomeScreen = ({ navigation }) => {
   const shimmerAnim = useRef(new Animated.Value(0)).current
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const currentLabels = texts[deviceLanguage] || texts["en"]
+  const voiceTexts = voiceInfoTexts[deviceLanguage] || voiceInfoTexts["en"]
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [pressCount, setPressCount] = useState(0)
+  const [voiceLimitModalVisible, setVoiceLimitModalVisible] = useState(false)
+  const [deviceVoiceCount, setDeviceVoiceCount] = useState(0)
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(true)
   const [titleFontSize, setTitleFontSize] = useState(23)
   const [showResults, setShowResults] = useState(false)
@@ -143,7 +391,9 @@ const HomeScreen = ({ navigation }) => {
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
   const [showCreatingMessage, setShowCreatingMessage] = useState(false)
   const colorAnim = useRef(new Animated.Value(0)).current
+  const emptyStateFadeAnim = useRef(new Animated.Value(0)).current
   const [highlightedWords, setHighlightedWords] = useState([]) // Palabras identificadas por AI
+  const [showBubbleLoader, setShowBubbleLoader] = useState(false) // Mini loader para burbujas
   const [isLoading, setIsLoading] = useState(true)
   const [editModalVisible, setEditModalVisible] = useState(false)
   const [editModalVisibleadd, setEditModalVisibleadd] = useState(false)
@@ -166,6 +416,35 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const modernStyles = getModernStyles()
 
   // Modern styles are now imported from external file
+
+  // Food icons for background animation
+  const foodIcons = [
+    'fish-outline', 'pizza-outline', 'wine-outline', 'leaf-outline',
+    'restaurant-outline', 'nutrition-outline', 'egg-outline', 'ice-cream-outline',
+    'cafe-outline', 'beer-outline', 'fast-food-outline', 'basket-outline'
+  ]
+
+  const renderFloatingFoodIcons = () => {
+    return (
+      <View style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 0,
+      }}>
+        {foodIcons.map((icon, index) => (
+          <FloatingFoodIcon
+            key={icon}
+            icon={icon}
+            index={index}
+            delay={index * 500}
+          />
+        ))}
+      </View>
+    )
+  }
 
   useEffect(() => {
     const updateAppOpenCount = async () => {
@@ -199,11 +478,6 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     }
   }
 
-  const NumberCircle = ({ number }) => (
-    <View style={modernStyles.circle}>
-      <Text style={modernStyles.circleText}>{number}</Text>
-    </View>
-  )
 
   useEffect(() => {
     const startPulsing = () => {
@@ -291,12 +565,32 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       }
     }
     checkSubscribeMessage()
+    
+    // Inicializar device tracking
+    initializeDeviceTracking()
   }, [])
+
+  const initializeDeviceTracking = async () => {
+    try {
+      await DeviceService.registerDevice()
+      const count = await DeviceService.getVoiceCount()
+      setDeviceVoiceCount(count)
+      console.log('Device initialized with voice count:', count)
+    } catch (error) {
+      console.error('Error initializing device tracking:', error)
+    }
+  }
 
   const handleSubscribePress = async () => {
     await AsyncStorage.setItem("hasSeenSubscribeMessage", "true")
     setHasSeenSubscribeMessage(false)
-    navigation.navigate("Suscribe")
+    
+    // Usar callback si está disponible, sino navigation.navigate como fallback
+    if (route.params?.onNavigateToSubscribe) {
+      route.params.onNavigateToSubscribe()
+    } else {
+      navigation.navigate("Suscribe")
+    }
   }
 
   useEffect(() => {
@@ -385,6 +679,18 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   }, [colorAnim])
 
   useEffect(() => {
+    if (!loading && showEmptyListText && !showCreatingMessage) {
+      Animated.timing(emptyStateFadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }).start()
+    } else {
+      emptyStateFadeAnim.setValue(0)
+    }
+  }, [loading, showEmptyListText, showCreatingMessage])
+
+  useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       loadHistory()
     })
@@ -453,6 +759,8 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   }, [estimatedCost])
 
   const fetchEstimatedCost = async () => {
+    console.log("fetchEstimatedCost called - country:", country)
+    console.log("fetchEstimatedCost called - shoppingList:", shoppingList)
     setLoading(true)
     if (!country) {
       Alert.alert("Error", "Please enter a country.")
@@ -478,7 +786,9 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         ],
       })
       const estimatedCostResponse = response.data.choices[0].message.content
+      console.log("API response for cost:", estimatedCostResponse)
       setEstimatedCost(`${estimatedCostResponse}`)
+      console.log("estimatedCost state set to:", estimatedCostResponse)
       setLoading(false)
 
       if (flatListRef.current) {
@@ -575,6 +885,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     startPulseAnimation()
     setEstimatedCost(null)
     setHighlightedWords([]) // Limpiar palabras resaltadas anteriores
+    setShowBubbleLoader(true) // Mostrar loader al empezar
   }
 
   const onSpeechRecognized = () => {
@@ -594,9 +905,63 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       if (items.length > 0) {
         const latestText = items[items.length - 1]
         const identifiedItems = await analyzeTextRealTime(latestText)
-        setHighlightedWords(identifiedItems)
+        
+        // Acumular items sin duplicados con lógica mejorada
+        setHighlightedWords(prevWords => {
+          const newWords = [...prevWords]
+          let hasNewItems = false
+          
+          identifiedItems.forEach(newItem => {
+            const newItemLower = newItem.toLowerCase().trim()
+            
+            // Buscar si ya existe una palabra similar
+            const existingSimilar = newWords.find(existing => {
+              const existingLower = existing.toLowerCase().trim()
+              
+              // Exacta coincidencia
+              if (existingLower === newItemLower) return true
+              
+              // Una palabra contiene a la otra (para evitar "lechu" y "lechuga")
+              if (existingLower.includes(newItemLower) || newItemLower.includes(existingLower)) {
+                return true
+              }
+              
+              // Palabras muy similares (diferencia de 1-2 caracteres)
+              if (Math.abs(existingLower.length - newItemLower.length) <= 2) {
+                let differences = 0
+                const maxLen = Math.max(existingLower.length, newItemLower.length)
+                for (let i = 0; i < maxLen; i++) {
+                  if (existingLower[i] !== newItemLower[i]) differences++
+                }
+                if (differences <= 2) return true
+              }
+              
+              return false
+            })
+            
+            if (!existingSimilar) {
+              newWords.push(newItem)
+              hasNewItems = true
+            } else {
+              // Si la nueva palabra es más larga, reemplazar la existente
+              const existingIndex = newWords.findIndex(existing => 
+                existing.toLowerCase().trim() === existingSimilar.toLowerCase().trim()
+              )
+              if (newItemLower.length > existingSimilar.toLowerCase().trim().length) {
+                newWords[existingIndex] = newItem
+              }
+            }
+          })
+          
+          // Ocultar loader cuando aparezcan items
+          if (hasNewItems || newWords.length > 0) {
+            setShowBubbleLoader(false)
+          }
+          
+          return newWords
+        })
       }
-    }, 500) // Esperar 500ms después de la última actualización
+    }, 150) // Esperar solo 150ms para respuesta más rápida
   }
 
   const renderLiveResults = () => {
@@ -622,6 +987,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
             ]}
           />
           
+          {/* Fixed header */}
           <View style={modernStyles.listeningHeader}>
             <Animated.View 
               style={[
@@ -632,33 +998,49 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
             <Text style={modernStyles.listeningText}> {primerModal.listening}</Text>
           </View>
 
-          {results.map((item, index) => (
-            <View key={index} style={modernStyles.resultItem}>
-              <Text style={modernStyles.resultText}>
-                {item.split(" ").map((word, idx) => {
-                  const cleanedWord = word.replace(/[.,!?]/g, "").toLowerCase()
-                  const isHighlighted = highlightedWords.some(highlightedWord => 
-                    cleanedWord.includes(highlightedWord) || highlightedWord.includes(cleanedWord)
-                  )
+          {/* Scrollable content area */}
+          <ScrollView 
+            style={modernStyles.scrollableContent}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={modernStyles.scrollContentContainer}
+          >
+            {/* Mini loader or floating animated bubbles */}
+            {showBubbleLoader ? (
+              <BubbleLoader />
+            ) : highlightedWords.length > 0 ? (
+              <View style={modernStyles.floatingItemsContainer}>
+                {highlightedWords.map((item, index) => (
+                  <AnimatedFloatingItem
+                    key={`${item}-${index}`}
+                    text={item}
+                    index={index}
+                    delay={0} // No delay since items are persistent now
+                  />
+                ))}
+              </View>
+            ) : null}
 
-                  return (
-                    <Text key={idx}>
-                      {isHighlighted ? (
-                        <Animated.Text style={[modernStyles.highlightedWord, { color: textColor }]}>
-                          {word}
-                        </Animated.Text>
-                      ) : (
-                        <Text style={modernStyles.normalWord}>{word}</Text>
-                      )}{" "}
-                    </Text>
-                  )
-                })}
-              </Text>
-            </View>
-          ))}
+          </ScrollView>
 
-          <View style={modernStyles.tipContainer}>
-            <Text style={modernStyles.tipText}>{primerModal.palabras}</Text>
+          {/* Fixed pause button at bottom */}
+          <View style={modernStyles.pauseButtonContainer}>
+            <TouchableOpacity
+              onPress={stopRecognizing}
+              style={modernStyles.pauseButton}
+              activeOpacity={0.8}
+            >
+              <Animated.View
+                style={[
+                  modernStyles.pauseButtonInner,
+                  { 
+                    opacity: pulseAnim,
+                    transform: [{ scale: pulseAnim }] 
+                  }
+                ]}
+              >
+                <Ionicons name="pause" size={20} color="white" />
+              </Animated.View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -695,22 +1077,47 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         setStarted(false)
         setShowEmptyListText(true)
         setHighlightedWords([]) // Limpiar palabras resaltadas
+        setShowBubbleLoader(false) // Ocultar loader
       } catch (e) {
         console.error(e)
         Alert.alert("Error", "Error stopping voice recognition.")
       }
     } else {
+      // Verificar límite de uso antes de comenzar la grabación
+      if (!isSubscribed) {
+        const usage = await DeviceService.canUseVoiceFeature(false)
+        
+        if (!usage.canUse) {
+          // Mostrar modal de límite alcanzado
+          setVoiceLimitModalVisible(true)
+          return
+        }
+        
+        // Incrementar contador de uso
+        const result = await DeviceService.incrementVoiceCount()
+        
+        if (!result.success) {
+          console.error('Error incrementando contador:', result.error)
+          // Continuar de todos modos en caso de error de red
+        } else {
+          setDeviceVoiceCount(result.voice_count)
+          console.log('Voice count incremented to:', result.voice_count)
+          
+          // Si alcanzó el límite después de este uso, mostrar modal después
+          if (result.has_reached_limit) {
+            setTimeout(() => {
+              setVoiceLimitModalVisible(true)
+            }, 1000) // Pequeño delay para que termine la grabación
+          }
+        }
+      }
+
       try {
         await Voice.start(recognitionLanguage)
         setRecognized("")
         setResults([])
         setStarted(true)
         setHighlightedWords([]) // Limpiar palabras resaltadas al iniciar
-        if (!isSubscribed) {
-          const newPressCount = pressCount + 1
-          setPressCount(newPressCount)
-          await AsyncStorage.setItem("@press_count", newPressCount.toString())
-        }
       } catch (e) {
         console.error(e)
         Alert.alert("Error", `Error starting voice recognition in ${recognitionLanguage}.`)
@@ -740,7 +1147,13 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
           setShowEmptyListText(true)
           setShowResults(false)
           setLoading(false)
-          setSettingsModalVisible(true)
+          
+          // Solo mostrar modal de configuración si no está en límite de voz
+          const usage = await DeviceService.canUseVoiceFeature(isSubscribed)
+          if (usage.canUse || isSubscribed) {
+            setSettingsModalVisible(true)
+          }
+          
           setHighlightedWords([]) // Limpiar palabras resaltadas
           return
         }
@@ -948,20 +1361,26 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     const currentLabels = settingsModalTexts[deviceLanguage] || settingsModalTexts["en"]
 
     return (
-      <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
-        <View style={modernStyles.primermodalView}>
-          <ScrollView contentContainerStyle={modernStyles.scrollViewContent}>
-            <View style={modernStyles.modalView}>
-              <Text style={modernStyles.modalTitleprimermodal}>{currentLabels.title}</Text>
-              <Text style={modernStyles.modalText}>{currentLabels.message}</Text>
+      <Modal animationType="fade" transparent={true} visible={visible} onRequestClose={onClose}>
+        <View style={modernStyles.modalOverlay}>
+          <View style={modernStyles.settingsModalContainer}>
+            <View style={modernStyles.settingsModalHeader}>
+              <Ionicons name="mic-off-outline" size={48} color="#6b7280" />
+              <Text style={modernStyles.settingsModalTitle}>{currentLabels.title}</Text>
             </View>
-            <TouchableOpacity style={modernStyles.modalButtonSettins} onPress={onOpenSettings}>
-              <Text style={modernStyles.modalButtonTextSettins}>{currentLabels.goSettings}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={modernStyles.modalButtonno} onPress={onClose}>
-              <Ionicons name="close" size={32} color="white" style={modernStyles.icon} />
-            </TouchableOpacity>
-          </ScrollView>
+            <Text style={modernStyles.settingsModalMessage}>{currentLabels.message}</Text>
+            <View style={modernStyles.settingsModalButtons}>
+              <TouchableOpacity style={modernStyles.settingsButton} onPress={onOpenSettings}>
+                <Ionicons name="settings-outline" size={20} color="white" />
+                <Text style={modernStyles.settingsButtonText}>{currentLabels.goSettings}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={modernStyles.cancelButton} onPress={onClose}>
+                <Text style={modernStyles.cancelButtonText}>
+                  {deviceLanguage === 'es' ? 'Cerrar' : 'Close'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </Modal>
     )
@@ -982,40 +1401,77 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     loadHistory()
   }, [])
 
+  // Monitorear triggers para modales desde navegador
+  useEffect(() => {
+    const checkModalTriggers = async () => {
+      try {
+        // Verificar trigger de modal añadir
+        const addTrigger = await AsyncStorage.getItem("@trigger_add_modal")
+        if (addTrigger === "true") {
+          await AsyncStorage.removeItem("@trigger_add_modal")
+          setEditModalVisibleadd(true)
+        }
+
+        // Verificar trigger de modal costes
+        const costTrigger = await AsyncStorage.getItem("@trigger_cost_modal")
+        if (costTrigger === "true") {
+          console.log("Cost modal trigger detected - opening modal")
+          await AsyncStorage.removeItem("@trigger_cost_modal")
+          setCountryModalVisible(true)
+        }
+
+        // Verificar trigger de reset home
+        const resetTrigger = await AsyncStorage.getItem("@trigger_reset_home")
+        if (resetTrigger === "true") {
+          console.log("Reset home trigger detected - resetting to initial state")
+          await AsyncStorage.removeItem("@trigger_reset_home")
+          setShowResults(false)
+          setShowEmptyListText(true)
+          setShoppingList([])
+          setEstimatedCost(null)
+        }
+      } catch (error) {
+        console.error("Error checking modal triggers:", error)
+      }
+    }
+
+    const interval = setInterval(checkModalTriggers, 500)
+    
+    return () => clearInterval(interval)
+  }, [])
+
   const renderVoiceButton = () => {
     if (shoppingList.length > 0) {
-      return (
-        <View style={modernStyles.actionButtonsContainer}>
-          <View style={modernStyles.buttonRow}>
-            {/* Delete Button */}
-            {shoppingList.length > 0 && !started && !loading && (
-              <TouchableOpacity style={modernStyles.deleteButton} onPress={clearShoppingList}>
-                <Ionicons name="trash-outline" size={20} color="#ef4444" />
-                <Text style={modernStyles.deleteButtonText}>{currentLabels.deleteList}</Text>
-              </TouchableOpacity>
-            )}
-
-            {/* Add Button */}
-            {shoppingList.length > 0 && !started && !loading && (
-              <TouchableOpacity style={modernStyles.addButton} onPress={() => addNewItem()}>
-                <Ionicons name="add-circle" size={20} color="#4a6bff" />
-                <Text style={modernStyles.addButtonText}>{currentLabels.addNewItembutton}</Text>
-              </TouchableOpacity>
-            )}
-
-            {/* Save Button */}
-            {shoppingList.length > 0 && !started && !loading && (
-              <TouchableOpacity style={modernStyles.saveButton} onPress={saveToHistory}>
-                <Ionicons name="checkmark-circle-outline" size={22} color="#10b981" />
-                <Text style={modernStyles.saveButtonText}>{currentLabels.saveList}</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-      )
+      return null // Los botones están ahora en el navegador de abajo
     } else {
       return (
         <View style={modernStyles.voiceButtonContainer}>
+          {/* Informative text for non-subscribed users */}
+          {!isSubscribed && (
+            <TouchableOpacity 
+              style={modernStyles.voiceInfoContainer}
+              onPress={() => {
+                if (deviceVoiceCount >= 3) {
+                  handleSubscribePress()
+                }
+              }}
+              activeOpacity={deviceVoiceCount >= 3 ? 0.7 : 1}
+            >
+              <Text style={modernStyles.voiceInfoText}>
+                {deviceVoiceCount >= 3 ? voiceTexts.limitTitle : voiceTexts.freeTitle}
+              </Text>
+              <Text style={[
+                modernStyles.voiceInfoSubtext,
+                deviceVoiceCount >= 3 && modernStyles.voiceInfoSubtextClickable
+              ]}>
+                {deviceVoiceCount >= 3
+                  ? voiceTexts.limitSubtitle
+                  : voiceTexts.freeSubtitle.replace('${remaining}', Math.max(0, 3 - deviceVoiceCount))
+                }
+              </Text>
+            </TouchableOpacity>
+          )}
+          
           {/* Ultra Modern Multi-Layer Pulse Rings */}
           <View style={modernStyles.voiceFloatingContainer}>
             {started && (
@@ -1118,7 +1574,21 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
       {!loading && showEmptyListText && !showCreatingMessage && (
         <View style={modernStyles.emptyStateContainer}>
-          <View style={modernStyles.emptyStateContent}>
+          {renderFloatingFoodIcons()}
+                        {isContentVisible && (
+              <TouchableOpacity onPress={handlePress} style={modernStyles.languageButton}>
+                <Ionicons name="globe-outline" size={22} color="#4a6bff" />
+                <Text style={modernStyles.languageButtonText}>
+                  {currentLabels.welcomeMessage} {languageName}
+                </Text>
+              </TouchableOpacity>
+            )}
+
+          <Animated.View style={[modernStyles.emptyStateContent, { zIndex: 10, position: 'relative', opacity: emptyStateFadeAnim }]}>
+
+
+     
+
             {/* Clean Hero Section - Sin círculo superior */}
             <View style={modernStyles.heroSection}>
   
@@ -1155,15 +1625,8 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
             </View>
 
             {/* Language Selection */}
-            {isContentVisible && (
-              <TouchableOpacity onPress={handlePress} style={modernStyles.languageButton}>
-                <Ionicons name="globe-outline" size={22} color="#4a6bff" />
-                <Text style={modernStyles.languageButtonText}>
-                  {currentLabels.welcomeMessage} {languageName}
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
+     
+          </Animated.View>
         </View>
       )}
 
@@ -1185,73 +1648,8 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
           {/* Solo mostrar resultados en vivo cuando está grabando */}
           {started && (
-            <View>
+            <View style={modernStyles.liveContainer}>
               {renderLiveResults()}
-              
-              {/* Botón de pausa integrado en los resultados en vivo */}
-              <View style={modernStyles.voiceButtonContainer}>
-                <View style={modernStyles.voiceFloatingContainer}>
-                  {/* Ultra Modern Multi-Layer Pulse Rings */}
-                  <Animated.View 
-                    style={[
-                      modernStyles.pulseRingOuter,
-                      { 
-                        opacity: Animated.multiply(pulseAnim, 0.7),
-                        transform: [{ scale: Animated.multiply(pulseAnim, 1.2) }] 
-                      }
-                    ]} 
-                  />
-                  <Animated.View 
-                    style={[
-                      modernStyles.pulseRingMiddle,
-                      { 
-                        opacity: Animated.multiply(secondaryPulse, 0.6),
-                        transform: [{ scale: Animated.multiply(secondaryPulse, 0.9) }] 
-                      }
-                    ]} 
-                  />
-                  <Animated.View 
-                    style={[
-                      modernStyles.pulseRingInner,
-                      { 
-                        opacity: Animated.subtract(1, Animated.multiply(pulseAnim, 0.5)),
-                        transform: [{ scale: Animated.add(0.8, Animated.multiply(pulseAnim, 0.3)) }] 
-                      }
-                    ]} 
-                  />
-                  <Animated.View 
-                    style={[
-                      modernStyles.pulseRingOuter,
-                      {
-                        opacity: Animated.multiply(shimmerAnim, 0.3),
-                        transform: [{ 
-                          scale: Animated.add(1, Animated.multiply(shimmerAnim, 0.5))
-                        }],
-                        backgroundColor: 'rgba(147, 176, 176, 0.08)',
-                      }
-                    ]} 
-                  />
-
-                  {/* Botón de pausa */}
-                  <TouchableOpacity
-                    onPress={stopRecognizing}
-                    style={modernStyles.voiceButtonWrapper}
-                    activeOpacity={0.8}
-                  >
-                    <Animated.View
-                      style={[
-                        modernStyles.voiceButton,
-                        { transform: [{ scale: 1.05 }] },
-                        modernStyles.voiceButtonActive,
-                      ]}
-                    >
-                      <View style={modernStyles.micIconContainer}>
-                        <Ionicons name="pause" size={30} color="white" />
-                      </View>
-                    </Animated.View>
-                  </TouchableOpacity>
-                </View>
-              </View>
             </View>
           )}
 
@@ -1279,13 +1677,14 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
           data={shoppingList.length > 0 ? [...shoppingList, currentLabels.costdelalista] : []}
           renderItem={({ item, index }) => {
             if (item === currentLabels.costdelalista) {
+              console.log("Rendering cost button - estimatedCost:", estimatedCost)
+              console.log("Rendering cost button - item:", item)
               return (
                 <TouchableOpacity onPress={() => setCountryModalVisible(true)} style={modernStyles.costButtonWrapper}>
                   <View style={modernStyles.costButton}>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
 
-                      <Text style={modernStyles.costButtonText}>{estimatedCost || item}</Text>
-                      <Ionicons name="calculator" size={20} color="rgba(255, 255, 255, 0.8)" style={{ marginLeft: 10 }} />
+                      <Text style={modernStyles.costButtonText}>{estimatedCost}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -1330,22 +1729,47 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         />
       )}
 
-      {/* Solo mostrar el botón de voz cuando NO está en modo "creating message" Y NO está grabando */}
-      {!showCreatingMessage && !started && renderVoiceButton()}
+      {/* Solo mostrar el botón de voz cuando NO está en modo "creating message" Y NO está grabando Y NO hay loading */}
+      <View style={{ zIndex: 20, position: 'relative' }}>
+        {!showCreatingMessage && !started && !loading && renderVoiceButton()}
+      </View>
       <ConfirmationModal />
 
-      {/* Rate App Modal */}
-      <Modal visible={modalVisible} transparent={true} animationType="fade">
-        <View style={modernStyles.rateModalContainer}>
-          <View style={modernStyles.rateModalContent}>
-            <Text style={modernStyles.rateModalTitle}>{rateTexts.rateTitle}</Text>
-            <Text style={modernStyles.rateModalMessage}>{rateTexts.rateMessage}</Text>
-            <View style={modernStyles.rateModalButtons}>
-              <TouchableOpacity style={modernStyles.rateButton} onPress={handleRateApp}>
-                <Text style={modernStyles.rateButtonText}>{rateTexts.rateButton}</Text>
+
+      {/* Voice Limit Modal */}
+      <Modal visible={voiceLimitModalVisible} transparent={true} animationType="fade">
+        <View style={modernStyles.modalOverlay}>
+          <View style={modernStyles.voiceLimitModalContainer}>
+            <View style={modernStyles.voiceLimitModalHeader}>
+              <Ionicons name="mic-off" size={48} color="#ff6b6b" />
+              <Text style={modernStyles.voiceLimitModalTitle}>
+                {voiceTexts.modalTitle}
+              </Text>
+            </View>
+            <Text style={modernStyles.voiceLimitModalMessage}>
+              {voiceTexts.modalMessage.replace('${count}', deviceVoiceCount)}
+            </Text>
+            <View style={modernStyles.voiceLimitModalButtons}>
+              <TouchableOpacity 
+                style={modernStyles.subscribeButton} 
+                onPress={() => {
+                  setVoiceLimitModalVisible(false)
+                  // Navegar a suscripción usando el mismo método que el botón subscribe existente
+                  handleSubscribePress()
+                }}
+              >
+                <Ionicons name="star" size={20} color="white" />
+                <Text style={modernStyles.subscribeButtonText}>
+                  {voiceTexts.subscribe}
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={modernStyles.notNowButton} onPress={() => setModalVisible(false)}>
-                <Text style={modernStyles.notNowButtonText}>{rateTexts.notNowButton}</Text>
+              <TouchableOpacity 
+                style={modernStyles.cancelButton} 
+                onPress={() => setVoiceLimitModalVisible(false)}
+              >
+                <Text style={modernStyles.cancelButtonText}>
+                  {voiceTexts.close}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -1554,41 +1978,69 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         </View>
       </Modal>
 
+      {/* Modern Welcome Modal */}
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={primerModalVisible}
         onRequestClose={() => {
           setPrimerModalVisible(!primerModalVisible)
         }}
       >
-        <View style={modernStyles.primermodalView}>
-          <ScrollView contentContainerStyle={modernStyles.scrollViewContent}>
-            <View style={modernStyles.modalView}>
-              <Text style={modernStyles.modalTitleprimermodal}>{currentLabelse.title}</Text>
-              <View style={modernStyles.stepContainer}>
-                <NumberCircle number="1" />
-                <Text style={modernStyles.modalText}>{currentLabelse.step1}</Text>
+        <View style={modernStyles.modalOverlay}>
+          <View style={modernStyles.welcomeModalContainer}>
+            <View style={modernStyles.welcomeModalHeader}>
+              <View style={modernStyles.welcomeIconContainer}>
+                <Ionicons name="mic" size={40} color="#ff9500" />
               </View>
-              <View style={modernStyles.stepContainer}>
-                <NumberCircle number="2" />
-                <Text style={modernStyles.modalText}>{currentLabelse.step2}</Text>
+              <Text style={modernStyles.welcomeModalTitle}>{currentLabelse.title}</Text>
+            </View>
+            
+            <View style={modernStyles.welcomeStepsContainer}>
+              <View style={modernStyles.welcomeStep}>
+                <View style={modernStyles.stepNumber}>
+                  <Text style={modernStyles.stepNumberText}>1</Text>
+                </View>
+                <View style={modernStyles.stepContent}>
+                  <Ionicons name="play-circle-outline" size={24} color="#4f46e5" />
+                  <Text style={modernStyles.stepText}>{currentLabelse.step1}</Text>
+                </View>
               </View>
-              <Text style={modernStyles.modalTextex}>{currentLabelse.step2Example}</Text>
-              <View style={modernStyles.stepContainer}>
-                <NumberCircle number="3" />
-                <Text style={modernStyles.modalText}>{currentLabelse.step3}</Text>
+              
+              <View style={modernStyles.welcomeStep}>
+                <View style={modernStyles.stepNumber}>
+                  <Text style={modernStyles.stepNumberText}>2</Text>
+                </View>
+                <View style={modernStyles.stepContent}>
+                  <Ionicons name="chatbubble-ellipses-outline" size={24} color="#10b981" />
+                  <View>
+                    <Text style={modernStyles.stepText}>{currentLabelse.step2}</Text>
+                    <Text style={modernStyles.stepExample}>{currentLabelse.step2Example}</Text>
+                  </View>
+                </View>
+              </View>
+              
+              <View style={modernStyles.welcomeStep}>
+                <View style={modernStyles.stepNumber}>
+                  <Text style={modernStyles.stepNumberText}>3</Text>
+                </View>
+                <View style={modernStyles.stepContent}>
+                  <Ionicons name="checkmark-circle-outline" size={24} color="#06b6d4" />
+                  <Text style={modernStyles.stepText}>{currentLabelse.step3}</Text>
+                </View>
               </View>
             </View>
-            <TouchableOpacity style={modernStyles.modalButton} onPress={handleCloseprimerModal}>
-              <Icon name="mic" size={25} color="white" style={modernStyles.icon} />
-              <Text style={modernStyles.modalButtonText}>{currentLabelse.createList}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={modernStyles.modalButtonnos} onPress={handleCloseprimerModalCerrar}>
-              <Icon name="close" size={25} color="white" style={modernStyles.icon} />
-              <Text style={modernStyles.modalButtonText}>{currentLabelse.nowNot}</Text>
-            </TouchableOpacity>
-          </ScrollView>
+            
+            <View style={modernStyles.welcomeModalButtons}>
+              <TouchableOpacity style={modernStyles.welcomeStartButton} onPress={handleCloseprimerModal}>
+                <Ionicons name="mic" size={20} color="white" />
+                <Text style={modernStyles.welcomeStartButtonText}>{currentLabelse.createList}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={modernStyles.welcomeSkipButton} onPress={handleCloseprimerModalCerrar}>
+                <Text style={modernStyles.welcomeSkipButtonText}>{currentLabelse.nowNot}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>

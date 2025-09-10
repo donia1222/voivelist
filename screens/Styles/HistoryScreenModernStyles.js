@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,19 +24,19 @@ const getModernStyles = (theme) => StyleSheet.create({
 
   categoriesScrollContainer: {
     paddingHorizontal: 16,
-    gap: 12,
+    gap: 6,
   },
 
   categoryChip: {
-    marginRight: 4,
+    marginRight: 12,
   },
 
   categoryChipContent: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fef8e7",
-    paddingHorizontal: 18,
-    paddingVertical: 14,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
     borderRadius: 28,
     borderWidth: 0,
     borderColor: "transparent",
@@ -46,13 +46,11 @@ const getModernStyles = (theme) => StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
     position: "relative",
-    marginTop: 12,
+    marginTop: 8,
+    minWidth: 140,
   },
 
   categoryChipActive: {
-    backgroundColor: "#b8d4f0",
-    borderColor: "transparent",
-    shadowColor: "#b8d4f0",
     shadowOpacity: 0.2,
     transform: [{ scale: 1.05 }],
   },
@@ -79,7 +77,7 @@ const getModernStyles = (theme) => StyleSheet.create({
     position: "absolute",
     top: -2,
     right: -8,
-    backgroundColor: "#c8d8e4",
+    backgroundColor: "#34c759",
     borderRadius: 12,
     minWidth: 24,
     height: 24,
@@ -87,7 +85,7 @@ const getModernStyles = (theme) => StyleSheet.create({
     justifyContent: "center",
     borderWidth: 2,
     borderColor: "white",
-    shadowColor: "#c8d8e4",
+    shadowColor: "#34c759",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
@@ -95,7 +93,7 @@ const getModernStyles = (theme) => StyleSheet.create({
   },
 
   badgeText: {
-    color: "#6b5b73",
+    color: "white",
     fontSize: 12,
     fontWeight: "700",
   },
@@ -103,12 +101,13 @@ const getModernStyles = (theme) => StyleSheet.create({
   // Tarjetas de historial
   historyCard: {
     width: width - 32,
-    backgroundColor: "#f5f5f5",
+marginBottom:-0,
+    backgroundColor: "#effbeeb3",
     borderRadius: 24,
     marginHorizontal: 16,
     marginVertical: 12,
-    padding: 24,
-    shadowColor: "#e0e8f0",
+    padding: 16,
+    shadowColor: "#a8d5a8",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 6,
@@ -116,7 +115,7 @@ const getModernStyles = (theme) => StyleSheet.create({
     borderWidth: 0,
     borderColor: "transparent",
     borderLeftWidth: 3,
-    borderLeftColor: "#e0e8f0",
+    borderLeftColor: "#a8d5a8",
   },
 
   cardHeader: {
@@ -175,6 +174,7 @@ const getModernStyles = (theme) => StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 3,
     elevation: 2,
+    maxWidth:45,
   },
 
   editButton: {
@@ -188,72 +188,91 @@ const getModernStyles = (theme) => StyleSheet.create({
     elevation: 2,
   },
 
-  // Botones de acción
+  // Botones de acción con scroll horizontal
+  actionButtonsContainer: {
+    marginBottom: 16,
+  },
+  
   actionButtonsRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-    gap: 8,
+    paddingHorizontal: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
 
   actionButton: {
-    flex: 1,
+    width: 36,
+    height: 36,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: 21,
+    marginHorizontal: 3,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
-    minHeight: 56,
   },
 
   deleteButton: {
-    backgroundColor: "#b8d4f0",
-    borderWidth: 0,
-    borderColor: "transparent",
-    shadowColor: "#b8d4f0",
-    shadowOpacity: 0.15,
+    backgroundColor: "rgba(55, 65, 81, 0.06)",
+    borderWidth: 1.5,
+    borderColor: "rgba(55, 65, 81, 0.15)",
   },
 
   shareButton: {
-    backgroundColor: "#c8d8e4",
-    borderWidth: 0,
-    borderColor: "transparent",
-    shadowColor: "#c8d8e4",
-    shadowOpacity: 0.15,
+    backgroundColor: "rgba(34, 197, 94, 0.06)",
+    borderWidth: 1.5,
+    borderColor: "rgba(34, 197, 94, 0.15)",
   },
 
   printButton: {
-    backgroundColor: "#fef8e7",
-    borderWidth: 0,
-    borderColor: "transparent",
-    shadowColor: "#fef8e7",
-    shadowOpacity: 0.1,
+    backgroundColor: "rgba(239, 68, 68, 0.06)",
+    borderWidth: 1.5,
+    borderColor: "rgba(239, 68, 68, 0.15)",
   },
 
   addButton: {
-    backgroundColor: "#b8d4f0",
-    borderWidth: 0,
-    borderColor: "transparent",
-    shadowColor: "#b8d4f0",
-    shadowOpacity: 0.15,
+    backgroundColor: "rgba(251, 146, 60, 0.06)",
+    borderWidth: 1.5,
+    borderColor: "rgba(251, 146, 60, 0.15)",
   },
 
   reminderButton: {
-    backgroundColor: "rgba(255, 235, 179, 0.7)",
-    borderWidth: 0,
-    borderColor: "transparent",
-    shadowColor: "#ffebb3",
-    shadowOpacity: 0.1,
+    backgroundColor: "rgba(168, 85, 247, 0.06)",
+    borderWidth: 1.5,
+    borderColor: "rgba(168, 85, 247, 0.15)",
   },
 
   expandButton: {
-    backgroundColor: "#f9fafb",
+    backgroundColor: "rgba(107, 114, 128, 0.06)",
+    borderWidth: 1.5,
+    borderColor: "rgba(107, 114, 128, 0.15)",
+  },
+
+  expandButtonBottom: {
+    backgroundColor: "rgba(107, 114, 128, 0.05)",
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: "rgba(107, 114, 128, 0.15)",
+    alignSelf: "center",
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    marginTop: 8,
+    marginBottom: 4,
+  },
+
+  expandButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+
+  expandButtonText: {
+    fontSize: 13,
+    fontWeight: "500",
+    color: "#6b7280",
   },
 
   // Recordatorio
@@ -261,34 +280,67 @@ const getModernStyles = (theme) => StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fffbeb",
-    padding: 12,
-    borderRadius: 12,
+    padding: 16,
+    borderRadius: 16,
     marginBottom: 16,
     borderLeftWidth: 4,
     borderLeftColor: "#f59e0b",
+    shadowColor: "#f59e0b",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
 
   reminderIcon: {
-    marginRight: 8,
+    backgroundColor: "#fde047",
+    padding: 8,
+    borderRadius: 20,
+    marginRight: 12,
   },
 
   reminderText: {
     flex: 1,
     fontSize: 14,
     color: "#92400e",
-    fontWeight: "500",
+    fontWeight: "600",
+    lineHeight: 20,
   },
 
   cancelReminderButton: {
-    backgroundColor: "#fef2f2",
-    padding: 6,
-    borderRadius: 6,
+    backgroundColor: "#ef4444",
+    padding: 8,
+    borderRadius: 20,
+    shadowColor: "#ef4444",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
   },
 
-  // Contenido de la lista
+  // Contenido de la lista con scroll
   listContent: {
-    maxHeight: 200,
-    marginBottom: 16,
+
+    marginBottom: 10,
+    marginTop: 4,
+  },
+  
+  listContentCollapsed: {
+    maxHeight: 100,
+    overflow: "hidden",
+  },
+  
+  listContentExpanded: {
+    maxHeight: 300,
+  },
+
+  moreItemsIndicator: {
+    fontSize: 13,
+    color: "#9ca3af",
+    fontStyle: "italic",
+    textAlign: "center",
+    marginTop: 4,
+    marginBottom: 8,
   },
 
   listItemContainer: {
@@ -301,9 +353,9 @@ const getModernStyles = (theme) => StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#b8d4f0",
+    backgroundColor: "#a8d5a8",
     marginRight: 12,
-    shadowColor: "#b8d4f0",
+    shadowColor:  "#a8d5a8",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
@@ -311,11 +363,11 @@ const getModernStyles = (theme) => StyleSheet.create({
   },
 
   completedBullet: {
-    backgroundColor: "#a8d5a8",
+    backgroundColor:"#d92356a3",
   },
 
   listItemText: {
-    fontSize: 16,
+    fontSize: 18,
     color: theme.text || "#2d3748",
     flex: 1,
     fontWeight: "500",
@@ -324,6 +376,57 @@ const getModernStyles = (theme) => StyleSheet.create({
   completedItemText: {
     textDecorationLine: "line-through",
     color: "#9ca3af",
+  },
+
+  // Estilos para edición de items
+  listItemEditContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    backgroundColor: "#f9fafb",
+    borderRadius: 8,
+    marginVertical: 2,
+    borderWidth: 2,
+    borderColor: "#3b82f6",
+  },
+
+  listItemEditInput: {
+    flex: 1,
+    fontSize: 16,
+    color: "#374151",
+    fontWeight: "500",
+    backgroundColor: "#ffffff",
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginLeft: 8,
+    borderWidth: 1,
+    borderColor: "#d1d5db",
+  },
+
+  saveItemButton: {
+    backgroundColor: "#ecfdf5",
+    padding: 8,
+    borderRadius: 20,
+    marginLeft: 8,
+    shadowColor: "#10b981",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+
+  cancelItemButton: {
+    backgroundColor: "#fef2f2",
+    padding: 6,
+    borderRadius: 18,
+    marginLeft: 6,
+    shadowColor: "#ef4444",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
 
   // Botón de favorito
@@ -375,7 +478,7 @@ const getModernStyles = (theme) => StyleSheet.create({
   emptyStateImage: {
     width: 80,
     height: 80,
-    tintColor: "#6b7280",
+
   },
 
   emptyStateTitle: {
@@ -422,10 +525,9 @@ const getModernStyles = (theme) => StyleSheet.create({
   favoritesModalContainer: {
     backgroundColor: "#f5f5f5",
     borderRadius: 28,
-    margin: 16,
-    maxHeight: "85%",
-    minHeight: height * 0.6,
-    width: width - 32,
+
+width: "95%",
+    height: "85%",
     shadowColor: "#d4a574",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.15,
@@ -447,6 +549,33 @@ const getModernStyles = (theme) => StyleSheet.create({
     backgroundColor: "rgba(254, 252, 243, 0.5)",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
+  },
+
+  // Footer del modal de favoritos
+  favoritesModalFooter: {
+    borderTopWidth: 1,
+    borderTopColor: "rgba(200, 216, 228, 0.3)",
+    backgroundColor: "rgba(254, 252, 243, 0.5)",
+    padding: 16,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+  },
+
+  addButtonFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#3b82f6",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    gap: 8,
+  },
+
+  addButtonFooterText: {
+    color: "#ffffff",
+    fontSize: 14,
+    fontWeight: "600",
   },
 
   modalCategoryIcon: {
@@ -480,9 +609,9 @@ const getModernStyles = (theme) => StyleSheet.create({
   },
 
   modalCloseButton: {
-    padding: 14,
+    padding: 10,
     backgroundColor: "#e8e8e8",
-    borderRadius: 16,
+    borderRadius: 12,
     shadowColor: "#e8e8e8",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.15,
@@ -605,6 +734,7 @@ const getModernStyles = (theme) => StyleSheet.create({
   favoriteItemActions: {
     flexDirection: "row",
     gap: 16,
+    alignItems: "center",
   },
 
   favoriteActionButton: {
@@ -627,7 +757,31 @@ const getModernStyles = (theme) => StyleSheet.create({
     marginLeft: 10,
     fontSize: 14,
     fontWeight: "700",
-    color: "#ffffff",
+    color: "#2d3748",
+  },
+
+  // Botón de expandir para items de favoritos
+  favoriteExpandButton: {
+    backgroundColor: "#e8f4fd",
+    borderWidth: 1.5,
+    borderColor: "#b8d4f0",
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#b8d4f0",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+
+  favoriteExpandText: {
+    marginLeft: 8,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#4a5d7a",
   },
 
   // Modales generales
@@ -643,7 +797,7 @@ const getModernStyles = (theme) => StyleSheet.create({
     borderRadius: 24,
     padding: 28,
     margin: 20,
-    maxHeight: "80%",
+    maxHeight: "90%",
     width: "90%",
     shadowColor: "#d4a574",
     shadowOffset: { width: 0, height: 6 },
@@ -768,11 +922,9 @@ const getModernStyles = (theme) => StyleSheet.create({
   },
 
   reminderButton: {
-    backgroundColor: "rgba(255, 235, 179, 0.7)",
-    borderWidth: 0,
-    borderColor: "transparent",
-    shadowColor: "#ffebb3",
-    shadowOpacity: 0.1,
+    backgroundColor: "rgba(168, 85, 247, 0.06)",
+    borderWidth: 1.5,
+    borderColor: "rgba(168, 85, 247, 0.15)",
   },
 
   modalReminderButton: {
@@ -957,6 +1109,437 @@ const getModernStyles = (theme) => StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 3,
+  },
+
+  // Modal de lista expandida - PANTALLA COMPLETA
+  expandedListModalContainer: {
+    backgroundColor: theme.background || "#ffffff",
+    flex: 1,
+    paddingTop: Platform.OS === 'ios' ? 50 : 30,
+  },
+
+  expandedModalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 24,
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(229, 231, 235, 0.3)",
+    backgroundColor: theme.background || "#ffffff",
+  },
+
+  expandedModalTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: theme.text || "#1f2937",
+    flex: 1,
+  },
+
+  expandedModalContent: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+
+  expandedListItem: {
+    marginBottom: 4,
+  },
+
+  expandedListItemContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    borderRadius: 14,
+    backgroundColor: "rgba(249, 250, 251, 0.4)",
+    marginHorizontal: 4,
+  },
+
+  expandedCheckbox: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#d1d5db",
+    marginRight: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+  },
+
+  expandedCheckboxCompleted: {
+    backgroundColor: "#10b981",
+    borderColor: "#10b981",
+  },
+
+  expandedListItemText: {
+    fontSize: 18,
+    color: theme.text || "#1f2937",
+    flex: 1,
+    fontWeight: "500",
+    lineHeight: 24,
+  },
+
+  expandedListItemTextCompleted: {
+    textDecorationLine: "line-through",
+    color: "#9ca3af",
+    fontWeight: "400",
+  },
+
+  // Estilos para edición en modal expandido
+  expandedListItemEditContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f0f9ff",
+    borderRadius: 12,
+    padding: 16,
+    marginVertical: 4,
+    borderWidth: 2,
+    borderColor: "#3b82f6",
+  },
+
+  expandedListItemEditInput: {
+    flex: 1,
+    fontSize: 18,
+    color: "#1f2937",
+    fontWeight: "500",
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginLeft: 16,
+    borderWidth: 1,
+    borderColor: "#d1d5db",
+  },
+
+  expandedSaveItemButton: {
+    backgroundColor: "#dcfce7",
+    padding: 10,
+    borderRadius: 24,
+    marginLeft: 12,
+    shadowColor: "#10b981",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+
+  expandedCancelItemButton: {
+    backgroundColor: "#fef2f2",
+    padding: 8,
+    borderRadius: 20,
+    marginLeft: 8,
+    shadowColor: "#ef4444",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+
+  expandedItemActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 12,
+  },
+
+  expandedEditButton: {
+    backgroundColor: "#f3f4f6",
+    padding: 6,
+    borderRadius: 16,
+    marginRight: 8,
+    shadowColor: "#6b7280",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+
+  expandedDeleteButton: {
+    backgroundColor: "#fef2f2",
+    padding: 6,
+    borderRadius: 16,
+    shadowColor: "#ef4444",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+
+  fixedAddButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: "#10b981",
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#10b981",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 12,
+    borderWidth: 3,
+    borderColor: "#ffffff",
+  },
+
+  expandedModalFooter: {
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(229, 231, 235, 0.5)",
+    alignItems: "center",
+  },
+
+  expandedModalProgress: {
+    fontSize: 14,
+    color: "#6b7280",
+    fontWeight: "600",
+  },
+
+  // Botón para agregar favoritos desde historial
+  addFavoriteButton: {
+    alignItems: "center",
+    marginTop: 20,
+    padding: 16,
+  },
+
+  addFavoriteText: {
+    fontSize: 14,
+    color: "#3b82f6",
+    fontWeight: "600",
+    marginTop: 8,
+    textAlign: "center",
+  },
+
+  // Estilos para el selector de listas del historial
+  historyListSelector: {
+    maxHeight: 400,
+    padding: 16,
+  },
+
+  historyListItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "rgba(249, 250, 251, 0.8)",
+    borderRadius: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "rgba(229, 231, 235, 0.5)",
+  },
+
+  historyListItemContent: {
+    flex: 1,
+    marginRight: 12,
+  },
+
+  historyListItemTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: theme.text || "#1f2937",
+    marginBottom: 4,
+  },
+
+  historyListItemCount: {
+    fontSize: 12,
+    color: "#6b7280",
+    marginBottom: 6,
+  },
+
+  historyListPreview: {
+    marginTop: 4,
+  },
+
+  previewText: {
+    fontSize: 12,
+    color: "#9ca3af",
+    lineHeight: 16,
+  },
+
+  previewMore: {
+    fontSize: 12,
+    color: "#6b7280",
+    fontStyle: "italic",
+  },
+
+  // Modalize styles
+  modalizeHandle: {
+    backgroundColor: "#d1d5db",
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+  },
+
+  modalizeContainer: {
+    backgroundColor: theme.background || "#fefefe",
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    paddingBottom: 20,
+  },
+
+  // Navigation container with arrows and dots
+  navigationContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    paddingHorizontal: 20,
+  },
+
+  // Dots indicator para paginación horizontal
+  dotsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+    maxWidth: 220, // Limitar ancho máximo para que siempre se vean las flechas
+    overflow: "hidden",
+  },
+
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "rgba(168, 213, 168, 0.3)",
+    marginHorizontal: 6,
+    borderWidth: 1,
+    borderColor: "rgba(168, 213, 168, 0.5)",
+  },
+
+  smallDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+
+  activeDot: {
+    backgroundColor: "#a8d5a8",
+    borderColor: "#a8d5a8",
+    transform: [{ scale: 1.2 }],
+    shadowColor: "#a8d5a8",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+
+  // Arrow buttons for navigation
+  arrowButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(168, 213, 168, 0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(168, 213, 168, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#a8d5a8",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+
+  arrowButtonDisabled: {
+    backgroundColor: "rgba(209, 213, 219, 0.1)",
+    borderColor: "rgba(209, 213, 219, 0.2)",
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+
+  // Single menu button styles
+  singleMenuButtonContainer: {
+
+  },
+
+  menuButton: {
+    width: 34,
+    height: 34,
+    borderRadius: 52,
+    backgroundColor: "rgba(168, 213, 168, 0.35)",
+    borderWidth: 1,
+    borderColor: "rgba(168, 213, 168, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#a8d5a8",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+
+  // Actions modal styles
+  actionsModal: {
+    backgroundColor: theme.background || "#ffffff",
+    borderRadius: 20,
+    maxHeight: "80%",
+    width: "99%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 12,
+    marginBottom:30,
+  },
+
+  actionsModalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 20,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(229, 231, 235, 0.3)",
+  },
+
+  actionsModalTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: theme.text || "#1f2937",
+  },
+
+  actionsModalContent: {
+    padding: 20,
+    paddingTop: 10,
+  },
+
+  actionModalButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 4,
+    marginBottom: 8,
+  },
+
+  actionModalIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 16,
+  },
+
+  actionModalTextContainer: {
+    flex: 1,
+  },
+
+  actionModalButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: theme.text || "#1f2937",
+    marginBottom: 2,
+  },
+
+  actionModalButtonSubtext: {
+    fontSize: 13,
+    color: theme.text || "#6b7280",
+    opacity: 0.7,
   },
 });
 

@@ -442,9 +442,7 @@ const OnboardingScreen = ({ navigation }) => {
         {screenWidth > 380 && ( // Solo mostrar imágenes en pantallas más anchas que 600px
         <Animated.Image source={item.image} style={[styles.image, { transform: [{ translateY }] }]} />
       )}
-        {screenWidth > 380 && ( 
-      <GradientText text= {currentLabels[item.titleKey]}/>
-      )}
+
       <Text style={styles.subtitle}>{currentLabels[item.subtitleKey]}</Text>
       <Text style={styles.description}>{currentLabels[item.descriptionKey]}</Text>
     </View>
@@ -571,9 +569,9 @@ const getStyles = (theme) => StyleSheet.create({
   },
   button: {
     backgroundColor: '#3f51b5',
-    padding: 15,
+    padding: 10,
     borderRadius: 50,
-    marginBottom: 50,
+marginBottom: -10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -585,13 +583,13 @@ const getStyles = (theme) => StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    width:200,
+    width:180,
   },
   buttonterminar: {
     backgroundColor: '#009688',
     padding: 15,
     borderRadius: 50,
-    marginBottom: 50,
+
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

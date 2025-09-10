@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, Alert, Image, StyleSheet, Modal, ScrollView, Linking, Easing, Animated, ImageBackground, Dimensions, ActivityIndicator, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Image, StyleSheet, Modal, ScrollView, Linking, Easing, Animated, ImageBackground, Dimensions, ActivityIndicator, Platform, LinearGradient } from 'react-native';
 import * as RNLocalize from "react-native-localize";
 import RNRestart from 'react-native-restart';
 import PrivacyModal from './links/PrivacyModal';
@@ -150,7 +150,7 @@ const currencySymbols = {
   CHF: 'CHF'
 };
 
-const basePriceUSD = 2.00;
+const basePriceUSD = 2.99;
 const conversionRates = {
   USD: 1, EUR: 1, TRY: 1, RUB: 1, CNY: 1, JPY: 1, PLN: 1, SEK: 1, HUF: 1, AED: 1, INR: 1, CHF: 1
 };
@@ -174,169 +174,235 @@ const monthTranslations = {
   el: "Μήνας με αυτόματη ανανέωση, ακύρωση ανά πάσα στιγμή."
 };
 
-// Estilos mejorados y responsivos
+// Estilos modernos y responsivos
 const getResponsiveStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme?.background || '#f8f9fa',
-    paddingHorizontal: isTablet ? 60 : 20,
-    paddingVertical: isTablet ? 40 : 20,
+  },
+  
+  backgroundGradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    opacity: 0.05,
   },
   
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: isTablet ? 60 : 20,
+    paddingVertical: isTablet ? 40 : 30,
   },
 
   headerSection: {
     alignItems: 'center',
-    marginBottom: isTablet ? 40 : 30,
+    marginBottom: isTablet ? 50 : 40,
+    marginTop: isTablet ? 30 : 20,
+  },
+
+  appIconContainer: {
+    marginBottom: isTablet ? 30 : 25,
+    padding: 5,
+    borderRadius: isTablet ? 45 : 40,
+    backgroundColor: 'transparent',
+    shadowColor: '#9b59b6',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
+    elevation: 15,
+    marginTop: isTablet ? -30 : -20,
   },
 
   appIcon: {
-    width: isTablet ? 120 : 180,
-    height: isTablet ? 120 : 180,
-    marginBottom: isTablet ? 20 : 30,
-    borderRadius: isTablet ? 25 : 35,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
+    width: isTablet ? 140 : 120,
+    height: isTablet ? 140 : 120,
+    borderRadius: isTablet ? 40 : 35,
   },
 
   titleText: {
-    fontSize: isTablet ? 28 : 24,
-    fontWeight: 'bold',
+    fontSize: isTablet ? 36 : 32,
+    fontWeight: '800',
     color: theme?.text || '#2c3e50',
     textAlign: 'center',
     marginBottom: 10,
-    fontFamily: 'Poppins-Bold',
+    letterSpacing: 0.5,
+  },
+
+  subtitleText: {
+    fontSize: isTablet ? 20 : 18,
+    color: theme?.text ? theme.text + '99' : '#666666',
+    textAlign: 'center',
+    marginBottom: 8,
+    fontWeight: '300',
+    letterSpacing: 0.3,
+  },
+
+  priceContainer: {
+    backgroundColor: 'rgba(155, 89, 182, 0.15)',
+    paddingHorizontal: 25,
+    paddingVertical: 12,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: 'rgba(155, 89, 182, 0.3)',
+    marginBottom: isTablet ? 35 : 30,
   },
 
   priceText: {
-    fontSize: isTablet ? 18 : 16,
-    color: '#34c759',
+    fontSize: isTablet ? 20 : 18,
+    color: '#9b59b6',
     textAlign: 'center',
-    marginBottom: isTablet ? 40 : 30,
-    fontWeight: '600',
-    paddingHorizontal: 20,
-    lineHeight: isTablet ? 24 : 22,
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
 
   featuresSection: {
     width: '100%',
-    maxWidth: isTablet ? 600 : 350,
-    marginBottom: isTablet ? 40 : 30,
+    maxWidth: isTablet ? 600 : 400,
+    marginBottom: isTablet ? 45 : 35,
+    alignSelf: 'center',
   },
 
   featureItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
-    padding: isTablet ? 20 : 16,
-    marginVertical: 8,
+    backgroundColor: theme?.background || 'white',
+    padding: isTablet ? 22 : 18,
+    marginVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: theme?.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+    shadowColor: '#9b59b6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+
+  featureIconContainer: {
+    width: isTablet ? 50 : 45,
+    height: isTablet ? 50 : 45,
     borderRadius: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
+    backgroundColor: 'rgba(155, 89, 182, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
   },
 
   featureIcon: {
-    width: isTablet ? 40 : 35,
-    height: isTablet ? 40 : 35,
-    marginRight: 15,
-    borderRadius: 8,
+    width: isTablet ? 30 : 28,
+    height: isTablet ? 30 : 28,
+    tintColor: '#9b59b6',
   },
 
   featureText: {
     flex: 1,
-    fontSize: isTablet ? 16 : 14,
+    fontSize: isTablet ? 17 : 15,
     color: theme?.text || '#2c3e50',
-    fontWeight: '500',
-    lineHeight: isTablet ? 22 : 20,
+    fontWeight: '600',
+    lineHeight: isTablet ? 24 : 22,
+    letterSpacing: 0.3,
   },
 
   buttonSection: {
     width: '100%',
-    maxWidth: isTablet ? 400 : 300,
+    maxWidth: isTablet ? 450 : 350,
     alignItems: 'center',
-    marginBottom: isTablet ? 30 : 20,
+    marginBottom: isTablet ? 30 : 25,
+    alignSelf: 'center',
+  },
+
+  subscribeButtonGradient: {
+    borderRadius: 30,
+    marginBottom: 20,
+    backgroundColor: '#f1c40f',
+    shadowColor: '#f39c12',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    elevation: 10,
   },
 
   subscribeButton: {
-    backgroundColor: '#ff375f',
-    paddingVertical: isTablet ? 18 : 16,
-    paddingHorizontal: isTablet ? 60 : 50,
+    paddingVertical: isTablet ? 20 : 18,
+    paddingHorizontal: isTablet ? 70 : 60,
     borderRadius: 30,
-    width: '100%',
     alignItems: 'center',
-    shadowColor: '#ff375f',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
-    marginBottom: 20,
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
 
   subscribeButtonText: {
-    color: 'white',
-    fontSize: isTablet ? 18 : 16,
-    fontWeight: 'bold',
-    letterSpacing: 1,
+    color: '#2c3e50',
+    fontSize: isTablet ? 19 : 17,
+    fontWeight: '800',
+    letterSpacing: 1.5,
+    textTransform: 'uppercase',
   },
 
   restoreButton: {
-    paddingVertical: isTablet ? 15 : 12,
-    paddingHorizontal: isTablet ? 30 : 25,
+    backgroundColor: 'rgba(155, 89, 182, 0.1)',
+    paddingVertical: isTablet ? 16 : 14,
+    paddingHorizontal: isTablet ? 35 : 30,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: 'rgba(155, 89, 182, 0.3)',
   },
 
   restoreButtonText: {
-    color: '#34c759',
+    color: '#9b59b6',
     fontSize: isTablet ? 16 : 14,
-    fontWeight: '600',
+    fontWeight: '700',
     textAlign: 'center',
+    letterSpacing: 0.5,
   },
 
   linksContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: isTablet ? 30 : 20,
+    marginTop: isTablet ? 35 : 25,
     paddingHorizontal: 20,
+
   },
 
   linkButton: {
+    backgroundColor: 'transparent',
     paddingHorizontal: isTablet ? 15 : 12,
-    paddingVertical: isTablet ? 10 : 8,
-    margin: 5,
+    paddingVertical: isTablet ? 8 : 6,
+    margin: 2,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: theme?.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
   },
 
   linkText: {
-    color: '#8e8e93',
+    color: theme?.text ? theme.text + '99' : '#8e8e93',
     fontSize: isTablet ? 14 : 12,
-    fontWeight: '500',
+    fontWeight: '600',
+    letterSpacing: 0.3,
   },
 
   subscribedContainer: {
-    backgroundColor: '#34c759',
-    paddingVertical: isTablet ? 20 : 18,
-    paddingHorizontal: isTablet ? 40 : 30,
-    borderRadius: 25,
+    backgroundColor: 'rgba(241, 196, 15, 0.2)',
+    paddingVertical: isTablet ? 22 : 20,
+    paddingHorizontal: isTablet ? 45 : 35,
+    borderRadius: 30,
     width: '100%',
     alignItems: 'center',
     marginBottom: 20,
+    borderWidth: 2,
+    borderColor: '#f1c40f',
   },
 
   subscribedText: {
-    color: 'white',
+    color: '#f39c12',
     fontSize: isTablet ? 18 : 16,
-    fontWeight: 'bold',
+    fontWeight: '800',
     textAlign: 'center',
+    letterSpacing: 0.5,
   },
 
   loaderContainer: {
@@ -345,8 +411,8 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
 
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
+    backgroundColor: '#1a1a1a',
+    borderRadius: 25,
     padding: 35,
     alignItems: 'center',
     shadowColor: '#000',
@@ -354,6 +420,8 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
 
   modalText: {
@@ -361,23 +429,53 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '500',
+    color: theme?.text || '#2c3e50',
   },
 
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.8)',
   },
 
   buttonDisabled: {
-    backgroundColor: '#cccccc',
-    paddingVertical: isTablet ? 18 : 16,
-    paddingHorizontal: isTablet ? 60 : 50,
+    backgroundColor: 'rgba(155, 89, 182, 0.2)',
+    paddingVertical: isTablet ? 20 : 18,
+    paddingHorizontal: isTablet ? 70 : 60,
     borderRadius: 30,
     width: '100%',
     alignItems: 'center',
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(155, 89, 182, 0.3)',
+  },
+
+  shimmerEffect: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0.3,
+  },
+
+  premiumBadge: {
+    backgroundColor: 'rgba(155, 89, 182, 0.2)',
+    paddingHorizontal: 15,
+    paddingVertical: 6,
+    borderRadius: 15,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(155, 89, 182, 0.4)',
+  },
+
+  premiumBadgeText: {
+    color: '#9b59b6',
+    fontSize: isTablet ? 14 : 12,
+    fontWeight: '700',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
 });
 
@@ -394,8 +492,43 @@ export default function Suscribe({ onClose }) {
   const [isGDPRModalVisible, setIsGDPRModalVisible] = useState(false);
   const [currencyCode, setCurrencyCode] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.9)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
 
   const benefitTitles = benefitTitleTranslations[systemLanguage] || benefitTitleTranslations['en'];
+  
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 4,
+        tension: 10,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+  
+  const animateButtonPress = () => {
+    Animated.sequence([
+      Animated.timing(buttonScale, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(buttonScale, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
 
   useEffect(() => {
     const checkSubscription = async () => {
@@ -473,6 +606,7 @@ export default function Suscribe({ onClose }) {
   }, []);
 
   const purchaseSubscription = async (pkg) => {
+    animateButtonPress();
     setIsSubscribing(true);
     try {
       const purchaseMade = await Purchases.purchasePackage(pkg);
@@ -541,93 +675,138 @@ export default function Suscribe({ onClose }) {
   if (isLoading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color="#ff375f" />
-        <Text style={styles.priceText}>Loading...</Text>
+        <ActivityIndicator size="large" color="#9b59b6" />
+        <Text style={[styles.priceText, { marginTop: 20 }]}>Loading...</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContainer}>
-      {/* Header Section */}
-      <View style={styles.headerSection}>
-        <Image 
-          source={require('../assets/images/App-Icon-1024x1024@1x copia.png')} 
-          style={styles.appIcon} 
-        />
-        <Text style={styles.titleText}>Voice Grocery Premium</Text>
-        <Text style={styles.priceText}>
-          {`${contentTranslations[systemLanguage] || contentTranslations['en']} ${getPriceForCurrency(currencyCode)}`}
-        </Text>
-      </View>
-
-      {/* Features Section */}
-      <View style={styles.featuresSection}>
-        {benefitTitles.map((benefit, index) => (
-          <View key={index} style={styles.featureItem}>
-            <Image source={{ uri: benefit.imageUrl }} style={styles.featureIcon} />
-            <Text style={styles.featureText}>{benefit.title}</Text>
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
+        <Animated.View style={[
+          styles.headerSection,
+          {
+            opacity: fadeAnim,
+            transform: [{ scale: scaleAnim }]
+          }
+        ]}>
+   
+          <View style={styles.appIconContainer}>
+            <Image 
+              source={require('../assets/images/App-Icon-1024x1024@1x copia.png')} 
+              style={styles.appIcon} 
+            />
           </View>
-        ))}
-      </View>
-
-      {/* Button Section */}
-      <View style={styles.buttonSection}>
-        {isSubscribed ? (
-          <View style={styles.subscribedContainer}>
-            <Text style={styles.subscribedText}>
-              {accessButtonTextTranslations[systemLanguage] || accessButtonTextTranslations['en']}
+          
+          <Text style={styles.titleText}>Voice Grocery</Text>
+          <Text style={styles.subtitleText}>Unlock Full Potential</Text>
+          
+          <View style={styles.priceContainer}>
+            <Text style={styles.priceText}>
+              {`${contentTranslations[systemLanguage] || contentTranslations['en']} ${getPriceForCurrency(currencyCode)}`}
             </Text>
           </View>
-        ) : (
-          offerings && offerings.availablePackages.map((pkg, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => purchaseSubscription(pkg)}
-              disabled={isSubscribing}
-              style={isSubscribing ? styles.buttonDisabled : styles.subscribeButton}
+        </Animated.View>
+
+
+        {/* Button Section */}
+        <Animated.View style={[
+          styles.buttonSection,
+          {
+            opacity: fadeAnim,
+            transform: [{ scale: buttonScale }]
+          }
+        ]}>
+          {isSubscribed ? (
+            <TouchableOpacity 
+              style={styles.subscribedContainer}
+              onPress={() => RNRestart.Restart()}
+              activeOpacity={0.8}
             >
-              {isSubscribing ? (
-                <View style={styles.loaderContainer}>
-                  <ActivityIndicator size="large" color='#009688' />
-                </View>
-              ) : (
-                <Text style={styles.subscribeButtonText}>SUBSCRIBE NOW</Text>
-              )}
+              <Text style={styles.subscribedText}>
+                {accessButtonTextTranslations[systemLanguage] || accessButtonTextTranslations['en']}
+              </Text>
             </TouchableOpacity>
-          ))
-        )}
+          ) : (
+            offerings && offerings.availablePackages.map((pkg, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => purchaseSubscription(pkg)}
+                disabled={isSubscribing}
+                activeOpacity={0.9}
+                style={styles.subscribeButtonGradient}
+              >
+                <View style={[
+                  styles.subscribeButton,
+                  isSubscribing && styles.buttonDisabled
+                ]}>
+                  {isSubscribing ? (
+                    <ActivityIndicator size="small" color='#FFFFFF' />
+                  ) : (
+                    <>
+                      <Text style={styles.subscribeButtonText}>Get Started →</Text>
+                    </>
+                  )}
+                </View>
+              </TouchableOpacity>
+            ))
+          )}
 
-        <TouchableOpacity onPress={restorePurchases} style={styles.restoreButton}>
-          <Text style={styles.restoreButtonText}>
-            {isSubscribed 
-              ? (accessButtonTextTranslations[systemLanguage] || accessButtonTextTranslations['en'])
-              : (restoreButtonTextTranslations[systemLanguage] || restoreButtonTextTranslations['en'])
-            }
-          </Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity 
+            onPress={restorePurchases} 
+            style={styles.restoreButton}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.restoreButtonText}>
+              {isSubscribed 
+                ? (accessButtonTextTranslations[systemLanguage] || accessButtonTextTranslations['en'])
+                : (restoreButtonTextTranslations[systemLanguage] || restoreButtonTextTranslations['en'])
+              }
+            </Text>
+          </TouchableOpacity>
+        </Animated.View>
 
-      {/* Links Section */}
-      <View style={styles.linksContainer}>
-        <TouchableOpacity onPress={handlePrivacyPress} style={styles.linkButton}>
-          <Text style={styles.linkText}>Privacy Policy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleEULAPress} style={styles.linkButton}>
-          <Text style={styles.linkText}>EULA</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleGDPRPress} style={styles.linkButton}>
-          <Text style={styles.linkText}>(T&C)</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleContactPress} style={styles.linkButton}>
-          <Text style={styles.linkText}>Contact</Text>
-        </TouchableOpacity>
-      </View>
+        {/* Links Section */}
+        <Animated.View style={[
+          styles.linksContainer,
+          { opacity: fadeAnim }
+        ]}>
+          <TouchableOpacity 
+            onPress={handlePrivacyPress} 
+            style={styles.linkButton}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.linkText}>Privacy Policy</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={handleEULAPress} 
+            style={styles.linkButton}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.linkText}>EULA</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={handleGDPRPress} 
+            style={styles.linkButton}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.linkText}>Terms</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={handleContactPress} 
+            style={styles.linkButton}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.linkText}>Support</Text>
+          </TouchableOpacity>
+        </Animated.View>
 
-      {/* Modals */}
-      <PrivacyModal visible={isPrivacyModalVisible} onClose={() => setIsPrivacyModalVisible(false)} />
-      <EULAModal visible={isEULAModalVisible} onClose={() => setIsEULAModalVisible(false)} />
-      <GDPRModal visible={isGDPRModalVisible} onClose={() => setIsGDPRModalVisible(false)} />
-    </ScrollView>
+        {/* Modals */}
+        <PrivacyModal visible={isPrivacyModalVisible} onClose={() => setIsPrivacyModalVisible(false)} />
+        <EULAModal visible={isEULAModalVisible} onClose={() => setIsEULAModalVisible(false)} />
+        <GDPRModal visible={isGDPRModalVisible} onClose={() => setIsGDPRModalVisible(false)} />
+      </ScrollView>
+    </View>
   );
 }

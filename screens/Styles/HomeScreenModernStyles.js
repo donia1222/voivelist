@@ -24,7 +24,9 @@ export const getModernStyles = () => {
 
     // Ultra Modern Live Results Styles with Advanced Glass Morphism
     liveResultsContainer: {
-      marginHorizontal: 20,
+      alignSelf: 'center',
+      width: '90%', // Fixed 90% width
+      height: screenHeight * 0.5, // Fixed height
       marginVertical: 30,
       position: 'relative',
     },
@@ -42,6 +44,9 @@ export const getModernStyles = () => {
       borderColor: "rgba(255, 255, 255, 0.6)",
       position: 'relative',
       overflow: 'hidden',
+      width: '100%', // Full width of container
+      height: '100%', // Full height of container
+      flex: 1,
     },
     
     // Advanced glass morphism background with gradient overlay
@@ -116,6 +121,69 @@ export const getModernStyles = () => {
       fontSize: 16,
       fontWeight: "500",
     },
+    // Scrollable content styles
+    scrollableContent: {
+      flex: 1,
+      maxHeight: screenHeight * 0.35, // Maximum height for scrollable area
+    },
+    
+    scrollContentContainer: {
+      paddingBottom: 10,
+    },
+
+    // Floating items container for detected grocery items
+    floatingItemsContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginVertical: 12,
+      minHeight: 40,
+      paddingHorizontal: 4,
+    },
+    
+    // Live container for better layout control
+    liveContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    
+    // Integrated pause button styles (fixed at bottom)
+    pauseButtonContainer: {
+      alignItems: 'center',
+      marginTop: 15,
+      paddingTop: 15,
+      borderTopWidth: 1,
+      borderTopColor: 'rgba(255, 255, 255, 0.1)',
+    },
+    
+    pauseButton: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      backgroundColor: 'rgba(239, 68, 68, 0.9)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: 'rgba(239, 68, 68, 0.6)',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.4,
+      shadowRadius: 4,
+      elevation: 4,
+    },
+    
+    pauseButtonInner: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: 'rgba(239, 68, 68, 1)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    
     tipContainer: {
       marginTop: 16,
       paddingTop: 16,
@@ -213,6 +281,42 @@ export const getModernStyles = () => {
       position: 'relative',
       zIndex: 100,
     },
+
+    // Voice Info Styles
+    voiceInfoContainer: {
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderRadius: 20,
+      marginBottom: 24,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.15,
+      shadowRadius: 16,
+      elevation: 8,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 149, 0, 0.2)',
+      maxWidth: screenWidth * 0.85,
+    },
+    voiceInfoText: {
+      fontSize: 16,
+      fontWeight: '700',
+      color: '#1f2937',
+      textAlign: 'center',
+      marginBottom: 4,
+    },
+    voiceInfoSubtext: {
+      fontSize: 13,
+      fontWeight: '500',
+      color: '#6b7280',
+      textAlign: 'center',
+      lineHeight: 18,
+    },
+    voiceInfoSubtextClickable: {
+      color: '#ff9500',
+      fontWeight: '600',
+      textDecorationLine: 'underline',
+    },
     
     // Floating effect background
     voiceFloatingContainer: {
@@ -261,8 +365,8 @@ export const getModernStyles = () => {
     },
     
     voiceButton: {
-      width: 120,
-      height: 120,
+      width: 90,
+      height: 90,
       borderRadius: 60,
       alignItems: "center",
       justifyContent: "center",
@@ -294,6 +398,7 @@ export const getModernStyles = () => {
       justifyContent: 'center',
     },
     
+
     // Ultra prominent call-to-action text - MÁS COMPACTO
     voiceButtonSubtitle: {
       marginTop: 20,
@@ -399,11 +504,12 @@ export const getModernStyles = () => {
     heroTitle: {
       fontSize: 24,
       fontWeight: "800",
-      color: "#3e4856ff",
+      color: "#2b4262d4",
       textAlign: "center",
       marginBottom: 8,
       letterSpacing: -0.3,
       lineHeight: 32,
+      marginTop: -40,
     },
     
     // Hero Subtitle - MÁS COMPACTO  
@@ -493,7 +599,9 @@ export const getModernStyles = () => {
       shadowOpacity: 0.20,
       shadowRadius: 15,
       elevation: 6,
-      marginTop: 16,
+      marginBottom: 30,
+
+
     },
     languageButtonText: {
       marginLeft: 12,
@@ -656,29 +764,19 @@ export const getModernStyles = () => {
       marginBottom: 16,
     },
     costButton: {
-      backgroundColor: "#8b5cf6",
       paddingVertical: 20,
       paddingHorizontal: 24,
       borderRadius: 25,
-      shadowColor: "#8b5cf6",
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.4,
-      shadowRadius: 20,
+  
       elevation: 12,
-      borderWidth: 2,
-      borderColor: "rgba(255, 255, 255, 0.2)",
       position: "relative",
       overflow: "hidden",
     },
     costButtonText: {
-      color: "white",
+      color: "rgba(0, 0, 0, 0.66)",
       fontWeight: "800",
       textAlign: "center",
       fontSize: 16,
-
-      textShadowColor: "rgba(0, 0, 0, 0.3)",
-      textShadowOffset: { width: 0, height: 2 },
-      textShadowRadius: 4,
     },
     addItemWrapper: {
       marginHorizontal: 16,
@@ -1393,6 +1491,247 @@ export const getModernStyles = () => {
       fontWeight: "600",
       fontSize: 16,
       textAlign: "center",
+    },
+
+    // Voice Limit Modal Styles
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 20,
+    },
+    voiceLimitModalContainer: {
+      backgroundColor: "white",
+      borderRadius: 24,
+      padding: 32,
+      width: "90%",
+      maxWidth: 400,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 12 },
+      shadowOpacity: 0.3,
+      shadowRadius: 24,
+      elevation: 16,
+    },
+    voiceLimitModalHeader: {
+      alignItems: "center",
+      marginBottom: 20,
+    },
+    voiceLimitModalTitle: {
+      fontSize: 22,
+      fontWeight: "800",
+      color: "#1f2937",
+      textAlign: "center",
+      marginTop: 12,
+    },
+    voiceLimitModalMessage: {
+      fontSize: 16,
+      color: "#6b7280",
+      textAlign: "center",
+      marginBottom: 32,
+      lineHeight: 24,
+    },
+    voiceLimitModalButtons: {
+      gap: 12,
+    },
+    subscribeButton: {
+      backgroundColor: "#ff9500",
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 16,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#ff9500",
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.3,
+      shadowRadius: 12,
+      elevation: 6,
+    },
+    subscribeButtonText: {
+      color: "white",
+      fontWeight: "700",
+      fontSize: 16,
+      marginLeft: 8,
+    },
+    cancelButton: {
+      backgroundColor: "#f3f4f6",
+      paddingVertical: 14,
+      borderRadius: 12,
+    },
+    cancelButtonText: {
+      color: "#6b7280",
+      fontWeight: "600",
+      fontSize: 16,
+      textAlign: "center",
+    },
+
+    // Settings Modal Styles (improved)
+    settingsModalContainer: {
+      backgroundColor: "white",
+      borderRadius: 24,
+      padding: 32,
+      width: "90%",
+      maxWidth: 400,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 12 },
+      shadowOpacity: 0.3,
+      shadowRadius: 24,
+      elevation: 16,
+    },
+    settingsModalHeader: {
+      alignItems: "center",
+      marginBottom: 20,
+    },
+    settingsModalTitle: {
+      fontSize: 22,
+      fontWeight: "800",
+      color: "#1f2937",
+      textAlign: "center",
+      marginTop: 12,
+    },
+    settingsModalMessage: {
+      fontSize: 16,
+      color: "#6b7280",
+      textAlign: "center",
+      marginBottom: 32,
+      lineHeight: 24,
+    },
+    settingsModalButtons: {
+      gap: 12,
+    },
+    settingsButton: {
+      backgroundColor: "#4f46e5",
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 16,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#4f46e5",
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.3,
+      shadowRadius: 12,
+      elevation: 6,
+    },
+    settingsButtonText: {
+      color: "white",
+      fontWeight: "700",
+      fontSize: 16,
+      marginLeft: 8,
+    },
+
+    // Modern Welcome Modal Styles
+    welcomeModalContainer: {
+      backgroundColor: "white",
+      borderRadius: 24,
+      padding: 32,
+      width: "99%",
+     height: "90%",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 12 },
+      shadowOpacity: 0.3,
+      shadowRadius: 24,
+      elevation: 16,
+    },
+    welcomeModalHeader: {
+      alignItems: "center",
+      marginBottom: 32,
+    },
+    welcomeIconContainer: {
+      width: 72,
+      height: 72,
+      backgroundColor: "rgba(255, 149, 0, 0.1)",
+      borderRadius: 36,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 16,
+    },
+    welcomeModalTitle: {
+      fontSize: 24,
+      fontWeight: "800",
+      color: "#1f2937",
+      textAlign: "center",
+    },
+    welcomeStepsContainer: {
+      marginBottom: 32,
+      gap: 20,
+    },
+    welcomeStep: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 16,
+    },
+    stepNumber: {
+      width: 32,
+      height: 32,
+      backgroundColor: "#ff9500",
+      borderRadius: 16,
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 4,
+    },
+    stepNumberText: {
+      color: "white",
+      fontWeight: "800",
+      fontSize: 16,
+    },
+    stepContent: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 12,
+    },
+    stepText: {
+      fontSize: 16,
+      color: "#374151",
+      lineHeight: 24,
+      fontWeight: "500",
+      flex: 1,
+    },
+    stepExample: {
+      fontSize: 14,
+      color: "#6b7280",
+      fontStyle: "italic",
+      marginTop: 4,
+      paddingLeft: 8,
+      borderLeftWidth: 2,
+      borderLeftColor: "#e5e7eb",
+    },
+    welcomeModalButtons: {
+      gap: 12,
+    },
+    welcomeStartButton: {
+      backgroundColor: "#ff9500",
+      paddingVertical: 18,
+      paddingHorizontal: 24,
+      borderRadius: 16,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#ff9500",
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.3,
+      shadowRadius: 12,
+      elevation: 6,
+    },
+    welcomeStartButtonText: {
+      color: "white",
+      fontWeight: "700",
+      fontSize: 16,
+      marginLeft: 8,
+    },
+    welcomeSkipButton: {
+      backgroundColor: "#f3f4f6",
+      paddingVertical: 14,
+      paddingHorizontal: 24,
+      borderRadius: 12,
+      alignItems: "center",
+    },
+    welcomeSkipButtonText: {
+      color: "#6b7280",
+      fontWeight: "600",
+      fontSize: 16,
     },
   })
 }

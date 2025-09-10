@@ -3,41 +3,148 @@ import { Modal, ScrollView, Text, TouchableOpacity, StyleSheet, View } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { PanGestureHandler, State, GestureHandlerRootView } from 'react-native-gesture-handler';
 
-
-const privacyPolicyText = `
-Apps made available through the App Store are licensed, not sold, to you. Your license to each App is subject to your prior acceptance of either this Licensed Application End User License Agreement (“Standard EULA”), or a custom end user license agreement between you and the Application Provider (“Custom EULA”), if one is provided. Your license to any Apple App under this Standard EULA or Custom EULA is granted by Apple, and your license to any Third Party App under this Standard EULA or Custom EULA is granted by the Application Provider of that Third Party App. Any App that is subject to this Standard EULA is referred to herein as the “Licensed Application.” The Application Provider or Apple as applicable (“Licensor”) reserves all rights in and to the Licensed Application not expressly granted to you under this Standard EULA.
-
-a. Scope of License: Licensor grants to you a nontransferable license to use the Licensed Application on any Apple-branded products that you own or control and as permitted by the Usage Rules. The terms of this Standard EULA will govern any content, materials, or services accessible from or purchased within the Licensed Application as well as upgrades provided by Licensor that replace or supplement the original Licensed Application, unless such upgrade is accompanied by a Custom EULA. Except as provided in the Usage Rules, you may not distribute or make the Licensed Application available over a network where it could be used by multiple devices at the same time. You may not transfer, redistribute or sublicense the Licensed Application and, if you sell your Apple Device to a third party, you must remove the Licensed Application from the Apple Device before doing so. You may not copy (except as permitted by this license and the Usage Rules), reverse-engineer, disassemble, attempt to derive the source code of, modify, or create derivative works of the Licensed Application, any updates, or any part thereof (except as and only to the extent that any foregoing restriction is prohibited by applicable law or to the extent as may be permitted by the licensing terms governing use of any open-sourced components included with the Licensed Application).
-
-b. Consent to Use of Data: You agree that Licensor may collect and use technical data and related information—including but not limited to technical information about your device, system and application software, and peripherals—that is gathered periodically to facilitate the provision of software updates, product support, and other services to you (if any) related to the Licensed Application. Licensor may use this information, as long as it is in a form that does not personally identify you, to improve its products or to provide services or technologies to you.
-
-c. Termination. This Standard EULA is effective until terminated by you or Licensor. Your rights under this Standard EULA will terminate automatically if you fail to comply with any of its terms. 
-
-d. External Services. The Licensed Application may enable access to Licensor’s and/or third-party services and websites (collectively and individually, "External Services"). You agree to use the External Services at your sole risk. Licensor is not responsible for examining or evaluating the content or accuracy of any third-party External Services, and shall not be liable for any such third-party External Services. Data displayed by any Licensed Application or External Service, including but not limited to financial, medical and location information, is for general informational purposes only and is not guaranteed by Licensor or its agents. You will not use the External Services in any manner that is inconsistent with the terms of this Standard EULA or that infringes the intellectual property rights of Licensor or any third party. You agree not to use the External Services to harass, abuse, stalk, threaten or defame any person or entity, and that Licensor is not responsible for any such use. External Services may not be available in all languages or in your Home Country, and may not be appropriate or available for use in any particular location. To the extent you choose to use such External Services, you are solely responsible for compliance with any applicable laws. Licensor reserves the right to change, suspend, remove, disable or impose access restrictions or limits on any External Services at any time without notice or liability to you. 
-
-e. NO WARRANTY: YOU EXPRESSLY ACKNOWLEDGE AND AGREE THAT USE OF THE LICENSED APPLICATION IS AT YOUR SOLE RISK. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE LICENSED APPLICATION AND ANY SERVICES PERFORMED OR PROVIDED BY THE LICENSED APPLICATION ARE PROVIDED "AS IS" AND “AS AVAILABLE,” WITH ALL FAULTS AND WITHOUT WARRANTY OF ANY KIND, AND LICENSOR HEREBY DISCLAIMS ALL WARRANTIES AND CONDITIONS WITH RESPECT TO THE LICENSED APPLICATION AND ANY SERVICES, EITHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES AND/OR CONDITIONS OF MERCHANTABILITY, OF SATISFACTORY QUALITY, OF FITNESS FOR A PARTICULAR PURPOSE, OF ACCURACY, OF QUIET ENJOYMENT, AND OF NONINFRINGEMENT OF THIRD-PARTY RIGHTS. NO ORAL OR WRITTEN INFORMATION OR ADVICE GIVEN BY LICENSOR OR ITS AUTHORIZED REPRESENTATIVE SHALL CREATE A WARRANTY. SHOULD THE LICENSED APPLICATION OR SERVICES PROVE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES OR LIMITATIONS ON APPLICABLE STATUTORY RIGHTS OF A CONSUMER, SO THE ABOVE EXCLUSION AND LIMITATIONS MAY NOT APPLY TO YOU.
-
-f. Limitation of Liability. TO THE EXTENT NOT PROHIBITED BY LAW, IN NO EVENT SHALL LICENSOR BE LIABLE FOR PERSONAL INJURY OR ANY INCIDENTAL, SPECIAL, INDIRECT, OR CONSEQUENTIAL DAMAGES WHATSOEVER, INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF PROFITS, LOSS OF DATA, BUSINESS INTERRUPTION, OR ANY OTHER COMMERCIAL DAMAGES OR LOSSES, ARISING OUT OF OR RELATED TO YOUR USE OF OR INABILITY TO USE THE LICENSED APPLICATION, HOWEVER CAUSED, REGARDLESS OF THE THEORY OF LIABILITY (CONTRACT, TORT, OR OTHERWISE) AND EVEN IF LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. SOME JURISDICTIONS DO NOT ALLOW THE LIMITATION OF LIABILITY FOR PERSONAL INJURY, OR OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THIS LIMITATION MAY NOT APPLY TO YOU. In no event shall Licensor’s total liability to you for all damages (other than as may be required by applicable law in cases involving personal injury) exceed the amount of fifty dollars ($50.00). The foregoing limitations will apply even if the above stated remedy fails of its essential purpose.
-
-g. You may not use or otherwise export or re-export the Licensed Application except as authorized by United States law and the laws of the jurisdiction in which the Licensed Application was obtained. In particular, but without limitation, the Licensed Application may not be exported or re-exported (a) into any U.S.-embargoed countries or (b) to anyone on the U.S. Treasury Department's Specially Designated Nationals List or the U.S. Department of Commerce Denied Persons List or Entity List. By using the Licensed Application, you represent and warrant that you are not located in any such country or on any such list. You also agree that you will not use these products for any purposes prohibited by United States law, including, without limitation, the development, design, manufacture, or production of nuclear, missile, or chemical or biological weapons.
-
-h. The Licensed Application and related documentation are "Commercial Items", as that term is defined at 48 C.F.R. §2.101, consisting of "Commercial Computer Software" and "Commercial Computer Software Documentation", as such terms are used in 48 C.F.R. §12.212 or 48 C.F.R. §227.7202, as applicable. Consistent with 48 C.F.R. §12.212 or 48 C.F.R. §227.7202-1 through 227.7202-4, as applicable, the Commercial Computer Software and Commercial Computer Software Documentation are being licensed to U.S. Government end users (a) only as Commercial Items and (b) with only those rights as are granted to all other end users pursuant to the terms and conditions herein. Unpublished-rights reserved under the copyright laws of the United States.
-
-i. Except to the extent expressly provided in the following paragraph, this Agreement and the relationship between you and Apple shall be governed by the laws of the State of California, excluding its conflicts of law provisions. You and Apple agree to submit to the personal and exclusive jurisdiction of the courts located within the county of Santa Clara, California, to resolve any dispute or claim arising from this Agreement. If (a) you are not a U.S. citizen; (b) you do not reside in the U.S.; (c) you are not accessing the Service from the U.S.; and (d) you are a citizen of one of the countries identified below, you hereby agree that any dispute or claim arising from this Agreement shall be governed by the applicable law set forth below, without regard to any conflict of law provisions, and you hereby irrevocably submit to the non-exclusive jurisdiction of the courts located in the state, province or country identified below whose law governs:
-
-If you are a citizen of any European Union country or Switzerland, Norway or Iceland, the governing law and forum shall be the laws and courts of your usual place of residence.
-
-Specifically excluded from application to this Agreement is that law known as the United Nations Convention on the International Sale of Goods.
-
-
-
-Terms & policies Open Ai:
-https://openai.com/policies
-
-
-
-
-`;
+// Contenido de términos moderno y adaptado para VoiceList
+const termsData = {
+  header: {
+    title: "Terms of Service",
+    subtitle: "Last updated: September 2025"
+  },
+  sections: [
+    {
+      title: "Acceptance of Terms",
+      icon: "checkmark-circle",
+      color: "#2ecc71",
+      content: [
+        {
+          text: "By downloading, installing or using VoiceList, you agree to be bound by these Terms of Service. If you do not agree with these terms, please do not use the app."
+        }
+      ]
+    },
+    {
+      title: "License to Use",
+      icon: "document-text",
+      color: "#3498db",
+      content: [
+        {
+          subtitle: "✅ What you can do:",
+          text: "We grant you a limited, non-exclusive, non-transferable and revocable license to use VoiceList for your personal use on devices you control."
+        },
+        {
+          subtitle: "❌ What you cannot do:",
+          text: "• Copy, modify or distribute the app\n• Reverse engineer the app\n• Use the app for illegal purposes\n• Violate intellectual property rights"
+        }
+      ]
+    },
+    {
+      title: "Premium Subscriptions",
+      icon: "star",
+      color: "#ff6b35",
+      content: [
+        {
+          subtitle: "🌟 Premium Features:",
+          text: "Premium subscription unlocks unlimited voice lists, unlimited image analysis, advanced AI processing, and removes usage limits."
+        },
+        {
+          subtitle: "💳 Billing:",
+          text: "Subscriptions are billed through your app store. Payment is charged upon purchase confirmation."
+        },
+        {
+          subtitle: "🔄 Cancellation:",
+          text: "You can cancel your subscription anytime from your app store settings. Cancellation will be effective at the end of the current period."
+        }
+      ]
+    },
+    {
+      title: "AI Services",
+      icon: "mic",
+      color: "#9b59b6",
+      content: [
+        {
+          subtitle: "🤖 Voice Processing:",
+          text: "The voice recognition uses ChatGPT API. By using this feature, you understand that AI responses are generated automatically and may not always be accurate."
+        },
+        {
+          subtitle: "📸 Image Analysis:",
+          text: "Image processing uses AI to recognize shopping lists from photos. We are not responsible for decisions made based on AI responses."
+        }
+      ]
+    },
+    {
+      title: "User Responsibilities",
+      icon: "person",
+      color: "#e74c3c",
+      content: [
+        {
+          subtitle: "📱 You are responsible for:",
+          text: "• Maintaining the confidentiality of your device\n• All activity that occurs on your device\n• Making regular backups of your data\n• Using the app in accordance with applicable laws"
+        }
+      ]
+    },
+    {
+      title: "Prohibited Uses",
+      icon: "ban",
+      color: "#95a5a6",
+      content: [
+        {
+          subtitle: "🚫 You must not:",
+          text: "• Use the app for illegal or fraudulent activities\n• Attempt to hack or compromise app security\n• Use the app to track others without consent\n• Violate privacy or data protection laws"
+        }
+      ]
+    },
+    {
+      title: "Disclaimer",
+      icon: "warning",
+      color: "#f39c12",
+      content: [
+        {
+          subtitle: "⚠️ \"AS IS\" Provision:",
+          text: "THE APP IS PROVIDED \"AS IS\" WITHOUT WARRANTIES. We do not guarantee that the app will be uninterrupted, error-free or completely secure. You use the app at your own risk."
+        }
+      ]
+    },
+    {
+      title: "Limitation of Liability",
+      icon: "shield-checkmark",
+      color: "#e74c3c",
+      content: [
+        {
+          text: "We shall not be liable for indirect, incidental, special or consequential damages arising from the use or inability to use the app, even if we have been advised of the possibility of such damages."
+        }
+      ]
+    },
+    {
+      title: "Applicable Law",
+      icon: "library",
+      color: "#34495e",
+      content: [
+        {
+          text: "These terms shall be governed and interpreted in accordance with the laws of the European Union, without regard to its conflicts of legal provisions."
+        }
+      ]
+    },
+    {
+      title: "Changes to Terms",
+      icon: "refresh",
+      color: "#1abc9c",
+      content: [
+        {
+          text: "We reserve the right to modify these terms at any time. Changes will take effect immediately after publication in the app."
+        }
+      ]
+    },
+    {
+      title: "Contact",
+      icon: "mail",
+      color: "#95a5a6",
+      content: [
+        {
+          subtitle: "📧 Questions?",
+          text: "If you have questions about these Terms of Service, contact us at: info@lweb.ch"
+        }
+      ]
+    }
+  ]
+};
 
 const EulaModal = ({ visible, onClose }) => {
     return (
@@ -61,37 +168,47 @@ const EulaModal = ({ visible, onClose }) => {
             }}
         >
             <View style={styles.container}>
-                <TouchableOpacity 
-                    style={{ 
-                        alignSelf: 'center',
-                        marginTop: 10, 
-                        height: 30,
-                        justifyContent: 'center',
-                        zIndex: 2 
-                    }} 
-                    activeOpacity={1}
-                >
-                    <View 
-                        style={{
-                            height: 0, 
-                            width: 40, 
-                            backgroundColor: 'white', 
-                            borderRadius: 5,
-                            marginTop: 10
-                        }}
-                    />
+                {/* Handle bar */}
+                <View style={styles.handleBar} />
+                
+                {/* Close button */}
+                <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                    <Ionicons name="close" size={24} color="#6b7280" />
                 </TouchableOpacity>
-                <TouchableOpacity 
-                            style={styles.closeIcon}
-                            onPress={onClose}
-                        >
-                            <Ionicons name="close" size={30} color="white" />
-                        </TouchableOpacity>
-                <ScrollView contentContainerStyle={styles.modalContent}>
-                    <Text style={styles.title}>LICENSED APPLICATION END USER LICENSE AGREEMENT</Text>
-                    <Text style={styles.privacyPolicyText}>
-                        {privacyPolicyText}
-                    </Text>
+                
+                <ScrollView contentContainerStyle={styles.modalContent} showsVerticalScrollIndicator={false}>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <View style={styles.headerIconContainer}>
+                            <Ionicons name="document-text" size={32} color="#3498db" />
+                        </View>
+                        <Text style={styles.headerTitle}>{termsData.header.title}</Text>
+                        <Text style={styles.headerSubtitle}>{termsData.header.subtitle}</Text>
+                    </View>
+
+                    {/* Sections */}
+                    {termsData.sections.map((section, sectionIndex) => (
+                        <View key={sectionIndex} style={styles.section}>
+                            <View style={styles.sectionHeader}>
+                                <View style={[styles.sectionIcon, { backgroundColor: `${section.color}20` }]}>
+                                    <Ionicons name={section.icon} size={24} color={section.color} />
+                                </View>
+                                <Text style={[styles.sectionTitle, { color: section.color }]}>{section.title}</Text>
+                            </View>
+                            
+                            {section.content.map((content, contentIndex) => (
+                                <View key={contentIndex} style={styles.contentBlock}>
+                                    {content.subtitle && (
+                                        <Text style={styles.contentSubtitle}>{content.subtitle}</Text>
+                                    )}
+                                    <Text style={styles.contentText}>{content.text}</Text>
+                                </View>
+                            ))}
+                        </View>
+                    ))}
+                    
+                    {/* Bottom padding */}
+                    <View style={{ height: 40 }} />
                 </ScrollView>
             </View>
         </PanGestureHandler>
@@ -103,36 +220,108 @@ const EulaModal = ({ visible, onClose }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#f0f4ff', // Fondo azul muy suave
+        paddingTop: 30
+    },
+    handleBar: {
+        width: 40,
+        height: 4,
+        backgroundColor: '#e5e7eb',
+        borderRadius: 2,
+        alignSelf: 'center',
+        marginTop: 12,
+        marginBottom: 8
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 16,
+        right: 16,
+        zIndex: 10,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#333',
-        paddingTop:30
-        
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3
     },
     modalContent: {
         padding: 20,
-        paddingTop: 60,  // Agregado espacio adicional en la parte superior para evitar que el texto se superponga con el icono
+        paddingTop: 20
     },
-    title: {
-        fontSize: 24,
+    header: {
+        alignItems: 'center',
+        marginBottom: 24
+    },
+    headerIconContainer: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        backgroundColor: '#dbeafe', // Azul muy claro
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 12
+    },
+    headerTitle: {
+        fontSize: 26,
         fontWeight: 'bold',
-        marginBottom: 20,
-        color: '#06c2b0',
+        color: '#1e40af', // Azul oscuro
         textAlign: 'center',
+        marginBottom: 4
     },
-    closeIcon: {
-        position: 'absolute',
-        top: 10,
-        left: 10,
-        zIndex: 1,
-        marginTop: 40,
-        marginLeft: 10,
+    headerSubtitle: {
+        fontSize: 16,
+        color: '#6b7280',
+        textAlign: 'center',
+        fontStyle: 'italic'
     },
-    privacyPolicyText: {
-        color: 'white',  // Texto blanco
-        fontSize: 16,    // Tamaño del texto 16px
-
+    section: {
+        backgroundColor: 'white',
+        borderRadius: 16,
+        padding: 20,
+        marginBottom: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 4,
+        elevation: 2
     },
+    sectionHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 16
+    },
+    sectionIcon: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12
+    },
+    sectionTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        flex: 1
+    },
+    contentBlock: {
+        marginBottom: 16
+    },
+    contentSubtitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#1f2937',
+        marginBottom: 6
+    },
+    contentText: {
+        fontSize: 15,
+        color: '#4b5563',
+        lineHeight: 22
+    }
 });
 
 export default EulaModal;
