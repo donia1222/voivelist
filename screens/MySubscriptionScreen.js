@@ -190,9 +190,8 @@ const MySubscriptionScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.headerContainer}>
-   
           <View style={styles.badgeContainer}>
-            <Text style={styles.badgeText}> {texts.subscriptionActive}</Text>
+            <Text style={styles.badgeText}>✓ {texts.subscriptionActive}</Text>
           </View>
 
           <Image 
@@ -200,6 +199,10 @@ const MySubscriptionScreen = () => {
             style={styles.image} 
             resizeMode="contain"
           />
+          
+          <Text style={styles.welcomeText}>
+            {texts.welcomeMessage || 'Welcome to Premium!'}
+          </Text>
         </View>
 
         {subscriptionInfo ? (
@@ -245,20 +248,17 @@ const MySubscriptionScreen = () => {
           <TouchableOpacity onPress={handlePrivacyPress} style={styles.linkButton}>
             <Text style={styles.linkText}>Privacy Policy</Text>
           </TouchableOpacity>
-          <View style={styles.linkDivider} />
           
           <TouchableOpacity onPress={handleEULAPress} style={styles.linkButton}>
             <Text style={styles.linkText}>EULA</Text>
           </TouchableOpacity>
-          <View style={styles.linkDivider} />
           
           <TouchableOpacity onPress={handleGDPRPress} style={styles.linkButton}>
             <Text style={styles.linkText}>T&C</Text>
           </TouchableOpacity>
-          <View style={styles.linkDivider} />
           
-          <TouchableOpacity onPress={handleSupportPress} style={styles.linkButton}>
-            <Text style={styles.linkText}>Support</Text>
+          <TouchableOpacity onPress={handleSupportPress} style={[styles.linkButton, styles.supportButton]}>
+            <Text style={[styles.linkText, styles.supportButtonText]}>📧 Support</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -282,12 +282,12 @@ const MySubscriptionScreen = () => {
 const getStyles = (theme) => StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor:'#e7ead2',
+    backgroundColor: theme === 'dark' ? '#1a1a1a' : '#f8f9fa',
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingHorizontal: 24,
+    paddingVertical: 40,
     alignItems: 'center',
   },
   loadingContainer: {
@@ -297,7 +297,8 @@ const getStyles = (theme) => StyleSheet.create({
   },
   headerContainer: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 40,
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 28,
@@ -307,100 +308,134 @@ const getStyles = (theme) => StyleSheet.create({
     textAlign: 'center',
   },
   badgeContainer: {
-    backgroundColor: theme.buttonBackground,
-    paddingHorizontal: 15,
-    paddingVertical: 6,
-    borderRadius: 20,
-    marginBottom: 20,
+    backgroundColor: 'rgba(34, 197, 94, 0.3)',
+    borderWidth: 1,
+    borderColor: 'rgba(34, 197, 94, 0.5)',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 25,
+    marginBottom: 24,
+    shadowColor: 'rgba(34, 197, 94, 0.3)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   badgeText: {
-    color: '#FFFFFF',
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 14,
+    color: '#16a34a',
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    fontWeight: '700',
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
+    marginBottom: 16,
+  },
+  welcomeText: {
+    fontSize: 20,
+    fontFamily: 'Poppins-SemiBold',
+    color: theme === 'dark' ? '#ffffff' : '#1f2937',
+    textAlign: 'center',
+    marginTop: 8,
+    fontWeight: '600',
   },
   infoContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 16,
-    padding: 24,
+    backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff',
+    borderRadius: 20,
+    padding: 28,
     width: '100%',
-    marginBottom: 24,
+    marginBottom: 32,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: theme === 'dark' ? 0.3 : 0.15,
+    shadowRadius: 16,
+    elevation: 8,
+    borderWidth: theme === 'dark' ? 1 : 0,
+    borderColor: theme === 'dark' ? '#3a3a3a' : 'transparent',
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 12,
+    paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, 0.05)',
+    borderBottomColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)',
   },
   infoLabel: {
     fontSize: 16,
     fontFamily: 'Poppins-Medium',
-    color: theme.text,
-    opacity: 0.7,
+    color: theme === 'dark' ? '#a0a0a0' : '#6b7280',
+    fontWeight: '500',
   },
   infoValue: {
     fontSize: 16,
-    fontFamily: 'Poppins-Regular',
-    color: theme.text,
+    fontFamily: 'Poppins-SemiBold',
+    color: theme === 'dark' ? '#ffffff' : '#1f2937',
     textAlign: 'right',
     flex: 1,
-    marginLeft: 10,
+    marginLeft: 12,
+    fontWeight: '600',
   },
   noSubscriptionContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 16,
-    padding: 24,
+    backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff',
+    borderRadius: 20,
+    padding: 32,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 32,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 6,
+    borderWidth: theme === 'dark' ? 1 : 0,
+    borderColor: theme === 'dark' ? '#3a3a3a' : 'transparent',
   },
   noSubscriptionText: {
-    fontSize: 16,
-    fontFamily: 'Poppins-Regular',
-    color: theme.text,
+    fontSize: 18,
+    fontFamily: 'Poppins-Medium',
+    color: theme === 'dark' ? '#a0a0a0' : '#6b7280',
     textAlign: 'center',
+    lineHeight: 24,
   },
   footerText: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: 'Poppins-Regular',
-    color: 'rgba(88, 88, 88, 0.8)',
+    color: theme === 'dark' ? '#808080' : '#6b7280',
     textAlign: 'center',
-    marginVertical: 20,
-    lineHeight: 20,
+    marginVertical: 24,
+    lineHeight: 22,
+    paddingHorizontal: 16,
   },
   linksContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-    flexWrap: 'wrap',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    marginTop: 24,
+    paddingHorizontal: 16,
+    gap: 12,
   },
   linkButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    backgroundColor: theme === 'dark' ? 'rgba(79, 70, 229, 0.2)' : 'rgba(79, 70, 229, 0.1)',
+    borderWidth: 1,
+    borderColor: theme === 'dark' ? 'rgba(79, 70, 229, 0.3)' : 'rgba(79, 70, 229, 0.2)',
   },
   linkText: {
-    fontSize: 14,
-    fontFamily: 'Poppins-Medium',
-    color: theme.buttonBackground,
+    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
+    color: '#4f46e5',
     textAlign: 'center',
+    fontWeight: '600',
   },
-  linkDivider: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: 'rgba(88, 88, 88, 0.5)',
+  supportButton: {
+    backgroundColor: theme === 'dark' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(34, 197, 94, 0.1)',
+    borderColor: theme === 'dark' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(34, 197, 94, 0.2)',
+    marginTop: 8,
+  },
+  supportButtonText: {
+    color: '#16a34a',
   },
 });
 

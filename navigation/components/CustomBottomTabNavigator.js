@@ -15,6 +15,7 @@ import {
 import { Ionicons } from "@expo/vector-icons"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { useTheme } from "../../ThemeContext"
+import { useRecording } from "../../RecordingContext"
 import * as RNLocalize from "react-native-localize"
 import { translations } from "../../translations"
 import texts from "../../screens/translations/texts"
@@ -125,11 +126,13 @@ const getMenuItemDescription = (icon) => {
 
 function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home" }) {
   const { theme } = useTheme()
+  const { isRecording } = useRecording()
   const currentTranslations = getCurrentTranslations()
   const menuTexts = getMenuTexts()
   const modernStyles = getModernStyles()
   const [activeTab, setActiveTab] = useState(initialTab)
   const [isMenuModalVisible, setMenuModalVisible] = useState(false)
+  const iconScaleAnim = useRef(new Animated.Value(1)).current
   
   // Get current language labels for success modal
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
@@ -139,6 +142,38 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   useEffect(() => {
     console.log("Menu modal visible:", isMenuModalVisible)
   }, [isMenuModalVisible])
+
+  // Animate icon when recording
+  useEffect(() => {
+    if (isRecording) {
+      // Continuous pulse animation
+      const pulseAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(iconScaleAnim, {
+            toValue: 1.2,
+            duration: 800,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+          Animated.timing(iconScaleAnim, {
+            toValue: 1,
+            duration: 800,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+        ])
+      )
+      pulseAnimation.start()
+      return () => pulseAnimation.stop()
+    } else {
+      Animated.timing(iconScaleAnim, {
+        toValue: 1,
+        duration: 300,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      }).start()
+    }
+  }, [isRecording])
 
   // Monitorear lista activa
   useEffect(() => {
@@ -662,10 +697,12 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             }}
           >
             {activeTab === "Home" ? (
-              <Image
-                source={require("../../assets/images/icono34.png")}
-                style={{ width: 24, height: 24 }}
-              />
+              <Animated.View style={{ transform: [{ scale: iconScaleAnim }] }}>
+                <Image
+                  source={require("../../assets/images/icono34.png")}
+                  style={{ width: 30, height: 30 }}
+                />
+              </Animated.View>
             ) : (
               <Ionicons 
                 name={activeTab === "Images" ? "image" : 

@@ -386,23 +386,86 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
   },
 
   subscribedContainer: {
-    backgroundColor: 'rgba(241, 196, 15, 0.2)',
-    paddingVertical: isTablet ? 22 : 20,
-    paddingHorizontal: isTablet ? 45 : 35,
-    borderRadius: 30,
+    backgroundColor: 'rgba(46, 213, 115, 0.1)',
+    paddingVertical: isTablet ? 28 : 24,
+    paddingHorizontal: isTablet ? 50 : 40,
+    borderRadius: 20,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 25,
     borderWidth: 2,
-    borderColor: '#f1c40f',
+    borderColor: 'rgba(46, 213, 115, 0.4)',
+    shadowColor: '#2ed573',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 12,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+
+  subscribedBadge: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    backgroundColor: '#2ed573',
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#2ed573',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
 
   subscribedText: {
-    color: '#f39c12',
-    fontSize: isTablet ? 18 : 16,
+    color: '#2ed573',
+    fontSize: isTablet ? 20 : 18,
     fontWeight: '800',
     textAlign: 'center',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    textShadowColor: 'rgba(46, 213, 115, 0.3)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+  },
+
+  subscribedSubtext: {
+    color: '#00cec9',
+    fontSize: isTablet ? 15 : 13,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: 8,
+    opacity: 0.8,
     letterSpacing: 0.5,
+  },
+
+  premiumFeatures: {
+    marginTop: 20,
+    width: '100%',
+  },
+
+  premiumFeatureRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 12,
+    marginVertical: 4,
+    borderLeftWidth: 3,
+    borderLeftColor: '#2ed573',
+  },
+
+  premiumFeatureText: {
+    color: theme?.text || '#2c3e50',
+    fontSize: isTablet ? 16 : 14,
+    fontWeight: '600',
+    marginLeft: 12,
+    flex: 1,
   },
 
   loaderContainer: {
@@ -719,15 +782,77 @@ export default function Suscribe({ onClose }) {
           }
         ]}>
           {isSubscribed ? (
-            <TouchableOpacity 
-              style={styles.subscribedContainer}
-              onPress={() => RNRestart.Restart()}
-              activeOpacity={0.8}
-            >
+            <View style={styles.subscribedContainer}>
+              {/* Badge de suscripción premium */}
+              <View style={styles.subscribedBadge}>
+                <Ionicons name="checkmark" size={14} color="white" />
+              </View>
+              
+              {/* Icono premium principal */}
+              <View style={{ marginBottom: 12 }}>
+                <Ionicons name="diamond" size={32} color="#2ed573" />
+              </View>
+              
+              {/* Texto principal */}
               <Text style={styles.subscribedText}>
-                {accessButtonTextTranslations[systemLanguage] || accessButtonTextTranslations['en']}
+                Premium Active
               </Text>
-            </TouchableOpacity>
+              <Text style={styles.subscribedSubtext}>
+                Enjoy unlimited features
+              </Text>
+              
+              {/* Lista de características premium desbloqueadas */}
+              <View style={styles.premiumFeatures}>
+                <View style={styles.premiumFeatureRow}>
+                  <Ionicons name="infinite" size={18} color="#2ed573" />
+                  <Text style={styles.premiumFeatureText}>Unlimited voice recordings</Text>
+                </View>
+                <View style={styles.premiumFeatureRow}>
+                  <Ionicons name="eye" size={18} color="#00cec9" />
+                  <Text style={styles.premiumFeatureText}>AI Image Analysis</Text>
+                </View>
+                <View style={styles.premiumFeatureRow}>
+                  <Ionicons name="calculator" size={18} color="#fd79a8" />
+                  <Text style={styles.premiumFeatureText}>Price Estimation</Text>
+                </View>
+                <View style={styles.premiumFeatureRow}>
+                  <Ionicons name="restaurant" size={18} color="#fdcb6e" />
+                  <Text style={styles.premiumFeatureText}>Recipe Suggestions</Text>
+                </View>
+              </View>
+              
+              {/* Botón principal para continuar usando la app */}
+              <TouchableOpacity 
+                onPress={() => RNRestart.Restart()}
+                style={{
+                  backgroundColor: '#2ed573',
+                  paddingVertical: isTablet ? 16 : 14,
+                  paddingHorizontal: isTablet ? 40 : 35,
+                  borderRadius: 25,
+                  marginTop: 20,
+                  width: '100%',
+                  alignItems: 'center',
+                  shadowColor: '#2ed573',
+                  shadowOffset: { width: 0, height: 6 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 12,
+                  elevation: 8,
+                }}
+                activeOpacity={0.8}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="arrow-forward" size={20} color="white" style={{ marginRight: 8 }} />
+                  <Text style={{
+                    color: 'white',
+                    fontSize: isTablet ? 18 : 16,
+                    fontWeight: '800',
+                    letterSpacing: 0.5,
+                  }}>
+                    {accessButtonTextTranslations[systemLanguage] || accessButtonTextTranslations['en']}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           ) : (
             offerings && offerings.availablePackages.map((pkg, index) => (
               <TouchableOpacity

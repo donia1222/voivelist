@@ -102,7 +102,7 @@ const getModernStyles = (theme) => StyleSheet.create({
   historyCard: {
     width: width - 32,
 marginBottom:-0,
-    backgroundColor: "#fdffefb3",
+    backgroundColor: "#ffffffa7",
     borderRadius: 24,
     marginHorizontal: 16,
     marginVertical: 12,

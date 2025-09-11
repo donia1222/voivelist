@@ -29,6 +29,8 @@ import { useRoute } from "@react-navigation/native"
 import Purchases from "react-native-purchases"
 import prompts from "./translations/prompts"
 import { useTheme } from "../ThemeContext"
+import { useRecording } from "../RecordingContext"
+import { useHaptic } from "../HapticContext"
 import getStyles from "./Styles/HomeScreenStyles"
 import texts from "./translations/texts"
 import getModernStyles from "./Styles/HomeScreenModernStyles"
@@ -51,6 +53,7 @@ const screenHeight = Dimensions.get("window").height
 const API_KEY_ANALIZE = process.env.API_KEY_ANALIZE
 const API_KEY_CHAT = process.env.API_KEY_CHAT
 const screenWidth = Dimensions.get("window").width
+
 
 // Mini loader component for bubble loading
 const BubbleLoader = () => {
@@ -345,6 +348,8 @@ const analyzeTextRealTime = async (text) => {
 
 const HomeScreen = ({ navigation }) => {
   const { theme } = useTheme()
+  const { setIsRecording } = useRecording()
+  const { triggerHaptic } = useHaptic()
   const styles = getStyles(theme)
   const route = useRoute()
   const prompt = route.params?.prompt
@@ -905,6 +910,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
   const onSpeechStart = () => {
     setStarted(true)
+    setIsRecording(true)
     setShowEmptyListText(false)
     setShowWelcomeMessage(false)
     setShowResults(false)
@@ -1066,7 +1072,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
                   }
                 ]}
               >
-                <Ionicons name="pause" size={20} color="white" />
+                <Ionicons name="stop" size={20} color="white" />
               </Animated.View>
             </TouchableOpacity>
           </View>
@@ -1101,8 +1107,10 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
     if (started) {
       try {
+        triggerHaptic('light')
         await Voice.stop()
         setStarted(false)
+        setIsRecording(false)
         setShowEmptyListText(true)
         setHighlightedWords([]) // Limpiar palabras resaltadas
         setShowBubbleLoader(false) // Ocultar loader
@@ -1141,6 +1149,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       }
 
       try {
+        triggerHaptic('light')
         await Voice.start(recognitionLanguage)
         setRecognized("")
         setResults([])
@@ -1159,6 +1168,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
   const stopRecognizing = async () => {
     try {
+      triggerHaptic('light')
       setLoading(true)
       setShowCreatingMessage(false)
 
@@ -1170,6 +1180,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       setTimeout(async () => {
         await Voice.stop()
         setStarted(false)
+        setIsRecording(false)
 
         if (results.length === 0) {
           setShowEmptyListText(true)
@@ -1558,7 +1569,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
               >
                 <View style={modernStyles.micIconContainer}>
                   {started ? (
-                    <Ionicons name="pause" size={30} color="white" />
+                    <Ionicons name="stop" size={30} color="white" />
                   ) : (
                     <Ionicons name="mic" size={32} color="white" />
                   )}

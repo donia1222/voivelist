@@ -25,6 +25,7 @@ import * as RNLocalize from "react-native-localize"
 import { useNavigation, useRoute } from "@react-navigation/native"
 import Purchases from "react-native-purchases"
 import { useTheme } from "../ThemeContext"
+import { useHaptic } from "../HapticContext"
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 import texts from "./translations/texts"
 import RNFS from "react-native-fs"
@@ -395,6 +396,7 @@ const uiTexts = {
 
 const ImageListScreen = ({ route }) => {
   const { theme } = useTheme()
+  const { triggerHaptic } = useHaptic()
   const navigation = useNavigation()
   const initialList = route.params?.initialList
   const subscriptionFromNav = route.params?.isSubscribed
@@ -984,7 +986,10 @@ const ImageListScreen = ({ route }) => {
             { transform: [{ scale: pulseRingInner }] }
           ]} />
           
-          <TouchableOpacity style={modernStyles.mainActionButton} onPress={() => setImageModalVisible(true)}>
+          <TouchableOpacity style={modernStyles.mainActionButton} onPress={() => {
+            triggerHaptic('light')
+            setImageModalVisible(true)
+          }}>
             <Animated.View style={[modernStyles.buttonContent, { transform: [{ scale: pulseAnim }] }]}>
               <Ionicons name="cloud-upload-outline" size={24} color="#fff" />
             </Animated.View>

@@ -460,6 +460,7 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
       fontWeight: 'bold',
       color: theme.text,
       marginLeft: 15,
+
     },
     content: {
       flex: 1,
@@ -471,10 +472,11 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
       fontWeight: '600',
       color: theme.text,
       marginBottom: 15,
+      marginLeft:15,
+    
     },
     listContainer: {
       flex: 1,
-      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#f9f9f9',
       borderRadius: 15,
       padding: 10,
     },
