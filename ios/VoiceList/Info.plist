@@ -36,6 +36,12 @@
 				<string>exp+voicelist</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>voicelist</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
@@ -62,6 +68,10 @@
 	<string>We need access to the photo library to analyze and create your list</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>It is needed to quickly add items to your shopping list using voice commands.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Voice Grocery needs access to your calendar to create shopping events and reminders. This helps you plan your grocery shopping and get notified when it's time to shop.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Voice Grocery needs access to your reminders to create shopping notifications and alerts for your planned grocery trips.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Poppins-Black.ttf</string>

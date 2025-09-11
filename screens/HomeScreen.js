@@ -44,6 +44,7 @@ import {
 } from "./translations/homeScreenTranslations"
 import Sound from "react-native-sound"
 import DeviceService from "../services/DeviceService"
+import WidgetService from "../services/WidgetService"
 
 Sound.setCategory("Playback")
 const screenHeight = Dimensions.get("window").height
@@ -365,7 +366,7 @@ const HomeScreen = ({ navigation }) => {
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const currentLabels = texts[deviceLanguage] || texts["en"]
   const voiceTexts = voiceInfoTexts[deviceLanguage] || voiceInfoTexts["en"]
-  const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(null)
   const [pressCount, setPressCount] = useState(0)
   const [voiceLimitModalVisible, setVoiceLimitModalVisible] = useState(false)
   const [deviceVoiceCount, setDeviceVoiceCount] = useState(0)
@@ -462,6 +463,33 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
     updateAppOpenCount()
   }, [])
+
+  // Handle deep links from widget
+  useEffect(() => {
+    const handleDeepLink = (url) => {
+      if (!url) return
+      
+      if (url.url?.includes('voicelist://create')) {
+        // Start voice recording when opened from widget
+        startRecording()
+      } else if (url.url?.includes('voicelist://favorites')) {
+        // Navigate to favorites/history screen
+        navigation.navigate('History')
+      }
+    }
+
+    // Handle initial URL when app is opened
+    Linking.getInitialURL().then(url => {
+      if (url) handleDeepLink({ url })
+    })
+
+    // Listen for URL changes while app is open
+    const subscription = Linking.addEventListener('url', handleDeepLink)
+
+    return () => {
+      subscription?.remove()
+    }
+  }, [navigation])
 
   const handleRateApp = async () => {
     const url = Platform.select({
@@ -722,7 +750,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const handleSaveCountry = async () => {
     if (!isCountryEmpty) {
       try {
-        if (!isSubscribed) {
+        if (isSubscribed === false) {
           Alert.alert("Subscription Required", "You must be subscribed to calculate the estimated cost.", [
             {
               text: "Subscribe",
@@ -1084,7 +1112,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       }
     } else {
       // Verificar límite de uso antes de comenzar la grabación
-      if (!isSubscribed) {
+      if (isSubscribed === false) {
         const usage = await DeviceService.canUseVoiceFeature(false)
         
         if (!usage.canUse) {
@@ -1240,15 +1268,6 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   }
 
   const renderItem = ({ item, index }) => {
-    if (item === currentLabels.costdelalista) {
-      return (
-        <TouchableOpacity onPress={() => setCountryModalVisible(true)}>
-          <View style={modernStyles.costButtonContaineriumage}>
-            <Text style={modernStyles.costButtonText}>{estimatedCost || item}</Text>
-          </View>
-        </TouchableOpacity>
-      )
-    }
 
     if (index === shoppingList.length) {
       return (
@@ -1447,7 +1466,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       return (
         <View style={modernStyles.voiceButtonContainer}>
           {/* Informative text for non-subscribed users */}
-          {!isSubscribed && (
+          {isSubscribed === false && (
             <TouchableOpacity 
               style={modernStyles.voiceInfoContainer}
               onPress={() => {
@@ -1674,23 +1693,8 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       {!loading && showResults && (
         <FlatList
           ref={flatListRef}
-          data={shoppingList.length > 0 ? [...shoppingList, currentLabels.costdelalista] : []}
+          data={shoppingList.length > 0 ? [...shoppingList] : []}
           renderItem={({ item, index }) => {
-            if (item === currentLabels.costdelalista) {
-              console.log("Rendering cost button - estimatedCost:", estimatedCost)
-              console.log("Rendering cost button - item:", item)
-              return (
-                <TouchableOpacity onPress={() => setCountryModalVisible(true)} style={modernStyles.costButtonWrapper}>
-                  <View style={modernStyles.costButton}>
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-
-                      <Text style={modernStyles.costButtonText}>{estimatedCost}</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              )
-            }
-
             if (index === shoppingList.length) {
               return (
                 <TouchableOpacity onPress={() => addNewItem()} style={modernStyles.addItemWrapper}>
@@ -1831,7 +1835,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
               <Text style={modernStyles.countryModalSubtitle}>{currentLabels.cityNamePlaceholder}</Text>
             </View>
 
-            {!isSubscribed && (
+            {isSubscribed === false && (
               <View style={modernStyles.subscriptionBanner}>
                 <Ionicons name="lock-closed-outline" size={20} color="#e91e63" style={{ marginRight: 6 }} />
                 <Text style={modernStyles.subscriptionBannerText}>Subscription Required</Text>

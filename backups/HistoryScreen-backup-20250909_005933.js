@@ -18,6 +18,7 @@ import {
   Easing,
   StyleSheet,
   Share,
+  KeyboardAvoidingView,
 } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -31,6 +32,7 @@ import DateTimePicker from "@react-native-community/datetimepicker"
 import { launchImageLibrary } from "react-native-image-picker"
 import { request, PERMISSIONS, RESULTS } from "react-native-permissions"
 import PushNotification from "react-native-push-notification"
+import WidgetService from "../services/WidgetService"
 
 const screenWidth = Dimensions.get("window").width
 const { width, height } = Dimensions.get("window")
@@ -68,6 +70,8 @@ const HistoryScreen = ({ navigation }) => {
   const currentLabels = translationsHistorial[deviceLanguage] || translationsHistorial["en"]
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedListIndex, setSelectedListIndex] = useState(0)
+  const [actionsModalVisible, setActionsModalVisible] = useState(false)
+  const [selectedItemIndex, setSelectedItemIndex] = useState(0)
   const thumbnailListRef = useRef(null)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -105,6 +109,11 @@ const HistoryScreen = ({ navigation }) => {
   const [expandedLists, setExpandedLists] = useState({})
   const [expandedModalVisible, setExpandedModalVisible] = useState(false)
   const [expandedListData, setExpandedListData] = useState({ list: [], name: '', index: null })
+  const [editingItemIndex, setEditingItemIndex] = useState(null)
+  const [editingListIndex, setEditingListIndex] = useState(null)
+  const [editingItemText, setEditingItemText] = useState("")
+  const [lastTap, setLastTap] = useState(null)
+  const expandedScrollViewRef = useRef(null)
 
   // Configurar notificaciones push
   useEffect(() => {
@@ -195,6 +204,135 @@ const HistoryScreen = ({ navigation }) => {
     if (favorites4.includes(index)) return "hardware"
     if (favorites5.includes(index)) return "gifts"
     return null
+  }
+
+  // Función para obtener el nombre traducido de la categoría
+  const getCategoryDisplayName = (index) => {
+    const category = getFavoriteCategory(index)
+    if (!category) return null
+    return favoriteTitles[category] || currentLabels[category]
+  }
+
+  // Función para manejar doble toque en items de lista
+  const handleDoubleTap = (listIndex, itemIndex, itemText) => {
+    const now = Date.now()
+    const DOUBLE_PRESS_DELAY = 400
+    
+    if (lastTap && (now - lastTap) < DOUBLE_PRESS_DELAY) {
+      // Es un doble toque - editar
+      setEditingListIndex(listIndex)
+      setEditingItemIndex(itemIndex)
+      setEditingItemText(itemText)
+      setLastTap(null) // Clear to avoid triple tap issues
+    } else {
+      // Primer toque - marcar como completado después de un pequeño delay
+      setTimeout(() => {
+        // Solo marcar como completado si no hubo un segundo tap
+        if (!lastTap || (Date.now() - lastTap) >= DOUBLE_PRESS_DELAY) {
+          toggleItemCompletion(listIndex, itemIndex)
+        }
+      }, DOUBLE_PRESS_DELAY)
+    }
+    setLastTap(now)
+  }
+
+  // Función para guardar la edición del item
+  const saveItemEdit = async () => {
+    if (editingListIndex !== null && editingItemIndex !== null) {
+      const newHistory = [...history]
+      newHistory[editingListIndex].list[editingItemIndex] = editingItemText
+      
+      // Si estamos en el modal expandido, actualizar también sus datos
+      if (expandedListData.index === editingListIndex) {
+        setExpandedListData({
+          ...expandedListData,
+          list: newHistory[editingListIndex].list
+        })
+      }
+      
+      await saveHistory(newHistory)
+      
+      // Limpiar estados de edición
+      setEditingListIndex(null)
+      setEditingItemIndex(null)
+      setEditingItemText("")
+    }
+  }
+
+  // Función para cancelar la edición
+  const cancelItemEdit = () => {
+    setEditingListIndex(null)
+    setEditingItemIndex(null)
+    setEditingItemText("")
+  }
+
+  // Función para eliminar un item de la lista
+  const deleteListItem = async (listIndex, itemIndex) => {
+    const newHistory = [...history]
+    newHistory[listIndex].list.splice(itemIndex, 1)
+    
+    // Actualizar datos del modal expandido si estamos en él
+    if (expandedListData.index === listIndex) {
+      setExpandedListData({
+        ...expandedListData,
+        list: newHistory[listIndex].list
+      })
+    }
+    
+    // Actualizar estados de items completados
+    const newCompletedItems = { ...completedItems }
+    if (newCompletedItems[listIndex]) {
+      // Remover el item eliminado de completados
+      newCompletedItems[listIndex] = newCompletedItems[listIndex].filter(index => index !== itemIndex)
+      // Ajustar indices de items que estaban después del eliminado
+      newCompletedItems[listIndex] = newCompletedItems[listIndex].map(index => 
+        index > itemIndex ? index - 1 : index
+      )
+    }
+    setCompletedItems(newCompletedItems)
+    saveCompletedItems(newCompletedItems)
+    
+    await saveHistory(newHistory)
+    
+    // Limpiar estados de edición si estamos editando el item eliminado
+    if (editingListIndex === listIndex && editingItemIndex === itemIndex) {
+      cancelItemEdit()
+    }
+  }
+
+  // Función para agregar un nuevo item a la lista expandida
+  const addNewItemToExpandedList = async () => {
+    if (expandedListData.index !== null) {
+      const newHistory = [...history]
+      const newItemIndex = newHistory[expandedListData.index].list.length
+      newHistory[expandedListData.index].list.push("")
+      
+      // Actualizar los datos del modal expandido ANTES de guardar
+      const updatedExpandedData = {
+        ...expandedListData,
+        list: newHistory[expandedListData.index].list
+      }
+      setExpandedListData(updatedExpandedData)
+      
+      // Asegurar que el nuevo item NO esté marcado como completado
+      const newCompletedItems = { ...completedItems }
+      if (newCompletedItems[expandedListData.index]) {
+        // Remover el índice del nuevo item de completados si existe
+        newCompletedItems[expandedListData.index] = newCompletedItems[expandedListData.index].filter(
+          index => index !== newItemIndex
+        )
+      }
+      setCompletedItems(newCompletedItems)
+      saveCompletedItems(newCompletedItems)
+      
+      // Guardar en storage
+      await saveHistory(newHistory)
+      
+      // Comenzar a editar el nuevo item
+      setEditingListIndex(expandedListData.index)
+      setEditingItemIndex(newItemIndex)
+      setEditingItemText("")
+    }
   }
 
   // Función para remover de favoritos
@@ -527,6 +665,21 @@ const HistoryScreen = ({ navigation }) => {
   const saveFavorites = async (newFavorites, key) => {
     try {
       await AsyncStorage.setItem(key, JSON.stringify(newFavorites))
+      
+      // Sync favorites with widget
+      if (key === "@favorites1" && newFavorites.length > 0) {
+        const favoriteItems = []
+        for (const index of newFavorites) {
+          if (history[index] && history[index].list) {
+            // Add first few items from the favorite list
+            const items = history[index].list.slice(0, 5).map(item => 
+              typeof item === 'string' ? item : item.text || item.name || String(item)
+            )
+            favoriteItems.push(...items)
+          }
+        }
+        await WidgetService.updateWidgetFavorites(favoriteItems.slice(0, 10))
+      }
     } catch (e) {
       console.error("Error saving favorites: ", e)
     }
@@ -807,13 +960,38 @@ const HistoryScreen = ({ navigation }) => {
         </ScrollView>
 
         <View style={modernStyles.favoriteItemActions}>
-
+          <TouchableOpacity
+            onPress={() => {
+              // First set up the expanded list data
+              setExpandedListData({
+                list: historyItem.list,
+                name: historyItem.name,
+                index: historyIndex
+              })
+              
+              // Close the current favorites modal based on which one is open
+              if (favoritesModalVisible1) setFavoritesModalVisible1(false)
+              if (favoritesModalVisible2) setFavoritesModalVisible2(false)
+              if (favoritesModalVisible3) setFavoritesModalVisible3(false)
+              if (favoritesModalVisible4) setFavoritesModalVisible4(false)
+              if (favoritesModalVisible5) setFavoritesModalVisible5(false)
+              
+              // Use a small delay to ensure the favorites modal closes first
+              setTimeout(() => {
+                setExpandedModalVisible(true)
+              }, 200)
+            }}
+            style={modernStyles.favoriteActionButton}
+          >
+            <Ionicons name="expand-outline" size={18} color="#2d3748" />
+            <Text style={modernStyles.favoriteActionText}>{currentLabels.expand}</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => shareShoppingList(historyItem.list)}
             style={modernStyles.favoriteActionButton}
           >
-            <Ionicons name="share-outline" size={18} color="#ffffff" />
+            <Ionicons name="share-outline" size={18} color="#2d3748" />
             <Text style={modernStyles.favoriteActionText}>{currentLabels.share}</Text>
           </TouchableOpacity>
         </View>
@@ -865,7 +1043,9 @@ const HistoryScreen = ({ navigation }) => {
 
   const renderHistoryItem = ({ item, index }) => (
     <View style={modernStyles.historyCard}>
+      
       <View style={modernStyles.cardHeader}>
+        
         {!favoritesModalVisible && editingIndex === index ? (
           <View style={modernStyles.editingContainer}>
             <TextInput
@@ -893,8 +1073,17 @@ const HistoryScreen = ({ navigation }) => {
           </View>
         ) : (
           <View style={modernStyles.titleContainer}>
+            
             <Text style={modernStyles.cardTitle}>{item.name}</Text>
-  
+         <TouchableOpacity
+              onPress={() => {
+                setSelectedItemIndex(index)
+                setActionsModalVisible(true)
+              }}
+              style={modernStyles.menuButton}
+            >
+              <Ionicons name="add-outline" size={26} color="#32945bff" />
+            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -904,90 +1093,15 @@ const HistoryScreen = ({ navigation }) => {
         !favoritesModalVisible3 &&
         !favoritesModalVisible4 &&
         !favoritesModalVisible5 && (
-          <View style={modernStyles.actionButtonsContainer}>
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={modernStyles.actionButtonsRow}
-            >
-              <TouchableOpacity
-                onPress={() => confirmRemoveListFromHistory(index)}
-                style={[modernStyles.actionButton, modernStyles.deleteButton]}
-              >
-                <Ionicons name="trash-outline" size={18} color="#374151" />
-              </TouchableOpacity>
-          <View style={modernStyles.titleActions}>
-              {isItemInFavorites(index) && (
-                <TouchableOpacity onPress={() => removeFromFavorites(index)} style={modernStyles.favoriteIndicator}>
-                  <Ionicons name="heart" size={24} color="#6b7280" />
-                </TouchableOpacity>
-              )}
-              {!favoritesModalVisible1 &&
-                !favoritesModalVisible2 &&
-                !favoritesModalVisible3 &&
-                !favoritesModalVisible4 &&
-                !favoritesModalVisible5 &&
-                screenWidth > 380 && (
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      setEditingIndex(index)
-                      setEditingText(item.name)
-                    }}
-                     style={[modernStyles.actionButton, modernStyles.printButton]}
-                  >
-                    <Ionicons name="pencil" size={22} color="#6b7280" />
-                  </TouchableOpacity>
-                )}
-            </View>
-              {!isItemInFavorites(index) && (
-                <TouchableOpacity
-                  onPress={() => openFavoriteModal(index)}
-                  style={[modernStyles.actionButton, modernStyles.printButton]}
-                >
-                  <Ionicons name="heart-outline" size={18} color="#ef4444" />
-                </TouchableOpacity>
-              )}
-
-              <TouchableOpacity
-                onPress={() => shareShoppingList(item.list)}
-                style={[modernStyles.actionButton, modernStyles.shareButton]}
-              >
-                <Ionicons name="share-outline" size={18} color="#22c55e" />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => openModal(index)}
-                style={[modernStyles.actionButton, modernStyles.addButton]}
-              >
-                <Ionicons name="add" size={20} color="#fb923c" />
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                onPress={() => openReminderModal(index)}
-                style={[modernStyles.actionButton, modernStyles.reminderButton]}
-              >
-                <Ionicons name="notifications-outline" size={18} color="#a855f7" />
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                onPress={() => openExpandedListModal(index)}
-                style={[modernStyles.actionButton, modernStyles.expandButton]}
-              >
-                <Ionicons 
-                  name="expand-outline" 
-                  size={18} 
-                  color="#6b7280" 
-                />
-              </TouchableOpacity>
-            </ScrollView>
+          <View style={modernStyles.singleMenuButtonContainer}>
+     
           </View>
         )}
 
       {reminders[index] && !isReminderPassed(reminders[index].date || reminders[index]) && (
         <View style={modernStyles.reminderContainer}>
           <View style={modernStyles.reminderIcon}>
-            <Ionicons name="notifications" size={16} color="#fef8e7" />
+            <Ionicons name="notifications" size={18} color="#92400e" />
           </View>
           <Text style={modernStyles.reminderText}>
             {new Date(reminders[index].date || reminders[index]).toLocaleDateString()} {currentLabels.time}:{" "}
@@ -997,7 +1111,7 @@ const HistoryScreen = ({ navigation }) => {
             })}
           </Text>
           <TouchableOpacity onPress={() => cancelNotification(index)} style={modernStyles.cancelReminderButton}>
-            <Ionicons name="close" size={16} color="#e8e8e8" />
+            <Ionicons name="close" size={16} color="#ffffff" />
           </TouchableOpacity>
         </View>
       )}
@@ -1007,27 +1121,64 @@ const HistoryScreen = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         {item.list.map((listItem, listItemIndex) => (
-          <TouchableOpacity key={listItemIndex} onPress={() => toggleItemCompletion(index, listItemIndex)}>
-            <View style={modernStyles.listItemContainer}>
-              <View
-                style={[
-                  modernStyles.listItemBullet,
-                  completedItems[index]?.includes(listItemIndex) && modernStyles.completedBullet,
-                ]}
-              />
-              <Text
-                style={[
-                  modernStyles.listItemText,
-                  completedItems[index]?.includes(listItemIndex) && modernStyles.completedItemText,
-                ]}
-              >
-                {listItem}
-              </Text>
-            </View>
-          </TouchableOpacity>
+          <View key={listItemIndex}>
+            {editingListIndex === index && editingItemIndex === listItemIndex ? (
+              // Modo edición
+              <View style={modernStyles.listItemEditContainer}>
+                <View
+                  style={[
+                    modernStyles.listItemBullet,
+                    completedItems[index]?.includes(listItemIndex) && modernStyles.completedBullet,
+                  ]}
+                />
+                <TextInput
+                  style={modernStyles.listItemEditInput}
+                  value={editingItemText}
+                  onChangeText={setEditingItemText}
+                  onSubmitEditing={saveItemEdit}
+                  autoFocus
+                  selectTextOnFocus
+                />
+                <TouchableOpacity
+                  onPress={saveItemEdit}
+                  style={modernStyles.saveItemButton}
+                >
+                  <Ionicons name="checkmark" size={20} color="#10b981" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={cancelItemEdit}
+                  style={modernStyles.cancelItemButton}
+                >
+                  <Ionicons name="close" size={18} color="#ef4444" />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              // Modo normal
+              <TouchableOpacity onPress={() => handleDoubleTap(index, listItemIndex, listItem)}>
+                <View style={modernStyles.listItemContainer}>
+                  <View
+                    style={[
+                      modernStyles.listItemBullet,
+                      completedItems[index]?.includes(listItemIndex) && modernStyles.completedBullet,
+                    ]}
+                  />
+                  <Text
+                    style={[
+                      modernStyles.listItemText,
+                      completedItems[index]?.includes(listItemIndex) && modernStyles.completedItemText,
+                    ]}
+                  >
+                    {listItem}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          </View>
         ))}
+        
       </ScrollView>
 
+   
     </View>
   )
 
@@ -1079,10 +1230,7 @@ const HistoryScreen = ({ navigation }) => {
               <Image source={require("../assets/images/disminuyendo.png")} style={modernStyles.emptyStateImage} />
             </View>
             <Text style={modernStyles.emptyStateTitle}>{currentLabels.noHistory}</Text>
-            <TouchableOpacity style={modernStyles.createListButton} onPress={() => navigation.navigate("HomeScreen")}>
-              <Ionicons name="mic" size={30} color="white" />
-              <Text style={modernStyles.createListButtonText}>{currentLabels.createShoppingList}</Text>
-            </TouchableOpacity>
+
           </View>
         </View>
       ) : (
@@ -1115,6 +1263,80 @@ const HistoryScreen = ({ navigation }) => {
             }, 100)
           }}
         />
+      )}
+
+      {/* Navigation with Arrows and Dots - Solo mostrar si hay más de 1 item */}
+      {history.length > 1 && (
+        <View style={modernStyles.navigationContainer}>
+          {/* Left Arrow */}
+          <TouchableOpacity
+            style={[
+              modernStyles.arrowButton,
+              currentIndex === 0 && modernStyles.arrowButtonDisabled
+            ]}
+            onPress={() => {
+              if (currentIndex > 0) {
+                const newIndex = currentIndex - 1
+                flatListRef.current?.scrollToIndex({ index: newIndex, animated: true })
+              }
+            }}
+            disabled={currentIndex === 0}
+          >
+            <Ionicons 
+              name="chevron-back" 
+              size={20} 
+              color={currentIndex === 0 ? "#d1d5db" : "#6b7280"} 
+            />
+          </TouchableOpacity>
+
+          {/* Dots Container */}
+          <View style={modernStyles.dotsContainer}>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: 10,
+              }}
+            >
+              {history.map((_, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    modernStyles.dot,
+                    history.length > 8 && modernStyles.smallDot, // Dots más pequeños si hay más de 8
+                    currentIndex === index && modernStyles.activeDot
+                  ]}
+                  onPress={() => {
+                    flatListRef.current?.scrollToIndex({ index, animated: true })
+                  }}
+                />
+              ))}
+            </ScrollView>
+          </View>
+
+          {/* Right Arrow */}
+          <TouchableOpacity
+            style={[
+              modernStyles.arrowButton,
+              currentIndex === history.length - 1 && modernStyles.arrowButtonDisabled
+            ]}
+            onPress={() => {
+              if (currentIndex < history.length - 1) {
+                const newIndex = currentIndex + 1
+                flatListRef.current?.scrollToIndex({ index: newIndex, animated: true })
+              }
+            }}
+            disabled={currentIndex === history.length - 1}
+          >
+            <Ionicons 
+              name="chevron-forward" 
+              size={20} 
+              color={currentIndex === history.length - 1 ? "#d1d5db" : "#6b7280"} 
+            />
+          </TouchableOpacity>
+        </View>
       )}
 
       {/* Modales de favoritos mejorados */}
@@ -1488,7 +1710,11 @@ const HistoryScreen = ({ navigation }) => {
         transparent={false}
         presentationStyle="fullScreen"
       >
-        <View style={modernStyles.expandedListModalContainer}>
+        <KeyboardAvoidingView 
+          style={modernStyles.expandedListModalContainer}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+        >
             <View style={modernStyles.expandedModalHeader}>
               <Text style={modernStyles.expandedModalTitle}>{expandedListData.name}</Text>
               <TouchableOpacity
@@ -1499,38 +1725,124 @@ const HistoryScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
             
-            <ScrollView style={modernStyles.expandedModalContent}>
+            <ScrollView 
+              ref={expandedScrollViewRef}
+              style={modernStyles.expandedModalContent}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+            >
               {expandedListData.list.map((item, itemIndex) => (
-                <TouchableOpacity
-                  key={itemIndex}
-                  onPress={() => {
-                    if (expandedListData.index !== null) {
-                      toggleItemCompletion(expandedListData.index, itemIndex)
-                    }
-                  }}
-                  style={modernStyles.expandedListItem}
-                >
-                  <View style={modernStyles.expandedListItemContent}>
-                    <View
-                      style={[
-                        modernStyles.expandedCheckbox,
-                        completedItems[expandedListData.index]?.includes(itemIndex) && modernStyles.expandedCheckboxCompleted
-                      ]}
-                    >
-                      {completedItems[expandedListData.index]?.includes(itemIndex) && (
-                        <Ionicons name="checkmark" size={20} color="white" />
-                      )}
+                <View key={itemIndex}>
+                  {editingListIndex === expandedListData.index && editingItemIndex === itemIndex ? (
+                    // Modo edición en modal expandido
+                    <View style={modernStyles.expandedListItemEditContainer}>
+                      <View
+                        style={[
+                          modernStyles.expandedCheckbox,
+                          completedItems[expandedListData.index]?.includes(itemIndex) && modernStyles.expandedCheckboxCompleted
+                        ]}
+                      >
+                        {completedItems[expandedListData.index]?.includes(itemIndex) && (
+                          <Ionicons name="checkmark" size={20} color="white" />
+                        )}
+                      </View>
+                      <TextInput
+                        style={modernStyles.expandedListItemEditInput}
+                        value={editingItemText}
+                        onChangeText={setEditingItemText}
+                        onSubmitEditing={saveItemEdit}
+                        autoFocus
+                        selectTextOnFocus
+                      />
+                      <TouchableOpacity
+                        onPress={saveItemEdit}
+                        style={modernStyles.expandedSaveItemButton}
+                      >
+                        <Ionicons name="checkmark" size={20} color="#10b981" />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={cancelItemEdit}
+                        style={modernStyles.expandedCancelItemButton}
+                      >
+                        <Ionicons name="close" size={18} color="#ef4444" />
+                      </TouchableOpacity>
                     </View>
-                    <Text
-                      style={[
-                        modernStyles.expandedListItemText,
-                        completedItems[expandedListData.index]?.includes(itemIndex) && modernStyles.expandedListItemTextCompleted
-                      ]}
+                  ) : (
+                    // Modo normal en modal expandido
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (expandedListData.index !== null) {
+                          toggleItemCompletion(expandedListData.index, itemIndex)
+                        }
+                      }}
+                      style={modernStyles.expandedListItem}
                     >
-                      {item}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                      <View style={modernStyles.expandedListItemContent}>
+                        <View
+                          style={[
+                            modernStyles.expandedCheckbox,
+                            completedItems[expandedListData.index]?.includes(itemIndex) && modernStyles.expandedCheckboxCompleted
+                          ]}
+                        >
+                          {completedItems[expandedListData.index]?.includes(itemIndex) && (
+                            <Ionicons name="checkmark" size={20} color="white" />
+                          )}
+                        </View>
+                        <Text
+                          style={[
+                            modernStyles.expandedListItemText,
+                            completedItems[expandedListData.index]?.includes(itemIndex) && modernStyles.expandedListItemTextCompleted
+                          ]}
+                        >
+                          {item}
+                        </Text>
+                        <View style={modernStyles.expandedItemActions}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setEditingListIndex(expandedListData.index)
+                              setEditingItemIndex(itemIndex)
+                              setEditingItemText(item)
+                              // Scroll to the editing item after a small delay
+                              setTimeout(() => {
+                                if (expandedScrollViewRef.current) {
+                                  expandedScrollViewRef.current.scrollTo({
+                                    y: itemIndex * 80, // Approximate item height
+                                    animated: true
+                                  })
+                                }
+                              }, 300)
+                            }}
+                            style={modernStyles.expandedEditButton}
+                          >
+                            <Ionicons name="pencil" size={14} color="#6b7280" />
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => {
+                              Alert.alert(
+                                currentLabels.confirmDelete || "Confirm Delete",
+                                currentLabels.areYouSure || "Are you sure you want to delete this item?",
+                                [
+                                  {
+                                    text: currentLabels.cancel || "Cancel",
+                                    style: "cancel"
+                                  },
+                                  {
+                                    text: currentLabels.delete || "Delete",
+                                    onPress: () => deleteListItem(expandedListData.index, itemIndex),
+                                    style: "destructive"
+                                  }
+                                ]
+                              )
+                            }}
+                            style={modernStyles.expandedDeleteButton}
+                          >
+                            <Ionicons name="trash-outline" size={14} color="#ef4444" />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                </View>
               ))}
             </ScrollView>
             
@@ -1539,6 +1851,180 @@ const HistoryScreen = ({ navigation }) => {
                 {completedItems[expandedListData.index]?.length || 0} / {expandedListData.list.length} {currentLabels.completed || 'completados'}
               </Text>
             </View>
+            
+            {/* Fixed Add Button */}
+            <TouchableOpacity
+              onPress={addNewItemToExpandedList}
+              style={modernStyles.fixedAddButton}
+            >
+              <Ionicons name="add" size={32} color="#ffffff" />
+            </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </Modal>
+
+      {/* Actions Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={actionsModalVisible}
+        onRequestClose={() => setActionsModalVisible(false)}
+      >
+        <View style={modernStyles.modalBackdrop}>
+          <View style={modernStyles.actionsModal}>
+            <View style={modernStyles.actionsModalHeader}>
+              <Text style={modernStyles.actionsModalTitle}>{currentLabels.actions}</Text>
+              <TouchableOpacity
+                onPress={() => setActionsModalVisible(false)}
+                style={modernStyles.modalCloseButton}
+              >
+                <Ionicons name="close" size={24} color="#6b7280" />
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView style={modernStyles.actionsModalContent}>
+              {/* Edit Action */}
+              <TouchableOpacity
+                style={modernStyles.actionModalButton}
+                onPress={() => {
+                  setEditingIndex(selectedItemIndex)
+                  setEditingText(history[selectedItemIndex]?.name || '')
+                  setActionsModalVisible(false)
+                }}
+              >
+                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#e0f2fe' }]}>
+                  <Ionicons name="pencil" size={20} color="#0284c7" />
+                </View>
+                <View style={modernStyles.actionModalTextContainer}>
+                  <Text style={modernStyles.actionModalButtonText}>{currentLabels.editName}</Text>
+                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.editNameDesc}</Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Expand List */}
+              <TouchableOpacity
+                style={modernStyles.actionModalButton}
+                onPress={() => {
+                  openExpandedListModal(selectedItemIndex)
+                  setActionsModalVisible(false)
+                }}
+              >
+                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#f3f4f6' }]}>
+                  <Ionicons name="expand-outline" size={20} color="#4b5563" />
+                </View>
+                <View style={modernStyles.actionModalTextContainer}>
+                  <Text style={modernStyles.actionModalButtonText}>{currentLabels.expandList}</Text>
+                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.expandListDesc}</Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Add to Favorites / Already in Favorites */}
+              <TouchableOpacity
+                style={[
+                  modernStyles.actionModalButton,
+                  isItemInFavorites(selectedItemIndex) && { opacity: 0.6 }
+                ]}
+                onPress={() => {
+                  if (isItemInFavorites(selectedItemIndex)) {
+                    removeFromFavorites(selectedItemIndex)
+                  } else {
+                    openFavoriteModal(selectedItemIndex)
+                  }
+                  setActionsModalVisible(false)
+                }}
+              >
+                <View style={[
+                  modernStyles.actionModalIcon, 
+                  { backgroundColor: isItemInFavorites(selectedItemIndex) ? '#f3f4f6' : '#fecaca' }
+                ]}>
+                  <Ionicons 
+                    name={isItemInFavorites(selectedItemIndex) ? "heart" : "heart-outline"} 
+                    size={20} 
+                    color={isItemInFavorites(selectedItemIndex) ? "#6b7280" : "#dc2626"} 
+                  />
+                </View>
+                <View style={modernStyles.actionModalTextContainer}>
+                  <Text style={modernStyles.actionModalButtonText}>
+                    {isItemInFavorites(selectedItemIndex) 
+                      ? currentLabels.alreadyInFavorites 
+                      : currentLabels.addToFavorites}
+                  </Text>
+                  <Text style={modernStyles.actionModalButtonSubtext}>
+                    {isItemInFavorites(selectedItemIndex) 
+                      ? `${currentLabels.savedInCategory}: ${getCategoryDisplayName(selectedItemIndex)}`
+                      : currentLabels.addToFavoritesDesc}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Add Items */}
+              <TouchableOpacity
+                style={modernStyles.actionModalButton}
+                onPress={() => {
+                  openModal(selectedItemIndex)
+                  setActionsModalVisible(false)
+                }}
+              >
+                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#fed7aa' }]}>
+                  <Ionicons name="add" size={20} color="#ea580c" />
+                </View>
+                <View style={modernStyles.actionModalTextContainer}>
+                  <Text style={modernStyles.actionModalButtonText}>{currentLabels.addItems}</Text>
+                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.addItemsDesc}</Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Set Reminder */}
+              <TouchableOpacity
+                style={modernStyles.actionModalButton}
+                onPress={() => {
+                  openReminderModal(selectedItemIndex)
+                  setActionsModalVisible(false)
+                }}
+              >
+                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#e9d5ff' }]}>
+                  <Ionicons name="notifications-outline" size={20} color="#9333ea" />
+                </View>
+                <View style={modernStyles.actionModalTextContainer}>
+                  <Text style={modernStyles.actionModalButtonText}>{currentLabels.createNotification}</Text>
+                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.createNotificationDesc}</Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Share */}
+              <TouchableOpacity
+                style={modernStyles.actionModalButton}
+                onPress={() => {
+                  shareShoppingList(history[selectedItemIndex]?.list || [])
+                  setActionsModalVisible(false)
+                }}
+              >
+                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#dcfce7' }]}>
+                  <Ionicons name="share-outline" size={20} color="#16a34a" />
+                </View>
+                <View style={modernStyles.actionModalTextContainer}>
+                  <Text style={modernStyles.actionModalButtonText}>{currentLabels.shareList}</Text>
+                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.shareListDesc}</Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Delete */}
+              <TouchableOpacity
+                style={[modernStyles.actionModalButton, { borderTopWidth: 1, borderTopColor: '#f3f4f6', marginTop: 10, paddingTop: 20 }]}
+                onPress={() => {
+                  confirmRemoveListFromHistory(selectedItemIndex)
+                  setActionsModalVisible(false)
+                }}
+              >
+                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#fef2f2',marginBottom:40 }]}>
+                  <Ionicons name="trash-outline" size={20} color="#dc2626" />
+                </View>
+                <View style={modernStyles.actionModalTextContainer}>
+                  <Text style={[modernStyles.actionModalButtonText, { color: '#dc2626' }]}>{currentLabels.deleteList}</Text>
+                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.deleteListDesc}</Text>
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>

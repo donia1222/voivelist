@@ -15,6 +15,8 @@ export const translations = {
     mySubscription: "My Subscription",
     information: "Information",
     home: "Home",
+    calendar: "Shopping Calendar",
+    priceCalculator: "Price Calculator",
     // Header titles
     voiceGrocery: "Voice Grocery",
     history: "History",
@@ -37,6 +39,8 @@ export const translations = {
     mySubscription: "Mi suscripción",
     information: "Información",
     home: "Inicio",
+    calendar: "Calendario de Compras",
+    priceCalculator: "Calculadora de Precios",
     // Header titles
     voiceGrocery: "Lista de Voz",
     history: "Historial",
@@ -59,6 +63,8 @@ export const translations = {
     mySubscription: "Mein Abonnement",
     information: "Informationen",
     home: "Startseite",
+    calendar: "Einkaufskalender",
+    priceCalculator: "Preisrechner",
     // Header titles
     voiceGrocery: "Spracheinkaufsliste",
     history: "Verlauf",
@@ -81,6 +87,8 @@ export const translations = {
     mySubscription: "Il mio abbonamento",
     information: "Informazioni",
     home: "Home",
+    calendar: "Calendario della Spesa",
+    priceCalculator: "Calcolatore di Prezzi",
     // Header titles
     voiceGrocery: "Lista della Spesa Vocale",
     history: "Cronologia",
@@ -103,6 +111,8 @@ export const translations = {
     mySubscription: "Mon abonnement",
     information: "Informations",
     home: "Accueil",
+    calendar: "Calendrier des Courses",
+    priceCalculator: "Calculateur de Prix",
     // Header titles
     voiceGrocery: "Liste de Courses Vocale",
     history: "Historique",
@@ -125,6 +135,7 @@ export const translations = {
     mySubscription: "Aboneliğim",
     information: "Bilgi",
     home: "Ana Sayfa",
+    calendar: "Alışveriş Takvimi",
     // Header titles
     voiceGrocery: "Sesli Alışveriş Listesi",
     history: "Geçmiş",
@@ -147,6 +158,7 @@ export const translations = {
     mySubscription: "Minha Assinatura",
     information: "Informações",
     home: "Início",
+    calendar: "Calendário de Compras",
     // Header titles
     voiceGrocery: "Lista de Compras por Voz",
     history: "Histórico",
@@ -168,6 +180,7 @@ export const translations = {
     mySubscription: "Моя подписка",
     information: "Информация",
     home: "Главная",
+    calendar: "Календарь Покупок",
     // Header titles
     voiceGrocery: "Голосовой Список Покупок",
     history: "История",
@@ -189,6 +202,7 @@ export const translations = {
     mySubscription: "اشتراكي",
     information: "معلومات",
     home: "الرئيسية",
+    calendar: "تقويم التسوق",
     // Header titles
     voiceGrocery: "قائمة التسوق الصوتية",
     history: "السجل",
@@ -210,6 +224,7 @@ export const translations = {
     mySubscription: "Előfizetésem",
     information: "Információ",
     home: "Főoldal",
+    calendar: "Vásárlási Naptár",
     // Header titles
     voiceGrocery: "Hangos Bevásárlólista",
     history: "Előzmények",
@@ -231,6 +246,7 @@ export const translations = {
     mySubscription: "マイサブスクリプション",
     information: "情報",
     home: "ホーム",
+    calendar: "ショッピングカレンダー",
     // Header titles
     voiceGrocery: "音声買い物リスト",
     history: "履歴",
@@ -252,6 +268,7 @@ export const translations = {
     mySubscription: "मेरी सदस्यता",
     information: "जानकारी",
     home: "होम",
+    calendar: "शॉपिंग कैलेंडर",
     // Header titles
     voiceGrocery: "आवाज़ खरीदारी सूची",
     history: "इतिहास",
@@ -273,6 +290,7 @@ export const translations = {
     mySubscription: "Mijn abonnement",
     information: "Informatie",
     home: "Home",
+    calendar: "Winkelkalender",
     // Header titles
     voiceGrocery: "Spraak Boodschappenlijst",
     history: "Geschiedenis",
@@ -294,6 +312,7 @@ export const translations = {
     mySubscription: "我的订阅",
     information: "信息",
     home: "首页",
+    calendar: "购物日历",
     // Header titles
     voiceGrocery: "语音购物清单",
     history: "历史记录",

@@ -30,6 +30,8 @@ import HistoryScreen from "../../screens/HistoryScreen"
 import Suscribe from "../../screens/Suscribe"
 import MySubscriptionScreen from "../../screens/MySubscriptionScreen"
 import InformationScreen from "../../screens/InformationScreen"
+import CalendarPlannerScreen from "../../screens/CalendarPlannerScreen"
+import PriceCalculatorScreen from "../../screens/PriceCalculatorScreen"
 
 const Stack = createNativeStackNavigator()
 
@@ -49,12 +51,14 @@ const getMenuTexts = () => {
       descriptions: {
         "star": "Gestiona tu suscripción",
         "star-outline": "Desbloquea todas las funciones",
+        "calculator": "Calcula precios de listas",
         "information-circle-outline": "Acerca de la aplicación",
         "share-social-outline": "Comparte con amigos",
         "mail-outline": "Contáctanos para soporte",
         "shield-outline": "Lee nuestra política",
         "document-text-outline": "Lee nuestros términos",
         "settings-outline": "Configuraciones de la app",
+        "calendar-outline": "Planifica tus compras semanales",
       }
     },
     en: {
@@ -65,12 +69,14 @@ const getMenuTexts = () => {
       descriptions: {
         "star": "Manage your subscription",
         "star-outline": "Unlock all features",
+        "calculator": "Calculate list prices",
         "information-circle-outline": "About the app",
         "share-social-outline": "Share with friends",
         "mail-outline": "Contact us for support",
         "shield-outline": "Read our policy",
         "document-text-outline": "Read our terms",
         "settings-outline": "App settings",
+        "calendar-outline": "Plan your weekly shopping",
       }
     },
     de: {
@@ -81,12 +87,14 @@ const getMenuTexts = () => {
       descriptions: {
         "star": "Verwalte dein Abonnement",
         "star-outline": "Alle Funktionen freischalten",
+        "calculator": "Listenpreise berechnen",
         "information-circle-outline": "Über die App",
         "share-social-outline": "Mit Freunden teilen",
         "mail-outline": "Kontaktiere uns für Support",
         "shield-outline": "Lies unsere Richtlinien",
         "document-text-outline": "Lies unsere Bedingungen",
         "settings-outline": "App-Einstellungen",
+        "calendar-outline": "Plane deine wöchentlichen Einkäufe",
       }
     },
     fr: {
@@ -97,6 +105,7 @@ const getMenuTexts = () => {
       descriptions: {
         "star": "Gérez votre abonnement",
         "star-outline": "Débloquez toutes les fonctionnalités",
+        "calculator": "Calculer les prix des listes",
         "information-circle-outline": "À propos de l'app",
         "share-social-outline": "Partagez avec des amis",
         "mail-outline": "Contactez-nous pour le support",
@@ -181,6 +190,16 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           primary: "#34c759",
           background: "rgba(52, 199, 89, 0.15)"
         }
+      case "Calendar":
+        return {
+          primary: "#6B7280",
+          background: "rgba(107, 114, 128, 0.15)"
+        }
+      case "PriceCalculator":
+        return {
+          primary: "#dc2626",
+          background: "rgba(220, 38, 38, 0.15)"
+        }
       default:
         return {
           primary: "#4a6bff",
@@ -247,15 +266,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     }
   }
 
-  const calculateCosts = async () => {
-    // Activar modal de calcular costes enviando señal a HomeScreen
-    try {
-      await AsyncStorage.setItem("@trigger_cost_modal", "true")
-      console.log("Calculate costs pressed - trigger set to true")
-    } catch (error) {
-      console.error("Error triggering cost modal:", error)
-    }
-  }
 
   const saveToHistory = async () => {
     try {
@@ -314,14 +324,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     },
   ]
 
-  // Botón de costes (abajo, ancho completo)
-  const costButton = {
-    key: "calculate",
-    label: "Calcular costes",
-    icon: "calculator",
-    color: "#ff9500",
-    onPress: calculateCosts,
-  }
 
   const mainTabs = [
     {
@@ -344,6 +346,20 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       icon: "bookmark",
       color: "#34c759",
       screen: HistoryScreen,
+    },
+    {
+      key: "Calendar",
+      label: currentTranslations.calendar,
+      icon: "calendar",
+      color: "#6B7280",
+      screen: CalendarPlannerScreen,
+    },
+    {
+      key: "PriceCalculator",
+      label: currentTranslations.priceCalculator || "Price Calculator",
+      icon: "calculator",
+      color: "#dc2626",
+      screen: PriceCalculatorScreen,
     },
   ]
 
@@ -472,6 +488,24 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
           </Stack.Navigator>
         )
+      case "Calendar":
+        return (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="CalendarPlannerScreen" component={CalendarPlannerScreen} />
+          </Stack.Navigator>
+        )
+      case "PriceCalculator":
+        return (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen 
+              name="PriceCalculatorScreen" 
+              component={PriceCalculatorScreen}
+              initialParams={{
+                onNavigateToSubscribe: () => setActiveTab("Subscribe")
+              }}
+            />
+          </Stack.Navigator>
+        )
       default:
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -484,6 +518,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const headerMenuItems = [
     ...(isSubscribed
       ? [
+
           {
             label: currentTranslations.mySubscription,
             icon: "star",
@@ -493,6 +528,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               setActiveTab("Subscription")
             }
           },
+          
         ]
       : [
           {
@@ -567,10 +603,22 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             <Stack.Screen name="MySubscriptionScreen" component={MySubscriptionScreen} />
           </Stack.Navigator>
         )
+      case "Calendar":
+        return (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="CalendarPlannerScreen" component={CalendarPlannerScreen} />
+          </Stack.Navigator>
+        )
       case "Information":
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="InformationScreen" component={InformationScreen} />
+          </Stack.Navigator>
+        )
+      case "PriceCalculator":
+        return (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="PriceCalculatorScreen" component={PriceCalculatorScreen} />
           </Stack.Navigator>
         )
       default:
@@ -595,33 +643,65 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
+          
           <View
             style={{
               width: 40,
               height: 40,
               borderRadius: 10,
-              backgroundColor: activeTab === "Images" ? "#ff950020" : activeTab === "History" ? "#34c75920" : "#4a6bff20",
+              backgroundColor: activeTab === "Images" ? "#ff950020" : 
+                              activeTab === "History" ? "#34c75920" : 
+                              activeTab === "Calendar" ? "#6B728020" : 
+                              activeTab === "Subscribe" ? "#ff375f20" :
+                              activeTab === "Subscription" ? "#ff375f20" :
+                              activeTab === "Information" ? "#5856d620" :
+                              activeTab === "PriceCalculator" ? "#dc262620" : "#4a6bff20",
               justifyContent: "center",
               alignItems: "center",
               marginRight: 12,
             }}
           >
-            <Ionicons 
-              name={activeTab === "Home" ? "storefront" : activeTab === "Images" ? "image" : "bookmark"} 
-              size={24} 
-              color={activeTab === "Images" ? "#ff9500" : activeTab === "History" ? "#34c759" : "#4a6bff"} 
-            />
+            {activeTab === "Home" ? (
+              <Image
+                source={require("../../assets/images/icono34.png")}
+                style={{ width: 24, height: 24 }}
+              />
+            ) : (
+              <Ionicons 
+                name={activeTab === "Images" ? "image" : 
+                      activeTab === "Calendar" ? "calendar" : 
+                      activeTab === "History" ? "bookmark" :
+                      activeTab === "Subscribe" ? "star-outline" :
+                      activeTab === "Subscription" ? "star" :
+                      activeTab === "Information" ? "information-circle-outline" :
+                      activeTab === "PriceCalculator" ? "calculator" : "storefront"} 
+                size={24} 
+                color={activeTab === "Images" ? "#ff9500" : 
+                       activeTab === "History" ? "#34c759" : 
+                       activeTab === "Calendar" ? "#6B7280" :
+                       activeTab === "Subscribe" ? "#ff375f" :
+                       activeTab === "Subscription" ? "#ff375f" :
+                       activeTab === "Information" ? "#5856d6" :
+                       activeTab === "PriceCalculator" ? "#dc2626" : "#4a6bff"} 
+              />
+            )}
           </View>
           <Text
             style={{
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: "bold",
               color: theme.text,
             }}
           >
             {activeTab === "Home" ? "Voice Grocery" : 
              activeTab === "Images" ? currentTranslations.imageList : 
-             currentTranslations.saved}
+             activeTab === "Calendar" ? currentTranslations.calendar :
+             activeTab === "History" ? currentTranslations.saved :
+             activeTab === "Subscribe" ? currentTranslations.subscribe :
+             activeTab === "Subscription" ? currentTranslations.mySubscription :
+             activeTab === "Information" ? currentTranslations.information :
+             activeTab === "PriceCalculator" ? (currentTranslations.priceCalculator || "Price Calculator") :
+             "Voice Grocery"}
           </Text>
         </View>
         
@@ -738,42 +818,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               </TouchableOpacity>
             ))}
           </View>
-          
-          {/* Botón de costes abajo, estilo similar a los otros */}
-          <View>
-            <TouchableOpacity
-              style={{
-                backgroundColor: costButton.color + "20",
-                borderWidth: 1.5,
-                borderColor: costButton.color + "40",
-                borderRadius: 15,
-                paddingVertical: 12,
-                paddingHorizontal: 16,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                marginHorizontal: 16,
-                shadowColor: costButton.color,
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.2,
-                shadowRadius: 3,
-                elevation: 3,
-              }}
-              onPress={costButton.onPress}
-            >
-              <Ionicons name={costButton.icon} size={18} color={costButton.color} style={{ marginRight: 6 }} />
-              <Text style={{
-                color: costButton.color,
-                fontSize: 14,
-                fontWeight: "600",
-              }}>
-                {costButton.label}
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
       ) : (
         // Barra de navegación normal
@@ -825,20 +869,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                     size={28}
                     color={tabColor}
                   />
-                  {isActive && (
-                    <Text
-                      style={{
-                        color: tabColor,
-                        fontSize: 12,
-                        fontWeight: "600",
-                        marginTop: 4,
-                        textAlign: "center",
-                      }}
-                      numberOfLines={1}
-                    >
-                      {tab.label}
-                    </Text>
-                  )}
                 </View>
               </TouchableOpacity>
             )

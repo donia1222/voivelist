@@ -29,6 +29,7 @@
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-appsflyer": "^6.14.3",
+    "react-native-calendar-events": "^2.2.0",
     "react-native-deck-swiper": "^2.0.17",
     "react-native-device-info": "^11.1.0",
     "react-native-draggable-flatlist": "^4.0.1",

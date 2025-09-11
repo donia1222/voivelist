@@ -879,14 +879,14 @@ const ImageListScreen = ({ route }) => {
           <View style={modernStyles.modalButtonsContainer}>
             <TouchableOpacity style={modernStyles.modalActionButton} onPress={handleChoosePhoto}>
               <View style={modernStyles.modalButtonIcon}>
-                <Ionicons name="image-outline" size={28} color="white" />
+                <Ionicons name="image-outline" size={28} color="#ff9500" />
               </View>
               <Text style={modernStyles.modalButtonText}>{modalText.gallery}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={modernStyles.modalActionButton} onPress={handleTakePhoto}>
               <View style={modernStyles.modalButtonIcon}>
-                <Ionicons name="camera-outline" size={28} color="white" />
+                <Ionicons name="camera-outline" size={28} color="#ff9500" />
               </View>
               <Text style={modernStyles.modalButtonText}>{modalText.takePhoto}</Text>
             </TouchableOpacity>
@@ -1450,7 +1450,7 @@ alignSelf: 'center',
   },
 
   modalActionButton: {
-    backgroundColor: "#ff9500",
+    backgroundColor: 'rgba(255, 149, 0, 0.3)',
     borderRadius: 20,
     padding: 24,
     flexDirection: "row",
@@ -1461,7 +1461,7 @@ alignSelf: 'center',
     shadowRadius: 16,
     elevation: 8,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 149, 0, 0.5)',
   },
 
   modalButtonIcon: {
@@ -1475,9 +1475,9 @@ alignSelf: 'center',
   },
 
   modalButtonText: {
-    color: "white",
+    color: "#ff9500",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
     flex: 1,
   },
 
@@ -1537,7 +1537,7 @@ alignSelf: 'center',
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fef2f2",
-    padding: 22,
+    padding: 20,
     borderRadius: 12,
     marginBottom: 20,
     borderWidth: 1,
