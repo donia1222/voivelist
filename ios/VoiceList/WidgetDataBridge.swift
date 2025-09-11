@@ -13,7 +13,7 @@ class WidgetDataBridge: NSObject {
     @objc
     func updateWidgetData(_ favorites: [String], resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
         DispatchQueue.main.async {
-            let sharedDefaults = UserDefaults(suiteName: "group.com.voicelist.widget")
+            let sharedDefaults = UserDefaults(suiteName: "group.com.roberto.worktrack")
             sharedDefaults?.set(favorites, forKey: "favoritesList")
             sharedDefaults?.synchronize()
             
@@ -28,14 +28,14 @@ class WidgetDataBridge: NSObject {
     
     @objc
     func getWidgetData(_ resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
-        let sharedDefaults = UserDefaults(suiteName: "group.com.voicelist.widget")
+        let sharedDefaults = UserDefaults(suiteName: "group.com.roberto.worktrack")
         let favorites = sharedDefaults?.array(forKey: "favoritesList") as? [String] ?? []
         resolver(favorites)
     }
     
     @objc
     func clearWidgetData(_ resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
-        let sharedDefaults = UserDefaults(suiteName: "group.com.voicelist.widget")
+        let sharedDefaults = UserDefaults(suiteName: "group.com.roberto.worktrack")
         sharedDefaults?.removeObject(forKey: "favoritesList")
         sharedDefaults?.synchronize()
         

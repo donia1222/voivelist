@@ -24,7 +24,7 @@ struct Provider: TimelineProvider {
     }
     
     func loadFavorites() -> [String] {
-        let sharedDefaults = UserDefaults(suiteName: "group.com.voicelist.widget")
+        let sharedDefaults = UserDefaults(suiteName: "group.com.roberto.worktrack")
         return sharedDefaults?.array(forKey: "favoritesList") as? [String] ?? []
     }
     
@@ -319,13 +319,19 @@ extension Color {
     }
 }
 
-@main
 struct VoiceListWidget: Widget {
     let kind: String = "VoiceListWidget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            VoiceListWidgetEntryView(entry: entry)
+            if #available(iOS 17.0, *) {
+                VoiceListWidgetEntryView(entry: entry)
+                    .containerBackground(.fill.tertiary, for: .widget)
+            } else {
+                VoiceListWidgetEntryView(entry: entry)
+                    .padding()
+                    .background()
+            }
         }
         .configurationDisplayName("Voice Grocery")
         .description("Quick access to your shopping lists")
@@ -333,17 +339,9 @@ struct VoiceListWidget: Widget {
     }
 }
 
-struct VoiceListWidget_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            VoiceListWidgetEntryView(entry: SimpleEntry(date: Date(), favoritesList: ["Milk", "Bread", "Eggs"], isEmpty: false))
-                .previewContext(WidgetPreviewContext(family: .systemSmall))
-            
-            VoiceListWidgetEntryView(entry: SimpleEntry(date: Date(), favoritesList: [], isEmpty: true))
-                .previewContext(WidgetPreviewContext(family: .systemMedium))
-            
-            VoiceListWidgetEntryView(entry: SimpleEntry(date: Date(), favoritesList: ["Milk", "Bread", "Eggs", "Tomatoes", "Cheese", "Yogurt", "Apples"], isEmpty: false))
-                .previewContext(WidgetPreviewContext(family: .systemLarge))
-        }
-    }
+#Preview(as: .systemSmall) {
+    VoiceListWidget()
+} timeline: {
+    SimpleEntry(date: .now, favoritesList: ["Milk", "Bread", "Eggs"], isEmpty: false)
+    SimpleEntry(date: .now, favoritesList: [], isEmpty: true)
 }
