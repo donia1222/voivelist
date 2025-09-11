@@ -1711,7 +1711,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
                 <TouchableOpacity onPress={() => addNewItem()} style={modernStyles.addItemWrapper}>
                   <View style={modernStyles.addItemButton}>
                     <Ionicons name="add-circle" size={32} color="#6b7280" />
-                    <Text style={modernStyles.addItemText}>Agregar artículo</Text>
+                    <Text style={modernStyles.addItemText}>+add</Text>
                   </View>
                 </TouchableOpacity>
               )

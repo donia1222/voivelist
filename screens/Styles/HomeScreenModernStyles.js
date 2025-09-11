@@ -599,7 +599,8 @@ export const getModernStyles = () => {
       shadowOpacity: 0.20,
       shadowRadius: 15,
       elevation: 6,
-      marginBottom: 30,
+      marginBottom: 60,
+
 
 
     },
