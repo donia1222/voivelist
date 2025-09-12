@@ -34,7 +34,7 @@ class WidgetService {
     }
   }
   
-  static async updateWidgetShoppingLists(history, isSubscribed = false) {
+  static async updateWidgetShoppingLists(history, completedItems = {}) {
     if (Platform.OS !== 'ios' || !WidgetDataBridge) {
       console.log('🚫 DEBUG: WidgetService - Platform is not iOS or WidgetDataBridge not available');
       return;
@@ -42,28 +42,32 @@ class WidgetService {
     
     console.log('🔍 DEBUG: WidgetService - Starting updateWidgetShoppingLists');
     console.log('🔍 DEBUG: WidgetService - Raw history:', JSON.stringify(history, null, 2));
-    console.log('🔍 DEBUG: WidgetService - isSubscribed:', isSubscribed);
+    console.log('🔍 DEBUG: WidgetService - CompletedItems:', JSON.stringify(completedItems, null, 2));
     
     try {
-      // Convert history to shopping lists format
-      const shoppingLists = history.slice(0, 5).map(item => ({
+      // Convert history to shopping lists format with completed items info
+      const shoppingLists = history.slice(0, 5).map((item, listIndex) => ({
         name: item.name || 'Shopping List',
-        items: Array.isArray(item.list) ? item.list.slice(0, 10).map(listItem => {
-          if (typeof listItem === 'string') return listItem;
-          if (listItem && listItem.text) return listItem.text;
-          if (listItem && listItem.name) return listItem.name;
-          return String(listItem);
-        }).filter(i => i && i.length > 0) : []
+        items: Array.isArray(item.list) ? item.list.slice(0, 12).map((listItem, itemIndex) => {
+          const itemText = typeof listItem === 'string' ? listItem : 
+                          (listItem && listItem.text) ? listItem.text :
+                          (listItem && listItem.name) ? listItem.name : String(listItem);
+          
+          const isCompleted = completedItems[listIndex] && completedItems[listIndex].includes(itemIndex);
+          
+          return {
+            text: itemText,
+            isCompleted: isCompleted
+          };
+        }).filter(item => item.text && item.text.length > 0) : [],
+        completedItems: completedItems[listIndex] || []
       })).filter(list => list.items.length > 0);
       
-      console.log('📤 DEBUG: WidgetService - Processed shopping lists:', JSON.stringify(shoppingLists, null, 2));
+      console.log('📤 DEBUG: WidgetService - Processed shopping lists with completion:', JSON.stringify(shoppingLists, null, 2));
       console.log('📤 DEBUG: WidgetService - Number of lists:', shoppingLists.length);
       
       // Store shopping lists as JSON data
       await WidgetDataBridge.updateShoppingLists(shoppingLists);
-      
-      // Also store subscription status  
-      // await WidgetDataBridge.updateSubscriptionStatus(isSubscribed); // TODO: Fix this method
     } catch (error) {
       console.log('Error updating widget shopping lists:', error);
     }

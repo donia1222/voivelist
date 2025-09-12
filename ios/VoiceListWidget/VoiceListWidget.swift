@@ -8,8 +8,16 @@ struct Provider: TimelineProvider {
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
         let sampleLists = [
-            ShoppingList(name: "Grocery", items: ["Milk", "Bread", "Eggs"]),
-            ShoppingList(name: "Market", items: ["Tomatoes", "Cheese", "Apples"])
+            ShoppingList(name: "Grocery", items: [
+                ShoppingListItem(text: "Milk", isCompleted: false),
+                ShoppingListItem(text: "Bread", isCompleted: true),
+                ShoppingListItem(text: "Eggs", isCompleted: false)
+            ]),
+            ShoppingList(name: "Market", items: [
+                ShoppingListItem(text: "Tomatoes", isCompleted: false),
+                ShoppingListItem(text: "Cheese", isCompleted: false),
+                ShoppingListItem(text: "Apples", isCompleted: true)
+            ])
         ]
         let entry = SimpleEntry(date: Date(), favoritesList: getSampleData(), shoppingLists: sampleLists, isEmpty: false, isSubscribed: true)
         completion(entry)
@@ -61,21 +69,43 @@ struct Provider: TimelineProvider {
             if let lists = try? JSONDecoder().decode([ShoppingListData].self, from: listsData) {
                 print("✅ DEBUG: Widget - Successfully decoded \(lists.count) shopping lists")
                 for (index, list) in lists.enumerated() {
-                    print("📋 DEBUG: Widget - List \(index): '\(list.name)' with \(list.items.count) items: \(list.items)")
+                    print("📋 DEBUG: Widget - List \(index): '\(list.name)' with \(list.items.count) items")
+                    for item in list.items {
+                        print("  📝 DEBUG: Widget - Item: '\(item.text)', completed: \(item.isCompleted)")
+                    }
                 }
-                let result = lists.map { ShoppingList(name: $0.name, items: $0.items) }
+                let result = lists.map { listData in
+                    ShoppingList(name: listData.name, items: listData.items.map { itemData in
+                        ShoppingListItem(text: itemData.text, isCompleted: itemData.isCompleted)
+                    })
+                }
                 print("🎯 DEBUG: Widget - Returning \(result.count) shopping lists to display")
                 return result
             } else {
                 print("❌ DEBUG: Widget - ERROR - Failed to decode JSON data with JSONDecoder")
                 
-                // Try manual parsing as fallback
+                // Try manual parsing as fallback - legacy format
                 if let jsonArray = try? JSONSerialization.jsonObject(with: listsData, options: []) as? [[String: Any]] {
                     print("🔄 DEBUG: Widget - Attempting manual JSON parsing...")
                     let manualLists = jsonArray.compactMap { dict -> ShoppingList? in
-                        guard let name = dict["name"] as? String,
-                              let items = dict["items"] as? [String] else { return nil }
-                        return ShoppingList(name: name, items: items)
+                        guard let name = dict["name"] as? String else { return nil }
+                        
+                        // Check for new format with item objects
+                        if let itemsData = dict["items"] as? [[String: Any]] {
+                            let items = itemsData.compactMap { itemDict -> ShoppingListItem? in
+                                guard let text = itemDict["text"] as? String else { return nil }
+                                let isCompleted = itemDict["isCompleted"] as? Bool ?? false
+                                return ShoppingListItem(text: text, isCompleted: isCompleted)
+                            }
+                            return ShoppingList(name: name, items: items)
+                        }
+                        // Fallback to old format with string array
+                        else if let items = dict["items"] as? [String] {
+                            let shoppingItems = items.map { ShoppingListItem(text: $0, isCompleted: false) }
+                            return ShoppingList(name: name, items: shoppingItems)
+                        }
+                        
+                        return nil
                     }
                     print("🔄 DEBUG: Widget - Manual parsing result: \(manualLists.count) lists")
                     return manualLists
@@ -91,7 +121,8 @@ struct Provider: TimelineProvider {
         
         if !favorites.isEmpty {
             print("🔄 DEBUG: Widget - Using favorites as fallback list")
-            return [ShoppingList(name: "Favorites", items: favorites)]
+            let favoriteItems = favorites.map { ShoppingListItem(text: $0, isCompleted: false) }
+            return [ShoppingList(name: "Favorites", items: favoriteItems)]
         }
         
         print("⚠️ DEBUG: Widget - No data found - widget will show empty state")
@@ -105,12 +136,23 @@ struct Provider: TimelineProvider {
 
 struct ShoppingList {
     let name: String
-    let items: [String]
+    let items: [ShoppingListItem]
+}
+
+struct ShoppingListItem {
+    let text: String
+    let isCompleted: Bool
 }
 
 struct ShoppingListData: Codable {
     let name: String
-    let items: [String]
+    let items: [ShoppingListItemData]
+    let completedItems: [Int]
+}
+
+struct ShoppingListItemData: Codable {
+    let text: String
+    let isCompleted: Bool
 }
 
 struct SimpleEntry: TimelineEntry {
@@ -162,16 +204,20 @@ struct SmallWidgetView: View {
                 
                 VStack(alignment: .leading, spacing: 2) {
                     ForEach(Array(currentList.items.prefix(4).enumerated()), id: \.offset) { index, item in
-                        HStack(spacing: 6) {
-                            Circle()
-                                .fill(Color(hex: "8B5CF6"))
-                                .frame(width: 6, height: 6)
-                            Text(item)
-                                .font(.system(size: 13))
-                                .foregroundColor(Color(hex: "374151"))
-                                .lineLimit(1)
-                            Spacer()
+                        Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                            HStack(spacing: 6) {
+                                Circle()
+                                    .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
+                                    .frame(width: 6, height: 6)
+                                Text(item.text)
+                                    .font(.system(size: 13))
+                                    .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
+                                    .strikethrough(item.isCompleted)
+                                    .lineLimit(1)
+                                Spacer()
+                            }
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                     
                     if currentList.items.count > 4 {
@@ -285,16 +331,20 @@ struct MediumWidgetView: View {
                 // Lista de items (scrollable content)
                 VStack(alignment: .leading, spacing: 3) {
                     ForEach(Array(currentList.items.prefix(4).enumerated()), id: \.offset) { index, item in
-                        HStack(spacing: 8) {
-                            Circle()
-                                .fill(Color(hex: "8B5CF6"))
-                                .frame(width: 7, height: 7)
-                            Text(item)
-                                .font(.system(size: 14))
-                                .foregroundColor(Color(hex: "374151"))
-                                .lineLimit(1)
-                            Spacer()
+                        Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                            HStack(spacing: 8) {
+                                Circle()
+                                    .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
+                                    .frame(width: 7, height: 7)
+                                Text(item.text)
+                                    .font(.system(size: 14))
+                                    .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
+                                    .strikethrough(item.isCompleted)
+                                    .lineLimit(1)
+                                Spacer()
+                            }
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                     
                     if currentList.items.count > 4 {
@@ -445,16 +495,20 @@ struct LargeWidgetView: View {
                 // Lista de items (scrollable content)
                 VStack(alignment: .leading, spacing: 4) {
                     ForEach(Array(currentList.items.prefix(12).enumerated()), id: \.offset) { index, item in
-                        HStack(spacing: 10) {
-                            Circle()
-                                .fill(Color(hex: "8B5CF6"))
-                                .frame(width: 8, height: 8)
-                            Text(item)
-                                .font(.system(size: 15))
-                                .foregroundColor(Color(hex: "374151"))
-                                .lineLimit(1)
-                            Spacer()
+                        Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                            HStack(spacing: 10) {
+                                Circle()
+                                    .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
+                                    .frame(width: 8, height: 8)
+                                Text(item.text)
+                                    .font(.system(size: 15))
+                                    .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
+                                    .strikethrough(item.isCompleted)
+                                    .lineLimit(1)
+                                Spacer()
+                            }
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                     
                     if currentList.items.count > 12 {
@@ -663,7 +717,7 @@ struct VoiceListWidget: Widget {
 #Preview(as: .systemSmall) {
     VoiceListWidget()
 } timeline: {
-    SimpleEntry(date: .now, favoritesList: ["Milk", "Bread", "Eggs"], shoppingLists: [ShoppingList(name: "Grocery", items: ["Milk", "Bread", "Eggs"])], isEmpty: false, isSubscribed: true)
+    SimpleEntry(date: .now, favoritesList: ["Milk", "Bread", "Eggs"], shoppingLists: [ShoppingList(name: "Grocery", items: [ShoppingListItem(text: "Milk", isCompleted: false), ShoppingListItem(text: "Bread", isCompleted: true), ShoppingListItem(text: "Eggs", isCompleted: false)])], isEmpty: false, isSubscribed: true)
     SimpleEntry(date: .now, favoritesList: [], shoppingLists: [], isEmpty: true, isSubscribed: false)
 }
 

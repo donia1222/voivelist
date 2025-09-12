@@ -453,6 +453,25 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       } else if (url?.includes('voicelist://calendar')) {
         console.log('📅 Switching to Calendar tab from widget calendar link')
         setActiveTab('Calendar')
+      } else if (url?.includes('voicelist://toggle-item/')) {
+        console.log('✅ Widget item toggle request:', url)
+        // Extract listIndex and itemIndex from URL
+        const matches = url.match(/voicelist:\/\/toggle-item\/(\d+)\/(\d+)/)
+        if (matches) {
+          const listIndex = parseInt(matches[1])
+          const itemIndex = parseInt(matches[2])
+          console.log('📝 Toggle item - List:', listIndex, 'Item:', itemIndex)
+          
+          // Navigate to History tab and trigger item toggle
+          setActiveTab('History')
+          
+          // Trigger item toggle via event or AsyncStorage flag
+          AsyncStorage.setItem('@widget_toggle_request', JSON.stringify({
+            listIndex,
+            itemIndex,
+            timestamp: Date.now()
+          }))
+        }
       }
     }
 

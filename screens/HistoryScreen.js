@@ -151,9 +151,49 @@ const HistoryScreen = ({ navigation }) => {
     if (history.length > 0 && currentIndex >= 0 && currentIndex < history.length) {
       // Create array with current visible list first, then the rest
       const reorderedHistory = [history[currentIndex], ...history.filter((_, index) => index !== currentIndex)]
-      WidgetService.updateWidgetShoppingLists(reorderedHistory)
+      
+      // Create reordered completedItems to match reordered history (simple version)
+      const reorderedCompletedItems = {
+        0: completedItems[currentIndex] || [] // Only send completed items for the current visible list
+      }
+      
+      WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
     }
-  }, [currentIndex, history])
+  }, [currentIndex, history, completedItems])
+
+  // Listen for widget item toggle requests
+  useEffect(() => {
+    const checkWidgetToggleRequest = async () => {
+      try {
+        const toggleRequest = await AsyncStorage.getItem('@widget_toggle_request')
+        if (toggleRequest) {
+          const { listIndex, itemIndex, timestamp } = JSON.parse(toggleRequest)
+          
+          // Only process recent requests (within last 5 seconds)
+          if (Date.now() - timestamp < 5000) {
+            console.log('🔄 Processing widget toggle request - List:', listIndex, 'Item:', itemIndex)
+            
+            // Since widget always sends listIndex 0 (current visible list), use currentIndex
+            const actualListIndex = currentIndex
+            
+            if (actualListIndex >= 0 && actualListIndex < history.length) {
+              toggleItemCompletion(actualListIndex, itemIndex)
+            }
+          }
+          
+          // Clear the request
+          await AsyncStorage.removeItem('@widget_toggle_request')
+        }
+      } catch (error) {
+        console.error('Error processing widget toggle request:', error)
+      }
+    }
+
+    // Check for toggle requests when tab becomes focused
+    if (isFocused) {
+      checkWidgetToggleRequest()
+    }
+  }, [isFocused, currentIndex, history])
 
   // Animaciones para las categorías
   const categoryAnimations = useRef({
@@ -608,7 +648,7 @@ const HistoryScreen = ({ navigation }) => {
         
         // Update widget with shopping lists
         console.log('Updating widget with history:', parsedHistory.length, 'lists')
-        await WidgetService.updateWidgetShoppingLists(parsedHistory, isSubscribed)
+        await WidgetService.updateWidgetShoppingLists(parsedHistory, completedItems)
         console.log('Widget update completed')
       }
     } catch (e) {
@@ -624,7 +664,7 @@ const HistoryScreen = ({ navigation }) => {
       setHistory(newHistory)
       
       // Update widget with shopping lists (original order - most recent first)
-      await WidgetService.updateWidgetShoppingLists(newHistory, isSubscribed)
+      await WidgetService.updateWidgetShoppingLists(newHistory, completedItems)
     } catch (e) {
       console.error("Error saving history: ", e)
     }
@@ -837,7 +877,7 @@ const HistoryScreen = ({ navigation }) => {
       
       // Update widget after removing list
       console.log('Updating widget after removing list:', newHistory.length, 'lists remaining')
-      await WidgetService.updateWidgetShoppingLists(newHistory, isSubscribed)
+      await WidgetService.updateWidgetShoppingLists(newHistory, completedItems)
       console.log('Widget update completed after removal')
     } catch (e) {
       console.error("Error removing from history: ", e)

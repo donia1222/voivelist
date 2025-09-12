@@ -1366,7 +1366,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       setHistory(newHistory)
       
       // Update widget with new list immediately
-      await WidgetService.updateWidgetShoppingLists(newHistory.reverse())
+      await WidgetService.updateWidgetShoppingLists(newHistory.reverse(), {})
       
       // Small delay to ensure widget updates in real-time
       await new Promise(resolve => setTimeout(resolve, 100))
