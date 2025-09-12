@@ -98,6 +98,21 @@ class WidgetService {
       console.log('Error clearing widget data:', error);
     }
   }
+  
+  static async syncWidgetChangesToApp() {
+    if (Platform.OS !== 'ios' || !WidgetDataBridge) {
+      return null;
+    }
+    
+    try {
+      const changes = await WidgetDataBridge.syncWidgetChangesToApp();
+      console.log('🔄 DEBUG: WidgetService - Synced widget changes:', changes);
+      return changes;
+    } catch (error) {
+      console.log('Error syncing widget changes:', error);
+      return null;
+    }
+  }
 }
 
 export default WidgetService;

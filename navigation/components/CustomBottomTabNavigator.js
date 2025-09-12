@@ -462,15 +462,58 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           const itemIndex = parseInt(matches[2])
           console.log('📝 Toggle item - List:', listIndex, 'Item:', itemIndex)
           
-          // Navigate to History tab and trigger item toggle
+          // Navigate to History tab and trigger item toggle immediately
           setActiveTab('History')
           
-          // Trigger item toggle via event or AsyncStorage flag
-          AsyncStorage.setItem('@widget_toggle_request', JSON.stringify({
-            listIndex,
-            itemIndex,
-            timestamp: Date.now()
-          }))
+          // Process the toggle immediately with a small delay to ensure History screen loads
+          setTimeout(async () => {
+            try {
+              // Load current history and completed items
+              const historyData = await AsyncStorage.getItem("@shopping_history")
+              const completedItemsData = await AsyncStorage.getItem("@completed_items")
+              
+              if (historyData) {
+                const history = JSON.parse(historyData).reverse() // Reverse to get original order (recent first)
+                const completedItems = completedItemsData ? JSON.parse(completedItemsData) : {}
+                
+                console.log('🔄 Processing toggle - History length:', history.length)
+                console.log('🔄 Current completed items:', completedItems)
+                
+                if (history.length > 0) {
+                  // Widget always sends listIndex 0 (current visible list), so use index 0 
+                  const actualListIndex = 0
+                  
+                  const newCompletedItems = { ...completedItems }
+                  if (!newCompletedItems[actualListIndex]) {
+                    newCompletedItems[actualListIndex] = []
+                  }
+                  
+                  // Toggle the item
+                  if (newCompletedItems[actualListIndex].includes(itemIndex)) {
+                    newCompletedItems[actualListIndex] = newCompletedItems[actualListIndex].filter((i) => i !== itemIndex)
+                    console.log('✅ Item UNCHECKED:', itemIndex)
+                  } else {
+                    newCompletedItems[actualListIndex].push(itemIndex)
+                    console.log('✅ Item CHECKED:', itemIndex)
+                  }
+                  
+                  console.log('💾 Saving new completed items:', newCompletedItems)
+                  
+                  // Save the updated completed items
+                  await AsyncStorage.setItem("@completed_items", JSON.stringify(newCompletedItems))
+                  
+                  // Set flag for HistoryScreen to reload
+                  await AsyncStorage.setItem('@widget_toggle_processed', JSON.stringify({
+                    timestamp: Date.now(),
+                    listIndex: actualListIndex,
+                    itemIndex: itemIndex
+                  }))
+                }
+              }
+            } catch (error) {
+              console.error('❌ Error processing widget toggle:', error)
+            }
+          }, 500) // Small delay to ensure History screen loads
         }
       }
     }
