@@ -68,6 +68,13 @@ class WidgetDataBridge: NSObject, RCTBridgeModule {
                     // Also reload specific widget kind
                     WidgetKit.WidgetCenter.shared.reloadTimelines(ofKind: "VoiceListWidget")
                     print("🔄 DEBUG: WidgetDataBridge - Widget timeline reload requested (both all and specific)")
+                    
+                    // Force additional reload after short delay
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        WidgetKit.WidgetCenter.shared.reloadAllTimelines()
+                        WidgetKit.WidgetCenter.shared.reloadTimelines(ofKind: "VoiceListWidget")
+                        print("🔄 DEBUG: WidgetDataBridge - Delayed widget reload executed")
+                    }
                 }
                 
                 resolver(true)

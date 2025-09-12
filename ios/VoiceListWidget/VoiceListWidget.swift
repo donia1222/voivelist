@@ -181,8 +181,12 @@ struct SmallWidgetView: View {
                             .italic()
                     }
                 }
+                
+                Spacer()
             }
-            .padding(10)
+            .padding(.horizontal, 10)
+            .padding(.top, 0)
+            .padding(.bottom, 10)
             .widgetURL(URL(string: "voicelist://favorites"))
         } else {
             // Show buttons when no lists
@@ -275,7 +279,7 @@ struct MediumWidgetView: View {
                     Spacer()
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 14)
+                .padding(.top, 4)
                 .padding(.bottom, 12)
                 
                 // Lista de items (scrollable content)

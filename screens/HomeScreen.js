@@ -1364,6 +1364,13 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     try {
       await AsyncStorage.setItem("@shopping_history", JSON.stringify(newHistory))
       setHistory(newHistory)
+      
+      // Update widget with new list immediately
+      await WidgetService.updateWidgetShoppingLists(newHistory.reverse())
+      
+      // Small delay to ensure widget updates in real-time
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
       setShoppingList([])
       await AsyncStorage.setItem("@shopping_list", JSON.stringify([]))
       setModalVisible(false)

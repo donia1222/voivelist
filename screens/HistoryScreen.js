@@ -146,6 +146,15 @@ const HistoryScreen = ({ navigation }) => {
     )
   }, [])
 
+  // Update widget when currentIndex changes (sync widget with visible list)
+  useEffect(() => {
+    if (history.length > 0 && currentIndex >= 0 && currentIndex < history.length) {
+      // Create array with current visible list first, then the rest
+      const reorderedHistory = [history[currentIndex], ...history.filter((_, index) => index !== currentIndex)]
+      WidgetService.updateWidgetShoppingLists(reorderedHistory)
+    }
+  }, [currentIndex, history])
+
   // Animaciones para las categorías
   const categoryAnimations = useRef({
     food: new Animated.Value(1),
