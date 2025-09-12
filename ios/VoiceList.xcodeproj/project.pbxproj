@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04FDFA651E924E61BB36BC54 /* VoiceListWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB38564FAA654E09836F3F12 /* VoiceListWidgetBundle.swift */; };
 		0CA9F50C93194117A11C6F18 /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B61D3FD3C77D472EB3132F28 /* Poppins-ExtraBoldItalic.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -26,6 +27,7 @@
 		621717C72E73803400133D04 /* VoiceListWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 621717BA2E73803200133D04 /* VoiceListWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		622C4B3D2C28AB9900AD6C6F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 622C4B3C2C28AB9900AD6C6F /* StoreKit.framework */; };
 		62A14C19CDC94BB4BDFA5CAF /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F21A0E75E3B547D18A7D44C4 /* Poppins-MediumItalic.ttf */; };
+		62E954A72E7441C600EAB49B /* icono34.png in Resources */ = {isa = PBXBuildFile; fileRef = 62E954A62E7441C600EAB49B /* icono34.png */; };
 		8838B2B6381C4E6E815D5E1E /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 39797AC44FB540E0A3A44D75 /* Poppins-SemiBold.ttf */; };
 		897D1C20F7AE3BF1F48248EC /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0F7754D1FCAA514FFF511EE0 /* PrivacyInfo.xcprivacy */; };
 		96905EF65AED1B983A6B3ABC /* libPods-VoiceList.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-VoiceList.a */; };
@@ -34,13 +36,12 @@
 		A9A732CC86F54C03BA17FD03 /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE2891B9761C45B08A4FEE78 /* Poppins-BlackItalic.ttf */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		B28C4E78F7FD491484274D03 /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 37192766F9974970ADEA189D /* Poppins-Thin.ttf */; };
+		B4BCFE72B97A4F08AB6DB4A9 /* VoiceListWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600450249B9B442A8662F8A2 /* VoiceListWidget.swift */; };
 		B8FCD1B3BBDA4160B3AE9447 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23181CEC50104C78B15F2A1F /* Poppins-Regular.ttf */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		D6D3E8016F5E461593CD22E7 /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9515B10E83D8408E88A914F2 /* Poppins-Black.ttf */; };
 		E66733A24C4741A1ABB57AC0 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC59626A9886484A8574CE5C /* Poppins-Bold.ttf */; };
 		EBEA73FC68614714A5D9FA9E /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21098DC4C1A42F58248196C /* noop-file.swift */; };
-		B4BCFE72B97A4F08AB6DB4A9 /* VoiceListWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600450249B9B442A8662F8A2 /* VoiceListWidget.swift */; };
-		04FDFA651E924E61BB36BC54 /* VoiceListWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB38564FAA654E09836F3F12 /* VoiceListWidgetBundle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,11 +84,13 @@
 		3EE8574FFA674F0B86FBC292 /* Poppins-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Light.ttf"; path = "../assets/fonts/Poppins/Poppins-Light.ttf"; sourceTree = "<group>"; };
 		4156F13882F1400F8D9E9F29 /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-VoiceList.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VoiceList.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		600450249B9B442A8662F8A2 /* VoiceListWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceListWidget.swift; sourceTree = "<group>"; };
 		621716CE2E73679900133D04 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		621716D02E73679900133D04 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		621717BA2E73803200133D04 /* VoiceListWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VoiceListWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		621717CD2E73819A00133D04 /* VoiceListWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VoiceListWidgetExtension.entitlements; sourceTree = "<group>"; };
 		622C4B3C2C28AB9900AD6C6F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		62E954A62E7441C600EAB49B /* icono34.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icono34.png; sourceTree = "<group>"; };
 		6C2E3173556A471DD304B334 /* Pods-VoiceList.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VoiceList.debug.xcconfig"; path = "Target Support Files/Pods-VoiceList/Pods-VoiceList.debug.xcconfig"; sourceTree = "<group>"; };
 		71493D4E00EE411D85AF17D2 /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLightItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-VoiceList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VoiceList.release.xcconfig"; path = "Target Support Files/Pods-VoiceList/Pods-VoiceList.release.xcconfig"; sourceTree = "<group>"; };
@@ -96,6 +99,7 @@
 		9B12676F145E4BB2BA7E1981 /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ThinItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
 		9D1D014173924F678AE68899 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBold.ttf"; path = "../assets/fonts/Poppins/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = VoiceList/SplashScreen.storyboard; sourceTree = "<group>"; };
+		AB38564FAA654E09836F3F12 /* VoiceListWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceListWidgetBundle.swift; sourceTree = "<group>"; };
 		B61D3FD3C77D472EB3132F28 /* Poppins-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBoldItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		CC59626A9886484A8574CE5C /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../assets/fonts/Poppins/Poppins-Bold.ttf"; sourceTree = "<group>"; };
@@ -108,8 +112,6 @@
 		F21A0E75E3B547D18A7D44C4 /* Poppins-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-MediumItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-MediumItalic.ttf"; sourceTree = "<group>"; };
 		FA79143B1F4E43C1A59C8209 /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../assets/fonts/Poppins/Poppins-Italic.ttf"; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-VoiceList/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		600450249B9B442A8662F8A2 /* VoiceListWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceListWidget.swift; sourceTree = "<group>"; };
-		AB38564FAA654E09836F3F12 /* VoiceListWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceListWidgetBundle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,16 @@
 				621716D02E73679900133D04 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		621717A62E737FFF00133D04 /* VoiceListWidget */ = {
+			isa = PBXGroup;
+			children = (
+				62E954A62E7441C600EAB49B /* icono34.png */,
+				600450249B9B442A8662F8A2 /* VoiceListWidget.swift */,
+				AB38564FAA654E09836F3F12 /* VoiceListWidgetBundle.swift */,
+			);
+			path = VoiceListWidget;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -255,15 +267,6 @@
 				92DBD88DE9BF7D494EA9DA96 /* VoiceList */,
 			);
 			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
-		621717A62E737FFF00133D04 /* VoiceListWidget */ = {
-			isa = PBXGroup;
-			children = (
-				600450249B9B442A8662F8A2 /* VoiceListWidget.swift */,
-				AB38564FAA654E09836F3F12 /* VoiceListWidgetBundle.swift */,
-			);
-			path = VoiceListWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -384,6 +387,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62E954A72E7441C600EAB49B /* icono34.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

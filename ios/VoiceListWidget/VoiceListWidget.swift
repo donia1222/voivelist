@@ -120,12 +120,17 @@ struct SmallWidgetView: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack {
-                Image(systemName: "cart.fill")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(Color(hex: "4F46E5"))
-                Text("Voice Grocery")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(Color(hex: "1F2937"))
+                Spacer()
+                if let ui = UIImage(named: "icono34") {
+                    Image(uiImage: ui)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32, height: 32)
+                } else {
+                    Image(systemName: "mic.circle.fill")
+                        .font(.system(size: 32, weight: .semibold))
+                        .foregroundColor(Color(hex: "8B5CF6"))
+                }
                 Spacer()
             }
             .padding(.horizontal, 6)
@@ -183,9 +188,16 @@ struct MediumWidgetView: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack {
-                Image(systemName: "cart.fill")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(Color(hex: "4F46E5"))
+                if let ui = UIImage(named: "icono34") {
+                    Image(uiImage: ui)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                } else {
+                    Image(systemName: "mic.circle.fill")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(Color(hex: "8B5CF6"))
+                }
                 Text("Voice Grocery")
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(Color(hex: "1F2937"))
@@ -265,9 +277,16 @@ struct LargeWidgetView: View {
     var body: some View {
         VStack(spacing: 24) {
             HStack {
-                Image(systemName: "cart.fill")
-                    .font(.system(size: 26, weight: .semibold))
-                    .foregroundColor(Color(hex: "4F46E5"))
+                if let ui = UIImage(named: "icono34") {
+                    Image(uiImage: ui)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32, height: 32)
+                } else {
+                    Image(systemName: "mic.circle.fill")
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundColor(Color(hex: "8B5CF6"))
+                }
                 Text("Voice Grocery")
                     .font(.system(size: 26, weight: .bold))
                     .foregroundColor(Color(hex: "1F2937"))
