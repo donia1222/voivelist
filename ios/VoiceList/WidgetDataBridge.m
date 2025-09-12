@@ -9,6 +9,10 @@ RCT_EXTERN_METHOD(updateWidgetData:(NSArray *)favorites
 RCT_EXTERN_METHOD(getWidgetData:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(updateShoppingLists:(NSArray *)lists
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(clearWidgetData:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

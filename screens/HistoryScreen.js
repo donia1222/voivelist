@@ -596,6 +596,11 @@ const HistoryScreen = ({ navigation }) => {
         })
 
         setHistory(parsedHistory)
+        
+        // Update widget with shopping lists
+        console.log('Updating widget with history:', parsedHistory.length, 'lists')
+        await WidgetService.updateWidgetShoppingLists(parsedHistory, isSubscribed)
+        console.log('Widget update completed')
       }
     } catch (e) {
       console.error("Error loading history:", e)
@@ -606,6 +611,9 @@ const HistoryScreen = ({ navigation }) => {
     try {
       await AsyncStorage.setItem("@shopping_history", JSON.stringify(newHistory.reverse()))
       setHistory(newHistory)
+      
+      // Update widget with shopping lists
+      await WidgetService.updateWidgetShoppingLists(newHistory, isSubscribed)
     } catch (e) {
       console.error("Error saving history: ", e)
     }
@@ -1002,6 +1010,7 @@ const HistoryScreen = ({ navigation }) => {
   // Agregar los useEffects necesarios
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
+      console.log('📱 HistoryScreen focused - loading data...')
       loadHistory()
       loadCompletedItems()
       loadReminders()

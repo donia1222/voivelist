@@ -474,18 +474,29 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     const handleDeepLink = (url) => {
       if (!url) return
       
+      console.log('🔗 Deep link received:', url.url)
+      
       if (url.url?.includes('voicelist://create')) {
-        // Start voice recording when opened from widget
-        startRecording()
+        console.log('🎤 Create link detected - but disabled for now')
+        // startRecognizing() - DISABLED until we fix the auto-trigger issue
+      } else if (url.url?.includes('voicelist://home')) {
+        console.log('🏠 Opening HomeScreen from widget home link (no recording)')
+        // Already on HomeScreen, do nothing
+      } else if (url.url?.includes('voicelist://upload')) {
+        console.log('📤 Upload link handled by CustomBottomTabNavigator')
       } else if (url.url?.includes('voicelist://favorites')) {
-        // Navigate to favorites/history screen
-        navigation.navigate('History')
+        console.log('⭐ Favorites link handled by CustomBottomTabNavigator')
       }
     }
 
-    // Handle initial URL when app is opened
+    // Handle initial URL when app is opened from widget
     Linking.getInitialURL().then(url => {
-      if (url) handleDeepLink({ url })
+      if (url) {
+        console.log('📱 App opened with initial URL:', url)
+        handleDeepLink({ url })
+      } else {
+        console.log('📱 App opened normally (no deep link)')
+      }
     })
 
     // Listen for URL changes while app is open

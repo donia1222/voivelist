@@ -432,6 +432,43 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     setActiveTab(initialTab)
   }, [initialTab])
 
+  // Handle deep links for widget navigation
+  useEffect(() => {
+    const handleDeepLink = (event) => {
+      const { url } = event
+      console.log('🔗 CustomBottomTabNavigator received deep link:', url)
+      
+      if (url?.includes('voicelist://upload')) {
+        console.log('📤 Switching to Images tab from widget upload link')
+        setActiveTab('Images')
+      } else if (url?.includes('voicelist://home')) {
+        console.log('🏠 Switching to Home tab from widget home link')
+        setActiveTab('Home')
+      } else if (url?.includes('voicelist://favorites')) {
+        console.log('⭐ Switching to History tab from widget favorites link')
+        setActiveTab('History')
+      } else if (url?.includes('voicelist://calculate')) {
+        console.log('🧮 Switching to PriceCalculator tab from widget calculate link')
+        setActiveTab('PriceCalculator')
+      }
+    }
+
+    // Handle initial URL when app is opened from widget
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        console.log('📱 CustomBottomTabNavigator - App opened with initial URL:', url)
+        handleDeepLink({ url })
+      }
+    })
+
+    // Listen for URL changes while app is open
+    const subscription = Linking.addEventListener('url', handleDeepLink)
+
+    return () => {
+      subscription?.remove()
+    }
+  }, [])
+
   // Initialize pulse animation
   useEffect(() => {
     const startPulsing = () => {

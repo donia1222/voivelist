@@ -3,11 +3,15 @@ import SwiftUI
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), favoritesList: [], isEmpty: true)
+        SimpleEntry(date: Date(), favoritesList: [], shoppingLists: [], isEmpty: true, isSubscribed: false)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), favoritesList: getSampleData(), isEmpty: false)
+        let sampleLists = [
+            ShoppingList(name: "Grocery", items: ["Milk", "Bread", "Eggs"]),
+            ShoppingList(name: "Market", items: ["Tomatoes", "Cheese", "Apples"])
+        ]
+        let entry = SimpleEntry(date: Date(), favoritesList: getSampleData(), shoppingLists: sampleLists, isEmpty: false, isSubscribed: true)
         completion(entry)
     }
 
@@ -15,8 +19,11 @@ struct Provider: TimelineProvider {
         var entries: [SimpleEntry] = []
         
         let favorites = loadFavorites()
+        let shoppingLists = loadShoppingLists()
+        let isSubscribed = loadSubscriptionStatus()
         let currentDate = Date()
-        let entry = SimpleEntry(date: currentDate, favoritesList: favorites, isEmpty: favorites.isEmpty)
+        let isEmpty = shoppingLists.isEmpty && favorites.isEmpty
+        let entry = SimpleEntry(date: currentDate, favoritesList: favorites, shoppingLists: shoppingLists, isEmpty: isEmpty, isSubscribed: isSubscribed)
         entries.append(entry)
         
         let timeline = Timeline(entries: entries, policy: .atEnd)
@@ -24,8 +31,46 @@ struct Provider: TimelineProvider {
     }
     
     func loadFavorites() -> [String] {
-        let sharedDefaults = UserDefaults(suiteName: "group.com.roberto.worktrack")
+        let sharedDefaults = UserDefaults(suiteName: "group.com.lwebch.VoiceList")
         return sharedDefaults?.array(forKey: "favoritesList") as? [String] ?? []
+    }
+    
+    func loadSubscriptionStatus() -> Bool {
+        let sharedDefaults = UserDefaults(suiteName: "group.com.lwebch.VoiceList")
+        return sharedDefaults?.bool(forKey: "isSubscribed") ?? false
+    }
+    
+    func loadShoppingLists() -> [ShoppingList] {
+        let sharedDefaults = UserDefaults(suiteName: "group.com.lwebch.VoiceList")
+        print("🔍 Widget: Checking App Group data...")
+        
+        // Try to load shopping lists from shared storage
+        if let listsData = sharedDefaults?.data(forKey: "shoppingLists") {
+            print("🔍 Widget: Found shoppingLists data, size: \(listsData.count) bytes")
+            
+            if let lists = try? JSONDecoder().decode([ShoppingListData].self, from: listsData) {
+                print("🔍 Widget: Successfully decoded \(lists.count) shopping lists")
+                for (index, list) in lists.enumerated() {
+                    print("🔍 Widget: List \(index): '\(list.name)' with \(list.items.count) items")
+                }
+                return lists.map { ShoppingList(name: $0.name, items: $0.items) }
+            } else {
+                print("🔍 Widget: ERROR - Failed to decode JSON data")
+            }
+        } else {
+            print("🔍 Widget: No shoppingLists data found in App Group")
+        }
+        
+        // Fallback to favorites if no lists available
+        let favorites = loadFavorites()
+        print("🔍 Widget: Fallback - found \(favorites.count) favorites")
+        
+        if !favorites.isEmpty {
+            return [ShoppingList(name: "Favorites", items: favorites)]
+        }
+        
+        print("🔍 Widget: No data found - widget will be empty")
+        return []
     }
     
     func getSampleData() -> [String] {
@@ -33,10 +78,22 @@ struct Provider: TimelineProvider {
     }
 }
 
+struct ShoppingList {
+    let name: String
+    let items: [String]
+}
+
+struct ShoppingListData: Codable {
+    let name: String
+    let items: [String]
+}
+
 struct SimpleEntry: TimelineEntry {
     let date: Date
-    let favoritesList: [String]
+    let favoritesList: [String] // Para compatibilidad
+    let shoppingLists: [ShoppingList] // Nueva estructura para múltiples listas
     let isEmpty: Bool
+    let isSubscribed: Bool // Estado de suscripción
 }
 
 struct VoiceListWidgetEntryView : View {
@@ -61,61 +118,61 @@ struct SmallWidgetView: View {
     var entry: Provider.Entry
     
     var body: some View {
-        ZStack {
-            LinearGradient(
-                gradient: Gradient(colors: [Color(hex: "4A90E2"), Color(hex: "7B68EE")]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            
-            if entry.isEmpty {
-                VStack(spacing: 8) {
-                    Image(systemName: "mic.fill")
-                        .font(.system(size: 32))
-                        .foregroundColor(.white)
-                    
-                    Text("Create List")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.white)
-                }
-            } else {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Image(systemName: "cart.fill")
-                            .font(.system(size: 16))
-                            .foregroundColor(.white.opacity(0.9))
-                        Text("Favorites")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(.white)
-                        Spacer()
-                    }
-                    .padding(.bottom, 4)
-                    
-                    ForEach(entry.favoritesList.prefix(3), id: \.self) { item in
-                        HStack {
-                            Image(systemName: "circle")
-                                .font(.system(size: 6))
-                                .foregroundColor(.white.opacity(0.7))
-                            Text(item)
-                                .font(.system(size: 12))
-                                .foregroundColor(.white.opacity(0.95))
-                                .lineLimit(1)
-                            Spacer()
-                        }
-                    }
-                    
-                    if entry.favoritesList.count > 3 {
-                        Text("+\(entry.favoritesList.count - 3) more")
-                            .font(.system(size: 10))
-                            .foregroundColor(.white.opacity(0.7))
-                            .padding(.top, 2)
-                    }
-                    
-                    Spacer()
-                }
-                .padding()
+        VStack(spacing: 12) {
+            HStack {
+                Image(systemName: "cart.fill")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(Color(hex: "4F46E5"))
+                Text("Voice Grocery")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(Color(hex: "1F2937"))
+                Spacer()
             }
+            .padding(.horizontal, 6)
+            .shadow(color: .black.opacity(0.05), radius: 1, x: 0, y: 1)
+            
+            VStack(spacing: 10) {
+                Link(destination: URL(string: "voicelist://home")!) {
+                    VStack(spacing: 6) {
+                        Image(systemName: "mic.fill")
+                            .font(.system(size: 22, weight: .medium))
+                            .foregroundColor(Color(hex: "8B5CF6"))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(hex: "8B5CF6").opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color(hex: "8B5CF6"), lineWidth: 2)
+                            )
+                    )
+                    .cornerRadius(12)
+                    .shadow(color: Color(hex: "8B5CF6").opacity(0.2), radius: 3, x: 0, y: 1)
+                }
+                
+                Link(destination: URL(string: "voicelist://upload")!) {
+                    VStack(spacing: 6) {
+                        Image(systemName: "photo.badge.plus")
+                            .font(.system(size: 22, weight: .medium))
+                            .foregroundColor(Color(hex: "F59E0B"))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(hex: "F59E0B").opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color(hex: "F59E0B"), lineWidth: 2)
+                            )
+                    )
+                    .cornerRadius(12)
+                    .shadow(color: Color(hex: "F59E0B").opacity(0.2), radius: 3, x: 0, y: 1)
+                }
+            }
+            .padding(.horizontal, 4)
         }
+        .padding(12)
         .widgetURL(URL(string: entry.isEmpty ? "voicelist://create" : "voicelist://favorites"))
     }
 }
@@ -124,82 +181,80 @@ struct MediumWidgetView: View {
     var entry: Provider.Entry
     
     var body: some View {
-        ZStack {
-            LinearGradient(
-                gradient: Gradient(colors: [Color(hex: "4A90E2"), Color(hex: "7B68EE")]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+        VStack(spacing: 12) {
+            HStack {
+                Image(systemName: "cart.fill")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(Color(hex: "4F46E5"))
+                Text("Voice Grocery")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(Color(hex: "1F2937"))
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
             
-            if entry.isEmpty {
-                HStack {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Voice Grocery")
-                            .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(.white)
-                        
-                        Text("Tap to create your first list")
-                            .font(.system(size: 14))
-                            .foregroundColor(.white.opacity(0.8))
+            HStack(spacing: 12) {
+                Link(destination: URL(string: "voicelist://home")!) {
+                    VStack(spacing: 4) {
+                        Image(systemName: "mic.fill")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(Color(hex: "8B5CF6"))
+                        Text("Voice")
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundColor(Color(hex: "8B5CF6"))
                     }
-                    .padding()
-                    
-                    Spacer()
-                    
-                    Image(systemName: "mic.circle.fill")
-                        .font(.system(size: 48))
-                        .foregroundColor(.white.opacity(0.9))
-                        .padding()
+                    .frame(maxWidth: .infinity, minHeight: 60)
+                    .padding(.vertical, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(hex: "8B5CF6").opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color(hex: "8B5CF6"), lineWidth: 2)
+                            )
+                    )
+                    .cornerRadius(12)
+                    .shadow(color: Color(hex: "8B5CF6").opacity(0.2), radius: 2, x: 0, y: 1)
                 }
-            } else {
-                HStack {
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Image(systemName: "cart.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(.white.opacity(0.9))
-                            Text("Shopping List")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.white)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 6) {
-                            ForEach(entry.favoritesList.prefix(5), id: \.self) { item in
-                                HStack {
-                                    Image(systemName: "checkmark.circle")
-                                        .font(.system(size: 12))
-                                        .foregroundColor(.white.opacity(0.7))
-                                    Text(item)
-                                        .font(.system(size: 14))
-                                        .foregroundColor(.white.opacity(0.95))
-                                        .lineLimit(1)
-                                }
-                            }
-                        }
-                        
-                        if entry.favoritesList.count > 5 {
-                            Text("+\(entry.favoritesList.count - 5) more items")
-                                .font(.system(size: 12))
-                                .foregroundColor(.white.opacity(0.7))
-                                .padding(.top, 4)
-                        }
+                
+                Link(destination: URL(string: "voicelist://upload")!) {
+                    VStack(spacing: 4) {
+                        Image(systemName: "photo.badge.plus")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(Color(hex: "F59E0B"))
+                        Text("Upload")
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundColor(Color(hex: "F59E0B"))
                     }
-                    .padding()
-                    
-                    Spacer()
-                    
-                    VStack {
-                        Image(systemName: "mic.circle")
-                            .font(.system(size: 32))
-                            .foregroundColor(.white.opacity(0.8))
-                        Text("Add more")
-                            .font(.system(size: 10))
-                            .foregroundColor(.white.opacity(0.7))
-                    }
-                    .padding()
+                    .frame(maxWidth: .infinity, minHeight: 60)
+                    .padding(.vertical, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(hex: "F59E0B").opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color(hex: "F59E0B"), lineWidth: 2)
+                            )
+                    )
+                    .cornerRadius(12)
+                    .shadow(color: Color(hex: "F59E0B").opacity(0.2), radius: 2, x: 0, y: 1)
                 }
             }
+            .padding(.horizontal, 16)
+            
+            VStack(spacing: 6) {
+                Text("Get started by creating your first list")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(Color(hex: "6B7280"))
+                    .multilineTextAlignment(.center)
+                
+            }
+            .padding(.horizontal, 16)
+            
+            Spacer()
         }
+        .padding(.bottom, 8)
         .widgetURL(URL(string: entry.isEmpty ? "voicelist://create" : "voicelist://favorites"))
     }
 }
@@ -208,86 +263,94 @@ struct LargeWidgetView: View {
     var entry: Provider.Entry
     
     var body: some View {
-        ZStack {
-            LinearGradient(
-                gradient: Gradient(colors: [Color(hex: "4A90E2"), Color(hex: "7B68EE")]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Image(systemName: "cart.fill")
-                        .font(.system(size: 24))
-                        .foregroundColor(.white.opacity(0.9))
-                    Text("Voice Grocery")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
-                    Spacer()
-                    Image(systemName: "mic.circle.fill")
-                        .font(.system(size: 28))
-                        .foregroundColor(.white.opacity(0.8))
-                }
-                .padding(.horizontal)
-                .padding(.top)
-                
-                if entry.isEmpty {
-                    Spacer()
-                    VStack(spacing: 16) {
-                        Image(systemName: "mic.fill")
-                            .font(.system(size: 48))
-                            .foregroundColor(.white.opacity(0.9))
-                        
-                        Text("Create your first list")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.white)
-                        
-                        Text("Tap to start speaking and create your shopping list")
-                            .font(.system(size: 14))
-                            .foregroundColor(.white.opacity(0.8))
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                    }
-                    Spacer()
-                } else {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Favorites")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(.white.opacity(0.9))
-                                .padding(.horizontal)
-                            
-                            ForEach(entry.favoritesList.prefix(10), id: \.self) { item in
-                                HStack {
-                                    Image(systemName: "checkmark.circle")
-                                        .font(.system(size: 14))
-                                        .foregroundColor(.white.opacity(0.7))
-                                    Text(item)
-                                        .font(.system(size: 15))
-                                        .foregroundColor(.white.opacity(0.95))
-                                    Spacer()
-                                }
-                                .padding(.horizontal)
-                                .padding(.vertical, 4)
-                            }
-                            
-                            if entry.favoritesList.count > 10 {
-                                HStack {
-                                    Spacer()
-                                    Text("View all \(entry.favoritesList.count) items")
-                                        .font(.system(size: 14, weight: .medium))
-                                        .foregroundColor(.white.opacity(0.8))
-                                        .padding()
-                                    Spacer()
-                                }
-                            }
-                        }
-                    }
-                }
-                
+        VStack(spacing: 24) {
+            HStack {
+                Image(systemName: "cart.fill")
+                    .font(.system(size: 26, weight: .semibold))
+                    .foregroundColor(Color(hex: "4F46E5"))
+                Text("Voice Grocery")
+                    .font(.system(size: 26, weight: .bold))
+                    .foregroundColor(Color(hex: "1F2937"))
                 Spacer()
             }
+            .padding(.horizontal, 24)
+            .padding(.top, 16)
+            
+            VStack(spacing: 20) {
+                Link(destination: URL(string: "voicelist://home")!) {
+                    VStack(spacing: 4) {
+                        Image(systemName: "mic.fill")
+                            .font(.system(size: 24, weight: .medium))
+                            .foregroundColor(Color(hex: "8B5CF6"))
+                        Text("Voice")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(Color(hex: "8B5CF6"))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                    .padding(.vertical, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color(hex: "8B5CF6").opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color(hex: "8B5CF6"), lineWidth: 2)
+                            )
+                    )
+                    .cornerRadius(20)
+                    .shadow(color: Color(hex: "8B5CF6").opacity(0.2), radius: 4, x: 0, y: 2)
+                }
+                
+                Link(destination: URL(string: "voicelist://upload")!) {
+                    VStack(spacing: 4) {
+                        Image(systemName: "photo.badge.plus")
+                            .font(.system(size: 24, weight: .medium))
+                            .foregroundColor(Color(hex: "F59E0B"))
+                        Text("Upload")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(Color(hex: "F59E0B"))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                    .padding(.vertical, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color(hex: "F59E0B").opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color(hex: "F59E0B"), lineWidth: 2)
+                            )
+                    )
+                    .cornerRadius(20)
+                    .shadow(color: Color(hex: "F59E0B").opacity(0.2), radius: 4, x: 0, y: 2)
+                }
+                
+                Link(destination: URL(string: "voicelist://calculate")!) {
+                    VStack(spacing: 4) {
+                        Image(systemName: "plus.forwardslash.minus")
+                            .font(.system(size: 24, weight: .medium))
+                            .foregroundColor(Color(hex: "10B981"))
+                        Text("Calculate")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(Color(hex: "10B981"))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                    .padding(.vertical, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color(hex: "10B981").opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color(hex: "10B981"), lineWidth: 2)
+                            )
+                    )
+                    .cornerRadius(20)
+                    .shadow(color: Color(hex: "10B981").opacity(0.2), radius: 4, x: 0, y: 2)
+                }
+            }
+            .padding(.horizontal, 24)
+            
+            Spacer()
         }
+        .frame(maxHeight: .infinity)
         .widgetURL(URL(string: entry.isEmpty ? "voicelist://create" : "voicelist://favorites"))
     }
 }
@@ -342,6 +405,6 @@ struct VoiceListWidget: Widget {
 #Preview(as: .systemSmall) {
     VoiceListWidget()
 } timeline: {
-    SimpleEntry(date: .now, favoritesList: ["Milk", "Bread", "Eggs"], isEmpty: false)
-    SimpleEntry(date: .now, favoritesList: [], isEmpty: true)
+    SimpleEntry(date: .now, favoritesList: ["Milk", "Bread", "Eggs"], shoppingLists: [ShoppingList(name: "Grocery", items: ["Milk", "Bread", "Eggs"])], isEmpty: false, isSubscribed: true)
+    SimpleEntry(date: .now, favoritesList: [], shoppingLists: [], isEmpty: true, isSubscribed: false)
 }

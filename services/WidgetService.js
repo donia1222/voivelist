@@ -24,6 +24,36 @@ class WidgetService {
     }
   }
   
+  static async updateWidgetShoppingLists(history, isSubscribed = false) {
+    if (Platform.OS !== 'ios' || !WidgetDataBridge) {
+      return;
+    }
+    
+    try {
+      // Convert history to shopping lists format
+      const shoppingLists = history.slice(0, 5).map(item => ({
+        name: item.name || 'Shopping List',
+        items: Array.isArray(item.list) ? item.list.slice(0, 10).map(listItem => {
+          if (typeof listItem === 'string') return listItem;
+          if (listItem && listItem.text) return listItem.text;
+          if (listItem && listItem.name) return listItem.name;
+          return String(listItem);
+        }).filter(i => i && i.length > 0) : []
+      })).filter(list => list.items.length > 0);
+      
+      console.log('WidgetService: Sending to widget:', JSON.stringify(shoppingLists, null, 2));
+      console.log('WidgetService: User subscription status:', isSubscribed);
+      
+      // Store shopping lists as JSON data
+      await WidgetDataBridge.updateShoppingLists(shoppingLists);
+      
+      // Also store subscription status
+      await WidgetDataBridge.updateSubscriptionStatus(isSubscribed);
+    } catch (error) {
+      console.log('Error updating widget shopping lists:', error);
+    }
+  }
+  
   static async getWidgetFavorites() {
     if (Platform.OS !== 'ios' || !WidgetDataBridge) {
       return [];
