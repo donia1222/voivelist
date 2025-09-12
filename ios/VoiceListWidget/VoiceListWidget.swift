@@ -120,17 +120,19 @@ struct SmallWidgetView: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack {
-                Spacer()
                 if let ui = UIImage(named: "icono34") {
                     Image(uiImage: ui)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 32, height: 32)
+                        .frame(width: 24, height: 24)
                 } else {
                     Image(systemName: "mic.circle.fill")
-                        .font(.system(size: 32, weight: .semibold))
-                        .foregroundColor(Color(hex: "8B5CF6"))
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundColor(Color(hex: "1F2937"))
                 }
+                Text("Voice Grocery")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(Color(hex: "1F2937"))
                 Spacer()
             }
             .padding(.horizontal, 6)
@@ -206,51 +208,71 @@ struct MediumWidgetView: View {
             .padding(.horizontal, 16)
             .padding(.top, 16)
             
-            HStack(spacing: 12) {
+            HStack(spacing: 8) {
                 Link(destination: URL(string: "voicelist://home")!) {
                     VStack(spacing: 4) {
                         Image(systemName: "mic.fill")
-                            .font(.system(size: 20, weight: .medium))
+                            .font(.system(size: 18, weight: .medium))
                             .foregroundColor(Color(hex: "8B5CF6"))
                         Text("Voice")
-                            .font(.system(size: 13, weight: .bold))
+                            .font(.system(size: 11, weight: .bold))
                             .foregroundColor(Color(hex: "8B5CF6"))
                     }
-                    .frame(maxWidth: .infinity, minHeight: 60)
-                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, minHeight: 50)
                     .background(
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: 10)
                             .fill(Color(hex: "8B5CF6").opacity(0.1))
                             .overlay(
-                                RoundedRectangle(cornerRadius: 12)
+                                RoundedRectangle(cornerRadius: 10)
                                     .stroke(Color(hex: "8B5CF6"), lineWidth: 2)
                             )
                     )
-                    .cornerRadius(12)
+                    .cornerRadius(10)
                     .shadow(color: Color(hex: "8B5CF6").opacity(0.2), radius: 2, x: 0, y: 1)
                 }
                 
                 Link(destination: URL(string: "voicelist://upload")!) {
                     VStack(spacing: 4) {
                         Image(systemName: "photo.badge.plus")
-                            .font(.system(size: 20, weight: .medium))
+                            .font(.system(size: 18, weight: .medium))
                             .foregroundColor(Color(hex: "F59E0B"))
                         Text("Upload")
-                            .font(.system(size: 13, weight: .bold))
+                            .font(.system(size: 11, weight: .bold))
                             .foregroundColor(Color(hex: "F59E0B"))
                     }
-                    .frame(maxWidth: .infinity, minHeight: 60)
-                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, minHeight: 50)
                     .background(
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: 10)
                             .fill(Color(hex: "F59E0B").opacity(0.1))
                             .overlay(
-                                RoundedRectangle(cornerRadius: 12)
+                                RoundedRectangle(cornerRadius: 10)
                                     .stroke(Color(hex: "F59E0B"), lineWidth: 2)
                             )
                     )
-                    .cornerRadius(12)
+                    .cornerRadius(10)
                     .shadow(color: Color(hex: "F59E0B").opacity(0.2), radius: 2, x: 0, y: 1)
+                }
+                
+                Link(destination: URL(string: "voicelist://calculate")!) {
+                    VStack(spacing: 4) {
+                        Image(systemName: "plus.forwardslash.minus")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundColor(Color(hex: "10B981"))
+                        Text("Calculate")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(Color(hex: "10B981"))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color(hex: "10B981").opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color(hex: "10B981"), lineWidth: 2)
+                            )
+                    )
+                    .cornerRadius(10)
+                    .shadow(color: Color(hex: "10B981").opacity(0.2), radius: 2, x: 0, y: 1)
                 }
             }
             .padding(.horizontal, 16)
@@ -288,81 +310,104 @@ struct LargeWidgetView: View {
                         .foregroundColor(Color(hex: "8B5CF6"))
                 }
                 Text("Voice Grocery")
-                    .font(.system(size: 26, weight: .bold))
+                    .font(.system(size: 20, weight: .bold))
                     .foregroundColor(Color(hex: "1F2937"))
                 Spacer()
             }
             .padding(.horizontal, 24)
             .padding(.top, 16)
             
-            VStack(spacing: 20) {
-                Link(destination: URL(string: "voicelist://home")!) {
-                    VStack(spacing: 4) {
-                        Image(systemName: "mic.fill")
-                            .font(.system(size: 24, weight: .medium))
-                            .foregroundColor(Color(hex: "8B5CF6"))
-                        Text("Voice")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(Color(hex: "8B5CF6"))
+            VStack(spacing: 12) {
+                HStack(spacing: 12) {
+                    Link(destination: URL(string: "voicelist://home")!) {
+                        VStack(spacing: 4) {
+                            Image(systemName: "mic.fill")
+                                .font(.system(size: 26, weight: .medium))
+                                .foregroundColor(Color(hex: "8B5CF6"))
+                            Text("Voice")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(Color(hex: "8B5CF6"))
+                        }
+                        .frame(width: 120, height: 120)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color(hex: "8B5CF6").opacity(0.1))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color(hex: "8B5CF6"), lineWidth: 2)
+                                )
+                        )
+                        .cornerRadius(16)
+                        .shadow(color: Color(hex: "8B5CF6").opacity(0.2), radius: 3, x: 0, y: 2)
                     }
-                    .frame(maxWidth: .infinity, minHeight: 50)
-                    .padding(.vertical, 8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color(hex: "8B5CF6").opacity(0.1))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color(hex: "8B5CF6"), lineWidth: 2)
-                            )
-                    )
-                    .cornerRadius(20)
-                    .shadow(color: Color(hex: "8B5CF6").opacity(0.2), radius: 4, x: 0, y: 2)
+                    
+                    Link(destination: URL(string: "voicelist://upload")!) {
+                        VStack(spacing: 4) {
+                            Image(systemName: "photo.badge.plus")
+                                .font(.system(size: 26, weight: .medium))
+                                .foregroundColor(Color(hex: "F59E0B"))
+                            Text("Upload")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(Color(hex: "F59E0B"))
+                        }
+                        .frame(width: 120, height: 120)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color(hex: "F59E0B").opacity(0.1))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color(hex: "F59E0B"), lineWidth: 2)
+                                )
+                        )
+                        .cornerRadius(16)
+                        .shadow(color: Color(hex: "F59E0B").opacity(0.2), radius: 3, x: 0, y: 2)
+                    }
                 }
                 
-                Link(destination: URL(string: "voicelist://upload")!) {
-                    VStack(spacing: 4) {
-                        Image(systemName: "photo.badge.plus")
-                            .font(.system(size: 24, weight: .medium))
-                            .foregroundColor(Color(hex: "F59E0B"))
-                        Text("Upload")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(Color(hex: "F59E0B"))
+                HStack(spacing: 12) {
+                    Link(destination: URL(string: "voicelist://calculate")!) {
+                        VStack(spacing: 4) {
+                            Image(systemName: "plus.forwardslash.minus")
+                                .font(.system(size: 26, weight: .medium))
+                                .foregroundColor(Color(hex: "10B981"))
+                            Text("Calculate")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(Color(hex: "10B981"))
+                        }
+                        .frame(width: 120, height: 120)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color(hex: "10B981").opacity(0.1))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color(hex: "10B981"), lineWidth: 2)
+                                )
+                        )
+                        .cornerRadius(16)
+                        .shadow(color: Color(hex: "10B981").opacity(0.2), radius: 3, x: 0, y: 2)
                     }
-                    .frame(maxWidth: .infinity, minHeight: 50)
-                    .padding(.vertical, 8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color(hex: "F59E0B").opacity(0.1))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color(hex: "F59E0B"), lineWidth: 2)
-                            )
-                    )
-                    .cornerRadius(20)
-                    .shadow(color: Color(hex: "F59E0B").opacity(0.2), radius: 4, x: 0, y: 2)
-                }
-                
-                Link(destination: URL(string: "voicelist://calculate")!) {
-                    VStack(spacing: 4) {
-                        Image(systemName: "plus.forwardslash.minus")
-                            .font(.system(size: 24, weight: .medium))
-                            .foregroundColor(Color(hex: "10B981"))
-                        Text("Calculate")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(Color(hex: "10B981"))
+                    
+                    Link(destination: URL(string: "voicelist://calendar")!) {
+                        VStack(spacing: 4) {
+                            Image(systemName: "calendar")
+                                .font(.system(size: 26, weight: .medium))
+                                .foregroundColor(Color(hex: "EF4444"))
+                            Text("ShopCalendar")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(Color(hex: "EF4444"))
+                        }
+                        .frame(width: 120, height: 120)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color(hex: "EF4444").opacity(0.1))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color(hex: "EF4444"), lineWidth: 2)
+                                )
+                        )
+                        .cornerRadius(16)
+                        .shadow(color: Color(hex: "EF4444").opacity(0.2), radius: 3, x: 0, y: 2)
                     }
-                    .frame(maxWidth: .infinity, minHeight: 50)
-                    .padding(.vertical, 8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color(hex: "10B981").opacity(0.1))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color(hex: "10B981"), lineWidth: 2)
-                            )
-                    )
-                    .cornerRadius(20)
-                    .shadow(color: Color(hex: "10B981").opacity(0.2), radius: 4, x: 0, y: 2)
                 }
             }
             .padding(.horizontal, 24)
@@ -408,11 +453,29 @@ struct VoiceListWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             if #available(iOS 17.0, *) {
                 VoiceListWidgetEntryView(entry: entry)
-                    .containerBackground(.fill.tertiary, for: .widget)
+                    .containerBackground(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(hex: "FEF3C7"),
+                                Color(hex: "F3E8FF")
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        for: .widget
+                    )
             } else {
                 VoiceListWidgetEntryView(entry: entry)
-                    .padding()
-                    .background()
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(hex: "FEF3C7"),
+                                Color(hex: "F3E8FF")
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
             }
         }
         .configurationDisplayName("Voice Grocery")
@@ -427,3 +490,4 @@ struct VoiceListWidget: Widget {
     SimpleEntry(date: .now, favoritesList: ["Milk", "Bread", "Eggs"], shoppingLists: [ShoppingList(name: "Grocery", items: ["Milk", "Bread", "Eggs"])], isEmpty: false, isSubscribed: true)
     SimpleEntry(date: .now, favoritesList: [], shoppingLists: [], isEmpty: true, isSubscribed: false)
 }
+

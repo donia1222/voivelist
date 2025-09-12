@@ -450,6 +450,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       } else if (url?.includes('voicelist://calculate')) {
         console.log('🧮 Switching to PriceCalculator tab from widget calculate link')
         setActiveTab('PriceCalculator')
+      } else if (url?.includes('voicelist://calendar')) {
+        console.log('📅 Switching to Calendar tab from widget calendar link')
+        setActiveTab('Calendar')
       }
     }
 
