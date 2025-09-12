@@ -146,7 +146,7 @@ struct SmallWidgetView: View {
         if !entry.shoppingLists.isEmpty {
             // Show shopping list
             let currentList = entry.shoppingLists.first!
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 5) {
                 HStack {
                     if let ui = UIImage(named: "icono34") {
                         Image(uiImage: ui)
@@ -162,14 +162,20 @@ struct SmallWidgetView: View {
                 
                 VStack(alignment: .leading, spacing: 2) {
                     ForEach(Array(currentList.items.prefix(4).enumerated()), id: \.offset) { index, item in
-                        Text("• \(item)")
-                            .font(.system(size: 11))
-                            .foregroundColor(Color(hex: "374151"))
-                            .lineLimit(1)
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(Color(hex: "8B5CF6"))
+                                .frame(width: 6, height: 6)
+                            Text(item)
+                                .font(.system(size: 13))
+                                .foregroundColor(Color(hex: "374151"))
+                                .lineLimit(1)
+                            Spacer()
+                        }
                     }
                     
                     if currentList.items.count > 4 {
-                        Text("... y \(currentList.items.count - 4) más")
+                        Text("... and \(currentList.items.count - 4) more")
                             .font(.system(size: 10))
                             .foregroundColor(Color(hex: "6B7280"))
                             .italic()
@@ -254,13 +260,14 @@ struct MediumWidgetView: View {
         if !entry.shoppingLists.isEmpty {
             // Show shopping list
             let currentList = entry.shoppingLists.first!
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(spacing: 0) {
+                // Header fijo arriba
                 HStack {
                     if let ui = UIImage(named: "icono34") {
                         Image(uiImage: ui)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 20, height: 20)
+                            .frame(width: 28, height: 28)
                     }
                     Text(currentList.name)
                         .font(.system(size: 16, weight: .bold))
@@ -268,24 +275,33 @@ struct MediumWidgetView: View {
                     Spacer()
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 16)
+                .padding(.top, 14)
+                .padding(.bottom, 12)
                 
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(Array(currentList.items.prefix(6).enumerated()), id: \.offset) { index, item in
-                        Text("• \(item)")
-                            .font(.system(size: 12))
-                            .foregroundColor(Color(hex: "374151"))
-                            .lineLimit(1)
+                // Lista de items (scrollable content)
+                VStack(alignment: .leading, spacing: 3) {
+                    ForEach(Array(currentList.items.prefix(4).enumerated()), id: \.offset) { index, item in
+                        HStack(spacing: 8) {
+                            Circle()
+                                .fill(Color(hex: "8B5CF6"))
+                                .frame(width: 7, height: 7)
+                            Text(item)
+                                .font(.system(size: 14))
+                                .foregroundColor(Color(hex: "374151"))
+                                .lineLimit(1)
+                            Spacer()
+                        }
                     }
                     
-                    if currentList.items.count > 6 {
-                        Text("... y \(currentList.items.count - 6) más")
+                    if currentList.items.count > 4 {
+                        Text("... and \(currentList.items.count - 4) more")
                             .font(.system(size: 11))
                             .foregroundColor(Color(hex: "6B7280"))
                             .italic()
                     }
                 }
                 .padding(.horizontal, 16)
+                .padding(.top, -2)
                 
                 Spacer()
             }
@@ -405,13 +421,14 @@ struct LargeWidgetView: View {
         if !entry.shoppingLists.isEmpty {
             // Show shopping list
             let currentList = entry.shoppingLists.first!
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(spacing: 0) {
+                // Header fijo arriba
                 HStack {
                     if let ui = UIImage(named: "icono34") {
                         Image(uiImage: ui)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 24, height: 24)
+                            .frame(width: 26, height: 26)
                     }
                     Text(currentList.name)
                         .font(.system(size: 20, weight: .bold))
@@ -419,24 +436,32 @@ struct LargeWidgetView: View {
                     Spacer()
                 }
                 .padding(.horizontal, 24)
-                .padding(.top, 16)
+                .padding(.vertical, 6)
                 
-                VStack(alignment: .leading, spacing: 6) {
-                    ForEach(Array(currentList.items.prefix(8).enumerated()), id: \.offset) { index, item in
-                        Text("• \(item)")
-                            .font(.system(size: 14))
-                            .foregroundColor(Color(hex: "374151"))
-                            .lineLimit(1)
+                // Lista de items (scrollable content)
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(Array(currentList.items.prefix(12).enumerated()), id: \.offset) { index, item in
+                        HStack(spacing: 10) {
+                            Circle()
+                                .fill(Color(hex: "8B5CF6"))
+                                .frame(width: 8, height: 8)
+                            Text(item)
+                                .font(.system(size: 15))
+                                .foregroundColor(Color(hex: "374151"))
+                                .lineLimit(1)
+                            Spacer()
+                        }
                     }
                     
-                    if currentList.items.count > 8 {
-                        Text("... y \(currentList.items.count - 8) más")
+                    if currentList.items.count > 12 {
+                        Text("... and \(currentList.items.count - 12) more")
                             .font(.system(size: 12))
                             .foregroundColor(Color(hex: "6B7280"))
                             .italic()
                     }
                 }
                 .padding(.horizontal, 24)
+                .padding(.top, 5)
                 
                 Spacer()
             }

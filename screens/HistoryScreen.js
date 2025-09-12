@@ -609,10 +609,12 @@ const HistoryScreen = ({ navigation }) => {
 
   const saveHistory = async (newHistory) => {
     try {
-      await AsyncStorage.setItem("@shopping_history", JSON.stringify(newHistory.reverse()))
+      // Save reversed for storage, but keep original order for widget
+      const reversedForStorage = [...newHistory].reverse()
+      await AsyncStorage.setItem("@shopping_history", JSON.stringify(reversedForStorage))
       setHistory(newHistory)
       
-      // Update widget with shopping lists
+      // Update widget with shopping lists (original order - most recent first)
       await WidgetService.updateWidgetShoppingLists(newHistory, isSubscribed)
     } catch (e) {
       console.error("Error saving history: ", e)
@@ -823,6 +825,11 @@ const HistoryScreen = ({ navigation }) => {
       await AsyncStorage.setItem("@favorites3", JSON.stringify(adjustedFavorites3))
       await AsyncStorage.setItem("@favorites4", JSON.stringify(adjustedFavorites4))
       await AsyncStorage.setItem("@favorites5", JSON.stringify(adjustedFavorites5))
+      
+      // Update widget after removing list
+      console.log('Updating widget after removing list:', newHistory.length, 'lists remaining')
+      await WidgetService.updateWidgetShoppingLists(newHistory, isSubscribed)
+      console.log('Widget update completed after removal')
     } catch (e) {
       console.error("Error removing from history: ", e)
     }

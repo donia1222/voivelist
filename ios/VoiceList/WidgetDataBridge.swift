@@ -62,10 +62,12 @@ class WidgetDataBridge: NSObject, RCTBridgeModule {
                     print("❌ DEBUG: WidgetDataBridge - ERROR - Cannot read back data immediately!")
                 }
                 
-                // Reload widget timeline
+                // Reload widget timeline more aggressively
                 if #available(iOS 14.0, *) {
                     WidgetKit.WidgetCenter.shared.reloadAllTimelines()
-                    print("🔄 DEBUG: WidgetDataBridge - Widget timeline reload requested")
+                    // Also reload specific widget kind
+                    WidgetKit.WidgetCenter.shared.reloadTimelines(ofKind: "VoiceListWidget")
+                    print("🔄 DEBUG: WidgetDataBridge - Widget timeline reload requested (both all and specific)")
                 }
                 
                 resolver(true)
