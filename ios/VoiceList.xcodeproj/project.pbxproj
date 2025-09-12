@@ -28,6 +28,8 @@
 		622C4B3D2C28AB9900AD6C6F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 622C4B3C2C28AB9900AD6C6F /* StoreKit.framework */; };
 		62A14C19CDC94BB4BDFA5CAF /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F21A0E75E3B547D18A7D44C4 /* Poppins-MediumItalic.ttf */; };
 		62E954A72E7441C600EAB49B /* icono34.png in Resources */ = {isa = PBXBuildFile; fileRef = 62E954A62E7441C600EAB49B /* icono34.png */; };
+		62E954AA2E7451E000EAB49B /* WidgetDataBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 62E954A82E7451E000EAB49B /* WidgetDataBridge.m */; };
+		62E954AB2E7451E000EAB49B /* WidgetDataBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E954A92E7451E000EAB49B /* WidgetDataBridge.swift */; };
 		8838B2B6381C4E6E815D5E1E /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 39797AC44FB540E0A3A44D75 /* Poppins-SemiBold.ttf */; };
 		897D1C20F7AE3BF1F48248EC /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0F7754D1FCAA514FFF511EE0 /* PrivacyInfo.xcprivacy */; };
 		96905EF65AED1B983A6B3ABC /* libPods-VoiceList.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-VoiceList.a */; };
@@ -91,6 +93,8 @@
 		621717CD2E73819A00133D04 /* VoiceListWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VoiceListWidgetExtension.entitlements; sourceTree = "<group>"; };
 		622C4B3C2C28AB9900AD6C6F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		62E954A62E7441C600EAB49B /* icono34.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icono34.png; sourceTree = "<group>"; };
+		62E954A82E7451E000EAB49B /* WidgetDataBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WidgetDataBridge.m; sourceTree = "<group>"; };
+		62E954A92E7451E000EAB49B /* WidgetDataBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDataBridge.swift; sourceTree = "<group>"; };
 		6C2E3173556A471DD304B334 /* Pods-VoiceList.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VoiceList.debug.xcconfig"; path = "Target Support Files/Pods-VoiceList/Pods-VoiceList.debug.xcconfig"; sourceTree = "<group>"; };
 		71493D4E00EE411D85AF17D2 /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLightItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-VoiceList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VoiceList.release.xcconfig"; path = "Target Support Files/Pods-VoiceList/Pods-VoiceList.release.xcconfig"; sourceTree = "<group>"; };
@@ -185,6 +189,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				62E954A82E7451E000EAB49B /* WidgetDataBridge.m */,
+				62E954A92E7451E000EAB49B /* WidgetDataBridge.swift */,
 				621717CD2E73819A00133D04 /* VoiceListWidgetExtension.entitlements */,
 				13B07FAE1A68108700A75B9A /* VoiceList */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -530,6 +536,8 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				62E954AA2E7451E000EAB49B /* WidgetDataBridge.m in Sources */,
+				62E954AB2E7451E000EAB49B /* WidgetDataBridge.swift in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
 				EBEA73FC68614714A5D9FA9E /* noop-file.swift in Sources */,
 			);

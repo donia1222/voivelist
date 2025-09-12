@@ -16,6 +16,7 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+        print("⏰ DEBUG: Widget getTimeline() called")
         var entries: [SimpleEntry] = []
         
         let favorites = loadFavorites()
@@ -23,6 +24,9 @@ struct Provider: TimelineProvider {
         let isSubscribed = loadSubscriptionStatus()
         let currentDate = Date()
         let isEmpty = shoppingLists.isEmpty && favorites.isEmpty
+        
+        print("⏰ DEBUG: Widget timeline - \(shoppingLists.count) shopping lists, isEmpty: \(isEmpty)")
+        
         let entry = SimpleEntry(date: currentDate, favoritesList: favorites, shoppingLists: shoppingLists, isEmpty: isEmpty, isSubscribed: isSubscribed)
         entries.append(entry)
         
@@ -42,34 +46,55 @@ struct Provider: TimelineProvider {
     
     func loadShoppingLists() -> [ShoppingList] {
         let sharedDefaults = UserDefaults(suiteName: "group.com.lwebch.VoiceList")
-        print("🔍 Widget: Checking App Group data...")
+        print("🔍 DEBUG: Widget - Starting loadShoppingLists()")
+        print("🔍 DEBUG: Widget - App Group UserDefaults created: \(sharedDefaults != nil)")
         
         // Try to load shopping lists from shared storage
         if let listsData = sharedDefaults?.data(forKey: "shoppingLists") {
-            print("🔍 Widget: Found shoppingLists data, size: \(listsData.count) bytes")
+            print("✅ DEBUG: Widget - Found shoppingLists data, size: \(listsData.count) bytes")
+            
+            // Try to decode as raw JSON first to see structure
+            if let jsonObject = try? JSONSerialization.jsonObject(with: listsData, options: []) {
+                print("🔍 DEBUG: Widget - Raw JSON data: \(jsonObject)")
+            }
             
             if let lists = try? JSONDecoder().decode([ShoppingListData].self, from: listsData) {
-                print("🔍 Widget: Successfully decoded \(lists.count) shopping lists")
+                print("✅ DEBUG: Widget - Successfully decoded \(lists.count) shopping lists")
                 for (index, list) in lists.enumerated() {
-                    print("🔍 Widget: List \(index): '\(list.name)' with \(list.items.count) items")
+                    print("📋 DEBUG: Widget - List \(index): '\(list.name)' with \(list.items.count) items: \(list.items)")
                 }
-                return lists.map { ShoppingList(name: $0.name, items: $0.items) }
+                let result = lists.map { ShoppingList(name: $0.name, items: $0.items) }
+                print("🎯 DEBUG: Widget - Returning \(result.count) shopping lists to display")
+                return result
             } else {
-                print("🔍 Widget: ERROR - Failed to decode JSON data")
+                print("❌ DEBUG: Widget - ERROR - Failed to decode JSON data with JSONDecoder")
+                
+                // Try manual parsing as fallback
+                if let jsonArray = try? JSONSerialization.jsonObject(with: listsData, options: []) as? [[String: Any]] {
+                    print("🔄 DEBUG: Widget - Attempting manual JSON parsing...")
+                    let manualLists = jsonArray.compactMap { dict -> ShoppingList? in
+                        guard let name = dict["name"] as? String,
+                              let items = dict["items"] as? [String] else { return nil }
+                        return ShoppingList(name: name, items: items)
+                    }
+                    print("🔄 DEBUG: Widget - Manual parsing result: \(manualLists.count) lists")
+                    return manualLists
+                }
             }
         } else {
-            print("🔍 Widget: No shoppingLists data found in App Group")
+            print("❌ DEBUG: Widget - No shoppingLists data found in App Group")
         }
         
         // Fallback to favorites if no lists available
         let favorites = loadFavorites()
-        print("🔍 Widget: Fallback - found \(favorites.count) favorites")
+        print("🔄 DEBUG: Widget - Fallback to favorites - found \(favorites.count) favorites")
         
         if !favorites.isEmpty {
+            print("🔄 DEBUG: Widget - Using favorites as fallback list")
             return [ShoppingList(name: "Favorites", items: favorites)]
         }
         
-        print("🔍 Widget: No data found - widget will be empty")
+        print("⚠️ DEBUG: Widget - No data found - widget will show empty state")
         return []
     }
     
@@ -118,7 +143,44 @@ struct SmallWidgetView: View {
     var entry: Provider.Entry
     
     var body: some View {
-        VStack(spacing: 12) {
+        if !entry.shoppingLists.isEmpty {
+            // Show shopping list
+            let currentList = entry.shoppingLists.first!
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    if let ui = UIImage(named: "icono34") {
+                        Image(uiImage: ui)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32, height: 32)
+                    }
+                    Text(currentList.name)
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(Color(hex: "1F2937"))
+                    Spacer()
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(Array(currentList.items.prefix(4).enumerated()), id: \.offset) { index, item in
+                        Text("• \(item)")
+                            .font(.system(size: 11))
+                            .foregroundColor(Color(hex: "374151"))
+                            .lineLimit(1)
+                    }
+                    
+                    if currentList.items.count > 4 {
+                        Text("... y \(currentList.items.count - 4) más")
+                            .font(.system(size: 10))
+                            .foregroundColor(Color(hex: "6B7280"))
+                            .italic()
+                    }
+                }
+            }
+            .padding(10)
+            .widgetURL(URL(string: "voicelist://favorites"))
+        } else {
+            // Show buttons when no lists
+            VStack(spacing: 12) {
             HStack {
                 if let ui = UIImage(named: "icono34") {
                     Image(uiImage: ui)
@@ -178,9 +240,10 @@ struct SmallWidgetView: View {
                 }
             }
             .padding(.horizontal, 4)
+            }
+            .padding(12)
+            .widgetURL(URL(string: "voicelist://create"))
         }
-        .padding(12)
-        .widgetURL(URL(string: entry.isEmpty ? "voicelist://create" : "voicelist://favorites"))
     }
 }
 
@@ -188,7 +251,48 @@ struct MediumWidgetView: View {
     var entry: Provider.Entry
     
     var body: some View {
-        VStack(spacing: 12) {
+        if !entry.shoppingLists.isEmpty {
+            // Show shopping list
+            let currentList = entry.shoppingLists.first!
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    if let ui = UIImage(named: "icono34") {
+                        Image(uiImage: ui)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                    }
+                    Text(currentList.name)
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(Color(hex: "1F2937"))
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(Array(currentList.items.prefix(6).enumerated()), id: \.offset) { index, item in
+                        Text("• \(item)")
+                            .font(.system(size: 12))
+                            .foregroundColor(Color(hex: "374151"))
+                            .lineLimit(1)
+                    }
+                    
+                    if currentList.items.count > 6 {
+                        Text("... y \(currentList.items.count - 6) más")
+                            .font(.system(size: 11))
+                            .foregroundColor(Color(hex: "6B7280"))
+                            .italic()
+                    }
+                }
+                .padding(.horizontal, 16)
+                
+                Spacer()
+            }
+            .widgetURL(URL(string: "voicelist://favorites"))
+        } else {
+            // Show buttons when no lists
+            VStack(spacing: 12) {
             HStack {
                 if let ui = UIImage(named: "icono34") {
                     Image(uiImage: ui)
@@ -289,7 +393,8 @@ struct MediumWidgetView: View {
             Spacer()
         }
         .padding(.bottom, 8)
-        .widgetURL(URL(string: entry.isEmpty ? "voicelist://create" : "voicelist://favorites"))
+        .widgetURL(URL(string: "voicelist://create"))
+        }
     }
 }
 
@@ -297,7 +402,48 @@ struct LargeWidgetView: View {
     var entry: Provider.Entry
     
     var body: some View {
-        VStack(spacing: 24) {
+        if !entry.shoppingLists.isEmpty {
+            // Show shopping list
+            let currentList = entry.shoppingLists.first!
+            VStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    if let ui = UIImage(named: "icono34") {
+                        Image(uiImage: ui)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                    }
+                    Text(currentList.name)
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(Color(hex: "1F2937"))
+                    Spacer()
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
+                
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(Array(currentList.items.prefix(8).enumerated()), id: \.offset) { index, item in
+                        Text("• \(item)")
+                            .font(.system(size: 14))
+                            .foregroundColor(Color(hex: "374151"))
+                            .lineLimit(1)
+                    }
+                    
+                    if currentList.items.count > 8 {
+                        Text("... y \(currentList.items.count - 8) más")
+                            .font(.system(size: 12))
+                            .foregroundColor(Color(hex: "6B7280"))
+                            .italic()
+                    }
+                }
+                .padding(.horizontal, 24)
+                
+                Spacer()
+            }
+            .widgetURL(URL(string: "voicelist://favorites"))
+        } else {
+            // Show buttons when no lists
+            VStack(spacing: 24) {
             HStack {
                 if let ui = UIImage(named: "icono34") {
                     Image(uiImage: ui)
@@ -415,7 +561,8 @@ struct LargeWidgetView: View {
             Spacer()
         }
         .frame(maxHeight: .infinity)
-        .widgetURL(URL(string: entry.isEmpty ? "voicelist://create" : "voicelist://favorites"))
+        .widgetURL(URL(string: "voicelist://create"))
+        }
     }
 }
 
