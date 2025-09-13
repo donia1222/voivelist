@@ -1431,10 +1431,13 @@ const HistoryScreen = ({ navigation }) => {
                   <Ionicons name="checkmark" size={20} color="#10b981" />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={cancelItemEdit}
+                  onPress={() => {
+                    deleteListItem(index, listItemIndex)
+                    cancelItemEdit()
+                  }}
                   style={modernStyles.cancelItemButton}
                 >
-                  <Ionicons name="close" size={18} color="#ef4444" />
+                  <Ionicons name="trash-outline" size={18} color="#ef4444" />
                 </TouchableOpacity>
               </View>
             ) : (

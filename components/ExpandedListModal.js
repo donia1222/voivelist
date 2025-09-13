@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -75,29 +74,30 @@ const ExpandedListModal = ({
   }
 
   const handleDeleteItem = (itemIndex) => {
-    Alert.alert(
-      currentLabels.confirmDelete || "Confirm Delete",
-      currentLabels.areYouSure || "Are you sure you want to delete this item?",
-      [
-        {
-          text: currentLabels.cancel || "Cancel",
-          style: "cancel"
-        },
-        {
-          text: currentLabels.delete || "Delete",
-          onPress: () => {
-            if (onDeleteItem) {
-              onDeleteItem(itemIndex)
-            }
-            // Cancel editing if we're editing the deleted item
-            if (editingItemIndex === itemIndex) {
-              handleCancelEdit()
-            }
-          },
-          style: "destructive"
-        }
-      ]
-    )
+    if (onDeleteItem) {
+      onDeleteItem(itemIndex)
+    }
+    // Cancel editing if we're editing the deleted item
+    if (editingItemIndex === itemIndex) {
+      handleCancelEdit()
+    }
+  }
+
+  const handleAddNewItem = () => {
+    // Add a new empty item
+    if (onAddItem) {
+      onAddItem()
+    }
+    // Set the new item (last index) in edit mode
+    const newItemIndex = listData?.list?.length || 0
+    setEditingItemIndex(newItemIndex)
+    setEditingItemText("")
+    // Scroll to the bottom to show the new item
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: true })
+      }
+    }, 100)
   }
 
   const getCompletedCount = () => {
@@ -124,23 +124,26 @@ const ExpandedListModal = ({
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: 20,
-      paddingTop: Platform.OS === 'ios' ? 45 : 15,
-      paddingBottom: 18,
-      borderBottomWidth: 1,
-      borderBottomColor: theme === 'dark' ? '#374151' : '#e5e7eb',
-      backgroundColor: theme === 'dark' ? '#1f2937' : '#f8fafc',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 3,
-      elevation: 3
+      paddingTop: Platform.OS === 'ios' ? 50 : 20,
+      paddingBottom: 20,
+      borderBottomWidth: 0,
+      backgroundColor: 'rgba(34, 197, 94, 0.08)',
+      borderRadius: 0,
+      borderBottomLeftRadius: 24,
+      borderBottomRightRadius: 24,
+      shadowColor: '#22c55e',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      elevation: 5
     },
     expandedModalTitle: {
-      fontSize: 22,
-      fontWeight: '700',
-      color: theme === 'dark' ? '#f9fafb' : '#1f2937',
+      fontSize: 24,
+      fontWeight: '800',
+      color: '#15803d',
       flex: 1,
-      marginRight: 15
+      marginRight: 15,
+      letterSpacing: -0.5
     },
     headerActions: {
       flexDirection: 'row',
@@ -148,26 +151,28 @@ const ExpandedListModal = ({
     },
     headerButton: {
       padding: 12,
-      borderRadius: 15,
-      backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
-      borderWidth: 1,
-      borderColor: theme === 'dark' ? '#4b5563' : '#e5e7eb',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.15,
-      shadowRadius: 4,
+      borderRadius: 16,
+      backgroundColor: 'rgba(34, 197, 94, 0.12)',
+      borderWidth: 1.5,
+      borderColor: 'rgba(22, 163, 74, 0.25)',
+      shadowColor: '#16a34a',
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.2,
+      shadowRadius: 6,
       elevation: 4,
       minWidth: 50,
       justifyContent: 'center',
       alignItems: 'center'
     },
     saveButton: {
-      backgroundColor: '#10b981',
-      borderColor: '#10b981'
+      backgroundColor: '#15803d',
+      borderColor: '#15803d',
+      shadowColor: '#15803d',
+      shadowOpacity: 0.3
     },
     closeButton: {
-      backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
-      borderColor: theme === 'dark' ? '#4b5563' : '#e5e7eb'
+      backgroundColor: 'rgba(34, 197, 94, 0.08)',
+      borderColor: 'rgba(22, 163, 74, 0.2)'
     },
     expandedModalContent: {
       flex: 1,
@@ -387,7 +392,26 @@ const ExpandedListModal = ({
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
         <View style={styles.expandedModalHeader}>
-          <Text style={styles.expandedModalTitle}>{listData.name}</Text>
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            flex: 1
+          }}>
+            <View style={{
+              width: 42,
+              height: 42,
+              borderRadius: 14,
+              backgroundColor: 'rgba(34, 197, 94, 0.15)',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginRight: 12,
+              borderWidth: 1.5,
+              borderColor: 'rgba(22, 163, 74, 0.3)'
+            }}>
+              <Ionicons name="list" size={22} color="#15803d" />
+            </View>
+            <Text style={styles.expandedModalTitle}>{listData.name}</Text>
+          </View>
           <View style={styles.headerActions}>
             {onSaveList && (
               <TouchableOpacity
@@ -401,7 +425,7 @@ const ExpandedListModal = ({
               onPress={onClose}
               style={[styles.headerButton, styles.closeButton]}
             >
-              <Ionicons name="close" size={24} color={theme === 'dark' ? '#f9fafb' : '#6b7280'} />
+              <Ionicons name="close" size={24} color="#15803d" />
             </TouchableOpacity>
           </View>
         </View>
@@ -539,7 +563,7 @@ const ExpandedListModal = ({
           </View>
           {(onAddItem || onDeleteList) && (
             <TouchableOpacity
-              onPress={areAllItemsCompleted() && onDeleteList ? onDeleteList : onAddItem}
+              onPress={areAllItemsCompleted() && onDeleteList ? onDeleteList : handleAddNewItem}
               style={areAllItemsCompleted() ? styles.deleteListButtonFooter : styles.addButtonFooter}
             >
               <Ionicons
