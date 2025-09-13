@@ -378,6 +378,84 @@ marginBottom:-0,
     color: "#9ca3af",
   },
 
+  listItemCheckbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: theme.text === '#ffffff' ? '#4b5563' : '#d1d5db',
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.background || '#ffffff'
+  },
+
+  listItemCheckboxCompleted: {
+    backgroundColor: '#10b981',
+    borderColor: '#10b981'
+  },
+
+  listItemMainArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+
+  listItemTextContainer: {
+    flex: 1,
+  },
+
+  editIconButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: theme.background || '#ffffff',
+    marginLeft: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+    borderWidth: 1,
+    borderColor: theme.text === '#ffffff' ? '#4b5563' : '#e5e7eb',
+  },
+
+  completionCounter: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+
+  completionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: theme.text === '#ffffff' ? '#9ca3af' : '#6b7280',
+  },
+
+  deleteListButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.background || '#ffffff',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ef4444',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1
+  },
+
+  deleteListText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#ef4444',
+    marginLeft: 6
+  },
+
   // Estilos para edición de items
   listItemEditContainer: {
     flexDirection: "row",

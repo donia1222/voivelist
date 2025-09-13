@@ -113,7 +113,6 @@ const HistoryScreen = ({ navigation }) => {
   const [editingItemIndex, setEditingItemIndex] = useState(null)
   const [editingListIndex, setEditingListIndex] = useState(null)
   const [editingItemText, setEditingItemText] = useState("")
-  const [lastTap, setLastTap] = useState(null)
 
   // Configurar notificaciones push
   useEffect(() => {
@@ -275,28 +274,6 @@ const HistoryScreen = ({ navigation }) => {
     return favoriteTitles[category] || currentLabels[category]
   }
 
-  // Función para manejar doble toque en items de lista
-  const handleDoubleTap = (listIndex, itemIndex, itemText) => {
-    const now = Date.now()
-    const DOUBLE_PRESS_DELAY = 400
-    
-    if (lastTap && (now - lastTap) < DOUBLE_PRESS_DELAY) {
-      // Es un doble toque - editar
-      setEditingListIndex(listIndex)
-      setEditingItemIndex(itemIndex)
-      setEditingItemText(itemText)
-      setLastTap(null) // Clear to avoid triple tap issues
-    } else {
-      // Primer toque - marcar como completado después de un pequeño delay
-      setTimeout(() => {
-        // Solo marcar como completado si no hubo un segundo tap
-        if (!lastTap || (Date.now() - lastTap) >= DOUBLE_PRESS_DELAY) {
-          toggleItemCompletion(listIndex, itemIndex)
-        }
-      }, DOUBLE_PRESS_DELAY)
-    }
-    setLastTap(now)
-  }
 
   // Función para guardar la edición del item
   const saveItemEdit = async () => {
@@ -657,11 +634,13 @@ const HistoryScreen = ({ navigation }) => {
           return item
         })
 
-        setHistory(parsedHistory)
+        // Reverse to show newest lists first (most recent at index 0)
+        const reversedHistory = parsedHistory.reverse()
+        setHistory(reversedHistory)
         
         // Update widget with shopping lists
-        console.log('Updating widget with history:', parsedHistory.length, 'lists')
-        await WidgetService.updateWidgetShoppingLists(parsedHistory, completedItems)
+        console.log('Updating widget with history:', reversedHistory.length, 'lists')
+        await WidgetService.updateWidgetShoppingLists(reversedHistory, completedItems)
         console.log('Widget update completed')
       }
     } catch (e) {
@@ -805,6 +784,36 @@ const HistoryScreen = ({ navigation }) => {
     setCurrentIndex(0)
   }
 
+  // Función para limpiar estados de completados inválidos
+  const cleanInvalidCompletedItems = () => {
+    const newCompletedItems = {}
+    let hasChanges = false
+    
+    Object.keys(completedItems).forEach(listIndexKey => {
+      const listIndex = parseInt(listIndexKey)
+      if (history[listIndex] && history[listIndex].list) {
+        // Filtrar solo los índices válidos para esta lista
+        const validItems = completedItems[listIndexKey].filter(itemIndex => 
+          itemIndex >= 0 && itemIndex < history[listIndex].list.length
+        )
+        if (validItems.length !== completedItems[listIndexKey].length) {
+          hasChanges = true
+        }
+        if (validItems.length > 0) {
+          newCompletedItems[listIndexKey] = validItems
+        }
+      } else {
+        // Lista no existe, eliminar completamente
+        hasChanges = true
+      }
+    })
+    
+    if (hasChanges) {
+      setCompletedItems(newCompletedItems)
+      saveCompletedItems(newCompletedItems)
+    }
+  }
+
   // Funciones de elementos completados
   const toggleItemCompletion = (listIndex, itemIndex) => {
     // Create a completely new object to avoid Hermes property mutation issues
@@ -886,12 +895,27 @@ const HistoryScreen = ({ navigation }) => {
     const adjustedFavorites4 = adjustFavorites(newFavorites4)
     const adjustedFavorites5 = adjustFavorites(newFavorites5)
 
+    // Ajustar completedItems - eliminar la lista eliminada y ajustar índices
+    const newCompletedItems = {}
+    Object.keys(completedItems).forEach(listIndexKey => {
+      const listIndex = parseInt(listIndexKey)
+      if (listIndex < index) {
+        // Listas antes de la eliminada mantienen sus índices
+        newCompletedItems[listIndexKey] = completedItems[listIndexKey]
+      } else if (listIndex > index) {
+        // Listas después de la eliminada reducen su índice en 1
+        newCompletedItems[listIndex - 1] = completedItems[listIndexKey]
+      }
+      // Si listIndex === index, no se copia (se elimina)
+    })
+
     setHistory(newHistory)
     setFavorites1(adjustedFavorites1)
     setFavorites2(adjustedFavorites2)
     setFavorites3(adjustedFavorites3)
     setFavorites4(adjustedFavorites4)
     setFavorites5(adjustedFavorites5)
+    setCompletedItems(newCompletedItems)
 
     setFavoritesModalVisible(false)
 
@@ -902,10 +926,11 @@ const HistoryScreen = ({ navigation }) => {
       await AsyncStorage.setItem("@favorites3", JSON.stringify(adjustedFavorites3))
       await AsyncStorage.setItem("@favorites4", JSON.stringify(adjustedFavorites4))
       await AsyncStorage.setItem("@favorites5", JSON.stringify(adjustedFavorites5))
+      await AsyncStorage.setItem("@completed_items", JSON.stringify(newCompletedItems))
       
       // Update widget after removing list
       console.log('Updating widget after removing list:', newHistory.length, 'lists remaining')
-      await WidgetService.updateWidgetShoppingLists(newHistory, completedItems)
+      await WidgetService.updateWidgetShoppingLists(newHistory, newCompletedItems)
       console.log('Widget update completed after removal')
     } catch (e) {
       console.error("Error removing from history: ", e)
@@ -1093,7 +1118,7 @@ const HistoryScreen = ({ navigation }) => {
 
   // Agregar los useEffects necesarios
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    const unsubscribe = navigation.addListener("focus", async () => {
       console.log('📱 HistoryScreen focused - loading data...')
       loadHistory()
       loadCompletedItems()
@@ -1103,6 +1128,24 @@ const HistoryScreen = ({ navigation }) => {
       loadFavorites("@favorites3", setFavorites3)
       loadFavorites("@favorites4", setFavorites4)
       loadFavorites("@favorites5", setFavorites5)
+      
+      // Check if we should scroll to newest list
+      try {
+        const showNewestList = await AsyncStorage.getItem("@show_newest_list")
+        if (showNewestList === "true") {
+          // Clear the flag
+          await AsyncStorage.removeItem("@show_newest_list")
+          // Scroll to first item (newest list) with a small delay
+          setTimeout(() => {
+            if (flatListRef.current) {
+              flatListRef.current.scrollToIndex({ index: 0, animated: true })
+              setCurrentIndex(0)
+            }
+          }, 300)
+        }
+      } catch (error) {
+        console.error("Error checking show newest list flag:", error)
+      }
     })
 
     return unsubscribe
@@ -1226,12 +1269,17 @@ const HistoryScreen = ({ navigation }) => {
             {editingListIndex === index && editingItemIndex === listItemIndex ? (
               // Modo edición
               <View style={modernStyles.listItemEditContainer}>
-                <View
+                <TouchableOpacity
+                  onPress={() => toggleItemCompletion(index, listItemIndex)}
                   style={[
-                    modernStyles.listItemBullet,
-                    completedItems[index]?.includes(listItemIndex) && modernStyles.completedBullet,
+                    modernStyles.listItemCheckbox,
+                    completedItems[index]?.includes(listItemIndex) && modernStyles.listItemCheckboxCompleted
                   ]}
-                />
+                >
+                  {completedItems[index]?.includes(listItemIndex) && (
+                    <Ionicons name="checkmark" size={16} color="white" />
+                  )}
+                </TouchableOpacity>
                 <TextInput
                   style={modernStyles.listItemEditInput}
                   value={editingItemText}
@@ -1255,30 +1303,74 @@ const HistoryScreen = ({ navigation }) => {
               </View>
             ) : (
               // Modo normal
-              <TouchableOpacity onPress={() => handleDoubleTap(index, listItemIndex, listItem)}>
-                <View style={modernStyles.listItemContainer}>
-                  <View
-                    style={[
-                      modernStyles.listItemBullet,
-                      completedItems[index]?.includes(listItemIndex) && modernStyles.completedBullet,
-                    ]}
-                  />
-                  <Text
-                    style={[
-                      modernStyles.listItemText,
-                      completedItems[index]?.includes(listItemIndex) && modernStyles.completedItemText,
-                    ]}
-                  >
-                    {listItem}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              <View style={modernStyles.listItemContainer}>
+                <TouchableOpacity
+                  onPress={() => toggleItemCompletion(index, listItemIndex)}
+                  style={modernStyles.listItemMainArea}
+                >
+                  <View style={[
+                    modernStyles.listItemCheckbox,
+                    completedItems[index]?.includes(listItemIndex) && modernStyles.listItemCheckboxCompleted
+                  ]}>
+                    {completedItems[index]?.includes(listItemIndex) && (
+                      <Ionicons name="checkmark" size={16} color="white" />
+                    )}
+                  </View>
+                  <View style={modernStyles.listItemTextContainer}>
+                    <Text
+                      style={[
+                        modernStyles.listItemText,
+                        completedItems[index]?.includes(listItemIndex) && modernStyles.completedItemText,
+                      ]}
+                    >
+                      {listItem}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  onPress={() => {
+                    setEditingListIndex(index)
+                    setEditingItemIndex(listItemIndex)
+                    setEditingItemText(listItem)
+                  }}
+                  style={modernStyles.editIconButton}
+                >
+                  <Ionicons name="pencil" size={14} color="#6b7280" />
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         ))}
         
       </ScrollView>
 
+      {/* Completion counter */}
+      <View style={modernStyles.completionCounter}>
+        {(() => {
+          // Contar solo los elementos que realmente existen en la lista actual
+          const currentCompletedItems = completedItems[index] || [];
+          const validCompletedItems = currentCompletedItems.filter(itemIndex => 
+            itemIndex >= 0 && itemIndex < item.list.length
+          );
+          const completedCount = validCompletedItems.length;
+          const totalCount = item.list.length;
+          const allCompleted = totalCount > 0 && completedCount === totalCount;
+          
+          return allCompleted ? (
+            <TouchableOpacity
+              style={modernStyles.deleteListButton}
+              onPress={() => confirmRemoveListFromHistory(index)}
+            >
+              <Ionicons name="trash-outline" size={16} color="#ef4444" />
+              <Text style={modernStyles.deleteListText}>Eliminar lista</Text>
+            </TouchableOpacity>
+          ) : (
+            <Text style={modernStyles.completionText}>
+              {completedCount} / {totalCount} completados
+            </Text>
+          );
+        })()}
+      </View>
    
     </View>
   )

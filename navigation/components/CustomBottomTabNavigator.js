@@ -322,10 +322,14 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           await AsyncStorage.setItem("@shopping_history", JSON.stringify(parsedHistory))
           await AsyncStorage.setItem("@shopping_list", JSON.stringify([]))
           await AsyncStorage.setItem("@trigger_reset_home", "true")
+          await AsyncStorage.setItem("@show_newest_list", "true")
           setHasActiveList(false)
           
           setShowSuccessModal(true)
-          setTimeout(() => setShowSuccessModal(false), 2000)
+          setTimeout(() => {
+            setShowSuccessModal(false)
+            setActiveTab('History')
+          }, 2000)
         }
       }
     } catch (error) {
