@@ -260,15 +260,33 @@ const ExpandedListModal = ({
       width: 64,
       height: 64,
       borderRadius: 32,
-      backgroundColor: '#8b5cf6',
+      backgroundColor: '#10a20ee9',
       justifyContent: 'center',
       alignItems: 'center',
-      elevation: 12,
-      shadowColor: '#8b5cf6',
-      shadowOffset: { width: 0, height: 6 },
-      shadowOpacity: 0.4,
-      shadowRadius: 12,
-      borderWidth: 3,
+      elevation: 8,
+      shadowColor: '#f59e0b',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      borderWidth: 2,
+      borderColor: '#ffffff'
+    },
+    notesButton: {
+      position: 'absolute',
+      top: 20,
+      right: 20,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: '#f59e0b',
+      justifyContent: 'center',
+      alignItems: 'center',
+      elevation: 8,
+      shadowColor: '#f59e0b',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      borderWidth: 2,
       borderColor: '#ffffff'
     }
   })
@@ -409,13 +427,14 @@ const ExpandedListModal = ({
           </Text>
         </View>
         
+ 
         {/* Fixed Add Button */}
         {onAddItem && (
           <TouchableOpacity
             onPress={onAddItem}
             style={styles.fixedAddButton}
           >
-            <Ionicons name="add" size={32} color="#ffffff" />
+             <Ionicons name="create" size={28} color="#ffffff" />
           </TouchableOpacity>
         )}
       </KeyboardAvoidingView>

@@ -760,8 +760,8 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
               ]}
               disabled={true}
             >
-              <Ionicons name="calculator" size={24} color="#fff" />
-              <Text style={styles.calculateButtonText}>{t.calculatePrice}</Text>
+
+
             </TouchableOpacity>
           </View>
         ) : (
@@ -808,7 +808,12 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
                       style={styles.calculateAgainSmallButton}
                       onPress={() => {
                         setSelectedList(item)
-                        handleCalculatePrice()
+                        // Use item directly instead of relying on state update
+                        if (!item) {
+                          Alert.alert(t.error, t.selectListFirst)
+                          return
+                        }
+                        setCountryModalVisible(true)
                       }}
                     >
                       <Text style={styles.calculateAgainSmallText} numberOfLines={1}>

@@ -797,7 +797,7 @@ width: "95%",
     borderRadius: 24,
     padding: 28,
     margin: 20,
-    maxHeight: "90%",
+    height: "85%",
     width: "90%",
     shadowColor: "#d4a574",
     shadowOffset: { width: 0, height: 6 },
@@ -808,6 +808,8 @@ width: "95%",
     borderColor: "transparent",
     borderTopWidth: 4,
     borderTopColor: "#b8d4f0",
+    marginBottom:60,
+   
   },
 
   modalHeader: {
@@ -1010,6 +1012,7 @@ width: "95%",
     backgroundColor: "#f5f5f5",
     borderRadius: 24,
     padding: 28,
+    height: "80%",
     width: "100%",
     maxWidth: 420,
     shadowColor: "#cbd5e0",
@@ -1477,14 +1480,14 @@ width: "95%",
   actionsModal: {
     backgroundColor: theme.background || "#ffffff",
     borderRadius: 20,
-    maxHeight: "80%",
+    maxHeight: "90%",
     width: "99%",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.25,
     shadowRadius: 16,
     elevation: 12,
-    marginBottom:30,
+  
   },
 
   actionsModalHeader: {
@@ -1514,6 +1517,13 @@ width: "95%",
     paddingVertical: 16,
     paddingHorizontal: 4,
     marginBottom: 8,
+  },
+
+    actionModalButtonexpand: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 4,
+
   },
 
   actionModalIcon: {

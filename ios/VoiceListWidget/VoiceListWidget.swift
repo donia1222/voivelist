@@ -189,7 +189,7 @@ struct SmallWidgetView: View {
             // Show shopping list
             let currentList = entry.shoppingLists.first!
             VStack(alignment: .leading, spacing: 5) {
-                HStack {
+                HStack(spacing: 5) {
                     if let ui = UIImage(named: "icono34") {
                         Image(uiImage: ui)
                             .resizable()
@@ -197,7 +197,7 @@ struct SmallWidgetView: View {
                             .frame(width: 32, height: 32)
                     }
                     Text(currentList.name)
-                        .font(.system(size: 14, weight: .bold))
+                        .font(.system(size: 16, weight: .bold))
                         .foregroundColor(Color(hex: "1F2937"))
                     Spacer()
                 }
@@ -210,8 +210,8 @@ struct SmallWidgetView: View {
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
                                     .frame(width: 6, height: 6)
                                 Text(item.text)
-                                    .font(.system(size: 13))
-                                    .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "4B5563"))
                                     .strikethrough(item.isCompleted)
                                     .lineLimit(1)
                                 Spacer()
@@ -246,7 +246,7 @@ struct SmallWidgetView: View {
                 } else {
                     Image(systemName: "mic.circle.fill")
                         .font(.system(size: 24, weight: .semibold))
-                        .foregroundColor(Color(hex: "1F2937"))
+                        .foregroundColor(Color(hex: "8B5CF6"))
                 }
                 Text("Voice Grocery")
                     .font(.system(size: 16, weight: .bold))
@@ -317,10 +317,10 @@ struct MediumWidgetView: View {
                         Image(uiImage: ui)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 28, height: 28)
+                            .frame(width: 32, height: 32)
                     }
                     Text(currentList.name)
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 18, weight: .bold))
                         .foregroundColor(Color(hex: "1F2937"))
                     Spacer()
                 }
@@ -337,8 +337,8 @@ struct MediumWidgetView: View {
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
                                     .frame(width: 7, height: 7)
                                 Text(item.text)
-                                    .font(.system(size: 14))
-                                    .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "4B5563"))
                                     .strikethrough(item.isCompleted)
                                     .lineLimit(1)
                                 Spacer()
@@ -477,15 +477,15 @@ struct LargeWidgetView: View {
             let currentList = entry.shoppingLists.first!
             VStack(spacing: 0) {
                 // Header fijo arriba
-                HStack {
+                HStack(spacing: 5) {
                     if let ui = UIImage(named: "icono34") {
                         Image(uiImage: ui)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 26, height: 26)
+                            .frame(width: 37, height: 37)
                     }
                     Text(currentList.name)
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.system(size: 24, weight: .bold))
                         .foregroundColor(Color(hex: "1F2937"))
                     Spacer()
                 }
@@ -494,15 +494,15 @@ struct LargeWidgetView: View {
                 
                 // Lista de items (scrollable content)
                 VStack(alignment: .leading, spacing: 4) {
-                    ForEach(Array(currentList.items.prefix(12).enumerated()), id: \.offset) { index, item in
+                    ForEach(Array(currentList.items.prefix(10).enumerated()), id: \.offset) { index, item in
                         Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
                             HStack(spacing: 10) {
                                 Circle()
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
-                                    .frame(width: 8, height: 8)
+                                    .frame(width: 12, height: 12)
                                 Text(item.text)
-                                    .font(.system(size: 15))
-                                    .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "4B5563"))
                                     .strikethrough(item.isCompleted)
                                     .lineLimit(1)
                                 Spacer()
@@ -511,8 +511,8 @@ struct LargeWidgetView: View {
                         .buttonStyle(PlainButtonStyle())
                     }
                     
-                    if currentList.items.count > 12 {
-                        Text("... and \(currentList.items.count - 12) more")
+                    if currentList.items.count > 10 {
+                        Text("... and \(currentList.items.count - 10) more")
                             .font(.system(size: 12))
                             .foregroundColor(Color(hex: "6B7280"))
                             .italic()

@@ -792,15 +792,26 @@ const HistoryScreen = ({ navigation }) => {
 
   // Funciones de elementos completados
   const toggleItemCompletion = (listIndex, itemIndex) => {
-    const newCompletedItems = { ...completedItems }
+    // Create a completely new object to avoid Hermes property mutation issues
+    const newCompletedItems = {}
+    
+    // Copy all existing properties
+    Object.keys(completedItems).forEach(key => {
+      newCompletedItems[key] = [...completedItems[key]]
+    })
+    
+    // Initialize array if it doesn't exist
     if (!newCompletedItems[listIndex]) {
       newCompletedItems[listIndex] = []
     }
+    
+    // Toggle item completion
     if (newCompletedItems[listIndex].includes(itemIndex)) {
       newCompletedItems[listIndex] = newCompletedItems[listIndex].filter((i) => i !== itemIndex)
     } else {
-      newCompletedItems[listIndex].push(itemIndex)
+      newCompletedItems[listIndex] = [...newCompletedItems[listIndex], itemIndex]
     }
+    
     saveCompletedItems(newCompletedItems)
   }
 
@@ -1140,15 +1151,23 @@ const HistoryScreen = ({ navigation }) => {
           <View style={modernStyles.titleContainer}>
             
             <Text style={modernStyles.cardTitle}>{item.name}</Text>
-         <TouchableOpacity
-              onPress={() => {
-                setSelectedItemIndex(index)
-                setActionsModalVisible(true)
-              }}
-              style={modernStyles.menuButton}
-            >
-              <Ionicons name="add-outline" size={26} color="#32945bff" />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity
+                onPress={() => openExpandedListModal(index)}
+                style={[modernStyles.menuButton, { marginRight: 8 }]}
+              >
+                <Ionicons name="expand-outline" size={24} color="#4b5563" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectedItemIndex(index)
+                  setActionsModalVisible(true)
+                }}
+                style={modernStyles.menuButton}
+              >
+                <Ionicons name="add-outline" size={26} color="#12542eff" />
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </View>
@@ -1249,6 +1268,7 @@ const HistoryScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={modernStyles.container}>
+      
       {/* Header de favoritos modernizado */}
       <View style={modernStyles.favoritesHeader}>
         <ScrollView
@@ -1520,6 +1540,7 @@ const HistoryScreen = ({ navigation }) => {
                 <Ionicons name="add-circle" size={32} color="#4a5568" />
                 <Text style={modernStyles.addItemText}></Text>
               </TouchableOpacity>
+              
             </ScrollView>
           </View>
         </View>
@@ -1838,22 +1859,7 @@ const HistoryScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-              {/* Expand List */}
-              <TouchableOpacity
-                style={modernStyles.actionModalButton}
-                onPress={() => {
-                  openExpandedListModal(selectedItemIndex)
-                  setActionsModalVisible(false)
-                }}
-              >
-                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#f3f4f6' }]}>
-                  <Ionicons name="expand-outline" size={20} color="#4b5563" />
-                </View>
-                <View style={modernStyles.actionModalTextContainer}>
-                  <Text style={modernStyles.actionModalButtonText}>{currentLabels.expandList}</Text>
-                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.expandListDesc}</Text>
-                </View>
-              </TouchableOpacity>
+  
 
               {/* Add to Favorites / Already in Favorites */}
               <TouchableOpacity
@@ -1947,7 +1953,7 @@ const HistoryScreen = ({ navigation }) => {
 
               {/* Delete */}
               <TouchableOpacity
-                style={[modernStyles.actionModalButton, { borderTopWidth: 1, borderTopColor: '#f3f4f6', marginTop: 10, paddingTop: 20 }]}
+                style={[modernStyles.actionModalButton, { borderTopWidth: 1, borderTopColor: '#223b6e64', marginTop: 10, paddingTop: 20 }]}
                 onPress={() => {
                   confirmRemoveListFromHistory(selectedItemIndex)
                   setActionsModalVisible(false)

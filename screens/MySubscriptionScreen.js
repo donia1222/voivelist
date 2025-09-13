@@ -282,7 +282,7 @@ const MySubscriptionScreen = () => {
 const getStyles = (theme) => StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: theme === 'dark' ? '#1a1a1a' : '#f8f9fa',
+    backgroundColor: theme === 'dark' ? '#1a1a1a' :"#e7ead2",
   },
   scrollContainer: {
     flexGrow: 1,
@@ -341,7 +341,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: '600',
   },
   infoContainer: {
-    backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff',
+    backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffffad',
     borderRadius: 20,
     padding: 28,
     width: '100%',
