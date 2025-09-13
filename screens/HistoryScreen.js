@@ -19,6 +19,7 @@ import {
   StyleSheet,
   Share,
   KeyboardAvoidingView,
+  AppState,
 } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -147,6 +148,9 @@ const HistoryScreen = ({ navigation }) => {
 
   // Update widget when currentIndex changes (sync widget with visible list)
   useEffect(() => {
+    // Skip widget update if we're just starting up to prevent overwriting widget changes
+    if (!isFocused) return
+    
     if (history.length > 0 && currentIndex >= 0 && currentIndex < history.length) {
       // Create array with current visible list first, then the rest
       const reorderedHistory = [history[currentIndex], ...history.filter((_, index) => index !== currentIndex)]
@@ -156,56 +160,105 @@ const HistoryScreen = ({ navigation }) => {
         0: completedItems[currentIndex] || [] // Only send completed items for the current visible list
       }
       
-      WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
+      // Delay widget update slightly to ensure widget changes are synced first
+      setTimeout(() => {
+        WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
+      }, 500)
     }
-  }, [currentIndex, history, completedItems])
+  }, [currentIndex, history, completedItems, isFocused])
 
-  // Listen for widget changes and sync to app
-  useEffect(() => {
-    const syncWidgetChanges = async () => {
-      try {
-        const changes = await WidgetService.syncWidgetChangesToApp()
+  // Define syncWidgetChanges function outside of useEffect to reuse it
+  const syncWidgetChanges = async () => {
+    try {
+      const changes = await WidgetService.syncWidgetChangesToApp()
+      
+      // Handle array of changes
+      if (changes && Array.isArray(changes)) {
+        console.log('🔄 Processing', changes.length, 'widget changes')
         
-        if (changes && changes.type === 'itemToggle') {
-          const { listIndex, itemIndex, isCompleted, timestamp } = changes
-          
-          // Only process recent changes (within last 30 seconds)
-          if (Date.now() - (timestamp * 1000) < 30000) {
-            console.log('🔄 Syncing widget change to app - List:', listIndex, 'Item:', itemIndex, 'Completed:', isCompleted)
+        // Start with current completed items
+        const newCompletedItems = { ...completedItems }
+        let hasChanges = false
+        
+        // Process each change
+        for (const change of changes) {
+          if (change && change.type === 'itemToggle') {
+            const { listIndex, itemIndex, isCompleted, timestamp } = change
             
-            // Update completed items in React Native
-            const newCompletedItems = { ...completedItems }
-            if (!newCompletedItems[listIndex]) {
-              newCompletedItems[listIndex] = []
-            }
-            
-            if (isCompleted) {
-              // Add to completed if not already there
-              if (!newCompletedItems[listIndex].includes(itemIndex)) {
-                newCompletedItems[listIndex].push(itemIndex)
+            // Only process recent changes (within last 60 seconds)
+            if (Date.now() - (timestamp * 1000) < 60000) {
+              console.log('🔄 Syncing widget change to app - List:', listIndex, 'Item:', itemIndex, 'Completed:', isCompleted)
+              hasChanges = true
+              
+              // Initialize array if needed
+              if (!newCompletedItems[listIndex]) {
+                newCompletedItems[listIndex] = []
               }
-            } else {
-              // Remove from completed
-              newCompletedItems[listIndex] = newCompletedItems[listIndex].filter(i => i !== itemIndex)
+              
+              if (isCompleted) {
+                // Add to completed if not already there
+                if (!newCompletedItems[listIndex].includes(itemIndex)) {
+                  newCompletedItems[listIndex].push(itemIndex)
+                }
+              } else {
+                // Remove from completed
+                newCompletedItems[listIndex] = newCompletedItems[listIndex].filter(i => i !== itemIndex)
+              }
             }
-            
-            console.log('✅ Updated completed items from widget:', newCompletedItems)
-            setCompletedItems(newCompletedItems)
-            
-            // Save to AsyncStorage
-            await AsyncStorage.setItem("@completed_items", JSON.stringify(newCompletedItems))
           }
         }
-      } catch (error) {
-        console.error('Error syncing widget changes:', error)
+        
+        if (hasChanges) {
+          console.log('✅ Updated completed items from widget:', newCompletedItems)
+          setCompletedItems(newCompletedItems)
+          
+          // Save to AsyncStorage
+          await AsyncStorage.setItem("@completed_items", JSON.stringify(newCompletedItems))
+          
+          // Update widget with merged data after a short delay
+          setTimeout(() => {
+            if (history.length > 0 && currentIndex >= 0 && currentIndex < history.length) {
+              const reorderedHistory = [history[currentIndex], ...history.filter((_, index) => index !== currentIndex)]
+              const reorderedCompletedItems = {
+                0: newCompletedItems[currentIndex] || []
+              }
+              WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
+            }
+          }, 100)
+        }
       }
+    } catch (error) {
+      console.error('Error syncing widget changes:', error)
     }
+  }
 
+  // Listen for widget changes when tab is focused
+  useEffect(() => {
     // Sync when tab becomes focused
     if (isFocused) {
       syncWidgetChanges()
     }
-  }, [isFocused, completedItems])
+  }, [isFocused])
+
+  // Listen for app state changes (foreground/background)
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      console.log('🔄 App state changed to:', nextAppState)
+      if (nextAppState === 'active') {
+        // App came to foreground, sync widget changes
+        console.log('📱 App came to foreground, syncing widget changes...')
+        syncWidgetChanges()
+      }
+    }
+
+    // Subscribe to app state changes
+    const subscription = AppState.addEventListener('change', handleAppStateChange)
+
+    // Cleanup
+    return () => {
+      subscription.remove()
+    }
+  }, [currentIndex, history, completedItems])
 
   // Animaciones para las categorías
   const categoryAnimations = useRef({
@@ -815,7 +868,7 @@ const HistoryScreen = ({ navigation }) => {
   }
 
   // Funciones de elementos completados
-  const toggleItemCompletion = (listIndex, itemIndex) => {
+  const toggleItemCompletion = async (listIndex, itemIndex) => {
     // Create a completely new object to avoid Hermes property mutation issues
     const newCompletedItems = {}
     
@@ -839,6 +892,10 @@ const HistoryScreen = ({ navigation }) => {
     console.log('🔄 DEBUG: toggleItemCompletion - List:', listIndex, 'Item:', itemIndex, 'New state:', newCompletedItems)
     
     saveCompletedItems(newCompletedItems)
+    
+    // IMPORTANT: Update widget immediately when marking items in app
+    console.log('📤 Updating widget after toggle in app')
+    await WidgetService.updateWidgetShoppingLists(history, newCompletedItems)
   }
 
   // Funciones de compartir e imprimir
@@ -1145,6 +1202,85 @@ const HistoryScreen = ({ navigation }) => {
         }
       } catch (error) {
         console.error("Error checking show newest list flag:", error)
+      }
+      
+      // Check for widget changes to sync
+      try {
+        const widgetChanges = await WidgetService.syncWidgetChangesToApp()
+        if (widgetChanges && Array.isArray(widgetChanges)) {
+          console.log('🔄 DEBUG: HistoryScreen - Processing', widgetChanges.length, 'widget changes')
+          
+          let newCompletedItems = { ...completedItems }
+          
+          // Process each change
+          widgetChanges.forEach(change => {
+            if (change.type === 'itemToggle') {
+              const { listIndex, itemIndex, isCompleted } = change
+              
+              // Widget always uses listIndex 0 for the first (newest) list
+              // In HistoryScreen, the newest list is at the END of the array (after reverse)
+              // So if we have 1 list: history[0] is the newest (and only) list
+              // If we have 2 lists: history[0] is newest, history[1] is older
+              // Widget index 0 = first list shown = newest = history[0] after reverse
+              const actualListIndex = listIndex // Use widget index directly since history is already reversed
+              
+              console.log('📝 Processing toggle - Widget listIndex:', listIndex, 'Item:', itemIndex, 'Completed:', isCompleted)
+              console.log('📝 History length:', history.length, 'Using actualListIndex:', actualListIndex)
+              
+              if (!newCompletedItems[actualListIndex]) {
+                newCompletedItems[actualListIndex] = []
+              }
+              
+              if (isCompleted) {
+                // Add to completed if not already there
+                if (!newCompletedItems[actualListIndex].includes(itemIndex)) {
+                  newCompletedItems[actualListIndex] = [...newCompletedItems[actualListIndex], itemIndex]
+                  console.log('✅ Added item', itemIndex, 'to completed for list', actualListIndex)
+                }
+              } else {
+                // Remove from completed
+                newCompletedItems[actualListIndex] = newCompletedItems[actualListIndex].filter(i => i !== itemIndex)
+                console.log('❌ Removed item', itemIndex, 'from completed for list', actualListIndex)
+              }
+            }
+          })
+          
+          console.log('📋 Final newCompletedItems:', JSON.stringify(newCompletedItems))
+          
+          setCompletedItems(newCompletedItems)
+          saveCompletedItems(newCompletedItems)
+          
+          console.log('✅ DEBUG: HistoryScreen - All widget changes synced successfully')
+          
+          // Update widget with new completed state
+          console.log('📤 Updating widget with synced completed items')
+          await WidgetService.updateWidgetShoppingLists(history, newCompletedItems)
+        } else if (widgetChanges) {
+          // Handle single change for backwards compatibility
+          console.log('🔄 DEBUG: HistoryScreen - Processing single widget change')
+          if (widgetChanges.type === 'itemToggle') {
+            const { listIndex, itemIndex, isCompleted } = widgetChanges
+            const actualListIndex = listIndex // Use widget index directly since history is already reversed
+            
+            const newCompletedItems = { ...completedItems }
+            if (!newCompletedItems[actualListIndex]) {
+              newCompletedItems[actualListIndex] = []
+            }
+            
+            if (isCompleted) {
+              if (!newCompletedItems[actualListIndex].includes(itemIndex)) {
+                newCompletedItems[actualListIndex] = [...newCompletedItems[actualListIndex], itemIndex]
+              }
+            } else {
+              newCompletedItems[actualListIndex] = newCompletedItems[actualListIndex].filter(i => i !== itemIndex)
+            }
+            
+            setCompletedItems(newCompletedItems)
+            saveCompletedItems(newCompletedItems)
+          }
+        }
+      } catch (error) {
+        console.error("Error syncing widget changes:", error)
       }
     })
 

@@ -16,4 +16,11 @@ RCT_EXTERN_METHOD(updateShoppingLists:(NSArray *)lists
 RCT_EXTERN_METHOD(clearWidgetData:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(updateSubscriptionStatus:(BOOL)isSubscribed
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(syncWidgetChangesToApp:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 @end

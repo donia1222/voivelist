@@ -189,19 +189,20 @@ struct SmallWidgetView: View {
         if !entry.shoppingLists.isEmpty {
             // Show shopping list
             let currentList = entry.shoppingLists.first!
-            VStack(alignment: .leading, spacing: 5) {
-                HStack(spacing: 5) {
-                    if let ui = UIImage(named: "icono34") {
-                        Image(uiImage: ui)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 32, height: 32)
+            ZStack {
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack(spacing: 5) {
+                        if let ui = UIImage(named: "icono34") {
+                            Image(uiImage: ui)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 32, height: 32)
+                        }
+                        Text(currentList.name)
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(Color(hex: "1F2937"))
+                        Spacer()
                     }
-                    Text(currentList.name)
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(Color(hex: "1F2937"))
-                    Spacer()
-                }
                 
                 VStack(alignment: .leading, spacing: 2) {
                     ForEach(Array(currentList.items.prefix(4).enumerated()), id: \.offset) { index, item in
@@ -247,12 +248,34 @@ struct SmallWidgetView: View {
                     }
                 }
                 
-                Spacer()
+                    Spacer()
+                }
+                .padding(.horizontal, 10)
+                .padding(.top, 0)
+                .padding(.bottom, 10)
+                
+                // History button in bottom right corner
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Link(destination: URL(string: "voicelist://history")!) {
+                            Image(systemName: "list.bullet")
+                                .font(.system(size: 18, weight: .medium))
+                                .foregroundColor(Color(hex: "8B5CF6"))
+                                .frame(width: 28, height: 28)
+                                .background(
+                                    Circle()
+                                        .fill(Color(hex: "8B5CF6").opacity(0.1))
+                                )
+                        }
+                    }
+                }
+                .padding(.top, 8)
+                .padding(.leading, 8)
+                .padding(.trailing, 8)
+                .padding(.bottom, 2)
             }
-            .padding(.horizontal, 10)
-            .padding(.top, 0)
-            .padding(.bottom, 10)
-            // Removed .widgetURL to allow individual button interactions
         } else {
             // Show buttons when no lists
             VStack(spacing: 12) {
@@ -276,7 +299,7 @@ struct SmallWidgetView: View {
             .shadow(color: .black.opacity(0.05), radius: 1, x: 0, y: 1)
             
             VStack(spacing: 10) {
-                Link(destination: URL(string: "voicelist://home")!) {
+                Link(destination: URL(string: "voicelist://history")!) {
                     VStack(spacing: 6) {
                         Image(systemName: "mic.fill")
                             .font(.system(size: 22, weight: .medium))
@@ -329,20 +352,21 @@ struct MediumWidgetView: View {
         if !entry.shoppingLists.isEmpty {
             // Show shopping list
             let currentList = entry.shoppingLists.first!
-            VStack(spacing: 0) {
-                // Header fijo arriba
-                HStack {
-                    if let ui = UIImage(named: "icono34") {
-                        Image(uiImage: ui)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 32, height: 32)
+            ZStack {
+                VStack(spacing: 0) {
+                    // Header fijo arriba
+                    HStack {
+                        if let ui = UIImage(named: "icono34") {
+                            Image(uiImage: ui)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 32, height: 32)
+                        }
+                        Text(currentList.name)
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(Color(hex: "1F2937"))
+                        Spacer()
                     }
-                    Text(currentList.name)
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(Color(hex: "1F2937"))
-                    Spacer()
-                }
                 .padding(.horizontal, 16)
                 .padding(.top, 4)
                 .padding(.bottom, 12)
@@ -396,6 +420,26 @@ struct MediumWidgetView: View {
                 
                 Spacer()
             }
+            
+            // History button in bottom right corner
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Link(destination: URL(string: "voicelist://history")!) {
+                        Image(systemName: "list.bullet")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(Color(hex: "8B5CF6"))
+                            .frame(width: 32, height: 32)
+                            .background(
+                                Circle()
+                                    .fill(Color(hex: "8B5CF6").opacity(0.1))
+                            )
+                    }
+                }
+            }
+            .padding(10)
+        }
             // Removed .widgetURL to allow individual button interactions
         } else {
             // Show buttons when no lists
@@ -420,7 +464,7 @@ struct MediumWidgetView: View {
             .padding(.top, 16)
             
             HStack(spacing: 8) {
-                Link(destination: URL(string: "voicelist://home")!) {
+                Link(destination: URL(string: "voicelist://history")!) {
                     VStack(spacing: 4) {
                         Image(systemName: "mic.fill")
                             .font(.system(size: 18, weight: .medium))
@@ -512,21 +556,22 @@ struct LargeWidgetView: View {
         if !entry.shoppingLists.isEmpty {
             // Show shopping list
             let currentList = entry.shoppingLists.first!
-            VStack(spacing: 0) {
-                // Header fijo arriba
-                HStack(spacing: 5) {
+            ZStack {
+                VStack(spacing: 0) {
+                    // Header fijo arriba
+                    HStack(spacing: 5) {
                     if let ui = UIImage(named: "icono34") {
                         Image(uiImage: ui)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 37, height: 37)
+                            .frame(width: 35, height: 35)
                     }
                     Text(currentList.name)
-                        .font(.system(size: 24, weight: .bold))
+                        .font(.system(size: 22, weight: .bold))
                         .foregroundColor(Color(hex: "1F2937"))
                     Spacer()
                 }
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 20)
                 .padding(.vertical, 6)
                 
                 // Lista de items (scrollable content)
@@ -578,6 +623,26 @@ struct LargeWidgetView: View {
                 
                 Spacer()
             }
+            
+            // History button in bottom right corner
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Link(destination: URL(string: "voicelist://history")!) {
+                        Image(systemName: "list.bullet")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundColor(Color(hex: "8B5CF6"))
+                            .frame(width: 38, height: 38)
+                            .background(
+                                Circle()
+                                    .fill(Color(hex: "8B5CF6").opacity(0.1))
+                            )
+                    }
+                }
+            }
+            .padding(12)
+        }
             // Removed .widgetURL to allow individual button interactions
         } else {
             // Show buttons when no lists
@@ -603,7 +668,7 @@ struct LargeWidgetView: View {
             
             VStack(spacing: 12) {
                 HStack(spacing: 12) {
-                    Link(destination: URL(string: "voicelist://home")!) {
+                    Link(destination: URL(string: "voicelist://history")!) {
                         VStack(spacing: 4) {
                             Image(systemName: "mic.fill")
                                 .font(.system(size: 26, weight: .medium))
@@ -784,6 +849,10 @@ func toggleItemInWidget(listIndex: Int, itemIndex: Int) {
     // Access shared UserDefaults
     let sharedDefaults = UserDefaults(suiteName: "group.com.lwebch.VoiceList")
     
+    // Force synchronization at the start
+    sharedDefaults?.synchronize()
+    print("🔍 DEBUG: toggleItemInWidget - UserDefaults synchronized at start")
+    
     // Load current shopping lists
     guard let listsData = sharedDefaults?.data(forKey: "shoppingLists"),
           let lists = try? JSONDecoder().decode([ShoppingListData].self, from: listsData) else {
@@ -815,6 +884,14 @@ func toggleItemInWidget(listIndex: Int, itemIndex: Int) {
         sharedDefaults?.set(updatedData, forKey: "shoppingLists")
         
         // Also save the change for React Native to sync
+        // Load existing changes first
+        var allChanges: [[String: Any]] = []
+        if let existingData = sharedDefaults?.data(forKey: "widgetChanges"),
+           let existingChanges = try? JSONSerialization.jsonObject(with: existingData) as? [[String: Any]] {
+            allChanges = existingChanges
+        }
+        
+        // Add the new change
         let widgetChange: [String: Any] = [
             "type": "itemToggle",
             "listIndex": listIndex,
@@ -822,13 +899,30 @@ func toggleItemInWidget(listIndex: Int, itemIndex: Int) {
             "isCompleted": !currentStatus,
             "timestamp": Date().timeIntervalSince1970
         ]
+        allChanges.append(widgetChange)
         
-        if let changeData = try? JSONSerialization.data(withJSONObject: widgetChange) {
+        // Save all changes
+        if let changeData = try? JSONSerialization.data(withJSONObject: allChanges) {
             sharedDefaults?.set(changeData, forKey: "widgetChanges")
-            print("📱 DEBUG: toggleItemInWidget - Saved change for app sync: \(widgetChange)")
+            print("📱 DEBUG: toggleItemInWidget - Saved \(allChanges.count) changes for app sync")
+            
+            // Verify the save worked
+            if let verifyData = sharedDefaults?.data(forKey: "widgetChanges") {
+                print("✅ DEBUG: toggleItemInWidget - Verified widgetChanges saved: \(verifyData.count) bytes")
+            } else {
+                print("❌ DEBUG: toggleItemInWidget - ERROR: widgetChanges not saved!")
+            }
         }
         
-        sharedDefaults?.synchronize()
+        // Force synchronization multiple times to ensure it's saved
+        let syncResult = sharedDefaults?.synchronize() ?? false
+        print("🔄 DEBUG: toggleItemInWidget - Synchronize result: \(syncResult)")
+        
+        // Double check all keys
+        if let defaults = sharedDefaults {
+            let allKeys = defaults.dictionaryRepresentation().keys
+            print("🔍 DEBUG: toggleItemInWidget - Keys after save: \(Array(allKeys).filter { $0.contains("widget") || $0.contains("shopping") })")
+        }
         
         print("💾 DEBUG: toggleItemInWidget - Successfully saved updated lists")
         

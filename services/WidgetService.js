@@ -101,15 +101,21 @@ class WidgetService {
   
   static async syncWidgetChangesToApp() {
     if (Platform.OS !== 'ios' || !WidgetDataBridge) {
+      console.log('❌ DEBUG: WidgetService - Platform check failed - Platform.OS:', Platform.OS, 'WidgetDataBridge:', !!WidgetDataBridge);
       return null;
     }
     
+    console.log('🔄 DEBUG: WidgetService - Starting syncWidgetChangesToApp call');
+    
     try {
       const changes = await WidgetDataBridge.syncWidgetChangesToApp();
-      console.log('🔄 DEBUG: WidgetService - Synced widget changes:', changes);
+      console.log('🔄 DEBUG: WidgetService - syncWidgetChangesToApp returned:', changes);
+      console.log('🔄 DEBUG: WidgetService - Type of returned value:', typeof changes);
+      console.log('🔄 DEBUG: WidgetService - Is changes null?', changes === null);
+      console.log('🔄 DEBUG: WidgetService - Is changes undefined?', changes === undefined);
       return changes;
     } catch (error) {
-      console.log('Error syncing widget changes:', error);
+      console.log('❌ DEBUG: WidgetService - Error syncing widget changes:', error);
       return null;
     }
   }

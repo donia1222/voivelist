@@ -489,16 +489,9 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       }
     }
 
-    // Handle initial URL when app is opened from widget
-    Linking.getInitialURL().then(url => {
-      if (url) {
-        console.log('📱 App opened with initial URL:', url)
-        handleDeepLink({ url })
-      } else {
-        console.log('📱 App opened normally (no deep link)')
-      }
-    })
-
+    // DISABLED: Initial URL is now handled by CustomBottomTabNavigator
+    // to avoid race conditions and ensure proper navigation
+    
     // Listen for URL changes while app is open
     const subscription = Linking.addEventListener('url', handleDeepLink)
 

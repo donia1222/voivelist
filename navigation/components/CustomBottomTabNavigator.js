@@ -448,6 +448,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       } else if (url?.includes('voicelist://home')) {
         console.log('🏠 Switching to Home tab from widget home link')
         setActiveTab('Home')
+      } else if (url?.includes('voicelist://history')) {
+        console.log('📜 Switching to History tab from widget history link')
+        setActiveTab('History')
       } else if (url?.includes('voicelist://favorites')) {
         console.log('⭐ Switching to History tab from widget favorites link')
         setActiveTab('History')
@@ -477,15 +480,21 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               const completedItemsData = await AsyncStorage.getItem("@completed_items")
               
               if (historyData) {
-                const history = JSON.parse(historyData).reverse() // Reverse to get original order (recent first)
+                const history = JSON.parse(historyData) // Keep original order (oldest first)
                 const completedItems = completedItemsData ? JSON.parse(completedItemsData) : {}
                 
+                // Widget shows newest list first (index 0), so we need to map to the actual index
+                // Since history is oldest-first and widget shows newest-first, we need to convert the index
+                const actualHistoryIndex = history.length - 1 - listIndex
+                
                 console.log('🔄 Processing toggle - History length:', history.length)
+                console.log('🔄 Widget sent listIndex:', listIndex, 'itemIndex:', itemIndex)
+                console.log('🔄 Converted to actualHistoryIndex:', actualHistoryIndex)
                 console.log('🔄 Current completed items:', completedItems)
                 
-                if (history.length > 0) {
-                  // Widget always sends listIndex 0 (current visible list), so use index 0 
-                  const actualListIndex = 0
+                if (history.length > 0 && actualHistoryIndex >= 0 && actualHistoryIndex < history.length) {
+                  // Use the converted index that maps widget display to actual history array
+                  const actualListIndex = actualHistoryIndex
                   
                   const newCompletedItems = { ...completedItems }
                   if (!newCompletedItems[actualListIndex]) {
