@@ -20,4 +20,7 @@ RCT_EXTERN_METHOD(updateSubscriptionStatus:(BOOL)isSubscribed
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(syncWidgetChangesToApp:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 @end

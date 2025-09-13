@@ -161,39 +161,52 @@ const HistoryScreen = ({ navigation }) => {
     }
   }, [currentIndex, history, completedItems])
 
-  // Listen for widget item toggle requests
+  // Listen for widget changes and sync to app
   useEffect(() => {
-    const checkWidgetToggleRequest = async () => {
+    const syncWidgetChanges = async () => {
       try {
-        const toggleRequest = await AsyncStorage.getItem('@widget_toggle_request')
-        if (toggleRequest) {
-          const { listIndex, itemIndex, timestamp } = JSON.parse(toggleRequest)
+        const changes = await WidgetService.syncWidgetChangesToApp()
+        
+        if (changes && changes.type === 'itemToggle') {
+          const { listIndex, itemIndex, isCompleted, timestamp } = changes
           
-          // Only process recent requests (within last 5 seconds)
-          if (Date.now() - timestamp < 5000) {
-            console.log('🔄 Processing widget toggle request - List:', listIndex, 'Item:', itemIndex)
+          // Only process recent changes (within last 30 seconds)
+          if (Date.now() - (timestamp * 1000) < 30000) {
+            console.log('🔄 Syncing widget change to app - List:', listIndex, 'Item:', itemIndex, 'Completed:', isCompleted)
             
-            // Since widget always sends listIndex 0 (current visible list), use currentIndex
-            const actualListIndex = currentIndex
-            
-            if (actualListIndex >= 0 && actualListIndex < history.length) {
-              toggleItemCompletion(actualListIndex, itemIndex)
+            // Update completed items in React Native
+            const newCompletedItems = { ...completedItems }
+            if (!newCompletedItems[listIndex]) {
+              newCompletedItems[listIndex] = []
             }
+            
+            if (isCompleted) {
+              // Add to completed if not already there
+              if (!newCompletedItems[listIndex].includes(itemIndex)) {
+                newCompletedItems[listIndex].push(itemIndex)
+              }
+            } else {
+              // Remove from completed
+              newCompletedItems[listIndex] = newCompletedItems[listIndex].filter(i => i !== itemIndex)
+            }
+            
+            console.log('✅ Updated completed items from widget:', newCompletedItems)
+            setCompletedItems(newCompletedItems)
+            
+            // Save to AsyncStorage
+            await AsyncStorage.setItem("@completed_items", JSON.stringify(newCompletedItems))
           }
-          
-          // Clear the request
-          await AsyncStorage.removeItem('@widget_toggle_request')
         }
       } catch (error) {
-        console.error('Error processing widget toggle request:', error)
+        console.error('Error syncing widget changes:', error)
       }
     }
 
-    // Check for toggle requests when tab becomes focused
+    // Sync when tab becomes focused
     if (isFocused) {
-      checkWidgetToggleRequest()
+      syncWidgetChanges()
     }
-  }, [isFocused, currentIndex, history])
+  }, [isFocused, completedItems])
 
   // Animaciones para las categorías
   const categoryAnimations = useRef({
@@ -811,6 +824,8 @@ const HistoryScreen = ({ navigation }) => {
     } else {
       newCompletedItems[listIndex] = [...newCompletedItems[listIndex], itemIndex]
     }
+    
+    console.log('🔄 DEBUG: toggleItemCompletion - List:', listIndex, 'Item:', itemIndex, 'New state:', newCompletedItems)
     
     saveCompletedItems(newCompletedItems)
   }

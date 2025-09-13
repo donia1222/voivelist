@@ -1,5 +1,6 @@
 import WidgetKit
 import SwiftUI
+import AppIntents
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
@@ -146,7 +147,7 @@ struct ShoppingListItem {
 
 struct ShoppingListData: Codable {
     let name: String
-    let items: [ShoppingListItemData]
+    var items: [ShoppingListItemData]
     let completedItems: [Int]
 }
 
@@ -204,7 +205,8 @@ struct SmallWidgetView: View {
                 
                 VStack(alignment: .leading, spacing: 2) {
                     ForEach(Array(currentList.items.prefix(4).enumerated()), id: \.offset) { index, item in
-                        Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                        if #available(iOS 16.0, *) {
+                            Button(intent: ToggleItemIntent(listIndex: 0, itemIndex: index)) {
                             HStack(spacing: 6) {
                                 Circle()
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
@@ -218,6 +220,23 @@ struct SmallWidgetView: View {
                             }
                         }
                         .buttonStyle(PlainButtonStyle())
+                        } else {
+                            // Fallback for iOS < 16 - opens app
+                            Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                                HStack(spacing: 6) {
+                                    Circle()
+                                        .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
+                                        .frame(width: 6, height: 6)
+                                    Text(item.text)
+                                        .font(.system(size: 13))
+                                        .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
+                                        .strikethrough(item.isCompleted)
+                                        .lineLimit(1)
+                                    Spacer()
+                                }
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
                     }
                     
                     if currentList.items.count > 4 {
@@ -233,7 +252,7 @@ struct SmallWidgetView: View {
             .padding(.horizontal, 10)
             .padding(.top, 0)
             .padding(.bottom, 10)
-            .widgetURL(URL(string: "voicelist://favorites"))
+            // Removed .widgetURL to allow individual button interactions
         } else {
             // Show buttons when no lists
             VStack(spacing: 12) {
@@ -331,7 +350,8 @@ struct MediumWidgetView: View {
                 // Lista de items (scrollable content)
                 VStack(alignment: .leading, spacing: 3) {
                     ForEach(Array(currentList.items.prefix(4).enumerated()), id: \.offset) { index, item in
-                        Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                        if #available(iOS 16.0, *) {
+                            Button(intent: ToggleItemIntent(listIndex: 0, itemIndex: index)) {
                             HStack(spacing: 8) {
                                 Circle()
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
@@ -345,6 +365,23 @@ struct MediumWidgetView: View {
                             }
                         }
                         .buttonStyle(PlainButtonStyle())
+                        } else {
+                            // Fallback for iOS < 16 - opens app
+                            Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                                HStack(spacing: 6) {
+                                    Circle()
+                                        .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
+                                        .frame(width: 6, height: 6)
+                                    Text(item.text)
+                                        .font(.system(size: 13))
+                                        .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
+                                        .strikethrough(item.isCompleted)
+                                        .lineLimit(1)
+                                    Spacer()
+                                }
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
                     }
                     
                     if currentList.items.count > 4 {
@@ -359,7 +396,7 @@ struct MediumWidgetView: View {
                 
                 Spacer()
             }
-            .widgetURL(URL(string: "voicelist://favorites"))
+            // Removed .widgetURL to allow individual button interactions
         } else {
             // Show buttons when no lists
             VStack(spacing: 12) {
@@ -494,8 +531,9 @@ struct LargeWidgetView: View {
                 
                 // Lista de items (scrollable content)
                 VStack(alignment: .leading, spacing: 4) {
-                    ForEach(Array(currentList.items.prefix(10).enumerated()), id: \.offset) { index, item in
-                        Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                    ForEach(Array(currentList.items.prefix(12).enumerated()), id: \.offset) { index, item in
+                        if #available(iOS 16.0, *) {
+                            Button(intent: ToggleItemIntent(listIndex: 0, itemIndex: index)) {
                             HStack(spacing: 10) {
                                 Circle()
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
@@ -509,6 +547,23 @@ struct LargeWidgetView: View {
                             }
                         }
                         .buttonStyle(PlainButtonStyle())
+                        } else {
+                            // Fallback for iOS < 16 - opens app
+                            Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                                HStack(spacing: 6) {
+                                    Circle()
+                                        .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
+                                        .frame(width: 6, height: 6)
+                                    Text(item.text)
+                                        .font(.system(size: 13))
+                                        .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
+                                        .strikethrough(item.isCompleted)
+                                        .lineLimit(1)
+                                    Spacer()
+                                }
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
                     }
                     
                     if currentList.items.count > 10 {
@@ -523,7 +578,7 @@ struct LargeWidgetView: View {
                 
                 Spacer()
             }
-            .widgetURL(URL(string: "voicelist://favorites"))
+            // Removed .widgetURL to allow individual button interactions
         } else {
             // Show buttons when no lists
             VStack(spacing: 24) {
@@ -719,5 +774,104 @@ struct VoiceListWidget: Widget {
 } timeline: {
     SimpleEntry(date: .now, favoritesList: ["Milk", "Bread", "Eggs"], shoppingLists: [ShoppingList(name: "Grocery", items: [ShoppingListItem(text: "Milk", isCompleted: false), ShoppingListItem(text: "Bread", isCompleted: true), ShoppingListItem(text: "Eggs", isCompleted: false)])], isEmpty: false, isSubscribed: true)
     SimpleEntry(date: .now, favoritesList: [], shoppingLists: [], isEmpty: true, isSubscribed: false)
+}
+
+// MARK: - Widget Helper Functions
+@available(iOS 16.0, *)
+func toggleItemInWidget(listIndex: Int, itemIndex: Int) {
+    print("🎯 DEBUG: toggleItemInWidget - Toggle item \(itemIndex) in list \(listIndex)")
+    
+    // Access shared UserDefaults
+    let sharedDefaults = UserDefaults(suiteName: "group.com.lwebch.VoiceList")
+    
+    // Load current shopping lists
+    guard let listsData = sharedDefaults?.data(forKey: "shoppingLists"),
+          let lists = try? JSONDecoder().decode([ShoppingListData].self, from: listsData) else {
+        print("❌ DEBUG: toggleItemInWidget - Could not load shopping lists")
+        return
+    }
+    
+    var updatedLists = lists
+    
+    // Check if indices are valid
+    guard listIndex >= 0 && listIndex < updatedLists.count,
+          itemIndex >= 0 && itemIndex < updatedLists[listIndex].items.count else {
+        print("❌ DEBUG: toggleItemInWidget - Invalid indices")
+        return
+    }
+    
+    // Toggle the item completion status
+    let currentStatus = updatedLists[listIndex].items[itemIndex].isCompleted
+    updatedLists[listIndex].items[itemIndex] = ShoppingListItemData(
+        text: updatedLists[listIndex].items[itemIndex].text,
+        isCompleted: !currentStatus
+    )
+    
+    print("✅ DEBUG: toggleItemInWidget - Item '\(updatedLists[listIndex].items[itemIndex].text)' toggled to: \(!currentStatus)")
+    
+    // Save updated lists back to UserDefaults
+    do {
+        let updatedData = try JSONEncoder().encode(updatedLists)
+        sharedDefaults?.set(updatedData, forKey: "shoppingLists")
+        
+        // Also save the change for React Native to sync
+        let widgetChange: [String: Any] = [
+            "type": "itemToggle",
+            "listIndex": listIndex,
+            "itemIndex": itemIndex,
+            "isCompleted": !currentStatus,
+            "timestamp": Date().timeIntervalSince1970
+        ]
+        
+        if let changeData = try? JSONSerialization.data(withJSONObject: widgetChange) {
+            sharedDefaults?.set(changeData, forKey: "widgetChanges")
+            print("📱 DEBUG: toggleItemInWidget - Saved change for app sync: \(widgetChange)")
+        }
+        
+        sharedDefaults?.synchronize()
+        
+        print("💾 DEBUG: toggleItemInWidget - Successfully saved updated lists")
+        
+        // Reload all widget timelines
+        WidgetCenter.shared.reloadAllTimelines()
+        print("🔄 DEBUG: toggleItemInWidget - Widget timelines reloaded")
+        
+    } catch {
+        print("❌ DEBUG: toggleItemInWidget - Error saving: \(error)")
+    }
+}
+
+// MARK: - App Intents for iOS 16+
+@available(iOS 16.0, *)
+struct ToggleItemIntent: AppIntent {
+    static var title: LocalizedStringResource = "Toggle Item"
+    static var description = IntentDescription("Toggle item completion in widget")
+    static var openAppWhenRun: Bool = false // KEY: This prevents opening the app
+    
+    @Parameter(title: "List Index")
+    var listIndex: Int
+    
+    @Parameter(title: "Item Index") 
+    var itemIndex: Int
+    
+    static var parameterSummary: some ParameterSummary {
+        Summary("Toggle item \(\.$itemIndex)")
+    }
+    
+    init() {
+        self.listIndex = 0
+        self.itemIndex = 0
+    }
+    
+    init(listIndex: Int, itemIndex: Int) {
+        self.listIndex = listIndex
+        self.itemIndex = itemIndex
+    }
+    
+    func perform() async throws -> some IntentResult {
+        print("🎯 DEBUG: ToggleItemIntent.perform() - List: \(listIndex), Item: \(itemIndex)")
+        toggleItemInWidget(listIndex: listIndex, itemIndex: itemIndex)
+        return .result()
+    }
 }
 

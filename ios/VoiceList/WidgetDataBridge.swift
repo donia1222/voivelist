@@ -116,4 +116,24 @@ class WidgetDataBridge: NSObject, RCTBridgeModule {
         
         resolver(true)
     }
+    
+    @objc
+    func syncWidgetChangesToApp(_ resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
+        // This method will be called by React Native to sync widget changes back to app
+        let sharedDefaults = UserDefaults(suiteName: "group.com.lwebch.VoiceList")
+        
+        // Check if there are pending widget changes
+        if let changesData = sharedDefaults?.data(forKey: "widgetChanges"),
+           let changes = try? JSONDecoder().decode([String: Any].self, from: changesData) {
+            
+            print("🔄 DEBUG: WidgetDataBridge - Found widget changes to sync to app")
+            resolver(changes)
+            
+            // Clear the changes after syncing
+            sharedDefaults?.removeObject(forKey: "widgetChanges")
+            sharedDefaults?.synchronize()
+        } else {
+            resolver([:]) // No changes
+        }
+    }
 }
