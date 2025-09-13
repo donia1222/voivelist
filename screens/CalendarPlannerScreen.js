@@ -13,7 +13,8 @@ import {
   Dimensions,
   StyleSheet,
   Switch,
-  Linking
+  Linking,
+  KeyboardAvoidingView
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -54,6 +55,15 @@ const translations = {
     tapToAdd: "Tap + to schedule shopping",
     eventCreated: "Shopping event created!",
     permissionDenied: "Calendar permission denied",
+    calendarAccessRequired: "Calendar Access Required",
+    calendarAccessMessage: "Voice Grocery needs access to your calendar to create shopping events and reminders. Please enable calendar access in Settings.",
+    error: "Error",
+    unableToRequestPermission: "Unable to request calendar permission",
+    pleaseSelectList: "Please select a shopping list",
+    calendarPermissionRequired: "Calendar Permission Required",
+    eventWithoutSync: "Event will be created without calendar sync. You can enable it later in settings.",
+    couldNotCreateEvent: "Could not create event",
+    openSettings: "Open Settings",
     selectStore: "Select Store",
     estimatedTime: "Estimated Time",
     minutes: "minutes",
@@ -123,7 +133,16 @@ const translations = {
     tapToAdd: "Toca + para programar compras",
     eventCreated: "¡Evento de compra creado!",
     permissionDenied: "Permiso de calendario denegado",
-    selectStore: "Seleccionar Tienda",
+    calendarAccessRequired: "Acceso al Calendario Requerido",
+    calendarAccessMessage: "Voice Grocery necesita acceso a tu calendario para crear eventos de compras y recordatorios. Por favor habilita el acceso al calendario en Configuración.",
+    error: "Error",
+    unableToRequestPermission: "No se pudo solicitar permiso del calendario",
+    pleaseSelectList: "Por favor selecciona una lista de compras",
+    calendarPermissionRequired: "Permiso de Calendario Requerido",
+    eventWithoutSync: "El evento se creará sin sincronización con el calendario. Puedes habilitarlo más tarde en la configuración.",
+    couldNotCreateEvent: "No se pudo crear el evento",
+    openSettings: "Abrir Configuración",
+    selectStore: "Nombre de tienda",
     estimatedTime: "Tiempo Estimado",
     minutes: "minutos",
     notifications: "Notificaciones",
@@ -372,6 +391,567 @@ const translations = {
     october: "Octobre",
     november: "Novembre",
     december: "Décembre"
+  },
+  tr: {
+    title: "Alışveriş Takvimi",
+    weeklyPlanner: "Haftalık Planlayıcı",
+    addEvent: "Alışveriş Etkinliği Ekle",
+    selectList: "Liste Seç",
+    selectDate: "Tarih ve Saat Seç",
+    repeat: "Tekrarla",
+    weekly: "Haftalık",
+    biweekly: "İki haftalık",
+    monthly: "Aylık",
+    never: "Asla",
+    remindMe: "Bana Hatırlat",
+    syncCalendar: "Takvimle Senkronize Et",
+    createEvent: "Etkinlik Oluştur",
+    cancel: "İptal",
+    monday: "Pzt",
+    tuesday: "Sal",
+    wednesday: "Çar",
+    thursday: "Per",
+    friday: "Cum",
+    saturday: "Cmt",
+    sunday: "Paz",
+    noEvents: "Planlanmış alışveriş yok",
+    tapToAdd: "Alışveriş planlamak için + dokunun",
+    eventCreated: "Alışveriş etkinliği oluşturuldu!",
+    permissionDenied: "Takvim izni reddedildi",
+    selectStore: "Mağaza Seç",
+    estimatedTime: "Tahmini Süre",
+    minutes: "dakika",
+    notifications: "Bildirimler",
+    reminderBefore: "Önce hatırlatıcı",
+    deleteEvent: "Etkinliği Sil",
+    editEvent: "Etkinliği Düzenle",
+    todayTasks: "Bugünün Alışverişi",
+    upcomingTasks: "Yaklaşan",
+    completedTasks: "Tamamlanan",
+    markComplete: "Tamamlandı Olarak İşaretle",
+    shoppingList: "Alışveriş Listesi",
+    store: "Mağaza",
+    time: "Saat",
+    fullCalendar: "Tam Takvim",
+    expand: "Genişlet",
+    today: "Bugün",
+    add: "Ekle",
+    viewList: "Listeyi Görüntüle",
+    editDay: "Günü Düzenle",
+    viewEditItems: "Liste öğelerini görüntüle ve düzenle",
+    modifyEvent: "Etkinlik ve ayarları değiştir",
+    emptyList: "Boş liste",
+    noContent: "İçerik yok",
+    noSavedLists: "Kayıtlı liste yok",
+    createListsFirst: "Önce geçmişte liste oluştur",
+    viewLess: "Daha az göster",
+    viewMore: "Daha fazla göster",
+    items: "ürün",
+    reminderSuccess: "Hatırlatıcı başarıyla planlandı",
+    january: "Ocak",
+    february: "Şubat",
+    march: "Mart",
+    april: "Nisan",
+    may: "Mayıs",
+    june: "Haziran",
+    july: "Temmuz",
+    august: "Ağustos",
+    september: "Eylül",
+    october: "Ekim",
+    november: "Kasım",
+    december: "Aralık"
+  },
+  pt: {
+    title: "Calendário de Compras",
+    weeklyPlanner: "Planejador Semanal",
+    addEvent: "Adicionar Evento de Compras",
+    selectList: "Selecionar Lista",
+    selectDate: "Selecionar Data e Hora",
+    repeat: "Repetir",
+    weekly: "Semanal",
+    biweekly: "Quinzenal",
+    monthly: "Mensal",
+    never: "Nunca",
+    remindMe: "Lembrar-me",
+    syncCalendar: "Sincronizar com Calendário",
+    createEvent: "Criar Evento",
+    cancel: "Cancelar",
+    monday: "Seg",
+    tuesday: "Ter",
+    wednesday: "Qua",
+    thursday: "Qui",
+    friday: "Sex",
+    saturday: "Sáb",
+    sunday: "Dom",
+    noEvents: "Nenhuma compra planejada",
+    tapToAdd: "Toque + para agendar compras",
+    eventCreated: "Evento de compras criado!",
+    permissionDenied: "Permissão de calendário negada",
+    selectStore: "Selecionar Loja",
+    estimatedTime: "Tempo Estimado",
+    minutes: "minutos",
+    notifications: "Notificações",
+    reminderBefore: "Lembrete antes",
+    deleteEvent: "Excluir Evento",
+    editEvent: "Editar Evento",
+    todayTasks: "Compras de Hoje",
+    upcomingTasks: "Próximas",
+    completedTasks: "Concluídas",
+    markComplete: "Marcar como Concluído",
+    shoppingList: "Lista de Compras",
+    store: "Loja",
+    time: "Hora",
+    fullCalendar: "Calendário Completo",
+    expand: "Expandir",
+    today: "Hoje",
+    add: "Adicionar",
+    viewList: "Ver Lista",
+    editDay: "Editar Dia",
+    viewEditItems: "Ver e editar itens da lista",
+    modifyEvent: "Modificar evento e configurações",
+    emptyList: "Lista vazia",
+    noContent: "Sem conteúdo",
+    noSavedLists: "Sem listas salvas",
+    createListsFirst: "Crie listas no histórico primeiro",
+    viewLess: "Ver menos",
+    viewMore: "Ver mais",
+    items: "itens",
+    reminderSuccess: "Lembrete agendado com sucesso",
+    january: "Janeiro",
+    february: "Fevereiro",
+    march: "Março",
+    april: "Abril",
+    may: "Maio",
+    june: "Junho",
+    july: "Julho",
+    august: "Agosto",
+    september: "Setembro",
+    october: "Outubro",
+    november: "Novembro",
+    december: "Dezembro"
+  },
+  ru: {
+    title: "Календарь покупок",
+    weeklyPlanner: "Еженедельный планировщик",
+    addEvent: "Добавить событие покупок",
+    selectList: "Выбрать список",
+    selectDate: "Выбрать дату и время",
+    repeat: "Повторить",
+    weekly: "Еженедельно",
+    biweekly: "Раз в две недели",
+    monthly: "Ежемесячно",
+    never: "Никогда",
+    remindMe: "Напомнить мне",
+    syncCalendar: "Синхр. с календарем",
+    createEvent: "Создать событие",
+    cancel: "Отмена",
+    monday: "Пн",
+    tuesday: "Вт",
+    wednesday: "Ср",
+    thursday: "Чт",
+    friday: "Пт",
+    saturday: "Сб",
+    sunday: "Вс",
+    noEvents: "Покупки не запланированы",
+    tapToAdd: "Нажмите + для планирования",
+    eventCreated: "Событие покупок создано!",
+    permissionDenied: "Доступ к календарю запрещен",
+    calendarAccessRequired: "Требуется доступ к календарю",
+    calendarAccessMessage: "Voice Grocery требует доступ к вашему календарю для создания событий покупок и напоминаний. Пожалуйста, включите доступ к календарю в Настройках.",
+    error: "Ошибка",
+    unableToRequestPermission: "Не удалось запросить разрешение календаря",
+    pleaseSelectList: "Пожалуйста, выберите список покупок",
+    calendarPermissionRequired: "Требуется разрешение календаря",
+    eventWithoutSync: "Событие будет создано без синхронизации с календарем. Вы можете включить ее позже в настройках.",
+    couldNotCreateEvent: "Не удалось создать событие",
+    openSettings: "Открыть Настройки",
+    selectStore: "Выбрать магазин",
+    estimatedTime: "Примерное время",
+    minutes: "минут",
+    notifications: "Уведомления",
+    reminderBefore: "Напоминание за",
+    deleteEvent: "Удалить событие",
+    editEvent: "Изменить событие",
+    todayTasks: "Покупки сегодня",
+    upcomingTasks: "Предстоящие",
+    completedTasks: "Завершенные",
+    markComplete: "Отметить как выполнено",
+    shoppingList: "Список покупок",
+    store: "Магазин",
+    time: "Время",
+    fullCalendar: "Полный календарь",
+    expand: "Развернуть",
+    today: "Сегодня",
+    add: "Добавить",
+    viewList: "Просмотр списка",
+    editDay: "Изменить день",
+    viewEditItems: "Просмотр и редактирование элементов",
+    modifyEvent: "Изменить событие и настройки",
+    emptyList: "Пустой список",
+    noContent: "Нет содержимого",
+    noSavedLists: "Нет сохраненных списков",
+    createListsFirst: "Сначала создайте списки в истории",
+    viewLess: "Показать меньше",
+    viewMore: "Показать больше",
+    items: "товаров",
+    reminderSuccess: "Напоминание успешно запланировано",
+    january: "Январь",
+    february: "Февраль",
+    march: "Март",
+    april: "Апрель",
+    may: "Май",
+    june: "Июнь",
+    july: "Июль",
+    august: "Август",
+    september: "Сентябрь",
+    october: "Октябрь",
+    november: "Ноябрь",
+    december: "Декабрь"
+  },
+  ar: {
+    title: "تقويم التسوق",
+    weeklyPlanner: "المخطط الأسبوعي",
+    addEvent: "إضافة حدث تسوق",
+    selectList: "اختر القائمة",
+    selectDate: "اختر التاريخ والوقت",
+    repeat: "تكرار",
+    weekly: "أسبوعي",
+    biweekly: "كل أسبوعين",
+    monthly: "شهري",
+    never: "أبداً",
+    remindMe: "ذكرني",
+    syncCalendar: "مزامنة مع التقويم",
+    createEvent: "إنشاء حدث",
+    cancel: "إلغاء",
+    monday: "الإثنين",
+    tuesday: "الثلاثاء",
+    wednesday: "الأربعاء",
+    thursday: "الخميس",
+    friday: "الجمعة",
+    saturday: "السبت",
+    sunday: "الأحد",
+    noEvents: "لا توجد تسوق مخطط",
+    tapToAdd: "اضغط + لجدولة التسوق",
+    eventCreated: "تم إنشاء حدث التسوق!",
+    permissionDenied: "تم رفض إذن التقويم",
+    selectStore: "اختر المتجر",
+    estimatedTime: "الوقت المقدر",
+    minutes: "دقائق",
+    notifications: "الإشعارات",
+    reminderBefore: "التذكير قبل",
+    deleteEvent: "حذف الحدث",
+    editEvent: "تعديل الحدث",
+    todayTasks: "تسوق اليوم",
+    upcomingTasks: "القادمة",
+    completedTasks: "المكتملة",
+    markComplete: "وضع علامة مكتمل",
+    shoppingList: "قائمة التسوق",
+    store: "المتجر",
+    time: "الوقت",
+    fullCalendar: "التقويم الكامل",
+    expand: "توسيع",
+    today: "اليوم",
+    add: "إضافة",
+    viewList: "عرض القائمة",
+    editDay: "تعديل اليوم",
+    viewEditItems: "عرض وتعديل عناصر القائمة",
+    modifyEvent: "تعديل الحدث والإعدادات",
+    emptyList: "قائمة فارغة",
+    noContent: "لا يوجد محتوى",
+    noSavedLists: "لا توجد قوائم محفوظة",
+    createListsFirst: "قم بإنشاء قوائم في السجل أولاً",
+    viewLess: "عرض أقل",
+    viewMore: "عرض المزيد",
+    items: "عناصر",
+    reminderSuccess: "تم جدولة التذكير بنجاح",
+    january: "يناير",
+    february: "فبراير",
+    march: "مارس",
+    april: "أبريل",
+    may: "مايو",
+    june: "يونيو",
+    july: "يوليو",
+    august: "أغسطس",
+    september: "سبتمبر",
+    october: "أكتوبر",
+    november: "نوفمبر",
+    december: "ديسمبر"
+  },
+  hu: {
+    title: "Bevásárlási naptár",
+    weeklyPlanner: "Heti tervező",
+    addEvent: "Bevásárlási esemény hozzáadása",
+    selectList: "Lista kiválasztása",
+    selectDate: "Dátum és idő kiválasztása",
+    repeat: "Ismétlés",
+    weekly: "Hetente",
+    biweekly: "Kéthetente",
+    monthly: "Havonta",
+    never: "Soha",
+    remindMe: "Emlékeztess",
+    syncCalendar: "Szinkronizálás naptárral",
+    createEvent: "Esemény létrehozása",
+    cancel: "Mégse",
+    monday: "Hé",
+    tuesday: "Ke",
+    wednesday: "Sze",
+    thursday: "Cs",
+    friday: "Pé",
+    saturday: "Szo",
+    sunday: "Vas",
+    noEvents: "Nincs tervezett bevásárlás",
+    tapToAdd: "Koppints + a bevásárlás ütemezéséhez",
+    eventCreated: "Bevásárlási esemény létrehozva!",
+    permissionDenied: "Naptár engedély megtagadva",
+    selectStore: "Bolt kiválasztása",
+    estimatedTime: "Becsült idő",
+    minutes: "perc",
+    notifications: "Értesítések",
+    reminderBefore: "Emlékeztető előtte",
+    deleteEvent: "Esemény törlése",
+    editEvent: "Esemény szerkesztése",
+    todayTasks: "Mai bevásárlás",
+    upcomingTasks: "Közelgő",
+    completedTasks: "Befejezett",
+    markComplete: "Megjelölés befejezettként",
+    shoppingList: "Bevásárlólista",
+    store: "Bolt",
+    time: "Idő",
+    fullCalendar: "Teljes naptár",
+    expand: "Kibővítés",
+    today: "Ma",
+    add: "Hozzáadás",
+    viewList: "Lista megtekintése",
+    editDay: "Nap szerkesztése",
+    viewEditItems: "Listaelemek megtekintése és szerkesztése",
+    modifyEvent: "Esemény és beállítások módosítása",
+    emptyList: "Üres lista",
+    noContent: "Nincs tartalom",
+    noSavedLists: "Nincsenek mentett listák",
+    createListsFirst: "Először hozz létre listákat az előzményekben",
+    viewLess: "Kevesebb megjelenítése",
+    viewMore: "Több megjelenítése",
+    items: "elem",
+    reminderSuccess: "Emlékeztető sikeresen ütemezve",
+    january: "Január",
+    february: "Február",
+    march: "Március",
+    april: "Április",
+    may: "Május",
+    june: "Június",
+    july: "Július",
+    august: "Augusztus",
+    september: "Szeptember",
+    october: "Október",
+    november: "November",
+    december: "December"
+  },
+  ja: {
+    title: "買い物カレンダー",
+    weeklyPlanner: "週間プランナー",
+    addEvent: "買い物イベントを追加",
+    selectList: "リストを選択",
+    selectDate: "日時を選択",
+    repeat: "繰り返し",
+    weekly: "毎週",
+    biweekly: "隔週",
+    monthly: "毎月",
+    never: "なし",
+    remindMe: "リマインダー",
+    syncCalendar: "カレンダーと同期",
+    createEvent: "イベントを作成",
+    cancel: "キャンセル",
+    monday: "月",
+    tuesday: "火",
+    wednesday: "水",
+    thursday: "木",
+    friday: "金",
+    saturday: "土",
+    sunday: "日",
+    noEvents: "予定された買い物はありません",
+    tapToAdd: "+ をタップして買い物を予定",
+    eventCreated: "買い物イベントが作成されました！",
+    permissionDenied: "カレンダー権限が拒否されました",
+    selectStore: "店舗を選択",
+    estimatedTime: "予定時間",
+    minutes: "分",
+    notifications: "通知",
+    reminderBefore: "事前リマインダー",
+    deleteEvent: "イベントを削除",
+    editEvent: "イベントを編集",
+    todayTasks: "今日の買い物",
+    upcomingTasks: "今後の予定",
+    completedTasks: "完了済み",
+    markComplete: "完了としてマーク",
+    shoppingList: "買い物リスト",
+    store: "店舗",
+    time: "時間",
+    fullCalendar: "フルカレンダー",
+    expand: "展開",
+    today: "今日",
+    add: "追加",
+    viewList: "リストを表示",
+    editDay: "日を編集",
+    viewEditItems: "リストアイテムの表示と編集",
+    modifyEvent: "イベントと設定を変更",
+    emptyList: "空のリスト",
+    noContent: "コンテンツなし",
+    noSavedLists: "保存されたリストはありません",
+    createListsFirst: "最初に履歴でリストを作成",
+    viewLess: "表示を減らす",
+    viewMore: "もっと見る",
+    items: "アイテム",
+    reminderSuccess: "リマインダーが正常にスケジュールされました",
+    january: "1月",
+    february: "2月",
+    march: "3月",
+    april: "4月",
+    may: "5月",
+    june: "6月",
+    july: "7月",
+    august: "8月",
+    september: "9月",
+    october: "10月",
+    november: "11月",
+    december: "12月"
+  },
+  hi: {
+    title: "खरीदारी कैलेंडर",
+    weeklyPlanner: "साप्ताहिक योजनाकार",
+    addEvent: "खरीदारी इवेंट जोड़ें",
+    selectList: "सूची चुनें",
+    selectDate: "तारीख और समय चुनें",
+    repeat: "दोहराएं",
+    weekly: "साप्ताहिक",
+    biweekly: "द्विसाप्ताहिक",
+    monthly: "मासिक",
+    never: "कभी नहीं",
+    remindMe: "मुझे याद दिलाएं",
+    syncCalendar: "कैलेंडर से सिंक करें",
+    createEvent: "इवेंट बनाएं",
+    cancel: "रद्द करें",
+    monday: "सोम",
+    tuesday: "मंगल",
+    wednesday: "बुध",
+    thursday: "गुरु",
+    friday: "शुक्र",
+    saturday: "शनि",
+    sunday: "रवि",
+    noEvents: "कोई खरीदारी निर्धारित नहीं",
+    tapToAdd: "खरीदारी शेड्यूल करने के लिए + टैप करें",
+    eventCreated: "खरीदारी इवेंट बनाया गया!",
+    permissionDenied: "कैलेंडर अनुमति अस्वीकृत",
+    selectStore: "स्टोर चुनें",
+    estimatedTime: "अनुमानित समय",
+    minutes: "मिनट",
+    notifications: "सूचनाएं",
+    reminderBefore: "पहले याद दिलाना",
+    deleteEvent: "इवेंट हटाएं",
+    editEvent: "इवेंट संपादित करें",
+    todayTasks: "आज की खरीदारी",
+    upcomingTasks: "आगामी",
+    completedTasks: "पूर्ण",
+    markComplete: "पूर्ण के रूप में चिह्नित करें",
+    shoppingList: "खरीदारी सूची",
+    store: "स्टोर",
+    time: "समय",
+    fullCalendar: "पूर्ण कैलेंडर",
+    expand: "विस्तार",
+    today: "आज",
+    add: "जोड़ें",
+    viewList: "सूची देखें",
+    editDay: "दिन संपादित करें",
+    viewEditItems: "सूची आइटम देखें और संपादित करें",
+    modifyEvent: "इवेंट और सेटिंग्स संशोधित करें",
+    emptyList: "खाली सूची",
+    noContent: "कोई सामग्री नहीं",
+    noSavedLists: "कोई सहेजी गई सूची नहीं",
+    createListsFirst: "पहले इतिहास में सूचियां बनाएं",
+    viewLess: "कम देखें",
+    viewMore: "और देखें",
+    items: "आइटम",
+    reminderSuccess: "रिमाइंडर सफलतापूर्वक शेड्यूल किया गया",
+    january: "जनवरी",
+    february: "फरवरी",
+    march: "मार्च",
+    april: "अप्रैल",
+    may: "मई",
+    june: "जून",
+    july: "जुलाई",
+    august: "अगस्त",
+    september: "सितंबर",
+    october: "अक्टूबर",
+    november: "नवंबर",
+    december: "दिसंबर"
+  },
+  nl: {
+    title: "Boodschappen Kalender",
+    weeklyPlanner: "Weekplanner",
+    addEvent: "Boodschappen Evenement Toevoegen",
+    selectList: "Selecteer Lijst",
+    selectDate: "Selecteer Datum & Tijd",
+    repeat: "Herhalen",
+    weekly: "Wekelijks",
+    biweekly: "Tweewekelijks",
+    monthly: "Maandelijks",
+    never: "Nooit",
+    remindMe: "Herinner mij",
+    syncCalendar: "Synchroniseren met Kalender",
+    createEvent: "Evenement Maken",
+    cancel: "Annuleren",
+    monday: "Ma",
+    tuesday: "Di",
+    wednesday: "Wo",
+    thursday: "Do",
+    friday: "Vr",
+    saturday: "Za",
+    sunday: "Zo",
+    noEvents: "Geen boodschappen gepland",
+    tapToAdd: "Tik + om boodschappen te plannen",
+    eventCreated: "Boodschappen evenement gemaakt!",
+    permissionDenied: "Kalender toestemming geweigerd",
+    selectStore: "Selecteer Winkel",
+    estimatedTime: "Geschatte Tijd",
+    minutes: "minuten",
+    notifications: "Meldingen",
+    reminderBefore: "Herinnering vooraf",
+    deleteEvent: "Evenement Verwijderen",
+    editEvent: "Evenement Bewerken",
+    todayTasks: "Boodschappen Vandaag",
+    upcomingTasks: "Aankomende",
+    completedTasks: "Voltooid",
+    markComplete: "Markeren als Voltooid",
+    shoppingList: "Boodschappenlijst",
+    store: "Winkel",
+    time: "Tijd",
+    fullCalendar: "Volledige Kalender",
+    expand: "Uitbreiden",
+    today: "Vandaag",
+    add: "Toevoegen",
+    viewList: "Lijst Bekijken",
+    editDay: "Dag Bewerken",
+    viewEditItems: "Lijst items bekijken en bewerken",
+    modifyEvent: "Evenement en instellingen wijzigen",
+    emptyList: "Lege lijst",
+    noContent: "Geen inhoud",
+    noSavedLists: "Geen opgeslagen lijsten",
+    createListsFirst: "Maak eerst lijsten in geschiedenis",
+    viewLess: "Minder tonen",
+    viewMore: "Meer tonen",
+    items: "items",
+    reminderSuccess: "Herinnering succesvol gepland",
+    january: "Januari",
+    february: "Februari",
+    march: "Maart",
+    april: "April",
+    may: "Mei",
+    june: "Juni",
+    july: "Juli",
+    august: "Augustus",
+    september: "September",
+    october: "Oktober",
+    november: "November",
+    december: "December"
   }
 }
 
@@ -391,8 +971,8 @@ const CalendarPlannerScreen = () => {
   const [savedLists, setSavedLists] = useState([])
   const [selectedStore, setSelectedStore] = useState('')
   const [estimatedMinutes, setEstimatedMinutes] = useState('30')
-  const [reminderMinutes, setReminderMinutes] = useState('15')
-  const [lastUsedReminderMinutes, setLastUsedReminderMinutes] = useState('15')
+  const [reminderMinutes, setReminderMinutes] = useState('')
+  const [lastUsedReminderMinutes, setLastUsedReminderMinutes] = useState('')
   const [editingEventId, setEditingEventId] = useState(null)
   const [showDateSelector, setShowDateSelector] = useState(false)
   const [showTimeSelector, setShowTimeSelector] = useState(false)
@@ -550,11 +1130,11 @@ const CalendarPlannerScreen = () => {
       
       if (status === 'denied' || status === 'restricted') {
         Alert.alert(
-          'Calendar Access Required',
-          'Voice Grocery needs access to your calendar to create shopping events and reminders. Please enable calendar access in Settings.',
+          t.calendarAccessRequired,
+          t.calendarAccessMessage,
           [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Open Settings', onPress: () => {
+            { text: t.cancel, style: 'cancel' },
+            { text: t.openSettings, onPress: () => {
               if (Platform.OS === 'ios') {
                 Linking.openURL('app-settings:')
               }
@@ -568,7 +1148,7 @@ const CalendarPlannerScreen = () => {
       return status === 'authorized'
     } catch (error) {
       console.log('Calendar permission error:', error)
-      Alert.alert('Error', 'Unable to request calendar permission')
+      Alert.alert(t.error, t.unableToRequestPermission)
       return false
     }
   }
@@ -630,7 +1210,7 @@ const CalendarPlannerScreen = () => {
   const createEvent = async () => {
     try {
       if (!selectedList) {
-        Alert.alert('Please select a shopping list')
+        Alert.alert(t.pleaseSelectList)
         return
       }
 
@@ -645,8 +1225,8 @@ const CalendarPlannerScreen = () => {
         if (!hasPermission) {
           setSyncWithCalendar(false)
           Alert.alert(
-            'Calendar Permission Required',
-            'Event will be created without calendar sync. You can enable it later in settings.'
+            t.calendarPermissionRequired,
+            t.eventWithoutSync
           )
         }
       }
@@ -766,7 +1346,7 @@ const CalendarPlannerScreen = () => {
       resetForm()
     } catch (error) {
       console.error('Error creating event:', error)
-      Alert.alert('Error', 'Could not create event')
+      Alert.alert(t.error, t.couldNotCreateEvent)
     }
   }
 
@@ -1107,7 +1687,7 @@ const CalendarPlannerScreen = () => {
           setReminderMinutes(event.reminder.toString())
         } else {
           setReminderEnabled(false)
-          setReminderMinutes('15')
+          setReminderMinutes('')
         }
         
         // Buscar la lista original en savedLists
@@ -1435,6 +2015,24 @@ const CalendarPlannerScreen = () => {
       fontSize: 16,
       color: theme === 'dark' ? '#fff' : '#4A5568',
       backgroundColor: theme === 'dark' ? '#333' : '#F9F7F0'
+    },
+    inputWithIcon: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: theme === 'dark' ? '#444' : '#E8E6DB',
+      borderRadius: 12,
+      backgroundColor: theme === 'dark' ? '#333' : '#F9F7F0',
+      paddingRight: 12
+    },
+    inputWithIconField: {
+      flex: 1,
+      padding: 12,
+      fontSize: 16,
+      color: theme === 'dark' ? '#fff' : '#4A5568'
+    },
+    inputIcon: {
+      marginRight: 4
     },
     listSelector: {
       borderWidth: 1,
@@ -2153,7 +2751,10 @@ const CalendarPlannerScreen = () => {
           animationType="slide"
           onRequestClose={() => setModalVisible(false)}
         >
-          <View style={styles.modal}>
+          <KeyboardAvoidingView
+            style={styles.modal}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          >
             <View style={styles.modalContent}>
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>{t.addEvent}</Text>
@@ -2381,7 +2982,7 @@ const CalendarPlannerScreen = () => {
                   <Switch
                     value={reminderEnabled}
                     onValueChange={setReminderEnabled}
-                    trackColor={{ false: '#D1D5DB', true: '#8B5CF6' }}
+                    trackColor={{ false: '#D1D5DB', true: '#16b038ff' }}
                     thumbColor={reminderEnabled ? '#fff' : '#f4f3f4'}
                   />
                 </View>
@@ -2389,14 +2990,22 @@ const CalendarPlannerScreen = () => {
                 {reminderEnabled && (
                   <View style={styles.inputSection}>
                     <Text style={styles.inputLabel}>{t.reminderBefore} ({t.minutes})</Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="15"
-                      placeholderTextColor={theme === 'dark' ? '#666' : '#999'}
-                      value={reminderMinutes}
-                      onChangeText={setReminderMinutes}
-                      keyboardType="numeric"
-                    />
+                    <View style={styles.inputWithIcon}>
+                      <TextInput
+                        style={styles.inputWithIconField}
+                        placeholder=""
+                        placeholderTextColor={theme === 'dark' ? '#666' : '#999'}
+                        value={reminderMinutes}
+                        onChangeText={setReminderMinutes}
+                        keyboardType="numeric"
+                      />
+                      <Ionicons
+                        name="notifications-outline"
+                        size={20}
+                        color={theme === 'dark' ? '#888' : '#666'}
+                        style={styles.inputIcon}
+                      />
+                    </View>
                   </View>
                 )}
 
@@ -2405,7 +3014,7 @@ const CalendarPlannerScreen = () => {
                   <Switch
                     value={syncWithCalendar}
                     onValueChange={setSyncWithCalendar}
-                    trackColor={{ false: '#D1D5DB', true: '#8B5CF6' }}
+                    trackColor={{ false: '#D1D5DB', true: '#16b038ff' }}
                     thumbColor={syncWithCalendar ? '#fff' : '#f4f3f4'}
                   />
                 </View>
@@ -2427,7 +3036,7 @@ const CalendarPlannerScreen = () => {
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
+          </KeyboardAvoidingView>
         </Modal>
 
         {/* Expanded Calendar Modal */}

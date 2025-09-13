@@ -34,8 +34,8 @@ import { useHaptic } from "../HapticContext"
 import getStyles from "./Styles/HomeScreenStyles"
 import texts from "./translations/texts"
 import getModernStyles from "./Styles/HomeScreenModernStyles"
-import { 
-  realTimeAnalysisPrompts, 
+import {
+  realTimeAnalysisPrompts,
   modalTexts,
   languageNames,
   primerModal,
@@ -44,6 +44,7 @@ import {
   costEstimatePrompts,
   voiceInfoTexts
 } from "./translations/homeScreenTranslations"
+import homeAlerts from "./translations/homeAlerts"
 import Sound from "react-native-sound"
 import DeviceService from "../services/DeviceService"
 import WidgetService from "../services/WidgetService"
@@ -371,6 +372,7 @@ const HomeScreen = ({ navigation }) => {
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const currentLabels = texts[deviceLanguage] || texts["en"]
   const voiceTexts = voiceInfoTexts[deviceLanguage] || voiceInfoTexts["en"]
+  const alertTexts = homeAlerts[deviceLanguage] || homeAlerts["en"]
   const [isSubscribed, setIsSubscribed] = useState(null)
   const [pressCount, setPressCount] = useState(0)
   const [voiceLimitModalVisible, setVoiceLimitModalVisible] = useState(false)
@@ -760,9 +762,9 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     if (!isCountryEmpty) {
       try {
         if (isSubscribed === false) {
-          Alert.alert("Subscription Required", "You must be subscribed to calculate the estimated cost.", [
+          Alert.alert(alertTexts.subscriptionRequired, alertTexts.subscriptionMessage, [
             {
-              text: "Subscribe",
+              text: alertTexts.subscribe,
               onPress: () => {
                 setCountryModalVisible(false)
                 navigation.navigate("Suscribe")
@@ -800,7 +802,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     console.log("fetchEstimatedCost called - shoppingList:", shoppingList)
     setLoading(true)
     if (!country) {
-      Alert.alert("Error", "Please enter a country.")
+      Alert.alert(alertTexts.error, alertTexts.pleaseEnterCountry)
       return
     }
 
@@ -833,7 +835,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       }
     } catch (error) {
       console.error("Error fetching estimated cost: ", error)
-      Alert.alert("Error", "Could not fetch the estimated cost.")
+      Alert.alert(alertTexts.error, alertTexts.couldNotFetchCost)
       setLoading(false)
     }
   }
@@ -1120,7 +1122,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         setShowBubbleLoader(false) // Ocultar loader
       } catch (e) {
         console.error(e)
-        Alert.alert("Error", "Error stopping voice recognition.")
+        Alert.alert(alertTexts.error, alertTexts.errorStoppingVoice)
       }
     } else {
       // Verificar límite de uso antes de comenzar la grabación
@@ -1161,7 +1163,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         setHighlightedWords([]) // Limpiar palabras resaltadas al iniciar
       } catch (e) {
         console.error(e)
-        Alert.alert("Error", `Error starting voice recognition in ${recognitionLanguage}.`)
+        Alert.alert(alertTexts.error, `${alertTexts.errorStartingVoice} ${recognitionLanguage}.`)
       }
     }
   }
@@ -1228,7 +1230,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
       }, 500)
     } catch (e) {
       console.error(e)
-      Alert.alert("Error", "Error stopping voice recognition.")
+      Alert.alert(alertTexts.error, alertTexts.errorStoppingVoice)
       setLoading(false)
       setHighlightedWords([]) // Limpiar palabras resaltadas en caso de error
     }

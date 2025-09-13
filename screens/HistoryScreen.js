@@ -1485,13 +1485,14 @@ const HistoryScreen = ({ navigation }) => {
         {(() => {
           // Contar solo los elementos que realmente existen en la lista actual
           const currentCompletedItems = completedItems[index] || [];
-          const validCompletedItems = currentCompletedItems.filter(itemIndex => 
+          const validCompletedItems = currentCompletedItems.filter(itemIndex =>
             itemIndex >= 0 && itemIndex < item.list.length
           );
           const completedCount = validCompletedItems.length;
           const totalCount = item.list.length;
           const allCompleted = totalCount > 0 && completedCount === totalCount;
-          
+          const progress = totalCount > 0 ? completedCount / totalCount : 0;
+
           return allCompleted ? (
             <TouchableOpacity
               style={modernStyles.deleteListButton}
@@ -1501,9 +1502,34 @@ const HistoryScreen = ({ navigation }) => {
               <Text style={modernStyles.deleteListText}>Eliminar lista</Text>
             </TouchableOpacity>
           ) : (
-            <Text style={modernStyles.completionText}>
-              {completedCount} / {totalCount} completados
-            </Text>
+            <View style={modernStyles.progressContainer}>
+              <View style={modernStyles.progressRingContainer}>
+                <View style={modernStyles.progressRingBackground} />
+                <Animated.View
+                  style={[
+                    modernStyles.progressRingFill,
+                    {
+                      opacity: completedCount === 0 ? 0 : 1,
+                      transform: [{
+                        rotate: `${-90 + (progress * 360)}deg`
+                      }]
+                    }
+                  ]}
+                />
+                <View style={modernStyles.progressNumbersContainer}>
+                  <Text style={[
+                    modernStyles.progressNumber,
+                    completedCount > 0 && modernStyles.progressNumberActive
+                  ]}>
+                    {completedCount}
+                  </Text>
+                  <Text style={modernStyles.progressSeparator}>/</Text>
+                  <Text style={modernStyles.progressTotal}>
+                    {totalCount}
+                  </Text>
+                </View>
+              </View>
+            </View>
           );
         })()}
       </View>

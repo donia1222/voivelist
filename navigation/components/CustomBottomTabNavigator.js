@@ -49,6 +49,8 @@ const getMenuTexts = () => {
       menuSubtitle: "Opciones adicionales",
       closeButton: "Cerrar",
       settings: "Ajustes",
+      error: "Error",
+      errorSavingList: "No se pudo guardar la lista",
       descriptions: {
         "star": "Gestiona tu suscripción",
         "star-outline": "Desbloquea todas las funciones",
@@ -67,6 +69,8 @@ const getMenuTexts = () => {
       menuSubtitle: "Additional options",
       closeButton: "Close",
       settings: "Settings",
+      error: "Error",
+      errorSavingList: "Could not save the list",
       descriptions: {
         "star": "Manage your subscription",
         "star-outline": "Unlock all features",
@@ -85,6 +89,8 @@ const getMenuTexts = () => {
       menuSubtitle: "Zusätzliche Optionen",
       closeButton: "Schließen",
       settings: "Einstellungen",
+      error: "Fehler",
+      errorSavingList: "Liste konnte nicht gespeichert werden",
       descriptions: {
         "star": "Verwalte dein Abonnement",
         "star-outline": "Alle Funktionen freischalten",
@@ -103,6 +109,8 @@ const getMenuTexts = () => {
       menuSubtitle: "Options supplémentaires",
       closeButton: "Fermer",
       settings: "Paramètres",
+      error: "Erreur",
+      errorSavingList: "Impossible d'enregistrer la liste",
       descriptions: {
         "star": "Gérez votre abonnement",
         "star-outline": "Débloquez toutes les fonctionnalités",
@@ -113,6 +121,87 @@ const getMenuTexts = () => {
         "shield-outline": "Lisez notre politique",
         "document-text-outline": "Lisez nos conditions",
         "settings-outline": "Paramètres de l'app",
+        "calendar-outline": "Planifiez vos achats hebdomadaires",
+      }
+    },
+    it: {
+      menuTitle: "Menu",
+      menuSubtitle: "Opzioni aggiuntive",
+      closeButton: "Chiudi",
+      settings: "Impostazioni",
+      error: "Errore",
+      errorSavingList: "Impossibile salvare la lista",
+      descriptions: {
+        "star": "Gestisci il tuo abbonamento",
+        "star-outline": "Sblocca tutte le funzionalità",
+        "calculator": "Calcola i prezzi delle liste",
+        "information-circle-outline": "Informazioni sull'app",
+        "share-social-outline": "Condividi con gli amici",
+        "mail-outline": "Contattaci per supporto",
+        "shield-outline": "Leggi la nostra politica",
+        "document-text-outline": "Leggi i nostri termini",
+        "settings-outline": "Impostazioni dell'app",
+        "calendar-outline": "Pianifica la tua spesa settimanale",
+      }
+    },
+    tr: {
+      menuTitle: "Menü",
+      menuSubtitle: "Ek seçenekler",
+      closeButton: "Kapat",
+      settings: "Ayarlar",
+      error: "Hata",
+      errorSavingList: "Liste kaydedilemedi",
+      descriptions: {
+        "star": "Aboneliğinizi yönetin",
+        "star-outline": "Tüm özellikleri kilidini açın",
+        "calculator": "Liste fiyatlarını hesapla",
+        "information-circle-outline": "Uygulama hakkında",
+        "share-social-outline": "Arkadaşlarınızla paylaşın",
+        "mail-outline": "Destek için bize ulaşın",
+        "shield-outline": "Politikamızı okuyun",
+        "document-text-outline": "Şartlarımızı okuyun",
+        "settings-outline": "Uygulama ayarları",
+        "calendar-outline": "Haftalık alışverişinizi planlayın",
+      }
+    },
+    pt: {
+      menuTitle: "Menu",
+      menuSubtitle: "Opções adicionais",
+      closeButton: "Fechar",
+      settings: "Configurações",
+      error: "Erro",
+      errorSavingList: "Não foi possível salvar a lista",
+      descriptions: {
+        "star": "Gerencie sua assinatura",
+        "star-outline": "Desbloqueie todos os recursos",
+        "calculator": "Calcule preços de listas",
+        "information-circle-outline": "Sobre o app",
+        "share-social-outline": "Compartilhe com amigos",
+        "mail-outline": "Entre em contato para suporte",
+        "shield-outline": "Leia nossa política",
+        "document-text-outline": "Leia nossos termos",
+        "settings-outline": "Configurações do app",
+        "calendar-outline": "Planeje suas compras semanais",
+      }
+    },
+    ru: {
+      menuTitle: "Меню",
+      menuSubtitle: "Дополнительные опции",
+      closeButton: "Закрыть",
+      settings: "Настройки",
+      error: "Ошибка",
+      errorSavingList: "Не удалось сохранить список",
+      descriptions: {
+        "star": "Управляйте подпиской",
+        "star-outline": "Разблокируйте все функции",
+        "calculator": "Рассчитать цены списка",
+        "information-circle-outline": "О приложении",
+        "share-social-outline": "Поделиться с друзьями",
+        "mail-outline": "Связаться с поддержкой",
+        "shield-outline": "Прочитайте нашу политику",
+        "document-text-outline": "Прочитайте наши условия",
+        "settings-outline": "Настройки приложения",
+        "calendar-outline": "Планируйте еженедельные покупки",
       }
     }
   }
@@ -334,7 +423,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       }
     } catch (error) {
       console.error("Error saving to history:", error)
-      Alert.alert("Error", "No se pudo guardar la lista")
+      Alert.alert(menuTexts.error || "Error", menuTexts.errorSavingList || "Could not save the list")
     }
   }
 
@@ -818,23 +907,99 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                   style={{ width: 30, height: 30 }}
                 />
               </Animated.View>
+            ) : activeTab === "Images" ? (
+              <View style={{ position: 'relative' }}>
+                <Ionicons
+                  name="image"
+                  size={24}
+                  color="#ff9500"
+                />
+                <View style={{
+                  position: 'absolute',
+                  top: -4,
+                  right: -6,
+                  backgroundColor: '#ff9500',
+                  borderRadius: 8,
+                  padding: 2,
+                }}>
+                  <Ionicons
+                    name="arrow-up"
+                    size={10}
+                    color="white"
+                  />
+                </View>
+              </View>
+            ) : activeTab === "History" ? (
+              <View style={{ position: 'relative' }}>
+                <Ionicons
+                  name="list"
+                  size={24}
+                  color="#34c759"
+                />
+                <View style={{
+                  position: 'absolute',
+                  top: -4,
+                  right: -6,
+                  backgroundColor: '#34c759',
+                  borderRadius: 8,
+                  padding: 2,
+                }}>
+                  <Ionicons
+                    name="checkmark"
+                    size={10}
+                    color="white"
+                  />
+                </View>
+              </View>
+            ) : activeTab === "Calendar" ? (
+              <View style={{ position: 'relative' }}>
+                <Ionicons
+                  name="calendar"
+                  size={24}
+                  color="#6B7280"
+                />
+                <View style={{
+                  position: 'absolute',
+                  top: -4,
+                  right: -6,
+                  backgroundColor: '#6B7280',
+                  borderRadius: 8,
+                  padding: 2,
+                }}>
+                  <Ionicons
+                    name="cart"
+                    size={10}
+                    color="white"
+                  />
+                </View>
+              </View>
+            ) : activeTab === "PriceCalculator" ? (
+              <View style={{ position: 'relative' }}>
+                <Ionicons
+                  name="calculator"
+                  size={24}
+                  color="#dc2626"
+                />
+                <View style={{
+                  position: 'absolute',
+                  top: -4,
+                  right: -6,
+                  backgroundColor: '#dc2626',
+                  borderRadius: 8,
+                  padding: 2,
+                }}>
+                  <Text style={{ fontSize: 10, color: "white", fontWeight: "bold" }}>$</Text>
+                </View>
+              </View>
             ) : (
-              <Ionicons 
-                name={activeTab === "Images" ? "image" : 
-                      activeTab === "Calendar" ? "calendar" : 
-                      activeTab === "History" ? "bookmark" :
-                      activeTab === "Subscribe" ? "star-outline" :
+              <Ionicons
+                name={activeTab === "Subscribe" ? "star-outline" :
                       activeTab === "Subscription" ? "star" :
-                      activeTab === "Information" ? "information-circle-outline" :
-                      activeTab === "PriceCalculator" ? "calculator" : "storefront"} 
-                size={24} 
-                color={activeTab === "Images" ? "#ff9500" : 
-                       activeTab === "History" ? "#34c759" : 
-                       activeTab === "Calendar" ? "#6B7280" :
-                       activeTab === "Subscribe" ? "#ff375f" :
+                      activeTab === "Information" ? "information-circle-outline" : "storefront"}
+                size={24}
+                color={activeTab === "Subscribe" ? "#ff375f" :
                        activeTab === "Subscription" ? "#ff375f" :
-                       activeTab === "Information" ? "#5856d6" :
-                       activeTab === "PriceCalculator" ? "#dc2626" : "#4a6bff"} 
+                       activeTab === "Information" ? "#5856d6" : "#4a6bff"}
               />
             )}
           </View>

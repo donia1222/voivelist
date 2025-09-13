@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   View,
   Text,
@@ -9,7 +9,8 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet
+  StyleSheet,
+  Animated
 } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { useTheme } from '../ThemeContext'
@@ -35,6 +36,17 @@ const ExpandedListModal = ({
   const [editingItemIndex, setEditingItemIndex] = useState(null)
   const [editingItemText, setEditingItemText] = useState("")
   const scrollViewRef = useRef(null)
+  const progressAnimation = useRef(new Animated.Value(0)).current
+
+  useEffect(() => {
+    const progress = getTotalCount() > 0 ? (getCompletedCount() / getTotalCount()) : 0
+    Animated.spring(progressAnimation, {
+      toValue: progress,
+      friction: 8,
+      tension: 40,
+      useNativeDriver: false
+    }).start()
+  }, [completedItems, listData])
 
   const handleEditItem = (itemIndex, itemText) => {
     setEditingItemIndex(itemIndex)
@@ -257,15 +269,35 @@ const ExpandedListModal = ({
       shadowRadius: 3,
       elevation: 3
     },
+    progressNumbersContainer: {
+      position: 'absolute',
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
     expandedModalProgress: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: theme === 'dark' ? '#fff' : '#374151'
+      fontSize: 14,
+      fontWeight: '700',
+      color: theme === 'dark' ? '#9ca3af' : '#6b7280'
+    },
+    expandedModalProgressActive: {
+      color: '#10b981',
+      fontWeight: '800'
+    },
+    expandedModalProgressSeparator: {
+      fontSize: 14,
+      fontWeight: '700',
+      color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+      marginHorizontal: 1
+    },
+    expandedModalProgressTotal: {
+      fontSize: 14,
+      fontWeight: '700',
+      color: theme === 'dark' ? '#9ca3af' : '#6b7280'
     },
     addButtonFooter: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
+      backgroundColor: theme === 'dark' ? '#059669' : '#dcfce7',
       paddingHorizontal: 16,
       paddingVertical: 12,
       borderRadius: 12,
@@ -280,7 +312,7 @@ const ExpandedListModal = ({
     addButtonText: {
       fontSize: 16,
       fontWeight: '600',
-      color: '#10b981',
+      color: theme === 'dark' ? '#ffffff' : '#059669',
       marginLeft: 6
     },
     deleteListButtonFooter: {
@@ -303,6 +335,39 @@ const ExpandedListModal = ({
       fontWeight: '600',
       color: '#ef4444',
       marginLeft: 6
+    },
+    progressContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12
+    },
+    progressRingContainer: {
+      width: 44,
+      height: 44,
+      position: 'relative',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    progressRingBackground: {
+      position: 'absolute',
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      borderWidth: 4,
+      borderColor: theme === 'dark' ? '#374151' : '#e5e7eb'
+    },
+    progressRingFill: {
+      position: 'absolute',
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      borderWidth: 4,
+      borderColor: '#10b981',
+      borderTopColor: 'transparent',
+      borderRightColor: 'transparent'
+    },
+    progressCheckmark: {
+      position: 'absolute'
     }
   })
 
@@ -437,18 +502,50 @@ const ExpandedListModal = ({
         </ScrollView>
         
         <View style={styles.expandedModalFooter}>
-          <Text style={styles.expandedModalProgress}>
-            {getCompletedCount()} / {getTotalCount()} {currentLabels.completed || 'completados'}
-          </Text>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressRingContainer}>
+              <View style={styles.progressRingBackground} />
+              <Animated.View
+                style={[
+                  styles.progressRingFill,
+                  {
+                    opacity: getCompletedCount() === 0 ? 0 : 1,
+                    transform: [{
+                      rotate: progressAnimation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['-90deg', '270deg']
+                      })
+                    }]
+                  }
+                ]}
+              />
+              {areAllItemsCompleted() ? (
+                <Ionicons name="checkmark-circle" size={40} color="#10b981" style={styles.progressCheckmark} />
+              ) : (
+                <View style={styles.progressNumbersContainer}>
+                  <Text style={[
+                    styles.expandedModalProgress,
+                    getCompletedCount() > 0 && styles.expandedModalProgressActive
+                  ]}>
+                    {getCompletedCount()}
+                  </Text>
+                  <Text style={styles.expandedModalProgressSeparator}>/</Text>
+                  <Text style={styles.expandedModalProgressTotal}>
+                    {getTotalCount()}
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
           {(onAddItem || onDeleteList) && (
             <TouchableOpacity
               onPress={areAllItemsCompleted() && onDeleteList ? onDeleteList : onAddItem}
               style={areAllItemsCompleted() ? styles.deleteListButtonFooter : styles.addButtonFooter}
             >
-              <Ionicons 
-                name={areAllItemsCompleted() ? "trash-outline" : "add"} 
-                size={20} 
-                color={areAllItemsCompleted() ? "#ef4444" : "#10b981"} 
+              <Ionicons
+                name={areAllItemsCompleted() ? "trash-outline" : "add-circle-outline"}
+                size={20}
+                color={areAllItemsCompleted() ? "#ef4444" : (theme === 'dark' ? "#ffffff" : "#059669")}
               />
               <Text style={areAllItemsCompleted() ? styles.deleteButtonText : styles.addButtonText}>
                 {areAllItemsCompleted() 

@@ -12,6 +12,7 @@ import Purchases from 'react-native-purchases';
 import Carousel from './components/Carousel';
 import TextoAnimado from './components/TextoAnimadoSuscribese';
 import { useTheme } from '../ThemeContext';
+import suscribeAlerts from './translations/suscribeAlerts';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const isTablet = screenWidth >= 768;
@@ -550,6 +551,7 @@ export default function Suscribe({ onClose }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubscribing, setIsSubscribing] = useState(false);
   const systemLanguage = RNLocalize.getLocales()[0]?.languageCode || 'en';
+  const alertTexts = suscribeAlerts[systemLanguage] || suscribeAlerts['en'];
   const [isPrivacyModalVisible, setIsPrivacyModalVisible] = useState(false);
   const [isEULAModalVisible, setIsEULAModalVisible] = useState(false);
   const [isGDPRModalVisible, setIsGDPRModalVisible] = useState(false);
@@ -698,20 +700,20 @@ export default function Suscribe({ onClose }) {
           console.log('Successful restoration');
           const expirationDate = restoredPurchases.allExpirationDates['12981'];
           Alert.alert(
-            'Success',
-            `Your purchase has been restored. The subscription will expire on ${new Date(expirationDate).toLocaleDateString()}.`,
+            alertTexts.success,
+            `${alertTexts.purchaseRestored} ${new Date(expirationDate).toLocaleDateString()}.`,
             [{
-              text: 'OK',
+              text: alertTexts.ok,
               onPress: () => {
                 RNRestart.Restart();
               }
             }]
           );
         } else {
-          Alert.alert('Restore Purchase', 'No previous purchases found to restore.');
+          Alert.alert(alertTexts.restorePurchase, alertTexts.noPreviousPurchases);
         }
       } catch (error) {
-        Alert.alert('Error Restoring', 'An error occurred while restoring the purchase.');
+        Alert.alert(alertTexts.errorRestoring, alertTexts.errorOccurred);
         console.log('Error restoring purchase:', error);
       } finally {
         setIsSubscribing(false);

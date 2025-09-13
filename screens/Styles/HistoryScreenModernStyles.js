@@ -24,11 +24,11 @@ const getModernStyles = (theme) => StyleSheet.create({
 
   categoriesScrollContainer: {
     paddingHorizontal: 16,
-    gap: 6,
+    gap: 2,
   },
 
   categoryChip: {
-    marginRight: 12,
+    marginRight: 10,
   },
 
   categoryChipContent: {
@@ -422,14 +422,77 @@ marginBottom:-0,
   },
 
   completionCounter: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 2,
     paddingVertical: 8,
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
 
   completionText: {
     fontSize: 14,
     fontWeight: '600',
+    color: theme.text === '#ffffff' ? '#9ca3af' : '#6b7280',
+  },
+
+  progressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  progressRingContainer: {
+    width: 44,
+    height: 14,
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  progressRingBackground: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    borderRadius: 22,
+    borderWidth: 4,
+    borderColor: theme.text === '#ffffff' ? '#374151' : '#e5e7eb',
+  },
+
+  progressRingFill: {
+    position: 'absolute',
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 4,
+    borderColor: '#10b981',
+    borderTopColor: 'transparent',
+    borderRightColor: 'transparent',
+  },
+
+  progressNumbersContainer: {
+    position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  progressNumber: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: theme.text === '#ffffff' ? '#9ca3af' : '#6b7280',
+  },
+
+  progressNumberActive: {
+    color: '#10b981',
+    fontWeight: '800',
+  },
+
+  progressSeparator: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: theme.text === '#ffffff' ? '#9ca3af' : '#6b7280',
+    marginHorizontal: 1,
+  },
+
+  progressTotal: {
+    fontSize: 14,
+    fontWeight: '700',
     color: theme.text === '#ffffff' ? '#9ca3af' : '#6b7280',
   },
 
