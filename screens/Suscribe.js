@@ -16,6 +16,7 @@ import suscribeAlerts from './translations/suscribeAlerts';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const isTablet = screenWidth >= 768;
+const isSmallIPhone = Platform.OS === 'ios' && (screenWidth <= 375 || screenHeight <= 667);
 
 // Mantén todas las traducciones existentes...
 const restoreButtonTextTranslations = {
@@ -217,37 +218,37 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
   },
 
   appIcon: {
-    width: isTablet ? 140 : 120,
-    height: isTablet ? 140 : 120,
-    borderRadius: isTablet ? 40 : 35,
+    width: isTablet ? 140 : isSmallIPhone ? 90 : 120,
+    height: isTablet ? 140 : isSmallIPhone ? 90 : 120,
+    borderRadius: isTablet ? 40 : isSmallIPhone ? 25 : 35,
   },
 
   titleText: {
-    fontSize: isTablet ? 36 : 32,
+    fontSize: isTablet ? 36 : isSmallIPhone ? 26 : 32,
     fontWeight: '800',
     color: theme?.text || '#2c3e50',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: isSmallIPhone ? 6 : 10,
     letterSpacing: 0.5,
   },
 
   subtitleText: {
-    fontSize: isTablet ? 20 : 18,
+    fontSize: isTablet ? 20 : isSmallIPhone ? 15 : 18,
     color: theme?.text ? theme.text + '99' : '#666666',
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: isSmallIPhone ? 5 : 8,
     fontWeight: '300',
     letterSpacing: 0.3,
   },
 
   priceContainer: {
     backgroundColor: 'rgba(155, 89, 182, 0.15)',
-    paddingHorizontal: 25,
-    paddingVertical: 12,
+    paddingHorizontal: isSmallIPhone ? 18 : 25,
+    paddingVertical: isSmallIPhone ? 8 : 12,
     borderRadius: 25,
     borderWidth: 1,
     borderColor: 'rgba(155, 89, 182, 0.3)',
-    marginBottom: isTablet ? 35 : 30,
+    marginBottom: isTablet ? 35 : isSmallIPhone ? 20 : 30,
   },
 
   priceText: {
@@ -326,8 +327,8 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
   },
 
   subscribeButton: {
-    paddingVertical: isTablet ? 20 : 18,
-    paddingHorizontal: isTablet ? 70 : 60,
+    paddingVertical: isTablet ? 20 : isSmallIPhone ? 14 : 18,
+    paddingHorizontal: isTablet ? 70 : isSmallIPhone ? 45 : 60,
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
@@ -336,7 +337,7 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
 
   subscribeButtonText: {
     color: '#2c3e50',
-    fontSize: isTablet ? 19 : 17,
+    fontSize: isTablet ? 19 : isSmallIPhone ? 15 : 17,
     fontWeight: '800',
     letterSpacing: 1.5,
     textTransform: 'uppercase',
@@ -344,8 +345,8 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
 
   restoreButton: {
     backgroundColor: 'rgba(155, 89, 182, 0.1)',
-    paddingVertical: isTablet ? 16 : 14,
-    paddingHorizontal: isTablet ? 35 : 30,
+    paddingVertical: isTablet ? 16 : isSmallIPhone ? 10 : 14,
+    paddingHorizontal: isTablet ? 35 : isSmallIPhone ? 22 : 30,
     borderRadius: 25,
     borderWidth: 1,
     borderColor: 'rgba(155, 89, 182, 0.3)',
@@ -353,7 +354,7 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
 
   restoreButtonText: {
     color: '#9b59b6',
-    fontSize: isTablet ? 16 : 14,
+    fontSize: isTablet ? 16 : isSmallIPhone ? 12 : 14,
     fontWeight: '700',
     textAlign: 'center',
     letterSpacing: 0.5,
@@ -764,11 +765,11 @@ export default function Suscribe({ onClose }) {
             />
           </View>
           
-          <Text style={styles.titleText}>Voice Grocery</Text>
-          <Text style={styles.subtitleText}>Unlock Full Potential</Text>
+          <Text style={[styles.titleText, isSmallIPhone && {fontSize: 28}]}>Voice Grocery</Text>
+          <Text style={[styles.subtitleText, isSmallIPhone && {fontSize: 14}]}>Unlock Full Potential</Text>
           
-          <View style={styles.priceContainer}>
-            <Text style={styles.priceText}>
+          <View style={[styles.priceContainer, isSmallIPhone && {marginBottom: 15}]}>
+            <Text style={[styles.priceText, isSmallIPhone && {fontSize: 16}]}>
               {`${contentTranslations[systemLanguage] || contentTranslations['en']} ${getPriceForCurrency(currencyCode)}`}
             </Text>
           </View>
@@ -828,8 +829,8 @@ export default function Suscribe({ onClose }) {
                 onPress={() => RNRestart.Restart()}
                 style={{
                   backgroundColor: '#2ed573',
-                  paddingVertical: isTablet ? 16 : 14,
-                  paddingHorizontal: isTablet ? 40 : 35,
+                  paddingVertical: isTablet ? 16 : isSmallIPhone ? 12 : 14,
+                  paddingHorizontal: isTablet ? 40 : isSmallIPhone ? 28 : 35,
                   borderRadius: 25,
                   marginTop: 20,
                   width: '100%',
@@ -872,7 +873,7 @@ export default function Suscribe({ onClose }) {
                     <ActivityIndicator size="small" color='#FFFFFF' />
                   ) : (
                     <>
-                      <Text style={styles.subscribeButtonText}>Get Started →</Text>
+                      <Text style={[styles.subscribeButtonText, isSmallIPhone && {fontSize: 16}]}>Get Started →</Text>
                     </>
                   )}
                 </View>

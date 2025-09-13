@@ -7,6 +7,8 @@ import Purchases from 'react-native-purchases';
 import RNRestart from 'react-native-restart'; // Importa para reiniciar la app (si es necesario)
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const isSmallIPhone = Platform.OS === 'ios' && (screenWidth <= 375 || screenHeight <= 667);
 import LinearGradient from 'react-native-linear-gradient';
 const GradientText = ({ text }) => (
   <View style={styles.textContainer}>
@@ -439,12 +441,12 @@ const OnboardingScreen = ({ navigation }) => {
 
   const renderItem = ({ item }) => (
     <View style={[styles.slide, { width }]}>
-        {screenWidth > 380 && ( // Solo mostrar imágenes en pantallas más anchas que 600px
+        {!isSmallIPhone && ( // No mostrar imágenes en iPhone SE
         <Animated.Image source={item.image} style={[styles.image, { transform: [{ translateY }] }]} />
       )}
 
-      <Text style={styles.subtitle}>{currentLabels[item.subtitleKey]}</Text>
-      <Text style={styles.description}>{currentLabels[item.descriptionKey]}</Text>
+      <Text style={[styles.subtitle, isSmallIPhone && {fontSize: 16, marginVertical: 3, padding: 15}]}>{currentLabels[item.subtitleKey]}</Text>
+      <Text style={[styles.description, isSmallIPhone && {fontSize: 14, marginHorizontal: 15}]}>{currentLabels[item.descriptionKey]}</Text>
     </View>
   );
 
@@ -517,10 +519,10 @@ const getStyles = (theme) => StyleSheet.create({
     height: '100%',
   },
   image: {
-    width: 150,
-    height: 150,
+    width: isSmallIPhone ? 100 : 150,
+    height: isSmallIPhone ? 100 : 150,
     resizeMode: 'contain',
-    marginBottom: 40,
+    marginBottom: isSmallIPhone ? 20 : 40,
   },
   title: {
     fontSize: 24,
@@ -531,19 +533,19 @@ const getStyles = (theme) => StyleSheet.create({
     padding: 20,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: isSmallIPhone ? 16 : 18,
     textAlign: 'center',
     color: theme.text,
-    marginVertical: 5,
-    padding: 20,
+    marginVertical: isSmallIPhone ? 3 : 5,
+    padding: isSmallIPhone ? 15 : 20,
     fontFamily: 'Poppins-Bold',
-   
+
   },
   description: {
-    fontSize: 16,
+    fontSize: isSmallIPhone ? 14 : 16,
     textAlign: 'center',
     color: theme.text,
-    marginHorizontal: 20,
+    marginHorizontal: isSmallIPhone ? 15 : 20,
     fontFamily: 'Poppins-Regular',
 
   },
@@ -569,13 +571,13 @@ const getStyles = (theme) => StyleSheet.create({
   },
   button: {
     backgroundColor: '#3f51b5',
-    padding: 10,
+    padding: isSmallIPhone ? 8 : 10,
     borderRadius: 50,
-marginBottom: -10,
+marginBottom: isSmallIPhone ? -5 : -10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: isSmallIPhone ? 5 : 10,
     // Sombras para Android
     elevation: 5,
     // Sombras para iOS
@@ -583,17 +585,17 @@ marginBottom: -10,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    width:180,
+    width: isSmallIPhone ? 160 : 180,
   },
   buttonterminar: {
     backgroundColor: '#009688',
-    padding: 15,
+    padding: isSmallIPhone ? 12 : 15,
     borderRadius: 50,
 
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: isSmallIPhone ? 5 : 10,
     // Sombras para Android
     elevation: 5,
     // Sombras para iOS
@@ -606,7 +608,7 @@ marginBottom: -10,
   
   buttonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: isSmallIPhone ? 16 : 18,
     fontFamily: 'Poppins-Regular',
   },
   icon: {

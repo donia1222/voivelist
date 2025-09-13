@@ -38,6 +38,7 @@ import ExpandedListModal from "../components/ExpandedListModal"
 
 const screenWidth = Dimensions.get("window").width
 const { width, height } = Dimensions.get("window")
+const isSmallIPhone = Platform.OS === 'ios' && (screenWidth <= 375 || height <= 667)
 
 const HistoryScreen = ({ navigation }) => {
   const { theme } = useTheme()
@@ -1093,7 +1094,7 @@ const HistoryScreen = ({ navigation }) => {
     return (
       <View style={modernStyles.favoriteItemCard}>
         <View style={modernStyles.favoriteItemHeader}>
-          <Text style={modernStyles.favoriteItemTitle}>{historyItem.name}</Text>
+          <Text style={[modernStyles.favoriteItemTitle, isSmallIPhone && {fontSize: 16}]}>{historyItem.name}</Text>
           <TouchableOpacity
             onPress={() => {
               const newFavorites = categoryFavorites.filter((_, i) => i !== favIndex)
@@ -1124,7 +1125,7 @@ const HistoryScreen = ({ navigation }) => {
 
         <ScrollView style={modernStyles.favoriteItemList} showsVerticalScrollIndicator={false}>
           {historyItem.list.slice(0, 3).map((listItem, listIndex) => (
-            <Text key={listIndex} style={modernStyles.favoriteItemText}>
+            <Text key={listIndex} style={[modernStyles.favoriteItemText, isSmallIPhone && {fontSize: 13}]}>
               • {listItem}
             </Text>
           ))}
@@ -1346,7 +1347,7 @@ const HistoryScreen = ({ navigation }) => {
         ) : (
           <View style={modernStyles.titleContainer}>
             
-            <Text style={modernStyles.cardTitle}>{item.name}</Text>
+            <Text style={[modernStyles.cardTitle, isSmallIPhone && {fontSize: 18}]}>{item.name}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TouchableOpacity
                 onPress={() => openExpandedListModal(index)}
@@ -1417,7 +1418,7 @@ const HistoryScreen = ({ navigation }) => {
                   )}
                 </TouchableOpacity>
                 <TextInput
-                  style={modernStyles.listItemEditInput}
+                  style={[modernStyles.listItemEditInput, isSmallIPhone && {fontSize: 14}]}
                   value={editingItemText}
                   onChangeText={setEditingItemText}
                   onSubmitEditing={saveItemEdit}
@@ -1459,6 +1460,7 @@ const HistoryScreen = ({ navigation }) => {
                     <Text
                       style={[
                         modernStyles.listItemText,
+                        isSmallIPhone && {fontSize: 14},
                         completedItems[index]?.includes(listItemIndex) && modernStyles.completedItemText,
                       ]}
                     >
@@ -2068,6 +2070,42 @@ const HistoryScreen = ({ navigation }) => {
         onClose={() => setExpandedModalVisible(false)}
         listData={expandedListData}
         completedItems={completedItems[expandedListData.index] || []}
+        markedLists={(() => {
+          // Obtener todas las listas disponibles (todas las del historial)
+          const allMarkedLists = []
+
+          // Primero agregar la lista actual
+          if (expandedListData.index !== null && history[expandedListData.index]) {
+            allMarkedLists.push({
+              ...history[expandedListData.index],
+              index: expandedListData.index,
+              category: null
+            })
+          }
+
+          // Luego agregar todas las demás listas del historial
+          history.forEach((list, index) => {
+            // No duplicar la lista actual
+            if (index !== expandedListData.index) {
+              allMarkedLists.push({
+                ...list,
+                index: index,
+                category: null
+              })
+            }
+          })
+
+          console.log('Prepared markedLists for modal:', allMarkedLists.length, 'lists')
+          return allMarkedLists
+        })()}
+        onSwitchList={(newList) => {
+          // Cambiar a la nueva lista seleccionada
+          setExpandedListData({
+            list: newList.list,
+            name: newList.name,
+            index: newList.index
+          })
+        }}
         onToggleItem={(itemIndex) => {
           if (expandedListData.index !== null) {
             toggleItemCompletion(expandedListData.index, itemIndex)
@@ -2077,13 +2115,13 @@ const HistoryScreen = ({ navigation }) => {
           if (expandedListData.index !== null) {
             const newHistory = [...history]
             newHistory[expandedListData.index].list[itemIndex] = newText
-            
+
             // Actualizar datos del modal expandido
             setExpandedListData({
               ...expandedListData,
               list: newHistory[expandedListData.index].list
             })
-            
+
             await saveHistory(newHistory)
           }
         }}

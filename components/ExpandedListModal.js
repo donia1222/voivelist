@@ -16,17 +16,19 @@ import { useTheme } from '../ThemeContext'
 import * as RNLocalize from 'react-native-localize'
 import translationsHistorial from '../screens/translations/translationsHistorial'
 
-const ExpandedListModal = ({ 
-  visible, 
-  onClose, 
-  listData, 
-  completedItems, 
-  onToggleItem, 
-  onSaveItem, 
-  onDeleteItem, 
+const ExpandedListModal = ({
+  visible,
+  onClose,
+  listData,
+  completedItems,
+  onToggleItem,
+  onSaveItem,
+  onDeleteItem,
   onAddItem,
   onSaveList,
-  onDeleteList 
+  onDeleteList,
+  markedLists,
+  onSwitchList
 }) => {
   const { theme } = useTheme()
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
@@ -34,8 +36,15 @@ const ExpandedListModal = ({
   
   const [editingItemIndex, setEditingItemIndex] = useState(null)
   const [editingItemText, setEditingItemText] = useState("")
+  const [listSwitcherVisible, setListSwitcherVisible] = useState(false)
   const scrollViewRef = useRef(null)
   const progressAnimation = useRef(new Animated.Value(0)).current
+
+  // Debug logging
+  useEffect(() => {
+    console.log('ExpandedListModal - markedLists:', markedLists)
+    console.log('ExpandedListModal - markedLists length:', markedLists?.length)
+  }, [markedLists])
 
   useEffect(() => {
     const progress = getTotalCount() > 0 ? (getCompletedCount() / getTotalCount()) : 0
@@ -397,19 +406,53 @@ const ExpandedListModal = ({
             alignItems: 'center',
             flex: 1
           }}>
-            <View style={{
-              width: 42,
-              height: 42,
-              borderRadius: 14,
-              backgroundColor: 'rgba(34, 197, 94, 0.15)',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginRight: 12,
-              borderWidth: 1.5,
-              borderColor: 'rgba(22, 163, 74, 0.3)'
-            }}>
+            <TouchableOpacity
+              onPress={() => {
+                console.log('===== LIST BUTTON PRESSED =====')
+                console.log('markedLists exists?', !!markedLists)
+                console.log('markedLists length:', markedLists?.length)
+                console.log('markedLists content:', markedLists)
+                console.log('listSwitcherVisible before:', listSwitcherVisible)
+
+                if (markedLists && markedLists.length > 0) {
+                  console.log('Setting listSwitcherVisible to true')
+                  setListSwitcherVisible(true)
+                } else {
+                  console.log('Not opening modal - no marked lists or empty')
+                }
+              }}
+              style={{
+                width: 42,
+                height: 42,
+                borderRadius: 14,
+                backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 12,
+                borderWidth: 1.5,
+                borderColor: 'rgba(22, 163, 74, 0.3)',
+                opacity: markedLists && markedLists.length > 0 ? 1 : 0.7
+              }}
+            >
               <Ionicons name="list" size={22} color="#15803d" />
-            </View>
+              {markedLists && markedLists.length > 0 && (
+                <View style={{
+                  position: 'absolute',
+                  top: -4,
+                  right: -4,
+                  backgroundColor: '#15803d',
+                  borderRadius: 10,
+                  width: 20,
+                  height: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <Text style={{ color: 'white', fontSize: 11, fontWeight: 'bold' }}>
+                    {markedLists.length}
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
             <Text style={styles.expandedModalTitle}>{listData.name}</Text>
           </View>
           <View style={styles.headerActions}>
@@ -583,6 +626,164 @@ const ExpandedListModal = ({
         
  
       </KeyboardAvoidingView>
+
+      {/* Modal para cambiar entre listas marcadas */}
+      <Modal
+        visible={listSwitcherVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setListSwitcherVisible(false)}
+      >
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+          activeOpacity={1}
+          onPress={() => setListSwitcherVisible(false)}
+        >
+          <View style={{
+            backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff',
+            borderRadius: 20,
+            padding: 20,
+            width: '85%',
+            maxHeight: '70%',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 8,
+            elevation: 8
+          }}>
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 20,
+              paddingBottom: 15,
+              borderBottomWidth: 1,
+              borderBottomColor: theme === 'dark' ? '#374151' : '#e5e7eb'
+            }}>
+              <View style={{
+                width: 36,
+                height: 36,
+                borderRadius: 12,
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 12
+              }}>
+                <Ionicons name="list" size={20} color="#15803d" />
+              </View>
+              <Text style={{
+                fontSize: 18,
+                fontWeight: '700',
+                color: theme === 'dark' ? '#f9fafb' : '#1f2937',
+                flex: 1
+              }}>
+                {currentLabels.switchList || 'Cambiar lista'}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setListSwitcherVisible(false)}
+                style={{
+                  padding: 8,
+                  borderRadius: 8,
+                  backgroundColor: theme === 'dark' ? '#374151' : '#f3f4f6'
+                }}
+              >
+                <Ionicons name="close" size={20} color={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {markedLists && markedLists.map((list, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    if (onSwitchList && list.index !== listData.index) {
+                      onSwitchList(list)
+                      setListSwitcherVisible(false)
+                    }
+                  }}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    padding: 15,
+                    marginVertical: 5,
+                    borderRadius: 12,
+                    backgroundColor: list.index === listData.index
+                      ? 'rgba(34, 197, 94, 0.1)'
+                      : (theme === 'dark' ? '#1a1a1a' : '#f9fafb'),
+                    borderWidth: list.index === listData.index ? 1.5 : 1,
+                    borderColor: list.index === listData.index
+                      ? 'rgba(22, 163, 74, 0.3)'
+                      : (theme === 'dark' ? '#374151' : '#e5e7eb')
+                  }}
+                  disabled={list.index === listData.index}
+                >
+                  <View style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 10,
+                    backgroundColor: list.index === listData.index
+                      ? '#15803d'
+                      : (theme === 'dark' ? '#374151' : '#e5e7eb'),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginRight: 12
+                  }}>
+                    {list.index === listData.index ? (
+                      <Ionicons name="checkmark" size={18} color="white" />
+                    ) : (
+                      <Text style={{
+                        color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        fontSize: 14,
+                        fontWeight: '600'
+                      }}>
+                        {index + 1}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{
+                      fontSize: 16,
+                      fontWeight: list.index === listData.index ? '700' : '500',
+                      color: list.index === listData.index
+                        ? '#15803d'
+                        : (theme === 'dark' ? '#f9fafb' : '#1f2937'),
+                      marginBottom: 4
+                    }}>
+                      {list.name}
+                    </Text>
+                    <Text style={{
+                      fontSize: 12,
+                      color: theme === 'dark' ? '#9ca3af' : '#6b7280'
+                    }}>
+                      {list.list?.length || 0} {currentLabels.items || 'items'}
+                    </Text>
+                  </View>
+                  {list.index === listData.index && (
+                    <View style={{
+                      paddingHorizontal: 12,
+                      paddingVertical: 4,
+                      borderRadius: 8,
+                      backgroundColor: 'rgba(34, 197, 94, 0.1)'
+                    }}>
+                      <Text style={{
+                        fontSize: 11,
+                        fontWeight: '600',
+                        color: '#15803d'
+                      }}>
+                        {currentLabels.current || 'ACTUAL'}
+                      </Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </Modal>
   )
 }

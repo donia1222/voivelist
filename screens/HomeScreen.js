@@ -50,10 +50,10 @@ import DeviceService from "../services/DeviceService"
 import WidgetService from "../services/WidgetService"
 
 Sound.setCategory("Playback")
-const screenHeight = Dimensions.get("window").height
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window")
+const isSmallIPhone = Platform.OS === 'ios' && (screenWidth <= 375 || screenHeight <= 667)
 const API_KEY_ANALIZE = process.env.API_KEY_ANALIZE
 const API_KEY_CHAT = process.env.API_KEY_CHAT
-const screenWidth = Dimensions.get("window").width
 
 
 // Mini loader component for bubble loading
@@ -414,7 +414,7 @@ const HomeScreen = ({ navigation }) => {
   const [settingsModalVisible, setSettingsModalVisible] = useState(false)
   const [showRateButton, setShowRateButton] = useState(false)
   const rateTexts = rateAppTexts[deviceLanguage] || rateAppTexts["en"]
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+// screenWidth y screenHeight ya declarados arriba
 
 // Determinar si es tablet o teléfono ya movido a estilos
 // Debounce para análisis en tiempo real
@@ -1491,8 +1491,8 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         <View style={modernStyles.voiceButtonContainer}>
           {/* Informative text for non-subscribed users */}
           {isSubscribed === false && (
-            <TouchableOpacity 
-              style={modernStyles.voiceInfoContainer}
+            <TouchableOpacity
+              style={[modernStyles.voiceInfoContainer, isSmallIPhone && {marginTop: 10}]}
               onPress={() => {
                 if (deviceVoiceCount >= 3) {
                   handleSubscribePress()
@@ -1582,9 +1582,9 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
               >
                 <View style={modernStyles.micIconContainer}>
                   {started ? (
-                    <Ionicons name="stop" size={30} color="white" />
+                    <Ionicons name="stop" size={isSmallIPhone ? 24 : 30} color="white" />
                   ) : (
-                    <Ionicons name="mic" size={32} color="white" />
+                    <Ionicons name="mic" size={isSmallIPhone ? 26 : 32} color="white" />
                   )}
                 </View>
               </Animated.View>
@@ -1619,9 +1619,9 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         <View style={modernStyles.emptyStateContainer}>
           {renderFloatingFoodIcons()}
                         {isContentVisible && (
-              <TouchableOpacity onPress={handlePress} style={modernStyles.languageButton}>
-                <Ionicons name="globe-outline" size={22} color="#4a6bff" />
-                <Text style={modernStyles.languageButtonText}>
+              <TouchableOpacity onPress={handlePress} style={[modernStyles.languageButton, isSmallIPhone && {paddingHorizontal: 12, paddingVertical: 8}]}>
+                <Ionicons name="globe-outline" size={isSmallIPhone ? 18 : 22} color="#4a6bff" />
+                <Text style={[modernStyles.languageButtonText, isSmallIPhone && {fontSize: 13}]}>
                   {currentLabels.welcomeMessage} {languageName}
                 </Text>
               </TouchableOpacity>
@@ -1641,30 +1641,32 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
               </Text>
               
               {/* Feature Highlights */}
-              <View style={modernStyles.featuresContainer}>
-                <View style={modernStyles.featureItem}>
-                  <Ionicons name="flash" size={20} color="#ff6b35" style={modernStyles.featureIcon} />
-                  <Text style={modernStyles.featureText}>{currentLabels.lightningFast}</Text>
+              <View style={[modernStyles.featuresContainer, isSmallIPhone && {marginBottom: 10}]}>
+                <View style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}>
+                  <Ionicons name="flash" size={isSmallIPhone ? 18 : 20} color="#ff6b35" style={modernStyles.featureIcon} />
+                  <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>{currentLabels.lightningFast}</Text>
                 </View>
-                
-                <View style={modernStyles.featureItem}>
-                  <Ionicons name="shield-checkmark" size={20} color="#4a6bff" style={modernStyles.featureIcon} />
-                  <Text style={modernStyles.featureText}>{currentLabels.aiPowered}</Text>
+
+                <View style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}>
+                  <Ionicons name="shield-checkmark" size={isSmallIPhone ? 18 : 20} color="#4a6bff" style={modernStyles.featureIcon} />
+                  <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>{currentLabels.aiPowered}</Text>
                 </View>
-                
-                <View style={modernStyles.featureItem}>
-                  <Ionicons name="heart" size={20} color="#ff9500" style={modernStyles.featureIcon} />
-                  <Text style={modernStyles.featureText}>{currentLabels.superEasy}</Text>
+
+                <View style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}>
+                  <Ionicons name="heart" size={isSmallIPhone ? 18 : 20} color="#ff9500" style={modernStyles.featureIcon} />
+                  <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>{currentLabels.superEasy}</Text>
                 </View>
               </View>
               
-              {/* Call to Action - Más prominente */}
-              <View style={modernStyles.ctaContainer}>
-                <Text style={modernStyles.ctaText}>
-                  Tap the button below to start
-                </Text>
-              
-              </View>
+              {/* Call to Action - Más prominente - No mostrar en iPhone SE */}
+              {!isSmallIPhone && (
+                <View style={modernStyles.ctaContainer}>
+                  <Text style={modernStyles.ctaText}>
+                    Tap the button below to start
+                  </Text>
+                </View>
+              )}
+    
             </View>
 
             {/* Language Selection */}

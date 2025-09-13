@@ -30,9 +30,11 @@ import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 import texts from "./translations/texts"
 import RNFS from "react-native-fs"
 import { request, PERMISSIONS, RESULTS } from "react-native-permissions"
-const { width: screenWidth } = Dimensions.get('window');
-const isTablet = screenWidth >= 768;
 const { width, height } = Dimensions.get("window")
+const screenWidth = width
+const screenHeight = height
+const isTablet = screenWidth >= 768;
+const isSmallIPhone = Platform.OS === 'ios' && (screenWidth <= 375 || screenHeight <= 667)
 const API_KEY_ANALIZE = process.env.API_KEY_ANALIZE
 const API_KEY_CHAT = process.env.API_KEY_CHAT
 
@@ -836,14 +838,7 @@ const ImageListScreen = ({ route }) => {
   // Render functions
   const renderItem = ({ item, index }) => {
     if (item === uiText.costOfList || item === currentLabels.costdelalista) {
-      return (
-        <TouchableOpacity onPress={() => setCountryModalVisible(true)} style={modernStyles.costItemContainer}>
-          <View style={modernStyles.costButton}>
-            <Ionicons name="calculator-outline" size={24} color="#8b5cf6" />
-            <Text style={modernStyles.costButtonText}>{estimatedCost || item}</Text>
-          </View>
-        </TouchableOpacity>
-      )
+      return null // Don't render the cost item anymore
     }
 
     return (
@@ -946,8 +941,8 @@ const ImageListScreen = ({ route }) => {
                 style={modernStyles.emptyStateImage}
               />
             </View>
-            <Text style={modernStyles.emptyStateTitle}>{currentLabels.uploadImageTitle}</Text>
-            <Text style={modernStyles.emptyStateSubtitle}>{uiText.uploadImageDescription}</Text>
+            <Text style={[modernStyles.emptyStateTitle, isSmallIPhone && {fontSize: 20}]}>{currentLabels.uploadImageTitle}</Text>
+            <Text style={[modernStyles.emptyStateSubtitle, isSmallIPhone && {fontSize: 13, paddingHorizontal: 10}]}>{uiText.uploadImageDescription}</Text>
           </View>
         </Animated.View>
       )}
@@ -966,47 +961,57 @@ const ImageListScreen = ({ route }) => {
       )}
 
       {/* Main Action Button with Pulse Rings */}
-      {!loading && isSubscribed && (
-        <View style={modernStyles.uploadButtonContainer}>
+      {!loading && !isSubscribed && (
+        <View style={[modernStyles.uploadButtonContainer, isSmallIPhone && {bottom: 10}]}>
           {/* Outer Pulse Ring - NARANJA */}
           <Animated.View style={[
-            modernStyles.pulseRingOuter, 
+            modernStyles.pulseRingOuter,
+            isSmallIPhone && {width: 140, height: 140, borderRadius: 70},
             { transform: [{ scale: pulseRingOuter }] }
           ]} />
-          
+
           {/* Middle Pulse Ring - NARANJA */}
           <Animated.View style={[
-            modernStyles.pulseRingMiddle, 
+            modernStyles.pulseRingMiddle,
+            isSmallIPhone && {width: 110, height: 110, borderRadius: 55},
             { transform: [{ scale: pulseRingMiddle }] }
           ]} />
-          
+
           {/* Inner Pulse Ring - NARANJA */}
           <Animated.View style={[
-            modernStyles.pulseRingInner, 
+            modernStyles.pulseRingInner,
+            isSmallIPhone && {width: 90, height: 90, borderRadius: 45},
             { transform: [{ scale: pulseRingInner }] }
           ]} />
-          
-          <TouchableOpacity style={modernStyles.mainActionButton} onPress={() => {
+
+          <TouchableOpacity style={[modernStyles.mainActionButton, isSmallIPhone && {
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            shadowOffset: { width: 0, height: 10 },
+            shadowRadius: 20,
+            elevation: 15
+          }]} onPress={() => {
             triggerHaptic('light')
             setImageModalVisible(true)
           }}>
             <Animated.View style={[modernStyles.buttonContent, { transform: [{ scale: pulseAnim }] }]}>
-              <Ionicons name="cloud-upload-outline" size={24} color="#fff" />
+              <Ionicons name="cloud-upload-outline" size={isSmallIPhone ? 18 : 24} color="#fff" />
             </Animated.View>
           </TouchableOpacity>
         </View>
       )}
 
       {/* Subscription Banner */}
-      {!isSubscribed && (
-        <TouchableOpacity style={modernStyles.subscriptionBanner} onPress={() => {
+      {isSubscribed && (
+        <TouchableOpacity style={[modernStyles.subscriptionBanner, isSmallIPhone && {padding: 8, marginBottom: 12}]} onPress={() => {
           // Navigate to Subscribe screen through route params
           if (route.params?.onNavigateToSubscribe) {
             route.params.onNavigateToSubscribe();
           }
         }}>
-          <Ionicons name="lock-closed" size={20} color="#ef4444" />
-          <Text style={modernStyles.subscriptionBannerText}>
+          <Ionicons name="lock-closed" size={isSmallIPhone ? 16 : 20} color="#ef4444" />
+          <Text style={[modernStyles.subscriptionBannerText, isSmallIPhone && {fontSize: 12}]}>
             {suscribeButtonTranslations[deviceLanguage] || suscribeButtonTranslations.en}
           </Text>
         </TouchableOpacity>
@@ -1041,9 +1046,9 @@ const ImageListScreen = ({ route }) => {
             </View>
 
             {!isSubscribed && (
-              <View style={modernStyles.subscriptionBanner}>
-                <Ionicons name="lock-closed-outline" size={20} color="#e91e63" />
-                <Text style={modernStyles.subscriptionBannerText}>{uiText.subscriptionRequired}</Text>
+              <View style={[modernStyles.subscriptionBanner, isSmallIPhone && {padding: 8}]}>
+                <Ionicons name="lock-closed-outline" size={isSmallIPhone ? 16 : 20} color="#e91e63" />
+                <Text style={[modernStyles.subscriptionBannerText, isSmallIPhone && {fontSize: 12}]}>{uiText.subscriptionRequired}</Text>
               </View>
             )}
 
@@ -1356,11 +1361,11 @@ alignSelf: 'center',
   saveButton: {
     position: "absolute",
     bottom: 32,
-    left: 32,
+    right: 5,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
     paddingVertical: 12,
     borderRadius: 24,
     shadowColor: "#000",
@@ -1372,7 +1377,7 @@ alignSelf: 'center',
 
   saveButtonText: {
     marginLeft: 8,
-    fontSize: 16,
+    fontSize: isSmallIPhone ? 12 : 16,
     fontWeight: "600",
     color: "#10b981",
   },

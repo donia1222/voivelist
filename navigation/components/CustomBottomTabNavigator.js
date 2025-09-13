@@ -21,6 +21,7 @@ import { translations } from "../../translations"
 import texts from "../../screens/translations/texts"
 import DeviceInfo from "react-native-device-info"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { Platform, Dimensions } from "react-native"
 import PrivacyModal from "../../screens/links/PrivacyModal"
 import EulaModal from "../../screens/links/EulaModal"
 import getModernStyles from "../../screens/Styles/HomeScreenModernStyles"
@@ -222,6 +223,10 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const [activeTab, setActiveTab] = useState(initialTab)
   const [isMenuModalVisible, setMenuModalVisible] = useState(false)
   const iconScaleAnim = useRef(new Animated.Value(1)).current
+
+  // Detectar iPhone SE (pantalla pequeña)
+  const { width, height } = Dimensions.get('window')
+  const isSmallIPhone = Platform.OS === 'ios' && (width <= 375 || height <= 667)
   
   // Get current language labels for success modal
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
@@ -875,19 +880,24 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingHorizontal: 20,
-          paddingTop: 50,
-          paddingBottom: 15,
+          paddingHorizontal: isSmallIPhone ? 15 : 20,
+          paddingTop: isSmallIPhone ? 45 : 50,
+          paddingBottom: isSmallIPhone ? 10 : 15,
           backgroundColor: theme.background,
         }}
       >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          
+        <View style={{
+          flexDirection: "row",
+          alignItems: "center",
+          flex: 1,
+          marginRight: isSmallIPhone ? 8 : 10
+        }}>
+
           <View
             style={{
-              width: 40,
-              height: 40,
-              borderRadius: 10,
+              width: isSmallIPhone ? 32 : 40,
+              height: isSmallIPhone ? 32 : 40,
+              borderRadius: isSmallIPhone ? 8 : 10,
               backgroundColor: activeTab === "Images" ? "#ff950020" : 
                               activeTab === "History" ? "#34c75920" : 
                               activeTab === "Calendar" ? "#6B728020" : 
@@ -897,21 +907,21 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                               activeTab === "PriceCalculator" ? "#dc262620" : "#4a6bff20",
               justifyContent: "center",
               alignItems: "center",
-              marginRight: 12,
+              marginRight: isSmallIPhone ? 8 : 12,
             }}
           >
             {activeTab === "Home" ? (
               <Animated.View style={{ transform: [{ scale: iconScaleAnim }] }}>
                 <Image
                   source={require("../../assets/images/icono34.png")}
-                  style={{ width: 30, height: 30 }}
+                  style={{ width: isSmallIPhone ? 24 : 30, height: isSmallIPhone ? 24 : 30 }}
                 />
               </Animated.View>
             ) : activeTab === "Images" ? (
               <View style={{ position: 'relative' }}>
                 <Ionicons
                   name="image"
-                  size={24}
+                  size={isSmallIPhone ? 20 : 24}
                   color="#ff9500"
                 />
                 <View style={{
@@ -933,7 +943,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               <View style={{ position: 'relative' }}>
                 <Ionicons
                   name="list"
-                  size={24}
+                  size={isSmallIPhone ? 20 : 24}
                   color="#34c759"
                 />
                 <View style={{
@@ -955,7 +965,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               <View style={{ position: 'relative' }}>
                 <Ionicons
                   name="calendar"
-                  size={24}
+                  size={isSmallIPhone ? 20 : 24}
                   color="#6B7280"
                 />
                 <View style={{
@@ -977,7 +987,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               <View style={{ position: 'relative' }}>
                 <Ionicons
                   name="calculator"
-                  size={24}
+                  size={isSmallIPhone ? 20 : 24}
                   color="#dc2626"
                 />
                 <View style={{
@@ -996,7 +1006,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                 name={activeTab === "Subscribe" ? "star-outline" :
                       activeTab === "Subscription" ? "star" :
                       activeTab === "Information" ? "information-circle-outline" : "storefront"}
-                size={24}
+                size={isSmallIPhone ? 20 : 24}
                 color={activeTab === "Subscribe" ? "#ff375f" :
                        activeTab === "Subscription" ? "#ff375f" :
                        activeTab === "Information" ? "#5856d6" : "#4a6bff"}
@@ -1005,10 +1015,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           </View>
           <Text
             style={{
-              fontSize: 18,
+              fontSize: isSmallIPhone ? 16 : 18,
               fontWeight: "bold",
               color: theme.text,
+              flex: 1,
             }}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           >
             {activeTab === "Home" ? "Voice Grocery" : 
              activeTab === "Images" ? currentTranslations.imageList : 
@@ -1029,9 +1042,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             setMenuModalVisible(true)
           }}
           style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
+            width: isSmallIPhone ? 40 : 50,
+            height: isSmallIPhone ? 40 : 50,
+            borderRadius: isSmallIPhone ? 20 : 25,
             backgroundColor: theme.backgroundtres + "40",
             justifyContent: "center",
             alignItems: "center",
@@ -1045,17 +1058,17 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           >
             {/* Modern animated hamburger menu */}
             <View style={{
-              width: 24,
-              height: 18,
+              width: isSmallIPhone ? 18 : 24,
+              height: isSmallIPhone ? 14 : 18,
               justifyContent: 'space-between',
               alignItems: 'flex-start',
             }}>
               <Animated.View style={{
                 width: bar1Anim.interpolate({
                   inputRange: [0, 1, 2],
-                  outputRange: [24, 18, 21]
+                  outputRange: isSmallIPhone ? [18, 14, 16] : [24, 18, 21]
                 }),
-                height: 2.5,
+                height: isSmallIPhone ? 2 : 2.5,
                 backgroundColor: theme.text,
                 borderRadius: 2,
                 transform: [{
@@ -1068,9 +1081,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               <Animated.View style={{
                 width: bar2Anim.interpolate({
                   inputRange: [0, 1, 2],
-                  outputRange: [18, 21, 24]
+                  outputRange: isSmallIPhone ? [14, 16, 18] : [18, 21, 24]
                 }),
-                height: 2.5,
+                height: isSmallIPhone ? 2 : 2.5,
                 backgroundColor: theme.text,
                 borderRadius: 2,
                 alignSelf: 'flex-end',
@@ -1084,9 +1097,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               <Animated.View style={{
                 width: bar3Anim.interpolate({
                   inputRange: [0, 1, 2],
-                  outputRange: [21, 24, 18]
+                  outputRange: isSmallIPhone ? [16, 18, 14] : [21, 24, 18]
                 }),
-                height: 2.5,
+                height: isSmallIPhone ? 2 : 2.5,
                 backgroundColor: theme.text,
                 borderRadius: 2,
                 transform: [{
@@ -1142,9 +1155,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           style={{
             flexDirection: "row",
             backgroundColor: theme.background,
-            paddingBottom: 20,
-            paddingTop: 10,
-            paddingHorizontal: 20,
+            paddingBottom: isSmallIPhone ? 15 : 20,
+            paddingTop: isSmallIPhone ? 6 : 10,
+            paddingHorizontal: isSmallIPhone ? 10 : 20,
             borderTopWidth: 1,
             borderTopColor: theme.backgroundtres + "20",
             shadowColor: "#000",
@@ -1168,22 +1181,22 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                 style={{
                   flex: 1,
                   alignItems: "center",
-                  paddingVertical: 8,
+                  paddingVertical: isSmallIPhone ? 4 : 8,
                 }}
               >
                 <View
                   style={{
                     backgroundColor: isActive ? tab.color + "20" : "transparent",
-                    paddingHorizontal: 16,
-                    paddingVertical: 8,
-                    borderRadius: 20,
-                    minWidth: 50,
+                    paddingHorizontal: isSmallIPhone ? 12 : 16,
+                    paddingVertical: isSmallIPhone ? 6 : 8,
+                    borderRadius: isSmallIPhone ? 16 : 20,
+                    minWidth: isSmallIPhone ? 40 : 50,
                     alignItems: "center",
                   }}
                 >
                   <Ionicons
                     name={tab.icon}
-                    size={28}
+                    size={isSmallIPhone ? 22 : 28}
                     color={tabColor}
                   />
                 </View>

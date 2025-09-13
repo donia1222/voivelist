@@ -1,7 +1,8 @@
-import { StyleSheet, Dimensions } from "react-native"
+import { StyleSheet, Dimensions, Platform } from "react-native"
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window")
 const isTablet = screenWidth >= 768
+const isSmallIPhone = Platform.OS === 'ios' && (screenWidth <= 375 || screenHeight <= 667)
 
 export const getModernStyles = () => {
   return StyleSheet.create({
@@ -285,32 +286,32 @@ export const getModernStyles = () => {
     // Voice Info Styles
     voiceInfoContainer: {
       backgroundColor: 'rgba(255, 255, 255, 0.95)',
-      paddingHorizontal: 20,
-      paddingVertical: 16,
-      borderRadius: 20,
-      marginBottom: 24,
+      paddingHorizontal: isSmallIPhone ? 14 : 20,
+      paddingVertical: isSmallIPhone ? 10 : 16,
+      borderRadius: isSmallIPhone ? 16 : 20,
+      marginBottom: isSmallIPhone ? 16 : 24,
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 6 },
+      shadowOffset: { width: 0, height: isSmallIPhone ? 4 : 6 },
       shadowOpacity: 0.15,
-      shadowRadius: 16,
+      shadowRadius: isSmallIPhone ? 12 : 16,
       elevation: 8,
       borderWidth: 1,
       borderColor: 'rgba(255, 149, 0, 0.2)',
-      maxWidth: screenWidth * 0.85,
+      maxWidth: isSmallIPhone ? screenWidth * 0.9 : screenWidth * 0.85,
     },
     voiceInfoText: {
-      fontSize: 16,
+      fontSize: isSmallIPhone ? 14 : 16,
       fontWeight: '700',
       color: '#1f2937',
       textAlign: 'center',
-      marginBottom: 4,
+      marginBottom: isSmallIPhone ? 2 : 4,
     },
     voiceInfoSubtext: {
-      fontSize: 13,
+      fontSize: isSmallIPhone ? 11 : 13,
       fontWeight: '500',
       color: '#6b7280',
       textAlign: 'center',
-      lineHeight: 18,
+      lineHeight: isSmallIPhone ? 15 : 18,
     },
     voiceInfoSubtextClickable: {
       color: '#ff9500',
@@ -328,20 +329,20 @@ export const getModernStyles = () => {
     // Outer pulse ring - COLORES VIBRANTES
     pulseRingOuter: {
       position: 'absolute',
-      width: 200,
-      height: 200,
-      borderRadius: 100,
+      width: isSmallIPhone ? 160 : 200,
+      height: isSmallIPhone ? 160 : 200,
+      borderRadius: isSmallIPhone ? 80 : 100,
       backgroundColor: 'rgba(74, 107, 255, 0.12)',
       alignItems: 'center',
       justifyContent: 'center',
     },
     
-    // Middle pulse ring - AMARILLO  
+    // Middle pulse ring - AMARILLO
     pulseRingMiddle: {
       position: 'absolute',
-      width: 160,
-      height: 160,
-      borderRadius: 80,
+      width: isSmallIPhone ? 130 : 160,
+      height: isSmallIPhone ? 130 : 160,
+      borderRadius: isSmallIPhone ? 65 : 80,
       backgroundColor: 'rgba(255, 149, 0, 0.18)',
       alignItems: 'center',
       justifyContent: 'center',
@@ -350,9 +351,9 @@ export const getModernStyles = () => {
     // Inner glow ring - LILA VIBRANTE
     pulseRingInner: {
       position: 'absolute',
-      width: 140,
-      height: 140,
-      borderRadius: 70,
+      width: isSmallIPhone ? 110 : 140,
+      height: isSmallIPhone ? 110 : 140,
+      borderRadius: isSmallIPhone ? 55 : 70,
       backgroundColor: 'rgba(74, 107, 255, 0.25)',
       alignItems: 'center',
       justifyContent: 'center',
@@ -365,16 +366,16 @@ export const getModernStyles = () => {
     },
     
     voiceButton: {
-      width: 90,
-      height: 90,
-      borderRadius: 60,
+      width: isSmallIPhone ? 70 : 90,
+      height: isSmallIPhone ? 70 : 90,
+      borderRadius: isSmallIPhone ? 45 : 60,
       alignItems: "center",
       justifyContent: "center",
-      shadowOffset: { width: 0, height: 25 },
-      shadowOpacity: 0.5,
-      shadowRadius: 40,
-      elevation: 30,
-      borderWidth: 5,
+      shadowOffset: { width: 0, height: isSmallIPhone ? 15 : 25 },
+      shadowOpacity: isSmallIPhone ? 0.4 : 0.5,
+      shadowRadius: isSmallIPhone ? 25 : 40,
+      elevation: isSmallIPhone ? 20 : 30,
+      borderWidth: isSmallIPhone ? 4 : 5,
       borderColor: 'rgba(255, 255, 255, 0.6)',
     },
     
@@ -502,61 +503,61 @@ export const getModernStyles = () => {
     
     // Hero Title - MÁS COMPACTO
     heroTitle: {
-      fontSize: 24,
-      fontWeight: "800",
+      fontSize: isSmallIPhone ? 20 : 24,
+      fontWeight: isSmallIPhone ? "700" : "800",
       color: "#2b4262d4",
       textAlign: "center",
-      marginBottom: 8,
+      marginBottom: isSmallIPhone ? 6 : 18,
       letterSpacing: -0.3,
-      lineHeight: 32,
-      marginTop: -40,
+      lineHeight: isSmallIPhone ? 26 : 32,
+      marginTop: isSmallIPhone ? -30 : -40,
     },
     
-    // Hero Subtitle - MÁS COMPACTO  
+    // Hero Subtitle - MÁS COMPACTO
     heroSubtitle: {
-      fontSize: 15,
+      fontSize: isSmallIPhone ? 13 : 15,
       color: "#6b7280",
       textAlign: "center",
-      lineHeight: 22,
-      marginBottom: 6,
+      lineHeight: isSmallIPhone ? 18 : 22,
+      marginBottom: isSmallIPhone ? 4 : 6,
       fontWeight: "500",
-      maxWidth: 280,
+      maxWidth: isSmallIPhone ? 260 : 280,
     },
     
     // Feature highlights - MÁS COMPACTO
     featuresContainer: {
       alignItems: "center",
-      marginTop: 12,
-      marginBottom: 16,
+      marginTop: isSmallIPhone ? 8 : 12,
+      marginBottom: isSmallIPhone ? 12 : 16,
     },
     
     featureItem: {
       flexDirection: "row",
       alignItems: "center",
-      marginBottom: 10,
-      paddingHorizontal: 18,
-      paddingVertical: 10,
+      marginBottom: isSmallIPhone ? 6 : 10,
+      paddingHorizontal: isSmallIPhone ? 12 : 18,
+      paddingVertical: isSmallIPhone ? 6 : 10,
       backgroundColor: "rgba(255, 255, 255, 0.85)",
-      borderRadius: 22,
-      borderWidth: 1.5,
+      borderRadius: isSmallIPhone ? 16 : 22,
+      borderWidth: isSmallIPhone ? 1 : 1.5,
       borderColor: "rgba(74, 107, 255, 0.2)",
       shadowColor: "#4a6bff",
-      shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: 0.15,
-      shadowRadius: 8,
-      elevation: 4,
-      minWidth: 160,
+      shadowOffset: { width: 0, height: isSmallIPhone ? 2 : 3 },
+      shadowOpacity: isSmallIPhone ? 0.1 : 0.15,
+      shadowRadius: isSmallIPhone ? 6 : 8,
+      elevation: isSmallIPhone ? 3 : 4,
+      minWidth: isSmallIPhone ? 130 : 160,
       justifyContent: "center",
     },
     
     featureIcon: {
-      marginRight: 12,
+      marginRight: isSmallIPhone ? 6 : 12,
     },
     
     featureText: {
-      fontSize: 14,
+      fontSize: isSmallIPhone ? 11 : 14,
       color: "#1f2937",
-      fontWeight: "700",
+      fontWeight: isSmallIPhone ? "600" : "700",
     },
     
     // Call to Action Section - MÁS COMPACTO
@@ -589,26 +590,23 @@ export const getModernStyles = () => {
       flexDirection: "row",
       alignItems: "center",
       backgroundColor: "rgba(74, 107, 255, 0.10)",
-      paddingHorizontal: 18,
-      paddingVertical: 10,
-      borderRadius: 20,
-      borderWidth: 1.5,
+      paddingHorizontal: isSmallIPhone ? 12 : 18,
+      paddingVertical: isSmallIPhone ? 8 : 10,
+      borderRadius: isSmallIPhone ? 16 : 20,
+      borderWidth: isSmallIPhone ? 1 : 1.5,
       borderColor: "rgba(74, 107, 255, 0.30)",
       shadowColor: "rgba(74, 107, 255, 0.8)",
-      shadowOffset: { width: 0, height: 6 },
-      shadowOpacity: 0.20,
-      shadowRadius: 15,
-      elevation: 6,
-      marginBottom: 60,
-
-
-
+      shadowOffset: { width: 0, height: isSmallIPhone ? 4 : 6 },
+      shadowOpacity: isSmallIPhone ? 0.15 : 0.20,
+      shadowRadius: isSmallIPhone ? 10 : 15,
+      elevation: isSmallIPhone ? 4 : 6,
+      marginBottom: isSmallIPhone ? 40 : 60,
     },
     languageButtonText: {
-      marginLeft: 12,
+      marginLeft: isSmallIPhone ? 8 : 12,
       color: "#1f2937",
-      fontWeight: "700",
-      fontSize: 16,
+      fontWeight: isSmallIPhone ? "600" : "700",
+      fontSize: isSmallIPhone ? 13 : 16,
     },
 
     // Creating Message Styles
