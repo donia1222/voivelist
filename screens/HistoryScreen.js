@@ -771,10 +771,12 @@ const HistoryScreen = ({ navigation }) => {
   // Funciones de modal y edición
   const openModal = (index) => {
     setFavoritesModalVisible(false)
-    setCurrentList(history[index].list)
-    setCurrentListName(history[index].name)
-    setCurrentListIndex(index)
-    setModalVisible(true)
+    setExpandedListData({
+      list: history[index].list,
+      name: history[index].name,
+      index: index
+    })
+    setExpandedModalVisible(true)
     setExpandedCardIndex(null)
   }
 
@@ -1834,6 +1836,12 @@ const HistoryScreen = ({ navigation }) => {
           }
         }}
         onAddItem={addNewItemToExpandedList}
+        onDeleteList={() => {
+          if (expandedListData.index !== null) {
+            setExpandedModalVisible(false)
+            confirmRemoveListFromHistory(expandedListData.index)
+          }
+        }}
       />
 
       {/* Actions Modal */}

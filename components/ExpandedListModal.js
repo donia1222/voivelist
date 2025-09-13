@@ -25,7 +25,8 @@ const ExpandedListModal = ({
   onSaveItem, 
   onDeleteItem, 
   onAddItem,
-  onSaveList 
+  onSaveList,
+  onDeleteList 
 }) => {
   const { theme } = useTheme()
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
@@ -93,6 +94,12 @@ const ExpandedListModal = ({
 
   const getTotalCount = () => {
     return listData?.list?.length || 0
+  }
+
+  const areAllItemsCompleted = () => {
+    const totalItems = getTotalCount()
+    const completedCount = getCompletedCount()
+    return totalItems > 0 && completedCount === totalItems
   }
 
   const styles = StyleSheet.create({
@@ -237,6 +244,9 @@ const ExpandedListModal = ({
       backgroundColor: '#fee2e2'
     },
     expandedModalFooter: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
       padding: 20,
       borderTopWidth: 1,
       borderTopColor: theme === 'dark' ? '#374151' : '#e5e7eb',
@@ -250,44 +260,49 @@ const ExpandedListModal = ({
     expandedModalProgress: {
       fontSize: 16,
       fontWeight: '600',
-      color: theme === 'dark' ? '#fff' : '#374151',
-      textAlign: 'center'
+      color: theme === 'dark' ? '#fff' : '#374151'
     },
-    fixedAddButton: {
-      position: 'absolute',
-      bottom: 100,
-      right: 20,
-      width: 64,
-      height: 64,
-      borderRadius: 32,
-      backgroundColor: '#10a20ee9',
-      justifyContent: 'center',
+    addButtonFooter: {
+      flexDirection: 'row',
       alignItems: 'center',
-      elevation: 8,
-      shadowColor: '#f59e0b',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      borderWidth: 2,
-      borderColor: '#ffffff'
+      backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: '#10b981',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+      elevation: 2
     },
-    notesButton: {
-      position: 'absolute',
-      top: 20,
-      right: 20,
-      width: 56,
-      height: 56,
-      borderRadius: 28,
-      backgroundColor: '#f59e0b',
-      justifyContent: 'center',
+    addButtonText: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: '#10b981',
+      marginLeft: 6
+    },
+    deleteListButtonFooter: {
+      flexDirection: 'row',
       alignItems: 'center',
-      elevation: 8,
-      shadowColor: '#f59e0b',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      borderWidth: 2,
-      borderColor: '#ffffff'
+      backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: '#ef4444',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+      elevation: 2
+    },
+    deleteButtonText: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: '#ef4444',
+      marginLeft: 6
     }
   })
 
@@ -425,18 +440,27 @@ const ExpandedListModal = ({
           <Text style={styles.expandedModalProgress}>
             {getCompletedCount()} / {getTotalCount()} {currentLabels.completed || 'completados'}
           </Text>
+          {(onAddItem || onDeleteList) && (
+            <TouchableOpacity
+              onPress={areAllItemsCompleted() && onDeleteList ? onDeleteList : onAddItem}
+              style={areAllItemsCompleted() ? styles.deleteListButtonFooter : styles.addButtonFooter}
+            >
+              <Ionicons 
+                name={areAllItemsCompleted() ? "trash-outline" : "add"} 
+                size={20} 
+                color={areAllItemsCompleted() ? "#ef4444" : "#10b981"} 
+              />
+              <Text style={areAllItemsCompleted() ? styles.deleteButtonText : styles.addButtonText}>
+                {areAllItemsCompleted() 
+                  ? (currentLabels.deleteList || 'Eliminar lista')
+                  : (currentLabels.addNewItembutton || 'Añadir')
+                }
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
         
  
-        {/* Fixed Add Button */}
-        {onAddItem && (
-          <TouchableOpacity
-            onPress={onAddItem}
-            style={styles.fixedAddButton}
-          >
-             <Ionicons name="create" size={28} color="#ffffff" />
-          </TouchableOpacity>
-        )}
       </KeyboardAvoidingView>
     </Modal>
   )
