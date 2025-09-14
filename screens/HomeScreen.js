@@ -377,6 +377,7 @@ const HomeScreen = ({ navigation }) => {
   const [pressCount, setPressCount] = useState(0)
   const [voiceLimitModalVisible, setVoiceLimitModalVisible] = useState(false)
   const [deviceVoiceCount, setDeviceVoiceCount] = useState(0)
+  const [showPencilMode, setShowPencilMode] = useState(false)
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(true)
   const [titleFontSize, setTitleFontSize] = useState(23)
   const [showResults, setShowResults] = useState(false)
@@ -1510,25 +1511,6 @@ const HomeScreen = ({ navigation }) => {
     } else {
       return (
         <View style={modernStyles.voiceButtonContainer}>
-          {/* Manual List Button */}
-          <TouchableOpacity
-            style={modernStyles.manualListButton}
-            onPress={() => {
-              triggerHaptic('light')
-              // Navigate to HandwrittenList through the tab navigator
-              if (route.params?.onNavigateToHandwrittenList) {
-                route.params.onNavigateToHandwrittenList()
-              } else {
-                // Fallback navigation if not using tab navigator
-                navigation.navigate('HandwrittenList')
-              }
-            }}
-            activeOpacity={0.8}
-          >
-            <View style={modernStyles.manualListInner}>
-              <Ionicons name="create-outline" size={26} color="white" />
-            </View>
-          </TouchableOpacity>
           {/* Informative text for non-subscribed users */}
           {isSubscribed === false && (
             <TouchableOpacity
@@ -1607,27 +1589,82 @@ const HomeScreen = ({ navigation }) => {
               />
             )}
 
-            {/* Main Voice Button */}
+            {/* Main Voice Button - Toggle between mic and pencil */}
             <TouchableOpacity
-              onPress={started ? stopRecognizing : startRecognizing}
+              onPress={() => {
+                if (showPencilMode) {
+                  // In pencil mode - navigate to handwritten list
+                  triggerHaptic('light')
+                  if (route.params?.onNavigateToHandwrittenList) {
+                    route.params.onNavigateToHandwrittenList()
+                  } else {
+                    navigation.navigate('HandwrittenList')
+                  }
+                } else {
+                  // In mic mode - handle voice recording
+                  started ? stopRecognizing() : startRecognizing()
+                }
+              }}
               style={modernStyles.voiceButtonWrapper}
               activeOpacity={0.8}
             >
               <Animated.View
                 style={[
                   modernStyles.voiceButton,
-                  { transform: [{ scale: started ? 1.05 : pulseAnim }] },
-                  started ? modernStyles.voiceButtonActive : modernStyles.voiceButtonInactive,
+                  {
+                    transform: [{ scale: started ? 1.05 : pulseAnim }],
+                    backgroundColor: showPencilMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(99, 102, 241, 0.15)',
+                    borderWidth: 2,
+                    borderColor: showPencilMode ? 'rgba(16, 185, 129, 0.3)' : 'rgba(99, 102, 241, 0.3)',
+                    backdropFilter: 'blur(10px)'
+                  },
+                  started && { backgroundColor: 'rgba(239, 68, 68, 0.15)', borderColor: 'rgba(239, 68, 68, 0.3)' }
                 ]}
               >
                 <View style={modernStyles.micIconContainer}>
                   {started ? (
-                    <Ionicons name="stop" size={isSmallIPhone ? 24 : 30} color="white" />
+                    <Ionicons name="stop" size={isSmallIPhone ? 24 : 30} color="#ef4444" />
                   ) : (
-                    <Ionicons name="mic" size={isSmallIPhone ? 26 : 32} color="white" />
+                    showPencilMode ? (
+                      <Ionicons name="pencil" size={isSmallIPhone ? 26 : 32} color="#10b981" />
+                    ) : (
+                      <Ionicons name="mic" size={isSmallIPhone ? 26 : 32} color="#6366f1" />
+                    )
                   )}
                 </View>
               </Animated.View>
+            </TouchableOpacity>
+
+            {/* Toggle button - shows opposite of main button */}
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                top: -8,
+                right: -38,
+                backgroundColor: showPencilMode ? 'rgba(99, 102, 241, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+                borderWidth: 2,
+                borderColor: showPencilMode ? 'rgba(99, 102, 241, 0.3)' : 'rgba(16, 185, 129, 0.3)',
+                borderRadius: 52,
+                width: 32,
+                height: 32,
+                alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: showPencilMode ? '#6366f1' : '#10b981',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 8,
+                elevation: 3,
+              }}
+              onPress={() => {
+                triggerHaptic('light')
+                // Toggle between mic and pencil mode
+                setShowPencilMode(!showPencilMode)
+              }}
+            >
+              <Ionicons
+                name={showPencilMode ? "mic" : "pencil"}
+                size={isSmallIPhone ? 16 : 16}
+                color={showPencilMode ? '#6366f1' : '#10b981'} />
             </TouchableOpacity>
           </View>
 
@@ -1683,7 +1720,7 @@ const HomeScreen = ({ navigation }) => {
               {/* Feature Highlights */}
               <View style={[modernStyles.featuresContainer, isSmallIPhone && {marginBottom: 10}]}>
                 <View style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}>
-                  <Ionicons name="flash" size={isSmallIPhone ? 18 : 20} color="#ff6b35" style={modernStyles.featureIcon} />
+                  <Ionicons name="flash" size={isSmallIPhone ? 18 : 20} color="#10b981" style={modernStyles.featureIcon} />
                   <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>{currentLabels.lightningFast}</Text>
                 </View>
 
@@ -1693,7 +1730,7 @@ const HomeScreen = ({ navigation }) => {
                 </View>
 
                 <View style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}>
-                  <Ionicons name="heart" size={isSmallIPhone ? 18 : 20} color="#ff9500" style={modernStyles.featureIcon} />
+                  <Ionicons name="heart" size={isSmallIPhone ? 18 : 20} color="#ff00909c" style={modernStyles.featureIcon} />
                   <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>{currentLabels.superEasy}</Text>
                 </View>
               </View>

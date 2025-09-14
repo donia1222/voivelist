@@ -896,8 +896,8 @@ const ImageListScreen = ({ route }) => {
         <View style={modernStyles.imageModalContainer}>
           <View style={modernStyles.modalHeader}>
             <View style={modernStyles.modalIconContainer}>
-              <Ionicons name="camera" size={32} color="#3b82f6" />
-            </View>
+              <Ionicons name="camera" size={32} color="#ff9500" />
+              </View>
             <Text style={modernStyles.modalTitle}>{modalText.title}</Text>
             <TouchableOpacity onPress={() => setImageModalVisible(false)} style={modernStyles.closeButton}>
               <Ionicons name="close" size={24} color="#6b7280" />
@@ -964,10 +964,10 @@ const ImageListScreen = ({ route }) => {
       {!loading && shoppingList.length === 0 && (
         <Animated.View style={[modernStyles.emptyStateContainer, { opacity: fadeAnim }]}>
           <View style={modernStyles.emptyStateContent}>
-            <View style={modernStyles.emptyIconContainer}>
+            <View style={[modernStyles.emptyIconContainer, isSmallIPhone && {width: 90, height: 90}]}>
               <Image
                 source={require("../assets/images/838080c2-a486-41a7-9ed4-ef7587b48120.png")}
-                style={modernStyles.emptyStateImage}
+                style={[modernStyles.emptyStateImage, isSmallIPhone && {width: 160, height: 160}]}
               />
             </View>
             <Text style={[modernStyles.emptyStateTitle, isSmallIPhone && {fontSize: 20}]}>{currentLabels.uploadImageTitle}</Text>
@@ -989,45 +989,67 @@ const ImageListScreen = ({ route }) => {
         />
       )}
 
-      {/* Main Action Button with Pulse Rings - Only show when no items in list */}
+      {/* Upload Section - Only show when no items in list */}
       {!loading && isSubscribed && shoppingList.length === 0 && (
-        <View style={[modernStyles.uploadButtonContainer, isSmallIPhone && {bottom: 10}]}>
-          {/* Outer Pulse Ring - NARANJA */}
-          <Animated.View style={[
-            modernStyles.pulseRingOuter,
-            isSmallIPhone && {width: 140, height: 140, borderRadius: 70},
-            { transform: [{ scale: pulseRingOuter }] }
-          ]} />
+        <View style={modernStyles.uploadSectionContainer}>
+          {/* Title and Description Card */}
+          <View style={[
+            modernStyles.uploadInfoCard,
+        
+          ]}>
+            <View style={modernStyles.uploadIconContainer}>
+              <Ionicons name="camera" size={24} color="#f97316" />
+            </View>
+            <Text style={modernStyles.uploadTitle}>{uiText.uploadImage}</Text>
+            <Text style={modernStyles.uploadDescription}>{uiText.uploadImageDescription}</Text>
+          </View>
 
-          {/* Middle Pulse Ring - NARANJA */}
-          <Animated.View style={[
-            modernStyles.pulseRingMiddle,
-            isSmallIPhone && {width: 110, height: 110, borderRadius: 55},
-            { transform: [{ scale: pulseRingMiddle }] }
-          ]} />
+          {/* Upload Button with Pulse Rings */}
+          <View style={[modernStyles.uploadButtonContainer, isSmallIPhone && {bottom: 10}]}>
+            {/* Outer Pulse Ring - NARANJA */}
+            <Animated.View style={[
+              modernStyles.pulseRingOuter,
+              isSmallIPhone && {width: 140, height: 140, borderRadius: 70},
+              { transform: [{ scale: pulseRingOuter }] }
+            ]} />
 
-          {/* Inner Pulse Ring - NARANJA */}
-          <Animated.View style={[
-            modernStyles.pulseRingInner,
-            isSmallIPhone && {width: 90, height: 90, borderRadius: 45},
-            { transform: [{ scale: pulseRingInner }] }
-          ]} />
+            {/* Middle Pulse Ring - NARANJA */}
+            <Animated.View style={[
+              modernStyles.pulseRingMiddle,
+              isSmallIPhone && {width: 110, height: 110, borderRadius: 55},
+              { transform: [{ scale: pulseRingMiddle }] }
+            ]} />
 
-          <TouchableOpacity style={[modernStyles.mainActionButton, isSmallIPhone && {
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            shadowOffset: { width: 0, height: 10 },
-            shadowRadius: 20,
-            elevation: 15
-          }]} onPress={() => {
-            triggerHaptic('light')
-            setImageModalVisible(true)
-          }}>
-            <Animated.View style={[modernStyles.buttonContent, { transform: [{ scale: pulseAnim }] }]}>
-              <Ionicons name="cloud-upload-outline" size={isSmallIPhone ? 18 : 24} color="#fff" />
-            </Animated.View>
-          </TouchableOpacity>
+            {/* Inner Pulse Ring - NARANJA */}
+            <Animated.View style={[
+              modernStyles.pulseRingInner,
+              isSmallIPhone && {width: 90, height: 90, borderRadius: 45},
+              { transform: [{ scale: pulseRingInner }] }
+            ]} />
+
+            <TouchableOpacity style={[modernStyles.mainActionButton, isSmallIPhone && {
+              width: 60,
+              height: 60,
+              borderRadius: 30,
+              shadowOffset: { width: 0, height: 10 },
+              shadowRadius: 20,
+              elevation: 15
+            },
+            {
+              backgroundColor: 'rgba(251, 146, 60, 0.15)',
+              borderWidth: 2,
+              borderColor: 'rgba(251, 146, 60, 0.5)',
+              backdropFilter: 'blur(10px)'
+            }
+            ]} onPress={() => {
+              triggerHaptic('light')
+              setImageModalVisible(true)
+            }}>
+              <Animated.View style={[modernStyles.buttonContent, { transform: [{ scale: pulseAnim }] }]}>
+                <Ionicons name="cloud-upload-outline" size={isSmallIPhone ? 18 : 24} color="#f97316" />
+              </Animated.View>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
 
@@ -1314,7 +1336,7 @@ const modernStyles = StyleSheet.create({
     borderRadius: 80,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 32,
+    marginBottom: 62,
   },
 
   emptyStateImage: {
@@ -1430,15 +1452,65 @@ const modernStyles = StyleSheet.create({
     marginLeft: 12,
   },
 
+  // Upload Section Styles
+  uploadSectionContainer: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+    alignItems: 'center',
+    width: '100%',
+
+  },
+
+  uploadInfoCard: {
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderRadius: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    marginBottom: 20,
+    marginHorizontal: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(251, 146, 60, 0.2)',
+  },
+
+  uploadIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(251, 146, 60, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+
+  uploadTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1e293b',
+    marginBottom: 6,
+  },
+
+  uploadDescription: {
+    fontSize: 13,
+    color: '#64748b',
+    textAlign: 'center',
+    lineHeight: 18,
+    maxWidth: 280,
+  },
+
   // Action Buttons with Pulse Rings
   uploadButtonContainer: {
-    position: "absolute",
-    bottom: 32,
-alignSelf: 'center',
     width: 94,
     height: 94,
     alignItems: "center",
     justifyContent: "center",
+        marginTop: 10,
   },
   
   // Outer pulse ring - NARANJA VIBRANTE
@@ -1472,23 +1544,25 @@ alignSelf: 'center',
     backgroundColor: 'rgba(255, 149, 0, 0.10)',
     alignItems: 'center',
     justifyContent: 'center',
+    
   },
   
   mainActionButton: {
    width: 84,
     height: 84,
-    backgroundColor: "#ff9500",
+    backgroundColor: 'rgba(251, 146, 60, 0.15)',
   borderRadius: 80,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#ff9500",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
+    shadowColor: "#f97316",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
     shadowRadius: 12,
-    elevation: 8,
-    borderWidth: 1.5,
+    elevation: 5,
+    borderWidth: 2,
     borderColor: 'rgba(255, 255, 255, 0.3)',
     zIndex: 10,
+
   },
 
   buttonContent: {

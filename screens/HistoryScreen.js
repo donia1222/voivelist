@@ -394,11 +394,11 @@ const HistoryScreen = ({ navigation }) => {
   }
 
   // Función para agregar un nuevo item a la lista expandida
-  const addNewItemToExpandedList = async () => {
+  const addNewItemToExpandedList = async (itemText = "") => {
     if (expandedListData.index !== null) {
       const newHistory = [...history]
       const newItemIndex = newHistory[expandedListData.index].list.length
-      newHistory[expandedListData.index].list.push("")
+      newHistory[expandedListData.index].list.push(itemText)
       
       // Actualizar los datos del modal expandido ANTES de guardar
       const updatedExpandedData = {

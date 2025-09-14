@@ -287,7 +287,7 @@ export const getModernStyles = () => {
     manualListButton: {
       position: 'absolute',
       top: -70,
-      right: 30,
+      right: 100,
       width: 54,
       height: 54,
       borderRadius: 27,

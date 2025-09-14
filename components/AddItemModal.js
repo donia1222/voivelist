@@ -1,30 +1,24 @@
-"use client"
-
-import { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef } from 'react';
 import {
-  SafeAreaView,
-  Text,
   View,
-  TouchableOpacity,
-  FlatList,
-  Modal,
-  TextInput,
-  ScrollView,
-  Animated,
-  Dimensions,
+  Text,
   StyleSheet,
-  Alert,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+  Modal,
+  Animated,
   Switch,
+  Alert,
+  FlatList,
   KeyboardAvoidingView,
-  Platform
-} from "react-native"
-import { Ionicons } from "@expo/vector-icons"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import * as RNLocalize from "react-native-localize"
-import { useNavigation } from "@react-navigation/native"
-import { useHaptic } from "../HapticContext"
+  Platform,
+  Dimensions
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window")
+const { width: screenWidth } = Dimensions.get("window")
 
 // Available icons for custom categories
 const availableIcons = [
@@ -80,7 +74,6 @@ const defaultCategories = [
 // Translations
 const translations = {
   en: {
-    title: "Create Manual List",
     selectCategory: "Select a category",
     addCustomCategory: "Custom",
     categoryName: "Category name",
@@ -103,10 +96,6 @@ const translations = {
     isStore: "Store item",
     add: "Add",
     cancel: "Cancel",
-    saveList: "Save List",
-    listName: "List name",
-    emptyList: "Your list is empty",
-    emptyListSubtitle: "Select a category and add items to get started",
     categories: {
       groceries: "Groceries",
       pharmacy: "Pharmacy",
@@ -120,13 +109,9 @@ const translations = {
       clothing: "Clothing",
       frozen: "Frozen",
       dairy: "Dairy"
-    },
-    items: "items",
-    total: "Total",
-    manualList: "Manual List"
+    }
   },
   es: {
-    title: "Crear Lista Manual",
     selectCategory: "Selecciona una categoría",
     addCustomCategory: "Personal",
     categoryName: "Nombre de la categoría",
@@ -149,10 +134,6 @@ const translations = {
     isStore: "Artículo de tienda",
     add: "Añadir",
     cancel: "Cancelar",
-    saveList: "Guardar Lista",
-    listName: "Nombre de la lista",
-    emptyList: "Tu lista está vacía",
-    emptyListSubtitle: "Selecciona una categoría y añade artículos para comenzar",
     categories: {
       groceries: "Supermercado",
       pharmacy: "Farmacia",
@@ -166,13 +147,9 @@ const translations = {
       clothing: "Ropa",
       frozen: "Congelados",
       dairy: "Lácteos"
-    },
-    items: "artículos",
-    total: "Total",
-    manualList: "Lista Manual"
+    }
   },
   de: {
-    title: "Manuelle Liste erstellen",
     selectCategory: "Wähle eine Kategorie",
     addCustomCategory: "Benutzerdefiniert",
     categoryName: "Kategoriename",
@@ -195,10 +172,6 @@ const translations = {
     isStore: "Ladenartikel",
     add: "Hinzufügen",
     cancel: "Abbrechen",
-    saveList: "Liste speichern",
-    listName: "Listenname",
-    emptyList: "Ihre Liste ist leer",
-    emptyListSubtitle: "Wählen Sie eine Kategorie und fügen Sie Artikel hinzu",
     categories: {
       groceries: "Lebensmittel",
       pharmacy: "Apotheke",
@@ -212,13 +185,9 @@ const translations = {
       clothing: "Kleidung",
       frozen: "Tiefkühl",
       dairy: "Milchprodukte"
-    },
-    items: "Artikel",
-    total: "Gesamt",
-    manualList: "Manuelle Liste"
+    }
   },
   fr: {
-    title: "Créer une liste manuelle",
     selectCategory: "Sélectionner une catégorie",
     addCustomCategory: "Personnalisé",
     categoryName: "Nom de la catégorie",
@@ -241,10 +210,6 @@ const translations = {
     isStore: "Article du magasin",
     add: "Ajouter",
     cancel: "Annuler",
-    saveList: "Enregistrer la liste",
-    listName: "Nom de la liste",
-    emptyList: "Votre liste est vide",
-    emptyListSubtitle: "Sélectionnez une catégorie et ajoutez des articles",
     categories: {
       groceries: "Épicerie",
       pharmacy: "Pharmacie",
@@ -258,13 +223,9 @@ const translations = {
       clothing: "Vêtements",
       frozen: "Surgelés",
       dairy: "Produits laitiers"
-    },
-    items: "articles",
-    total: "Total",
-    manualList: "Liste manuelle"
+    }
   },
   it: {
-    title: "Crea lista manuale",
     selectCategory: "Seleziona una categoria",
     addCustomCategory: "Personalizzato",
     categoryName: "Nome categoria",
@@ -287,10 +248,6 @@ const translations = {
     isStore: "Articolo del negozio",
     add: "Aggiungi",
     cancel: "Annulla",
-    saveList: "Salva lista",
-    listName: "Nome lista",
-    emptyList: "La tua lista è vuota",
-    emptyListSubtitle: "Seleziona una categoria e aggiungi articoli per iniziare",
     categories: {
       groceries: "Alimentari",
       pharmacy: "Farmacia",
@@ -304,13 +261,9 @@ const translations = {
       clothing: "Abbigliamento",
       frozen: "Surgelati",
       dairy: "Latticini"
-    },
-    items: "articoli",
-    total: "Totale",
-    manualList: "Lista manuale"
+    }
   },
   tr: {
-    title: "Manuel Liste Oluştur",
     selectCategory: "Bir kategori seçin",
     addCustomCategory: "Özel",
     categoryName: "Kategori adı",
@@ -333,10 +286,6 @@ const translations = {
     isStore: "Mağaza ürünü",
     add: "Ekle",
     cancel: "İptal",
-    saveList: "Listeyi Kaydet",
-    listName: "Liste adı",
-    emptyList: "Listeniz boş",
-    emptyListSubtitle: "Bir kategori seçin ve öğeler ekleyin",
     categories: {
       groceries: "Market",
       pharmacy: "Eczane",
@@ -350,13 +299,9 @@ const translations = {
       clothing: "Giyim",
       frozen: "Dondurulmuş",
       dairy: "Süt Ürünleri"
-    },
-    items: "öğeler",
-    total: "Toplam",
-    manualList: "Manuel Liste"
+    }
   },
   pt: {
-    title: "Criar Lista Manual",
     selectCategory: "Selecione uma categoria",
     addCustomCategory: "Personalizado",
     categoryName: "Nome da categoria",
@@ -379,10 +324,6 @@ const translations = {
     isStore: "Item da loja",
     add: "Adicionar",
     cancel: "Cancelar",
-    saveList: "Salvar Lista",
-    listName: "Nome da lista",
-    emptyList: "Sua lista está vazia",
-    emptyListSubtitle: "Selecione uma categoria e adicione itens para começar",
     categories: {
       groceries: "Mercearia",
       pharmacy: "Farmácia",
@@ -396,13 +337,9 @@ const translations = {
       clothing: "Roupas",
       frozen: "Congelados",
       dairy: "Laticínios"
-    },
-    items: "itens",
-    total: "Total",
-    manualList: "Lista Manual"
+    }
   },
   ru: {
-    title: "Создать ручной список",
     selectCategory: "Выберите категорию",
     addCustomCategory: "Пользовательская",
     categoryName: "Название категории",
@@ -425,10 +362,6 @@ const translations = {
     isStore: "Товар магазина",
     add: "Добавить",
     cancel: "Отмена",
-    saveList: "Сохранить список",
-    listName: "Название списка",
-    emptyList: "Ваш список пуст",
-    emptyListSubtitle: "Выберите категорию и добавьте товары для начала",
     categories: {
       groceries: "Продукты",
       pharmacy: "Аптека",
@@ -442,13 +375,9 @@ const translations = {
       clothing: "Одежда",
       frozen: "Замороженные",
       dairy: "Молочные продукты"
-    },
-    items: "товаров",
-    total: "Итого",
-    manualList: "Ручной список"
+    }
   },
   ar: {
-    title: "إنشاء قائمة يدوية",
     selectCategory: "اختر فئة",
     addCustomCategory: "مخصص",
     categoryName: "اسم الفئة",
@@ -471,10 +400,6 @@ const translations = {
     isStore: "عنصر المتجر",
     add: "إضافة",
     cancel: "إلغاء",
-    saveList: "حفظ القائمة",
-    listName: "اسم القائمة",
-    emptyList: "قائمتك فارغة",
-    emptyListSubtitle: "اختر فئة وأضف عناصر للبدء",
     categories: {
       groceries: "البقالة",
       pharmacy: "صيدلية",
@@ -488,13 +413,9 @@ const translations = {
       clothing: "الملابس",
       frozen: "المجمدة",
       dairy: "منتجات الألبان"
-    },
-    items: "عناصر",
-    total: "المجموع",
-    manualList: "قائمة يدوية"
+    }
   },
   ja: {
-    title: "手動リストを作成",
     selectCategory: "カテゴリーを選択",
     addCustomCategory: "カスタム",
     categoryName: "カテゴリー名",
@@ -517,10 +438,6 @@ const translations = {
     isStore: "店舗アイテム",
     add: "追加",
     cancel: "キャンセル",
-    saveList: "リストを保存",
-    listName: "リスト名",
-    emptyList: "リストは空です",
-    emptyListSubtitle: "カテゴリーを選択してアイテムを追加してください",
     categories: {
       groceries: "食料品",
       pharmacy: "薬局",
@@ -534,13 +451,9 @@ const translations = {
       clothing: "衣類",
       frozen: "冷凍食品",
       dairy: "乳製品"
-    },
-    items: "アイテム",
-    total: "合計",
-    manualList: "手動リスト"
+    }
   },
   hu: {
-    title: "Kézi lista létrehozása",
     selectCategory: "Válasszon kategóriát",
     addCustomCategory: "Egyéni",
     categoryName: "Kategória neve",
@@ -563,10 +476,6 @@ const translations = {
     isStore: "Bolti termék",
     add: "Hozzáadás",
     cancel: "Mégse",
-    saveList: "Lista mentése",
-    listName: "Lista neve",
-    emptyList: "A lista üres",
-    emptyListSubtitle: "Válasszon kategóriát és adjon hozzá elemeket",
     categories: {
       groceries: "Élelmiszer",
       pharmacy: "Gyógyszertár",
@@ -580,13 +489,9 @@ const translations = {
       clothing: "Ruházat",
       frozen: "Fagyasztott",
       dairy: "Tejtermékek"
-    },
-    items: "elemek",
-    total: "Összesen",
-    manualList: "Kézi lista"
+    }
   },
   hi: {
-    title: "मैनुअल सूची बनाएं",
     selectCategory: "एक श्रेणी चुनें",
     addCustomCategory: "कस्टम",
     categoryName: "श्रेणी का नाम",
@@ -609,10 +514,6 @@ const translations = {
     isStore: "स्टोर आइटम",
     add: "जोड़ें",
     cancel: "रद्द करें",
-    saveList: "सूची सहेजें",
-    listName: "सूची का नाम",
-    emptyList: "आपकी सूची खाली है",
-    emptyListSubtitle: "एक श्रेणी चुनें और आइटम जोड़ें",
     categories: {
       groceries: "किराने का सामान",
       pharmacy: "फार्मेसी",
@@ -626,13 +527,9 @@ const translations = {
       clothing: "कपड़े",
       frozen: "जमे हुए",
       dairy: "डेयरी उत्पाद"
-    },
-    items: "आइटम",
-    total: "कुल",
-    manualList: "मैनुअल सूची"
+    }
   },
   nl: {
-    title: "Handmatige lijst maken",
     selectCategory: "Selecteer een categorie",
     addCustomCategory: "Aangepast",
     categoryName: "Categorienaam",
@@ -655,10 +552,6 @@ const translations = {
     isStore: "Winkelartikel",
     add: "Toevoegen",
     cancel: "Annuleren",
-    saveList: "Lijst opslaan",
-    listName: "Lijstnaam",
-    emptyList: "Uw lijst is leeg",
-    emptyListSubtitle: "Selecteer een categorie en voeg items toe om te beginnen",
     categories: {
       groceries: "Boodschappen",
       pharmacy: "Apotheek",
@@ -672,40 +565,29 @@ const translations = {
       clothing: "Kleding",
       frozen: "Diepvries",
       dairy: "Zuivelproducten"
-    },
-    items: "items",
-    total: "Totaal",
-    manualList: "Handmatige lijst"
+    }
   }
 }
 
-const HandwrittenListScreen = ({ route }) => {
-  const { triggerHaptic } = useHaptic()
-  const navigation = useNavigation()
-
-  // Get device language
-  const deviceLanguage = RNLocalize.getLocales()[0].languageCode
-  const t = translations[deviceLanguage] || translations.en
+const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
+  const t = translations[language] || translations.es
 
   // States
-  const [categories, setCategories] = useState([])
-  const [customCategories, setCustomCategories] = useState([])
+  const [categories, setCategories] = useState([...defaultCategories])
   const [selectedCategory, setSelectedCategory] = useState(null)
-  const [listItems, setListItems] = useState({})
   const [modalVisible, setModalVisible] = useState(false)
-  const [saveModalVisible, setSaveModalVisible] = useState(false)
   const [customCategoryModalVisible, setCustomCategoryModalVisible] = useState(false)
-  const [listName, setListName] = useState("")
   const [itemName, setItemName] = useState("")
   const [quantity, setQuantity] = useState("1")
-  const [unit, setUnit] = useState("units") // units, kg, g, l, ml
+  const [unit, setUnit] = useState("units")
   const [price, setPrice] = useState("")
   const [isStore, setIsStore] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState("")
   const [selectedIcon, setSelectedIcon] = useState(null)
   const [selectedColor, setSelectedColor] = useState(availableColors[0])
   const [showIconPicker, setShowIconPicker] = useState(false)
-  const [deleteMode, setDeleteMode] = useState(null) // ID de la categoría en modo eliminar
+  const [customCategories, setCustomCategories] = useState([])
+  const [deleteMode, setDeleteMode] = useState(null) // ID de la categoría que se está presionando
 
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current
@@ -713,55 +595,64 @@ const HandwrittenListScreen = ({ route }) => {
   const categoryAnimations = useRef(
     categories.map(() => new Animated.Value(0))
   ).current
-  const shakeAnimation = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
-    // Load custom categories on mount
-    loadCustomCategories()
+    console.log('=== AddItemModal useEffect ===')
+    console.log('AddItemModal visible prop:', visible)
+    if (visible) {
+      loadCustomCategories()
+      // Entrance animation
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          friction: 5,
+          useNativeDriver: true,
+        })
+      ]).start()
 
-    // Entrance animation
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        friction: 5,
-        useNativeDriver: true,
-      })
-    ]).start()
+      // Animate categories sequentially
+      const animations = categoryAnimations.map((anim, index) =>
+        Animated.timing(anim, {
+          toValue: 1,
+          duration: 400,
+          delay: index * 50,
+          useNativeDriver: true,
+        })
+      )
 
-    // Animate categories sequentially
-    const animations = categoryAnimations.map((anim, index) =>
-      Animated.timing(anim, {
-        toValue: 1,
-        duration: 400,
-        delay: index * 50,
-        useNativeDriver: true,
-      })
-    )
-
-    Animated.stagger(50, animations).start()
-  }, [])
+      Animated.stagger(50, animations).start()
+    } else {
+      // Reset everything when modal closes
+      setSelectedCategory(null)
+      setItemName("")
+      setQuantity("1")
+      setUnit("units")
+      setPrice("")
+      setIsStore(false)
+      setModalVisible(false)
+      setDeleteMode(null)
+    }
+  }, [visible])
 
   const loadCustomCategories = async () => {
     try {
-      const stored = await AsyncStorage.getItem('customCategoriesHandwritten')
+      const stored = await AsyncStorage.getItem('customCategoriesAddItem')
       if (stored) {
         const parsed = JSON.parse(stored)
         setCustomCategories(parsed)
-        // Ordenar: categorías personalizadas primero, luego las predeterminadas
         setCategories([...parsed, ...defaultCategories])
-      } else {
-        setCategories(defaultCategories)
       }
     } catch (error) {
       console.error('Error loading custom categories:', error)
-      setCategories(defaultCategories)
     }
   }
+
+  // Animation functions removed - no vibration needed
 
   const handleCategoryPress = (category) => {
     if (deleteMode) {
@@ -769,7 +660,6 @@ const HandwrittenListScreen = ({ route }) => {
       setDeleteMode(null)
       return
     }
-    triggerHaptic('light')
     setSelectedCategory(category)
     setModalVisible(true)
   }
@@ -784,54 +674,35 @@ const HandwrittenListScreen = ({ route }) => {
     } else {
       setDeleteMode(category.id)
     }
-    triggerHaptic('light')
   }
 
   const handleDeleteCategory = async (categoryId) => {
-    // Actualizar categorías personalizadas
     const updatedCustom = customCategories.filter(cat => cat.id !== categoryId)
     setCustomCategories(updatedCustom)
-
-    // Actualizar la lista combinada
     setCategories([...updatedCustom, ...defaultCategories])
 
     // Salir del modo eliminar después de eliminar
     setDeleteMode(null)
 
-    // También eliminar los items de esta categoría
-    setListItems(prev => {
-      const newItems = { ...prev }
-      delete newItems[categoryId]
-      return newItems
-    })
-
-    // Guardar en AsyncStorage
     try {
-      await AsyncStorage.setItem('customCategoriesHandwritten', JSON.stringify(updatedCustom))
+      await AsyncStorage.setItem('customCategoriesAddItem', JSON.stringify(updatedCustom))
     } catch (error) {
-      console.error('Error saving custom categories:', error)
+      console.error('Error deleting category:', error)
     }
-
-    triggerHaptic('success')
   }
 
   const handleAddItem = () => {
     if (!itemName.trim() || !selectedCategory) return
 
-    const newItem = {
-      id: Date.now().toString(),
-      name: itemName,
-      quantity: parseFloat(quantity) || 1,
-      unit: unit,
-      price: parseFloat(price) || 0,
-      isStore,
-      category: selectedCategory.id
-    }
+    // Format the item string
+    const categoryName = selectedCategory.isCustom ? selectedCategory.name : t.categories[selectedCategory.id]
+    const quantityText = unit === 'units' ? (quantity > 1 ? ` (x${quantity})` : '') : ` (${quantity}${getUnitAbbreviation(unit)})`
+    const priceText = price ? ` - $${parseFloat(price).toFixed(2)}` : ''
+    const storeText = isStore ? ' 🏪' : ''
 
-    setListItems(prev => ({
-      ...prev,
-      [selectedCategory.id]: [...(prev[selectedCategory.id] || []), newItem]
-    }))
+    const formattedItem = `${categoryName} - ${itemName}${quantityText}${priceText}${storeText}`
+
+    onAddItem(formattedItem)
 
     // Reset form
     setItemName("")
@@ -840,8 +711,17 @@ const HandwrittenListScreen = ({ route }) => {
     setPrice("")
     setIsStore(false)
     setModalVisible(false)
+  }
 
-    triggerHaptic('success')
+  const getUnitAbbreviation = (unit) => {
+    const abbr = {
+      units: '',
+      kg: 'kg',
+      g: 'g',
+      l: 'L',
+      ml: 'ml'
+    }
+    return abbr[unit] || ''
   }
 
   const handleAddCustomCategory = async () => {
@@ -859,106 +739,23 @@ const HandwrittenListScreen = ({ route }) => {
       isCustom: true
     }
 
-    // Actualizar categorías personalizadas
     const updatedCustom = [...customCategories, newCategory]
     setCustomCategories(updatedCustom)
-
-    // Actualizar la lista combinada: personalizadas primero, luego predeterminadas
     setCategories([...updatedCustom, ...defaultCategories])
 
-    // Guardar en AsyncStorage
     try {
-      await AsyncStorage.setItem('customCategoriesHandwritten', JSON.stringify(updatedCustom))
+      await AsyncStorage.setItem('customCategoriesAddItem', JSON.stringify(updatedCustom))
     } catch (error) {
-      console.error('Error saving custom categories:', error)
+      console.error('Error saving custom category:', error)
     }
 
     setCustomCategoryModalVisible(false)
     setNewCategoryName("")
     setSelectedIcon(null)
     setSelectedColor(availableColors[0])
-    triggerHaptic('success')
-  }
-
-  const removeItem = (categoryId, itemId) => {
-    triggerHaptic('light')
-    setListItems(prev => ({
-      ...prev,
-      [categoryId]: prev[categoryId].filter(item => item.id !== itemId)
-    }))
-  }
-
-  const getTotalItems = () => {
-    return Object.values(listItems).reduce((total, items) => total + items.length, 0)
-  }
-
-  const getTotalPrice = () => {
-    return Object.values(listItems).reduce((total, items) => {
-      return total + items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-    }, 0)
-  }
-
-  const saveList = async () => {
-    if (getTotalItems() === 0) {
-      Alert.alert("", t.emptyList)
-      return
-    }
-
-    const defaultName = `${t.manualList} ${new Date().toLocaleDateString()}`
-    setListName(defaultName)
-    setSaveModalVisible(true)
-  }
-
-  const confirmSave = async () => {
-    try {
-      const listData = {
-        id: Date.now().toString(),
-        name: listName || `${t.manualList} ${new Date().toLocaleDateString()}`,
-        items: listItems,
-        totalItems: getTotalItems(),
-        totalPrice: getTotalPrice(),
-        createdAt: new Date().toISOString(),
-        type: 'manual'
-      }
-
-      // Get existing history
-      const existingHistory = await AsyncStorage.getItem("@shopping_history")
-      let history = existingHistory ? JSON.parse(existingHistory) : []
-
-      // Convert to flat list format for compatibility
-      const flatList = Object.entries(listItems).flatMap(([, items]) =>
-        items.map(item => `${item.name} (${item.quantity})`)
-      )
-
-      // Add to history in compatible format
-      history.push({
-        list: flatList,
-        name: listData.name,
-        date: listData.createdAt,
-        metadata: listData
-      })
-
-      await AsyncStorage.setItem("@shopping_history", JSON.stringify(history))
-      await AsyncStorage.setItem("@show_newest_list", "true")
-
-      setSaveModalVisible(false)
-
-      // Navigate to History
-      if (route.params?.onNavigateToHistory) {
-        route.params.onNavigateToHistory()
-      } else {
-        navigation.navigate('History')
-      }
-
-      triggerHaptic('success')
-    } catch (error) {
-      console.error("Error saving list:", error)
-      Alert.alert("Error", "Could not save list")
-    }
   }
 
   const renderCategory = ({ item, index }) => {
-    const itemCount = listItems[item.id]?.length || 0
     const displayName = item.isCustom ? item.name : t.categories[item.id]
     const showDeleteButton = deleteMode === item.id
 
@@ -981,7 +778,10 @@ const HandwrittenListScreen = ({ route }) => {
         ]}
       >
         <TouchableOpacity
-          style={[styles.categoryButton, { backgroundColor: item.gradient[0] }]}
+          style={[
+            styles.categoryButton,
+            { backgroundColor: item.gradient[0] }
+          ]}
           onPress={() => handleCategoryPress(item)}
           onLongPress={() => handleCategoryLongPress(item)}
           activeOpacity={0.8}
@@ -998,19 +798,16 @@ const HandwrittenListScreen = ({ route }) => {
             )}
             <View style={styles.categoryIconContainer}>
               {item.icon ? (
-                <Ionicons name={item.icon} size={32} color="white" />
+                <Ionicons name={item.icon} size={30} color="white" />
               ) : (
                 <Text style={styles.categoryInitials}>
                   {displayName.substring(0, 2).toUpperCase()}
                 </Text>
               )}
             </View>
-            <Text style={styles.categoryName} numberOfLines={2}>{displayName}</Text>
-            {itemCount > 0 && (
-              <View style={styles.categoryBadge}>
-                <Text style={styles.categoryBadgeText}>{itemCount}</Text>
-              </View>
-            )}
+            <Text style={styles.categoryName} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.8}>
+              {displayName}
+            </Text>
           </View>
         </TouchableOpacity>
       </Animated.View>
@@ -1032,129 +829,58 @@ const HandwrittenListScreen = ({ route }) => {
       >
         <View style={styles.categoryGradient}>
           <View style={[styles.categoryIconContainer, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
-            <Ionicons name="add" size={32} color="white" />
+            <Ionicons name="add" size={30} color="white" />
           </View>
-          <Text style={[styles.categoryName, { fontSize: 11 }]}>{t.addCustomCategory}</Text>
+          <Text style={[styles.categoryName]} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.8}>
+            {t.addCustomCategory}
+          </Text>
         </View>
       </TouchableOpacity>
     </View>
   )
 
-  const getUnitDisplay = (quantity, unit) => {
-    const unitAbbreviations = {
-      units: '',
-      kg: 'kg',
-      g: 'g',
-      l: 'L',
-      ml: 'ml'
-    }
-    const unitText = unitAbbreviations[unit] || ''
-    return unit === 'units' ? `x${quantity}` : `${quantity}${unitText}`
-  }
-
-  const renderListItem = (item, categoryId) => (
-    <View key={item.id} style={styles.listItem}>
-      <View style={styles.listItemContent}>
-        <View style={styles.itemInfo}>
-          <Text style={styles.itemName}>{item.name}</Text>
-          <View style={styles.itemDetails}>
-            <Text style={styles.itemQuantity}>
-              {getUnitDisplay(item.quantity, item.unit)}
-            </Text>
-            {item.price > 0 && (
-              <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
-            )}
-            {item.isStore && (
-              <View style={styles.storeBadge}>
-                <Ionicons name="business" size={12} color="#ff9500" />
-              </View>
-            )}
-          </View>
-        </View>
-        <TouchableOpacity
-          onPress={() => removeItem(categoryId, item.id)}
-          style={styles.removeButton}
-        >
-          <Ionicons name="close-circle" size={24} color="#ef4444" />
-        </TouchableOpacity>
-      </View>
-    </View>
-  )
-
   return (
-    <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
-        {/* Header */}
-        <View style={styles.header}>
-
-          <Text style={styles.title}>{t.selectCategory}</Text>
-        </View>
-
-        {/* Categories Grid */}
-        <FlatList
-          data={[{ id: 'add_custom', isAddButton: true }, ...categories]}
-          renderItem={({ item, index }) =>
-            item.isAddButton ? <AddCategoryButton key="add_custom" /> : renderCategory({ item, index: index - 1 })
-          }
-          keyExtractor={item => item.id}
-          numColumns={3}
-          contentContainerStyle={styles.categoriesGrid}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={
-            getTotalItems() > 0 && (
-              <View style={styles.summaryCard}>
-                <View style={styles.summaryRow}>
-                  <Text style={styles.summaryLabel}>
-                    {getTotalItems()} {t.items}
-                  </Text>
-                  {getTotalPrice() > 0 && (
-                    <Text style={styles.summaryPrice}>
-                      {t.total}: ${getTotalPrice().toFixed(2)}
-                    </Text>
-                  )}
-                </View>
-              </View>
-            )
-          }
-          ListFooterComponent={
-            <View style={styles.listSection}>
-              {Object.entries(listItems).map(([categoryId, items]) => {
-                if (items.length === 0) return null
-                const category = categories.find(c => c.id === categoryId)
-
-                return (
-                  <View key={categoryId} style={styles.categorySection}>
-                    <View style={[styles.categorySectionHeader, { backgroundColor: category.gradient[0] + '20' }]}>
-                      <Ionicons name={category.icon} size={20} color={category.gradient[0]} />
-                      <Text style={[styles.categorySectionTitle, { color: category.gradient[0] }]}>
-                        {category.isCustom ? category.name : t.categories[categoryId]}
-                      </Text>
-                    </View>
-                    {items.map(item => renderListItem(item, categoryId))}
-                  </View>
-                )
-              })}
-            </View>
-          }
-        />
-
-        {/* Empty State */}
-        {getTotalItems() === 0 && (
-          <View style={styles.emptyState}>
-            <Ionicons name="list-outline" size={64} color="#cbd5e1" />
-            <Text style={styles.emptyTitle}>{t.emptyList}</Text>
-            <Text style={styles.emptySubtitle}>{t.emptyListSubtitle}</Text>
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <Animated.View
+          style={[
+            styles.modalContent,
+            {
+              opacity: fadeAnim,
+              transform: [{
+                translateY: fadeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [50, 0],
+                }),
+              }],
+            },
+          ]}
+        >
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>{t.selectCategory}</Text>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <Ionicons name="close" size={28} color="#333" />
+            </TouchableOpacity>
           </View>
-        )}
 
-        {/* Save Button */}
-        {getTotalItems() > 0 && (
-          <TouchableOpacity style={styles.saveButton} onPress={saveList}>
-            <Ionicons name="save-outline" size={24} color="white" />
-            <Text style={styles.saveButtonText}>{t.saveList}</Text>
-          </TouchableOpacity>
-        )}
-      </Animated.View>
+          <FlatList
+            data={[{ id: 'add_custom', isAddButton: true }, ...categories]}
+            renderItem={({ item, index }) =>
+              item.isAddButton ? <AddCategoryButton key="add_custom" /> : renderCategory({ item, index })
+            }
+            keyExtractor={item => item.id}
+            numColumns={2}
+            contentContainerStyle={styles.categoriesGrid}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={styles.columnWrapper}
+          />
+        </Animated.View>
+      </View>
 
       {/* Custom Category Modal */}
       <Modal
@@ -1168,8 +894,8 @@ const HandwrittenListScreen = ({ route }) => {
           style={styles.modalOverlay}
         >
           <View style={styles.customCategoryModal}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{t.addCustomCategory}</Text>
+            <View style={styles.modalHeaderCustom}>
+              <Text style={styles.modalTitleCustom}>{t.addCustomCategory}</Text>
               <TouchableOpacity onPress={() => setCustomCategoryModalVisible(false)}>
                 <Ionicons name="close" size={24} color="#6b7280" />
               </TouchableOpacity>
@@ -1191,7 +917,7 @@ const HandwrittenListScreen = ({ route }) => {
                   style={[
                     styles.colorOption,
                     { backgroundColor: color.gradient[0] },
-                    selectedColor.color === color.color && styles.selectedColor
+                    selectedColor.color === color.color && styles.selectedColorOption
                   ]}
                   onPress={() => setSelectedColor(color)}
                 >
@@ -1284,8 +1010,8 @@ const HandwrittenListScreen = ({ route }) => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.modalOverlay}
         >
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
+          <View style={styles.itemModalContent}>
+            <View style={styles.modalHeaderItem}>
               <View style={styles.modalHeaderIcon}>
                 {selectedCategory && (
                   selectedCategory.icon ? (
@@ -1301,7 +1027,7 @@ const HandwrittenListScreen = ({ route }) => {
                   )
                 )}
               </View>
-              <Text style={styles.modalTitle}>{t.addItem}</Text>
+              <Text style={styles.modalTitleItem}>{t.addItem}</Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
                 <Ionicons name="close" size={24} color="#6b7280" />
               </TouchableOpacity>
@@ -1414,85 +1140,60 @@ const HandwrittenListScreen = ({ route }) => {
           </View>
         </KeyboardAvoidingView>
       </Modal>
-
-      {/* Save List Modal */}
-      <Modal
-        visible={saveModalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setSaveModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.saveModalContent}>
-            <Text style={styles.saveModalTitle}>{t.listName}</Text>
-            <TextInput
-              style={styles.saveInput}
-              value={listName}
-              onChangeText={setListName}
-              placeholder={t.manualList}
-              autoFocus
-              selectTextOnFocus
-            />
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => setSaveModalVisible(false)}
-              >
-                <Text style={styles.cancelButtonText}>{t.cancel}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.modalButton, styles.confirmButton]}
-                onPress={confirmSave}
-              >
-                <Text style={styles.addButtonText}>{t.saveList}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
-  )
-}
+    </Modal>
+  );
+};
 
 const styles = StyleSheet.create({
-  container: {
+  modalOverlay: {
     flex: 1,
-    backgroundColor: "#e7ead2",
+
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  content: {
-    flex: 1,
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    width: '90%',
+    maxHeight: '80%',
+    padding: 20,
+    elevation: 10, // Añadir elevación en Android
+    shadowColor: '#000', // Añadir sombra en iOS
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
   },
-  title: {
+  modalTitle: {
     fontSize: 21,
     fontWeight: '500',
     color: '#1e293b9a',
-    marginBottom: 40,
-    marginTop: -20,
-
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#64748b',
+  closeButton: {
+    padding: 5,
   },
   categoriesGrid: {
-    paddingHorizontal: 10,
-    paddingBottom: 100,
+    paddingBottom: 20,
+    paddingHorizontal: 5,
+  },
+  columnWrapper: {
+    justifyContent: 'space-between',
+    paddingHorizontal: 5,
   },
   categoryCard: {
-    flex: 1,
-    margin: 8,
-    height: 120,
+    width: '47%',
+    aspectRatio: 1.1,
+    marginVertical: 8,
   },
   categoryButton: {
     flex: 1,
     borderRadius: 20,
-    padding: 16,
+    padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
@@ -1514,13 +1215,16 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   categoryName: {
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: '600',
     color: 'white',
     textAlign: 'center',
+    paddingHorizontal: 5,
+    lineHeight: 16,
+    minHeight: 32,
   },
   categoryInitials: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
   },
@@ -1529,20 +1233,6 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.5)',
-  },
-  categoryBadge: {
-    position: 'absolute',
-    top: -8,
-    right: -8,
-    backgroundColor: '#ef4444',
-    borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-  },
-  categoryBadgeText: {
-    color: 'white',
-    fontSize: 12,
-    fontWeight: 'bold',
   },
   deleteButton: {
     position: 'absolute',
@@ -1563,178 +1253,23 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 5,
   },
-  summaryCard: {
-    backgroundColor: 'white',
-    borderRadius: 16,
-    padding: 16,
-    margin: 16,
-    marginBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  summaryLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#475569',
-  },
-  summaryPrice: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#10b981',
-  },
-  listSection: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-  },
-  categorySection: {
-    marginBottom: 20,
-  },
-  categorySectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  categorySectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 8,
-  },
-  listItem: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    marginBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  listItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-  },
-  itemInfo: {
-    flex: 1,
-  },
-  itemName: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#1e293b',
-    marginBottom: 4,
-  },
-  itemDetails: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  itemQuantity: {
-    fontSize: 14,
-    color: '#64748b',
-  },
-  itemPrice: {
-    fontSize: 14,
-    color: '#10b981',
-    fontWeight: '600',
-  },
-  storeBadge: {
-    backgroundColor: '#fff7ed',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 8,
-  },
-  removeButton: {
-    padding: 4,
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 40,
-    marginTop: -100,
-  },
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#475569',
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  emptySubtitle: {
-    fontSize: 16,
-    color: '#94a3b8',
-    textAlign: 'center',
-  },
-  saveButton: {
-    position: 'absolute',
-    bottom: 30,
-    right: 20,
-    backgroundColor: '#10b981',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    borderRadius: 28,
-    shadowColor: '#10b981',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 8,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 24,
-    padding: 24,
-  },
   customCategoryModal: {
     backgroundColor: 'white',
     borderRadius: 24,
     padding: 24,
     maxHeight: '80%',
+    width: '90%',
   },
-  modalHeader: {
+  modalHeaderCustom: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
   },
-  modalHeaderIcon: {
-    width: 40,
-    height: 40,
-    backgroundColor: '#f1f5f9',
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalTitle: {
+  modalTitleCustom: {
     fontSize: 20,
     fontWeight: '700',
     color: '#1e293b',
-    flex: 1,
-    marginLeft: 12,
   },
   input: {
     backgroundColor: '#f8fafc',
@@ -1766,7 +1301,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  selectedColor: {
+  selectedColorOption: {
     borderWidth: 3,
     borderColor: '#1e293b',
   },
@@ -1816,6 +1351,59 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#94a3b8',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  cancelButton: {
+    backgroundColor: '#f1f5f9',
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#64748b',
+  },
+  addButton: {
+    backgroundColor: '#10b981',
+  },
+  addButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'white',
+  },
+  itemModalContent: {
+    backgroundColor: 'white',
+    borderRadius: 24,
+    padding: 24,
+    width: '90%',
+  },
+  modalHeaderItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  modalHeaderIcon: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#f1f5f9',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalTitleItem: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1e293b',
+    flex: 1,
+    marginLeft: 12,
   },
   row: {
     flexDirection: 'row',
@@ -1894,56 +1482,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#475569',
   },
-  modalButtons: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  modalButton: {
-    flex: 1,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  cancelButton: {
-    backgroundColor: '#f1f5f9',
-  },
-  cancelButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#64748b',
-  },
-  addButton: {
-    backgroundColor: '#10b981',
-  },
-  confirmButton: {
-    backgroundColor: '#10b981',
-  },
-  addButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: 'white',
-  },
-  saveModalContent: {
-    backgroundColor: 'white',
-    borderRadius: 24,
-    padding: 24,
-  },
-  saveModalTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#1e293b',
-    marginBottom: 16,
-  },
-  saveInput: {
-    backgroundColor: '#f8fafc',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-  },
-})
+});
 
-export default HandwrittenListScreen
+export default AddItemModal;

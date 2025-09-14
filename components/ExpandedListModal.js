@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { useTheme } from '../ThemeContext'
 import * as RNLocalize from 'react-native-localize'
 import translationsHistorial from '../screens/translations/translationsHistorial'
+import AddItemModal from './AddItemModal'
 
 const ExpandedListModal = ({
   visible,
@@ -37,6 +38,7 @@ const ExpandedListModal = ({
   const [editingItemIndex, setEditingItemIndex] = useState(null)
   const [editingItemText, setEditingItemText] = useState("")
   const [listSwitcherVisible, setListSwitcherVisible] = useState(false)
+  const [showAddItemModal, setShowAddItemModal] = useState(false)
   const scrollViewRef = useRef(null)
   const progressAnimation = useRef(new Animated.Value(0)).current
 
@@ -93,14 +95,15 @@ const ExpandedListModal = ({
   }
 
   const handleAddNewItem = () => {
-    // Add a new empty item
+    // Show the new add item modal instead of adding empty items
+    setShowAddItemModal(true)
+  }
+
+  const handleAddItemFromModal = (item) => {
+    // Add the formatted item from the modal
     if (onAddItem) {
-      onAddItem()
+      onAddItem(item)
     }
-    // Set the new item (last index) in edit mode
-    const newItemIndex = listData?.list?.length || 0
-    setEditingItemIndex(newItemIndex)
-    setEditingItemText("")
     // Scroll to the bottom to show the new item
     setTimeout(() => {
       if (scrollViewRef.current) {
@@ -126,7 +129,7 @@ const ExpandedListModal = ({
   const styles = StyleSheet.create({
     expandedListModalContainer: {
       flex: 1,
-      backgroundColor: theme === 'dark' ? '#1a1a1a' : '#FFFFFF'
+      backgroundColor: "#e7ead2",
     },
     expandedModalHeader: {
       flexDirection: 'row',
@@ -276,7 +279,7 @@ const ExpandedListModal = ({
       padding: 20,
       borderTopWidth: 1,
       borderTopColor: theme === 'dark' ? '#374151' : '#e5e7eb',
-      backgroundColor: theme === 'dark' ? '#1f2937' : '#f8fafc',
+      backgroundColor: "#e7ead2",
       shadowColor: '#000',
       shadowOffset: { width: 0, height: -2 },
       shadowOpacity: 0.1,
@@ -784,6 +787,17 @@ const ExpandedListModal = ({
           </View>
         </TouchableOpacity>
       </Modal>
+
+      {/* Add Item Modal */}
+      <AddItemModal
+        visible={showAddItemModal}
+        onClose={() => setShowAddItemModal(false)}
+        onAddItem={(item) => {
+          handleAddItemFromModal(item)
+          setShowAddItemModal(false)
+        }}
+        language={deviceLanguage}
+      />
     </Modal>
   )
 }

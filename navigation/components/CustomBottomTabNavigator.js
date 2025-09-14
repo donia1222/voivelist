@@ -500,7 +500,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     {
       key: "Images",
       label: currentTranslations.imageList,
-      icon: "image",
+      icon: "cloud-upload",
       color: "#ff9500",
       screen: ImageListScreen,
     },
@@ -1075,7 +1075,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           </View>
           <Text
             style={{
-              fontSize: isSmallIPhone ? 16 : 18,
+              fontSize: isSmallIPhone ? 16 : 21,
               fontWeight: "bold",
               color: theme.text,
               flex: 1,
