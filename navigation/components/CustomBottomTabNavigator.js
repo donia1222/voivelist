@@ -713,12 +713,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       case "Images":
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen 
-              name="ImageListScreen" 
+            <Stack.Screen
+              name="ImageListScreen"
               component={ImageListScreen}
-              initialParams={{ 
+              initialParams={{
                 isSubscribed: isSubscribed,
-                onNavigateToSubscribe: () => setActiveTab("Subscribe")
+                onNavigateToSubscribe: () => setActiveTab("Subscribe"),
+                onNavigateToHistory: () => setActiveTab("History")
               }}
             />
           </Stack.Navigator>

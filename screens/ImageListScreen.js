@@ -820,15 +820,29 @@ const ImageListScreen = ({ route }) => {
       }
 
       const newDishName = generateGenericListName()
-      const newHistory = [...updatedLists, { list: shoppingList, name: newDishName }]
+      const newHistory = [...updatedLists, {
+        list: shoppingList,
+        name: newDishName,
+        date: new Date().toISOString()
+      }]
 
       await AsyncStorage.setItem("@shopping_history", JSON.stringify(newHistory))
       setHistory(newHistory)
       setShoppingList([])
+
+      console.log("🔥 Setting confirmationModalVisible to true")
       setConfirmationModalVisible(true)
 
+      // Set flag to show newest list in History
+      await AsyncStorage.setItem("@show_newest_list", "true")
+
       setTimeout(() => {
+        console.log("🔥 Closing modal after 2 seconds")
         setConfirmationModalVisible(false)
+        // Navigate to History if callback is available
+        if (route.params?.onNavigateToHistory) {
+          route.params.onNavigateToHistory()
+        }
       }, 2000)
     } catch (e) {
       console.error(alertText.errorSavingHistory, e)
@@ -895,13 +909,11 @@ const ImageListScreen = ({ route }) => {
 
   const ConfirmationModal = () => (
     <Modal visible={confirmationModalVisible} transparent={true} animationType="fade">
-      <View style={modernStyles.confirmationOverlay}>
-        <Animated.View style={[modernStyles.confirmationContainer, { transform: [{ scale: scaleAnim }] }]}>
-          <View style={modernStyles.successIconContainer}>
-            <Ionicons name="checkmark-circle" size={64} color="#10b981" />
-          </View>
-          <Text style={modernStyles.confirmationText}>{uiText.listSaved}</Text>
-        </Animated.View>
+      <View style={modernStyles.confirmationModalContainer}>
+        <View style={modernStyles.confirmationModalContent}>
+          <Image source={require("../assets/images/checked.png")} style={modernStyles.confirmationImage} />
+          <Text style={modernStyles.confirmationText}>{uiText.listSaved || "List Saved!"}</Text>
+        </View>
       </View>
     </Modal>
   )
@@ -1093,6 +1105,37 @@ const modernStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#e7ead2",
+  },
+
+  // Confirmation Modal
+  confirmationModalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  confirmationModalContent: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 30,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 15,
+  },
+  confirmationImage: {
+    width: 60,
+    height: 60,
+    marginBottom: 20,
+    tintColor: "#10b981",
+  },
+  confirmationText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#1f2937",
+    textAlign: "center",
   },
 
   // Loading States
