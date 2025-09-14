@@ -283,6 +283,32 @@ export const getModernStyles = () => {
       zIndex: 100,
     },
 
+    // Manual List Button
+    manualListButton: {
+      position: 'absolute',
+      top: -70,
+      right: 30,
+      width: 54,
+      height: 54,
+      borderRadius: 27,
+      backgroundColor: '#10b981',
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: '#10b981',
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.35,
+      shadowRadius: 14,
+      elevation: 10,
+      borderWidth: 2,
+      borderColor: 'rgba(255, 255, 255, 0.4)',
+      zIndex: 101,
+    },
+
+    manualListInner: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
     // Voice Info Styles
     voiceInfoContainer: {
       backgroundColor: 'rgba(255, 255, 255, 0.95)',

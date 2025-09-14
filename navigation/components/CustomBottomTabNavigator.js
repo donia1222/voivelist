@@ -36,6 +36,7 @@ import InformationScreen from "../../screens/InformationScreen"
 import CalendarPlannerScreen from "../../screens/CalendarPlannerScreen"
 import PriceCalculatorScreen from "../../screens/PriceCalculatorScreen"
 import ContactScreen from "../../screens/ContactScreen"
+import HandwrittenListScreen from "../../screens/HandwrittenListScreen"
 
 const Stack = createNativeStackNavigator()
 
@@ -65,6 +66,7 @@ const getMenuTexts = () => {
         "document-text-outline": "Lee nuestros términos",
         "settings-outline": "Configuraciones de la app",
         "calendar-outline": "Planifica tus compras semanales",
+        "create-outline": "Crea listas manualmente",
       }
     },
     en: {
@@ -85,6 +87,7 @@ const getMenuTexts = () => {
         "document-text-outline": "Read our terms",
         "settings-outline": "App settings",
         "calendar-outline": "Plan your weekly shopping",
+        "create-outline": "Create lists manually",
       }
     },
     de: {
@@ -733,7 +736,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               component={HomeScreen}
               initialParams={{
                 onNavigateToSubscribe: () => setActiveTab("Subscribe"),
-                onNavigateToHistory: () => setActiveTab("History")
+                onNavigateToHistory: () => setActiveTab("History"),
+                onNavigateToHandwrittenList: () => setActiveTab("HandwrittenList")
               }}
             />
           </Stack.Navigator>
@@ -786,6 +790,15 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   }
 
   const headerMenuItems = [
+    {
+      label: currentTranslations.manualList || "Manual List",
+      icon: "create-outline",
+      color: "#10b981",
+      onPress: () => {
+        setMenuModalVisible(false)
+        setActiveTab("HandwrittenList")
+      }
+    },
     ...(isSubscribed
       ? [
 
@@ -798,7 +811,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               setActiveTab("Subscription")
             }
           },
-          
+
         ]
       : [
           {
@@ -897,12 +910,24 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             <Stack.Screen name="ContactScreen" component={ContactScreen} />
           </Stack.Navigator>
         )
+      case "HandwrittenList":
+        return (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="HandwrittenListScreen"
+              component={HandwrittenListScreen}
+              initialParams={{
+                onNavigateToHistory: () => setActiveTab("History")
+              }}
+            />
+          </Stack.Navigator>
+        )
       default:
         return null
     }
   }
 
-  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact"].includes(activeTab)
+  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact", "HandwrittenList"].includes(activeTab)
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -1067,6 +1092,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
              activeTab === "Information" ? currentTranslations.information :
              activeTab === "Contact" ? currentTranslations.contactUs :
              activeTab === "PriceCalculator" ? (currentTranslations.priceCalculator || "Price Calculator") :
+             activeTab === "HandwrittenList" ? (currentTranslations.manualList || "Manual List") :
              "Voice Grocery"}
           </Text>
         </View>

@@ -1510,6 +1510,25 @@ const HomeScreen = ({ navigation }) => {
     } else {
       return (
         <View style={modernStyles.voiceButtonContainer}>
+          {/* Manual List Button */}
+          <TouchableOpacity
+            style={modernStyles.manualListButton}
+            onPress={() => {
+              triggerHaptic('light')
+              // Navigate to HandwrittenList through the tab navigator
+              if (route.params?.onNavigateToHandwrittenList) {
+                route.params.onNavigateToHandwrittenList()
+              } else {
+                // Fallback navigation if not using tab navigator
+                navigation.navigate('HandwrittenList')
+              }
+            }}
+            activeOpacity={0.8}
+          >
+            <View style={modernStyles.manualListInner}>
+              <Ionicons name="create-outline" size={26} color="white" />
+            </View>
+          </TouchableOpacity>
           {/* Informative text for non-subscribed users */}
           {isSubscribed === false && (
             <TouchableOpacity
