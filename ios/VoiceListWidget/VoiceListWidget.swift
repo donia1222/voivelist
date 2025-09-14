@@ -184,11 +184,13 @@ struct VoiceListWidgetEntryView : View {
 
 struct SmallWidgetView: View {
     var entry: Provider.Entry
-    
+    @AppStorage("widgetListIndex", store: UserDefaults(suiteName: "group.com.lwebch.VoiceList")) private var currentListIndex = 0
+
     var body: some View {
         if !entry.shoppingLists.isEmpty {
-            // Show shopping list
-            let currentList = entry.shoppingLists.first!
+            // Show shopping list with bounds checking
+            let safeIndex = min(max(0, currentListIndex), entry.shoppingLists.count - 1)
+            let currentList = entry.shoppingLists[safeIndex]
             ZStack {
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 5) {
@@ -207,7 +209,7 @@ struct SmallWidgetView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     ForEach(Array(currentList.items.prefix(4).enumerated()), id: \.offset) { index, item in
                         if #available(iOS 16.0, *) {
-                            Button(intent: ToggleItemIntent(listIndex: 0, itemIndex: index)) {
+                            Button(intent: ToggleItemIntent(listIndex: safeIndex, itemIndex: index)) {
                             HStack(spacing: 6) {
                                 Circle()
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
@@ -223,7 +225,7 @@ struct SmallWidgetView: View {
                         .buttonStyle(PlainButtonStyle())
                         } else {
                             // Fallback for iOS < 16 - opens app
-                            Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                            Link(destination: URL(string: "voicelist://toggle-item/\(safeIndex)/\(index)")!) {
                                 HStack(spacing: 6) {
                                     Circle()
                                         .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
@@ -347,35 +349,118 @@ struct SmallWidgetView: View {
 
 struct MediumWidgetView: View {
     var entry: Provider.Entry
-    
+    @AppStorage("widgetListIndex", store: UserDefaults(suiteName: "group.com.lwebch.VoiceList")) private var currentListIndex = 0
+
     var body: some View {
         if !entry.shoppingLists.isEmpty {
-            // Show shopping list
-            let currentList = entry.shoppingLists.first!
+            // Show shopping list with bounds checking
+            let safeIndex = min(max(0, currentListIndex), entry.shoppingLists.count - 1)
+            let currentList = entry.shoppingLists[safeIndex]
             ZStack {
                 VStack(spacing: 0) {
-                    // Header fijo arriba
-                    HStack {
+                    // Header with navigation arrows
+                    HStack(spacing: 6) {
+                        // Left navigation arrow (smaller for medium widget)
+                        if entry.shoppingLists.count > 1 {
+                            if #available(iOS 16.0, *) {
+                                Button(intent: NavigateListIntent(direction: "previous", currentIndex: safeIndex, totalLists: entry.shoppingLists.count)) {
+                                    Image(systemName: "chevron.left")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(safeIndex > 0 ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                        .frame(width: 24, height: 24)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(hex: "8B5CF6").opacity(safeIndex > 0 ? 0.1 : 0.05))
+                                        )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .disabled(safeIndex == 0)
+                            } else {
+                                Link(destination: URL(string: "voicelist://navigate-list/previous/\(safeIndex)/\(entry.shoppingLists.count)")!) {
+                                    Image(systemName: "chevron.left")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(safeIndex > 0 ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                        .frame(width: 24, height: 24)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(hex: "8B5CF6").opacity(safeIndex > 0 ? 0.1 : 0.05))
+                                        )
+                                }
+                            }
+                        }
+
+                        // Logo
                         if let ui = UIImage(named: "icono34") {
                             Image(uiImage: ui)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 32, height: 32)
+                                .frame(width: 28, height: 28)
                         }
-                        Text(currentList.name)
-                            .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(Color(hex: "1F2937"))
+
+                        // Title with dots indicator
+                        VStack(spacing: 1) {
+                            Text(currentList.name)
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundColor(Color(hex: "1F2937"))
+                                .lineLimit(1)
+
+                            // List indicator dots (smaller for medium)
+                            if entry.shoppingLists.count > 1 {
+                                HStack(spacing: 3) {
+                                    ForEach(0..<min(entry.shoppingLists.count, 5), id: \.self) { index in
+                                        Circle()
+                                            .fill(index == safeIndex ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                            .frame(width: 4, height: 4)
+                                    }
+                                    if entry.shoppingLists.count > 5 {
+                                        Text("+\(entry.shoppingLists.count - 5)")
+                                            .font(.system(size: 8))
+                                            .foregroundColor(Color(hex: "6B7280"))
+                                    }
+                                }
+                            }
+                        }
+
                         Spacer()
+
+                        // Right navigation arrow (smaller for medium widget)
+                        if entry.shoppingLists.count > 1 {
+                            if #available(iOS 16.0, *) {
+                                Button(intent: NavigateListIntent(direction: "next", currentIndex: safeIndex, totalLists: entry.shoppingLists.count)) {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(safeIndex < entry.shoppingLists.count - 1 ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                        .frame(width: 24, height: 24)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(hex: "8B5CF6").opacity(safeIndex < entry.shoppingLists.count - 1 ? 0.1 : 0.05))
+                                        )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .disabled(safeIndex == entry.shoppingLists.count - 1)
+                            } else {
+                                Link(destination: URL(string: "voicelist://navigate-list/next/\(safeIndex)/\(entry.shoppingLists.count)")!) {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(safeIndex < entry.shoppingLists.count - 1 ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                        .frame(width: 24, height: 24)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(hex: "8B5CF6").opacity(safeIndex < entry.shoppingLists.count - 1 ? 0.1 : 0.05))
+                                        )
+                                }
+                            }
+                        }
                     }
                 .padding(.horizontal, 16)
                 .padding(.top, 4)
-                .padding(.bottom, 12)
+                .padding(.bottom, 8)
                 
                 // Lista de items (scrollable content)
                 VStack(alignment: .leading, spacing: 3) {
                     ForEach(Array(currentList.items.prefix(4).enumerated()), id: \.offset) { index, item in
                         if #available(iOS 16.0, *) {
-                            Button(intent: ToggleItemIntent(listIndex: 0, itemIndex: index)) {
+                            Button(intent: ToggleItemIntent(listIndex: safeIndex, itemIndex: index)) {
                             HStack(spacing: 8) {
                                 Circle()
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
@@ -391,7 +476,7 @@ struct MediumWidgetView: View {
                         .buttonStyle(PlainButtonStyle())
                         } else {
                             // Fallback for iOS < 16 - opens app
-                            Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                            Link(destination: URL(string: "voicelist://toggle-item/\(safeIndex)/\(index)")!) {
                                 HStack(spacing: 6) {
                                     Circle()
                                         .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
@@ -407,7 +492,7 @@ struct MediumWidgetView: View {
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
-                    
+
                     if currentList.items.count > 4 {
                         Text("... and \(currentList.items.count - 4) more")
                             .font(.system(size: 11))
@@ -417,10 +502,10 @@ struct MediumWidgetView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, -2)
-                
+
                 Spacer()
             }
-            
+
             // History button in bottom right corner
             VStack {
                 Spacer()
@@ -551,34 +636,116 @@ struct MediumWidgetView: View {
 
 struct LargeWidgetView: View {
     var entry: Provider.Entry
-    
+    @AppStorage("widgetListIndex", store: UserDefaults(suiteName: "group.com.lwebch.VoiceList")) private var currentListIndex = 0
+
     var body: some View {
         if !entry.shoppingLists.isEmpty {
-            // Show shopping list
-            let currentList = entry.shoppingLists.first!
+            // Show shopping list with bounds checking
+            let safeIndex = min(max(0, currentListIndex), entry.shoppingLists.count - 1)
+            let currentList = entry.shoppingLists[safeIndex]
             ZStack {
                 VStack(spacing: 0) {
-                    // Header fijo arriba
-                    HStack(spacing: 5) {
-                    if let ui = UIImage(named: "icono34") {
-                        Image(uiImage: ui)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 35, height: 35)
+                    // Header with navigation arrows
+                    HStack(spacing: 8) {
+                        // Left navigation arrow
+                        if entry.shoppingLists.count > 1 {
+                            if #available(iOS 16.0, *) {
+                                Button(intent: NavigateListIntent(direction: "previous", currentIndex: safeIndex, totalLists: entry.shoppingLists.count)) {
+                                    Image(systemName: "chevron.left")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .foregroundColor(safeIndex > 0 ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                        .frame(width: 28, height: 28)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(hex: "8B5CF6").opacity(safeIndex > 0 ? 0.1 : 0.05))
+                                        )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .disabled(safeIndex == 0)
+                            } else {
+                                Link(destination: URL(string: "voicelist://navigate-list/previous/\(safeIndex)/\(entry.shoppingLists.count)")!) {
+                                    Image(systemName: "chevron.left")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .foregroundColor(safeIndex > 0 ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                        .frame(width: 28, height: 28)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(hex: "8B5CF6").opacity(safeIndex > 0 ? 0.1 : 0.05))
+                                        )
+                                }
+                            }
+                        }
+
+                        // Logo and title
+                        if let ui = UIImage(named: "icono34") {
+                            Image(uiImage: ui)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 35, height: 35)
+                        }
+
+                        VStack(spacing: 2) {
+                            Text(currentList.name)
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(Color(hex: "1F2937"))
+                                .lineLimit(1)
+
+                            // List indicator dots
+                            if entry.shoppingLists.count > 1 {
+                                HStack(spacing: 4) {
+                                    ForEach(0..<min(entry.shoppingLists.count, 5), id: \.self) { index in
+                                        Circle()
+                                            .fill(index == safeIndex ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                            .frame(width: 6, height: 6)
+                                    }
+                                    if entry.shoppingLists.count > 5 {
+                                        Text("+\(entry.shoppingLists.count - 5)")
+                                            .font(.system(size: 10))
+                                            .foregroundColor(Color(hex: "6B7280"))
+                                    }
+                                }
+                            }
+                        }
+
+                        Spacer()
+
+                        // Right navigation arrow
+                        if entry.shoppingLists.count > 1 {
+                            if #available(iOS 16.0, *) {
+                                Button(intent: NavigateListIntent(direction: "next", currentIndex: safeIndex, totalLists: entry.shoppingLists.count)) {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .foregroundColor(safeIndex < entry.shoppingLists.count - 1 ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                        .frame(width: 28, height: 28)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(hex: "8B5CF6").opacity(safeIndex < entry.shoppingLists.count - 1 ? 0.1 : 0.05))
+                                        )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .disabled(safeIndex == entry.shoppingLists.count - 1)
+                            } else {
+                                Link(destination: URL(string: "voicelist://navigate-list/next/\(safeIndex)/\(entry.shoppingLists.count)")!) {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .foregroundColor(safeIndex < entry.shoppingLists.count - 1 ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                        .frame(width: 28, height: 28)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(hex: "8B5CF6").opacity(safeIndex < entry.shoppingLists.count - 1 ? 0.1 : 0.05))
+                                        )
+                                }
+                            }
+                        }
                     }
-                    Text(currentList.name)
-                        .font(.system(size: 22, weight: .bold))
-                        .foregroundColor(Color(hex: "1F2937"))
-                    Spacer()
-                }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 6)
                 
                 // Lista de items (scrollable content)
                 VStack(alignment: .leading, spacing: 4) {
-                    ForEach(Array(currentList.items.prefix(12).enumerated()), id: \.offset) { index, item in
+                    ForEach(Array(currentList.items.prefix(10).enumerated()), id: \.offset) { index, item in
                         if #available(iOS 16.0, *) {
-                            Button(intent: ToggleItemIntent(listIndex: 0, itemIndex: index)) {
+                            Button(intent: ToggleItemIntent(listIndex: safeIndex, itemIndex: index)) {
                             HStack(spacing: 10) {
                                 Circle()
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
@@ -594,7 +761,7 @@ struct LargeWidgetView: View {
                         .buttonStyle(PlainButtonStyle())
                         } else {
                             // Fallback for iOS < 16 - opens app
-                            Link(destination: URL(string: "voicelist://toggle-item/0/\(index)")!) {
+                            Link(destination: URL(string: "voicelist://toggle-item/\(safeIndex)/\(index)")!) {
                                 HStack(spacing: 6) {
                                     Circle()
                                         .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
@@ -610,7 +777,7 @@ struct LargeWidgetView: View {
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
-                    
+
                     if currentList.items.count > 10 {
                         Text("... and \(currentList.items.count - 10) more")
                             .font(.system(size: 12))
@@ -941,30 +1108,86 @@ struct ToggleItemIntent: AppIntent {
     static var title: LocalizedStringResource = "Toggle Item"
     static var description = IntentDescription("Toggle item completion in widget")
     static var openAppWhenRun: Bool = false // KEY: This prevents opening the app
-    
+
     @Parameter(title: "List Index")
     var listIndex: Int
-    
-    @Parameter(title: "Item Index") 
+
+    @Parameter(title: "Item Index")
     var itemIndex: Int
-    
+
     static var parameterSummary: some ParameterSummary {
         Summary("Toggle item \(\.$itemIndex)")
     }
-    
+
     init() {
         self.listIndex = 0
         self.itemIndex = 0
     }
-    
+
     init(listIndex: Int, itemIndex: Int) {
         self.listIndex = listIndex
         self.itemIndex = itemIndex
     }
-    
+
     func perform() async throws -> some IntentResult {
         print("🎯 DEBUG: ToggleItemIntent.perform() - List: \(listIndex), Item: \(itemIndex)")
         toggleItemInWidget(listIndex: listIndex, itemIndex: itemIndex)
+        return .result()
+    }
+}
+
+@available(iOS 16.0, *)
+struct NavigateListIntent: AppIntent {
+    static var title: LocalizedStringResource = "Navigate List"
+    static var description = IntentDescription("Navigate between shopping lists in widget")
+    static var openAppWhenRun: Bool = false // Prevents opening the app
+
+    @Parameter(title: "Direction")
+    var direction: String
+
+    @Parameter(title: "Current Index")
+    var currentIndex: Int
+
+    @Parameter(title: "Total Lists")
+    var totalLists: Int
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Navigate \(\.$direction)")
+    }
+
+    init() {
+        self.direction = "next"
+        self.currentIndex = 0
+        self.totalLists = 1
+    }
+
+    init(direction: String, currentIndex: Int, totalLists: Int) {
+        self.direction = direction
+        self.currentIndex = currentIndex
+        self.totalLists = totalLists
+    }
+
+    func perform() async throws -> some IntentResult {
+        print("🎯 DEBUG: NavigateListIntent.perform() - Direction: \(direction), Current: \(currentIndex), Total: \(totalLists)")
+
+        let sharedDefaults = UserDefaults(suiteName: "group.com.lwebch.VoiceList")
+        var newIndex = currentIndex
+
+        if direction == "previous" && currentIndex > 0 {
+            newIndex = currentIndex - 1
+        } else if direction == "next" && currentIndex < totalLists - 1 {
+            newIndex = currentIndex + 1
+        }
+
+        // Save the new index to UserDefaults
+        sharedDefaults?.set(newIndex, forKey: "widgetListIndex")
+        sharedDefaults?.synchronize()
+
+        print("✅ DEBUG: NavigateListIntent - Updated index from \(currentIndex) to \(newIndex)")
+
+        // Reload widget timeline to show the new list
+        WidgetCenter.shared.reloadAllTimelines()
+
         return .result()
     }
 }

@@ -243,12 +243,21 @@ const HistoryScreen = ({ navigation }) => {
 
   // Listen for app state changes (foreground/background)
   useEffect(() => {
-    const handleAppStateChange = (nextAppState) => {
+    const handleAppStateChange = async (nextAppState) => {
       console.log('🔄 App state changed to:', nextAppState)
       if (nextAppState === 'active') {
         // App came to foreground, sync widget changes
         console.log('📱 App came to foreground, syncing widget changes...')
         syncWidgetChanges()
+      } else if (nextAppState === 'background' || nextAppState === 'inactive') {
+        // App going to background, ensure widget is updated with latest data
+        console.log('📤 App going to background, updating widget with latest data...')
+        try {
+          await WidgetService.updateWidgetShoppingLists(history, completedItems)
+          console.log('✅ Widget updated before backgrounding')
+        } catch (error) {
+          console.error('Error updating widget on background:', error)
+        }
       }
     }
 
@@ -691,10 +700,21 @@ const HistoryScreen = ({ navigation }) => {
         // Reverse to show newest lists first (most recent at index 0)
         const reversedHistory = parsedHistory.reverse()
         setHistory(reversedHistory)
-        
-        // Update widget with shopping lists
-        console.log('Updating widget with history:', reversedHistory.length, 'lists')
-        await WidgetService.updateWidgetShoppingLists(reversedHistory, completedItems)
+
+        // Load completed items before updating widget
+        let loadedCompletedItems = {}
+        try {
+          const savedCompletedItems = await AsyncStorage.getItem("@completed_items")
+          if (savedCompletedItems !== null) {
+            loadedCompletedItems = JSON.parse(savedCompletedItems)
+          }
+        } catch (e) {
+          console.error("Error loading completed items for widget: ", e)
+        }
+
+        // Update widget with shopping lists and completed items
+        console.log('Updating widget with history:', reversedHistory.length, 'lists and completed items')
+        await WidgetService.updateWidgetShoppingLists(reversedHistory, loadedCompletedItems)
         console.log('Widget update completed')
       }
     } catch (e) {
@@ -1178,8 +1198,19 @@ const HistoryScreen = ({ navigation }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
       console.log('📱 HistoryScreen focused - loading data...')
-      loadHistory()
-      loadCompletedItems()
+
+      // Load history and completed items first
+      await loadHistory()
+      await loadCompletedItems()
+
+      // Force widget update with fresh data after both are loaded
+      setTimeout(async () => {
+        console.log('🔄 Forcing widget update after screen focus')
+        if (history.length > 0) {
+          await WidgetService.updateWidgetShoppingLists(history, completedItems)
+        }
+      }, 500)
+
       loadReminders()
       loadFavorites("@favorites1", setFavorites1)
       loadFavorites("@favorites2", setFavorites2)

@@ -1373,8 +1373,19 @@ const HomeScreen = ({ navigation }) => {
       await AsyncStorage.setItem("@shopping_history", JSON.stringify(newHistory))
       setHistory(newHistory)
 
+      // Load existing completed items to pass to widget
+      let existingCompletedItems = {}
+      try {
+        const savedCompletedItems = await AsyncStorage.getItem("@completed_items")
+        if (savedCompletedItems !== null) {
+          existingCompletedItems = JSON.parse(savedCompletedItems)
+        }
+      } catch (e) {
+        console.error("Error loading completed items for widget: ", e)
+      }
+
       // Update widget with new list immediately
-      await WidgetService.updateWidgetShoppingLists(newHistory.reverse(), {})
+      await WidgetService.updateWidgetShoppingLists(newHistory.reverse(), existingCompletedItems)
 
       // Small delay to ensure widget updates in real-time
       await new Promise(resolve => setTimeout(resolve, 100))
