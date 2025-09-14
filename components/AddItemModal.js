@@ -760,20 +760,10 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
     const showDeleteButton = deleteMode === item.id
 
     return (
-      <Animated.View
+      <View
         style={[
           styles.categoryCard,
           {
-            opacity: categoryAnimations[index] || 1,
-            transform: [
-              {
-                translateY: categoryAnimations[index]?.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [30, 0]
-                }) || 0
-              },
-              { scale: scaleAnim }
-            ]
           }
         ]}
       >
@@ -810,7 +800,7 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
             </Text>
           </View>
         </TouchableOpacity>
-      </Animated.View>
+      </View>
     )
   }
 
@@ -847,18 +837,10 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
       onRequestClose={onClose}
     >
       <View style={styles.modalOverlay}>
-        <Animated.View
+        <View
           style={[
             styles.modalContent,
-            {
-              opacity: fadeAnim,
-              transform: [{
-                translateY: fadeAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [50, 0],
-                }),
-              }],
-            },
+       
           ]}
         >
           <View style={styles.modalHeader}>
@@ -879,7 +861,7 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={styles.columnWrapper}
           />
-        </Animated.View>
+        </View>
       </View>
 
       {/* Custom Category Modal */}

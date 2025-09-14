@@ -1138,14 +1138,6 @@ const HandwrittenListScreen = ({ route }) => {
           }
         />
 
-        {/* Empty State */}
-        {getTotalItems() === 0 && (
-          <View style={styles.emptyState}>
-            <Ionicons name="list-outline" size={64} color="#cbd5e1" />
-            <Text style={styles.emptyTitle}>{t.emptyList}</Text>
-            <Text style={styles.emptySubtitle}>{t.emptyListSubtitle}</Text>
-          </View>
-        )}
 
         {/* Save Button */}
         {getTotalItems() > 0 && (
