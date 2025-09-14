@@ -344,6 +344,10 @@ const uiTexts = {
     uploadImageDescription: "Take a photo or select an image of your shopping list to analyze it automatically",
     saveList: "Save List",
     listSaved: "List Saved!",
+    listName: "List Name",
+    enterListName: "Enter list name",
+    save: "Save",
+    cancel: "Cancel",
     selectCountry: "Select Country",
     cityNamePlaceholder: "Enter city or country name",
     viewCost: "View cost in",
@@ -359,6 +363,10 @@ const uiTexts = {
       "Toma una foto o selecciona una imagen de tu lista de compras para analizarla automáticamente",
     saveList: "Guardar Lista",
     listSaved: "¡Lista Guardada!",
+    listName: "Nombre de Lista",
+    enterListName: "Ingrese nombre de lista",
+    save: "Guardar",
+    cancel: "Cancelar",
     selectCountry: "Seleccionar País",
     cityNamePlaceholder: "Ingresa el nombre de la ciudad o país",
     viewCost: "Ver costo en",
@@ -421,6 +429,8 @@ const ImageListScreen = ({ route }) => {
   const [isSubscribed, setIsSubscribed] = useState(subscriptionFromNav || false)
   const [images, setImages] = useState([])
   const [uploadingImage, setUploadingImage] = useState(null)
+  const [nameModalVisible, setNameModalVisible] = useState(false)
+  const [listName, setListName] = useState("")
 
   // Animations
   const pulseAnim = useRef(new Animated.Value(1)).current
@@ -811,6 +821,13 @@ const ImageListScreen = ({ route }) => {
   const saveToHistory = async () => {
     if (shoppingList.length === 0) return
 
+    // Generate default name and show name modal
+    const defaultName = generateGenericListName()
+    setListName(defaultName)
+    setNameModalVisible(true)
+  }
+
+  const confirmSaveWithName = async () => {
     try {
       const existingLists = await AsyncStorage.getItem("@shopping_history")
       let updatedLists = []
@@ -819,16 +836,16 @@ const ImageListScreen = ({ route }) => {
         updatedLists = JSON.parse(existingLists)
       }
 
-      const newDishName = generateGenericListName()
       const newHistory = [...updatedLists, {
         list: shoppingList,
-        name: newDishName,
+        name: listName || generateGenericListName(),
         date: new Date().toISOString()
       }]
 
       await AsyncStorage.setItem("@shopping_history", JSON.stringify(newHistory))
       setHistory(newHistory)
       setShoppingList([])
+      setNameModalVisible(false)
 
       console.log("🔥 Setting confirmationModalVisible to true")
       setConfirmationModalVisible(true)
@@ -1055,6 +1072,69 @@ const ImageListScreen = ({ route }) => {
       {/* Modals */}
       {renderImageModal()}
       <ConfirmationModal />
+
+      {/* Name Modal */}
+      <Modal
+        visible={nameModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setNameModalVisible(false)}
+      >
+        <View style={modernStyles.modalOverlay}>
+          <View style={modernStyles.countryModalContainer}>
+            <View style={modernStyles.modalHeader}>
+              <Text style={modernStyles.countryModalTitle}>
+                {uiText.listName || "List Name"}
+              </Text>
+              <Text style={modernStyles.countryModalSubtitle}>
+                {uiText.enterListName || "Enter list name"}
+              </Text>
+            </View>
+
+            <TextInput
+              style={modernStyles.modalInput}
+              value={listName}
+              onChangeText={setListName}
+              placeholder={uiText.imageListPrefix || "Image List"}
+              placeholderTextColor="#b8b8b8ab"
+              autoFocus
+              selectTextOnFocus
+            />
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
+              <TouchableOpacity
+                style={[modernStyles.modalButton, {
+                  flex: 1,
+                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(239, 68, 68, 0.3)'
+                }]}
+                onPress={() => setNameModalVisible(false)}
+              >
+                <Ionicons name="close" size={20} color="#ef4444" style={{ marginRight: 8 }} />
+                <Text style={[modernStyles.modalButtonText, { color: '#ef4444' }]}>
+                  {uiText.cancel || "Cancel"}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[modernStyles.modalButton, {
+                  flex: 1,
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(16, 185, 129, 0.3)'
+                }]}
+                onPress={confirmSaveWithName}
+              >
+                <Ionicons name="checkmark" size={20} color="#10b981" style={{ marginRight: 8 }} />
+                <Text style={[modernStyles.modalButtonText, { color: '#10b981' }]}>
+                  {uiText.save || "Save"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* Country Modal */}
       <Modal
@@ -1542,11 +1622,19 @@ alignSelf: 'center',
     marginRight: 16,
   },
 
+  modalButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    marginTop: 10,
+  },
+
   modalButtonText: {
-    color: "#ff9500",
     fontSize: 16,
     fontWeight: "700",
-    flex: 1,
   },
 
   // Confirmation Modal

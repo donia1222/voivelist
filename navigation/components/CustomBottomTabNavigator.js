@@ -11,6 +11,7 @@ import {
   Easing,
   Alert,
   Image,
+  TextInput,
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
@@ -300,7 +301,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const [isEulaModalVisible, setEulaModalVisible] = useState(false)
   const [isSettingsModalVisible, setSettingsModalVisible] = useState(false)
   const [hasActiveList, setHasActiveList] = useState(false) // Estado para lista activa
-  const [showSuccessModal, setShowSuccessModal] = useState(false) // Modal de éxito
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [nameModalVisible, setNameModalVisible] = useState(false)
+  const [listName, setListName] = useState("") // Modal de éxito
   
   // Función para obtener colores basados en la pestaña activa
   const getTabColors = () => {
@@ -401,31 +404,55 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     try {
       const list = await AsyncStorage.getItem("@shopping_list")
       const history = await AsyncStorage.getItem("@shopping_history") || "[]"
-      
+
       if (list) {
         const parsedList = JSON.parse(list)
         const parsedHistory = JSON.parse(history)
-        
+
         if (parsedList.length > 0) {
-          const newHistoryItem = {
-            list: parsedList,
-            name: `Lista ${parsedHistory.length + 1}`,
-            date: new Date().toISOString()
-          }
-          
-          parsedHistory.push(newHistoryItem)
-          await AsyncStorage.setItem("@shopping_history", JSON.stringify(parsedHistory))
-          await AsyncStorage.setItem("@shopping_list", JSON.stringify([]))
-          await AsyncStorage.setItem("@trigger_reset_home", "true")
-          await AsyncStorage.setItem("@show_newest_list", "true")
-          setHasActiveList(false)
-          
-          setShowSuccessModal(true)
-          setTimeout(() => {
-            setShowSuccessModal(false)
-            setActiveTab('History')
-          }, 2000)
+          // Generate default name and show modal
+          const defaultName = `${currentTranslations.list || "Lista"} ${parsedHistory.length + 1}`
+          setListName(defaultName)
+          setNameModalVisible(true)
         }
+      }
+    } catch (error) {
+      console.error("Error saving to history:", error)
+      Alert.alert(menuTexts.error || "Error", menuTexts.errorSavingList || "Could not save the list")
+    }
+  }
+
+  const confirmSaveWithName = async () => {
+    try {
+      const list = await AsyncStorage.getItem("@shopping_list")
+      const history = await AsyncStorage.getItem("@shopping_history") || "[]"
+
+      if (list) {
+        const parsedList = JSON.parse(list)
+        const parsedHistory = JSON.parse(history)
+
+        const newHistoryItem = {
+          list: parsedList,
+          name: listName || `${currentTranslations.list || "Lista"} ${parsedHistory.length + 1}`,
+          date: new Date().toISOString()
+        }
+
+        parsedHistory.push(newHistoryItem)
+        await AsyncStorage.setItem("@shopping_history", JSON.stringify(parsedHistory))
+        await AsyncStorage.setItem("@shopping_list", JSON.stringify([]))
+        await AsyncStorage.setItem("@trigger_reset_home", "true")
+        await AsyncStorage.setItem("@show_newest_list", "true")
+
+        // Close name modal
+        setNameModalVisible(false)
+        setHasActiveList(false)
+
+        // Show success modal
+        setShowSuccessModal(true)
+        setTimeout(() => {
+          setShowSuccessModal(false)
+          setActiveTab('History')
+        }, 2000)
       }
     } catch (error) {
       console.error("Error saving to history:", error)
@@ -701,11 +728,12 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       case "Home":
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen 
-              name="HomeScreen" 
+            <Stack.Screen
+              name="HomeScreen"
               component={HomeScreen}
-              initialParams={{ 
-                onNavigateToSubscribe: () => setActiveTab("Subscribe")
+              initialParams={{
+                onNavigateToSubscribe: () => setActiveTab("Subscribe"),
+                onNavigateToHistory: () => setActiveTab("History")
               }}
             />
           </Stack.Navigator>
@@ -1454,6 +1482,115 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             }}>
               {currentLabels.listSaved || "Lista guardada correctamente"}
             </Text>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Name Modal */}
+      <Modal
+        visible={nameModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setNameModalVisible(false)}
+      >
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        }}>
+          <View style={{
+            backgroundColor: 'white',
+            borderRadius: 20,
+            padding: 20,
+            width: '90%',
+            maxWidth: 400,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.25,
+            shadowRadius: 20,
+            elevation: 15,
+          }}>
+            <View style={{ marginBottom: 20 }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#1f2937',
+                textAlign: 'center',
+                marginBottom: 8,
+              }}>
+                {currentTranslations.listName || "List Name"}
+              </Text>
+              <Text style={{
+                fontSize: 14,
+                color: '#6b7280',
+                textAlign: 'center',
+              }}>
+                {currentTranslations.enterListName || "Enter list name"}
+              </Text>
+            </View>
+
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderColor: '#e5e7eb',
+                borderRadius: 12,
+                padding: 12,
+                fontSize: 16,
+                marginBottom: 20,
+                backgroundColor: '#f9fafb',
+              }}
+              value={listName}
+              onChangeText={setListName}
+              placeholder={currentTranslations.list || "List"}
+              placeholderTextColor="#9ca3af"
+              autoFocus
+              selectTextOnFocus
+            />
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingVertical: 12,
+                  paddingHorizontal: 20,
+                  borderRadius: 12,
+                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(239, 68, 68, 0.3)',
+                }}
+                onPress={() => setNameModalVisible(false)}
+              >
+                <Ionicons name="close" size={20} color="#ef4444" style={{ marginRight: 8 }} />
+                <Text style={{ color: '#ef4444', fontSize: 16, fontWeight: '600' }}>
+                  {currentTranslations.cancel || "Cancel"}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingVertical: 12,
+                  paddingHorizontal: 20,
+                  borderRadius: 12,
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(16, 185, 129, 0.3)',
+                }}
+                onPress={confirmSaveWithName}
+              >
+                <Ionicons name="checkmark" size={20} color="#10b981" style={{ marginRight: 8 }} />
+                <Text style={{ color: '#10b981', fontSize: 16, fontWeight: '600' }}>
+                  {currentTranslations.save || "Save"}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>

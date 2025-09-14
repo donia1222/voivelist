@@ -398,6 +398,8 @@ const HomeScreen = ({ navigation }) => {
   const [isCountryEmpty, setIsCountryEmpty] = useState(true)
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(false)
   const [showCreatingMessage, setShowCreatingMessage] = useState(false)
+  const [nameModalVisible, setNameModalVisible] = useState(false)
+  const [listName, setListName] = useState("")
   const colorAnim = useRef(new Animated.Value(0)).current
   const emptyStateFadeAnim = useRef(new Animated.Value(0)).current
   const [highlightedWords, setHighlightedWords] = useState([]) // Palabras identificadas por AI
@@ -1352,26 +1354,45 @@ const HomeScreen = ({ navigation }) => {
   const saveToHistory = async () => {
     if (shoppingList.length === 0) return
 
+    // Generate default name and show name modal
     const providedDishName = route.params?.dishName
-    const newDishName = providedDishName || generateGenericListName()
-    const newHistory = [...history, { list: shoppingList, name: newDishName }]
+    const defaultName = providedDishName || generateGenericListName()
+    setListName(defaultName)
+    setNameModalVisible(true)
+  }
+
+  const confirmSaveWithName = async () => {
+    const newHistory = [...history, {
+      list: shoppingList,
+      name: listName || generateGenericListName(),
+      date: new Date().toISOString()
+    }]
 
     try {
       await AsyncStorage.setItem("@shopping_history", JSON.stringify(newHistory))
       setHistory(newHistory)
-      
+
       // Update widget with new list immediately
       await WidgetService.updateWidgetShoppingLists(newHistory.reverse(), {})
-      
+
       // Small delay to ensure widget updates in real-time
       await new Promise(resolve => setTimeout(resolve, 100))
-      
+
       setShoppingList([])
       await AsyncStorage.setItem("@shopping_list", JSON.stringify([]))
       setModalVisible(false)
+      setNameModalVisible(false)
       setConfirmationModalVisible(true)
       navigation.setParams({ dishName: null })
-      setTimeout(() => setConfirmationModalVisible(false), 2000)
+
+      // Navigate to History after 2 seconds
+      setTimeout(() => {
+        setConfirmationModalVisible(false)
+        // Navigate to History through CustomBottomTabNavigator
+        if (route.params?.onNavigateToHistory) {
+          route.params.onNavigateToHistory()
+        }
+      }, 2000)
     } catch (e) {
       console.error("Error saving to history: ", e)
     }
@@ -1667,11 +1688,11 @@ const HomeScreen = ({ navigation }) => {
           </Animated.View>
         </View>
       )}
-      {/* Call to Action - Más prominente - No mostrar en iPhone SE ni cuando hay banner de suscripción */}
-              {!isSmallIPhone && isSubscribed !== false && (
+      {/* Call to Action - Más prominente - No mostrar en iPhone SE */}
+              {!isSmallIPhone && (
                 <View style={modernStyles.ctaContainer}>
                   <Text style={modernStyles.ctaText}>
-                    Tap the button below to start
+                
                   </Text>
                 </View>
               )}
@@ -1765,6 +1786,68 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <ConfirmationModal />
 
+      {/* Name Modal */}
+      <Modal
+        visible={nameModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setNameModalVisible(false)}
+      >
+        <View style={modernStyles.modalOverlay}>
+          <View style={modernStyles.countryModalContainer}>
+            <View style={modernStyles.modalHeader}>
+              <Text style={modernStyles.countryModalTitle}>
+                {currentLabels.listName || "List Name"}
+              </Text>
+              <Text style={modernStyles.countryModalSubtitle}>
+                {currentLabels.enterListName || "Enter list name"}
+              </Text>
+            </View>
+
+            <TextInput
+              style={modernStyles.modalInput}
+              value={listName}
+              onChangeText={setListName}
+              placeholder={currentLabels.list || "List"}
+              placeholderTextColor="#b8b8b8ab"
+              autoFocus
+              selectTextOnFocus
+            />
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
+              <TouchableOpacity
+                style={[modernStyles.modalButton, {
+                  flex: 1,
+                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(239, 68, 68, 0.3)'
+                }]}
+                onPress={() => setNameModalVisible(false)}
+              >
+                <Ionicons name="close" size={20} color="#ef4444" style={{ marginRight: 8 }} />
+                <Text style={[modernStyles.modalButtonText, { color: '#ef4444' }]}>
+                  {currentLabels.cancel || "Cancel"}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[modernStyles.modalButton, {
+                  flex: 1,
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(16, 185, 129, 0.3)'
+                }]}
+                onPress={confirmSaveWithName}
+              >
+                <Ionicons name="checkmark" size={20} color="#10b981" style={{ marginRight: 8 }} />
+                <Text style={[modernStyles.modalButtonText, { color: '#10b981' }]}>
+                  {currentLabels.save || "Save"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* Voice Limit Modal */}
       <Modal visible={voiceLimitModalVisible} transparent={true} animationType="fade">
