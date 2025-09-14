@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { ThemeProvider } from "./ThemeContext"
 import { NotificationProvider } from "./NotificationContext"
 import { RecordingProvider } from "./RecordingContext"
@@ -24,14 +25,16 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider>
-      <NotificationProvider>
-        <RecordingProvider>
-          <HapticProvider>
-            <AppContent />
-          </HapticProvider>
-        </RecordingProvider>
-      </NotificationProvider>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider>
+        <NotificationProvider>
+          <RecordingProvider>
+            <HapticProvider>
+              <AppContent />
+            </HapticProvider>
+          </RecordingProvider>
+        </NotificationProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   )
 }

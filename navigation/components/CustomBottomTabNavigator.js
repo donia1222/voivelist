@@ -14,6 +14,7 @@ import {
   TextInput,
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { PanGestureHandler, State } from "react-native-gesture-handler"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { useTheme } from "../../ThemeContext"
 import { useRecording } from "../../RecordingContext"
@@ -307,6 +308,12 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [nameModalVisible, setNameModalVisible] = useState(false)
   const [listName, setListName] = useState("") // Modal de éxito
+
+  // Swipe gesture variables
+  const translateX = useRef(new Animated.Value(0)).current
+  const gestureRef = useRef(null)
+  const [swipeDirection, setSwipeDirection] = useState(null) // 'left' or 'right'
+  const [isSwipeActive, setIsSwipeActive] = useState(false)
   
   // Función para obtener colores basados en la pestaña activa
   const getTabColors = () => {
@@ -726,6 +733,84 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     setActiveTab(tab.key)
   }
 
+  // Get adjacent tabs for preview
+  const getAdjacentTabs = () => {
+    const currentIndex = mainTabs.findIndex(tab => tab.key === activeTab)
+    const prevIndex = currentIndex > 0 ? currentIndex - 1 : mainTabs.length - 1
+    const nextIndex = currentIndex < mainTabs.length - 1 ? currentIndex + 1 : 0
+
+    return {
+      current: mainTabs[currentIndex],
+      previous: mainTabs[prevIndex],
+      next: mainTabs[nextIndex]
+    }
+  }
+
+  // Swipe gesture handler
+  const onPanGestureEvent = Animated.event(
+    [{ nativeEvent: { translationX: translateX } }],
+    {
+      useNativeDriver: true,
+      listener: (event) => {
+        const { translationX } = event.nativeEvent
+
+        // Set swipe direction based on translation
+        if (Math.abs(translationX) > 10) {
+          setIsSwipeActive(true)
+          setSwipeDirection(translationX > 0 ? 'right' : 'left')
+        }
+      }
+    }
+  )
+
+  const onPanHandlerStateChange = (event) => {
+    const { state, translationX, velocityX } = event.nativeEvent
+
+    if (state === State.ACTIVE) {
+      setIsSwipeActive(true)
+    } else if (state === State.END || state === State.CANCELLED) {
+      setIsSwipeActive(false)
+      setSwipeDirection(null)
+
+      const threshold = 120
+      const velocityThreshold = 600
+      const { width } = Dimensions.get('window')
+
+      // Check if swipe was significant enough
+      if (Math.abs(translationX) > threshold || Math.abs(velocityX) > velocityThreshold) {
+        const currentIndex = mainTabs.findIndex(tab => tab.key === activeTab)
+        let newIndex = currentIndex
+
+        if (translationX > 0 || velocityX > 0) {
+          // Swipe right - go to previous tab
+          newIndex = currentIndex > 0 ? currentIndex - 1 : mainTabs.length - 1
+        } else {
+          // Swipe left - go to next tab
+          newIndex = currentIndex < mainTabs.length - 1 ? currentIndex + 1 : 0
+        }
+
+        // Animate to complete the transition
+        Animated.timing(translateX, {
+          toValue: translationX > 0 ? width : -width,
+          duration: 200,
+          useNativeDriver: true,
+        }).start(() => {
+          setActiveTab(mainTabs[newIndex].key)
+          translateX.setValue(0)
+        })
+      } else {
+        // Snap back to center
+        Animated.spring(translateX, {
+          toValue: 0,
+          useNativeDriver: true,
+          tension: 200,
+          friction: 8,
+        }).start()
+      }
+    }
+  }
+
+
   const renderActiveScreen = () => {
     switch (activeTab) {
       case "Home":
@@ -735,9 +820,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               name="HomeScreen"
               component={HomeScreen}
               initialParams={{
-                onNavigateToSubscribe: () => setActiveTab("Subscribe"),
-                onNavigateToHistory: () => setActiveTab("History"),
-                onNavigateToHandwrittenList: () => setActiveTab("HandwrittenList")
+                isSubscribed: isSubscribed
               }}
             />
           </Stack.Navigator>
@@ -749,9 +832,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               name="ImageListScreen"
               component={ImageListScreen}
               initialParams={{
-                isSubscribed: isSubscribed,
-                onNavigateToSubscribe: () => setActiveTab("Subscribe"),
-                onNavigateToHistory: () => setActiveTab("History")
+                isSubscribed: isSubscribed
               }}
             />
           </Stack.Navigator>
@@ -775,7 +856,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               name="PriceCalculatorScreen"
               component={PriceCalculatorScreen}
               initialParams={{
-                onNavigateToSubscribe: () => setActiveTab("Subscribe")
+                isSubscribed: isSubscribed
               }}
             />
           </Stack.Navigator>
@@ -1177,9 +1258,149 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       </View>
 
       {/* Content */}
-      <View style={{ flex: 1 }}>
-        {isMenuScreen ? renderMenuScreen() : renderActiveScreen()}
-      </View>
+      <PanGestureHandler
+        ref={gestureRef}
+        onGestureEvent={onPanGestureEvent}
+        onHandlerStateChange={onPanHandlerStateChange}
+        enabled={!isMenuScreen && !isMenuModalVisible}
+        activeOffsetX={[-20, 20]}
+        failOffsetY={[-10, 10]}
+      >
+        <Animated.View style={{ flex: 1 }}>
+          {isMenuScreen ? (
+            <Animated.View
+              style={{
+                flex: 1,
+                transform: [{ translateX }]
+              }}
+            >
+              {renderMenuScreen()}
+            </Animated.View>
+          ) : (
+            <View style={{ flex: 1 }}>
+              {/* Current Screen */}
+              <Animated.View
+                style={{
+                  flex: 1,
+                  transform: [{ translateX }]
+                }}
+              >
+                {renderActiveScreen()}
+              </Animated.View>
+
+              {/* Previous Screen Preview */}
+              {isSwipeActive && swipeDirection === 'right' && (
+                <Animated.View
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    width: Dimensions.get('window').width,
+                    height: '100%',
+                    backgroundColor: getAdjacentTabs().previous?.color + '15' || '#4a6bff15',
+                    transform: [
+                      {
+                        translateX: translateX.interpolate({
+                          inputRange: [0, 300],
+                          outputRange: [-Dimensions.get('window').width / 2, 0],
+                          extrapolate: 'clamp'
+                        })
+                      }
+                    ],
+                    opacity: translateX.interpolate({
+                      inputRange: [0, 150, 300],
+                      outputRange: [0, 0.5, 0.8],
+                      extrapolate: 'clamp'
+                    })
+                  }}
+                >
+                  <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'transparent'
+                  }}>
+                    <View style={{
+                      backgroundColor: getAdjacentTabs().previous?.color + '25' || '#4a6bff25',
+                      borderRadius: 60,
+                      padding: 20,
+                      marginBottom: 20
+                    }}>
+                      <Ionicons
+                        name={getAdjacentTabs().previous?.icon || 'arrow-back'}
+                        size={60}
+                        color={getAdjacentTabs().previous?.color || '#4a6bff'}
+                      />
+                    </View>
+                    <Text style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      color: getAdjacentTabs().previous?.color || '#4a6bff'
+                    }}>
+                      {getAdjacentTabs().previous?.label || 'Previous'}
+                    </Text>
+                  </View>
+                </Animated.View>
+              )}
+
+              {/* Next Screen Preview */}
+              {isSwipeActive && swipeDirection === 'left' && (
+                <Animated.View
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    width: Dimensions.get('window').width,
+                    height: '100%',
+                    backgroundColor: getAdjacentTabs().next?.color + '15' || '#4a6bff15',
+                    transform: [
+                      {
+                        translateX: translateX.interpolate({
+                          inputRange: [-300, 0],
+                          outputRange: [0, Dimensions.get('window').width / 2],
+                          extrapolate: 'clamp'
+                        })
+                      }
+                    ],
+                    opacity: translateX.interpolate({
+                      inputRange: [-300, -150, 0],
+                      outputRange: [0.8, 0.5, 0],
+                      extrapolate: 'clamp'
+                    })
+                  }}
+                >
+                  <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'transparent'
+                  }}>
+                    <View style={{
+                      backgroundColor: getAdjacentTabs().next?.color + '25' || '#4a6bff25',
+                      borderRadius: 60,
+                      padding: 20,
+                      marginBottom: 20
+                    }}>
+                      <Ionicons
+                        name={getAdjacentTabs().next?.icon || 'arrow-forward'}
+                        size={60}
+                        color={getAdjacentTabs().next?.color || '#4a6bff'}
+                      />
+                    </View>
+                    <Text style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      color: getAdjacentTabs().next?.color || '#4a6bff'
+                    }}>
+                      {getAdjacentTabs().next?.label || 'Next'}
+                    </Text>
+                  </View>
+                </Animated.View>
+              )}
+            </View>
+          )}
+        </Animated.View>
+      </PanGestureHandler>
 
       {/* Custom Bottom Tab Bar */}
       {activeTab === "Home" && hasActiveList ? (
@@ -1187,7 +1408,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
         <View style={modernStyles.actionButtonsContainer}>
           {/* Primeros 3 botones en fila */}
           <View style={[modernStyles.buttonRow, { marginBottom: 20 }]}>
-            {topActionTabs.map((tab, index) => (
+            {topActionTabs.map((tab) => (
               <TouchableOpacity
                 key={tab.key}
                 style={[
@@ -1232,7 +1453,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             elevation: 5,
           }}
         >
-          {mainTabs.map((tab, index) => {
+          {mainTabs.map((tab) => {
             const isActive = tab.key === activeTab
             const tabColor = isActive ? tab.color : theme.backgroundtres
 
@@ -1363,9 +1584,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               showsVerticalScrollIndicator={false}
               style={{ maxHeight: "60%" }}
             >
-              {headerMenuItems.map((item, index) => (
+              {headerMenuItems.map((item, idx) => (
                 <TouchableOpacity
-                  key={index}
+                  key={idx}
                   onPress={() => {
                     item.onPress()
                   }}
