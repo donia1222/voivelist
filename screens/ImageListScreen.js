@@ -960,8 +960,8 @@ const ImageListScreen = ({ route }) => {
         />
       )}
 
-      {/* Main Action Button with Pulse Rings */}
-      {!loading && isSubscribed && (
+      {/* Main Action Button with Pulse Rings - Only show when no items in list */}
+      {!loading && isSubscribed && shoppingList.length === 0 && (
         <View style={[modernStyles.uploadButtonContainer, isSmallIPhone && {bottom: 10}]}>
           {/* Outer Pulse Ring - NARANJA */}
           <Animated.View style={[
@@ -1017,7 +1017,22 @@ const ImageListScreen = ({ route }) => {
         </TouchableOpacity>
       )}
 
-      {/* Save Button */}
+      {/* Cancel Button - Left side when items exist */}
+      {shoppingList.length > 0 && !loading && (
+        <TouchableOpacity
+          onPress={() => setShoppingList([])}
+          style={[modernStyles.saveButton, {
+            left: 20,
+            right: 'auto',
+            backgroundColor: '#ef4444'
+          }]}
+        >
+          <Ionicons name="close-circle-outline" size={24} color="#fff" />
+          <Text style={[modernStyles.saveButtonText, { color: '#fff' }]}>{uiText.cancel || 'Cancel'}</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* Save Button - Right side */}
       {shoppingList.length > 0 && !loading && (
         <TouchableOpacity onPress={saveToHistory} style={modernStyles.saveButton}>
           <Ionicons name="checkmark-circle-outline" size={24} color="#10b981" />
@@ -1361,7 +1376,7 @@ alignSelf: 'center',
   saveButton: {
     position: "absolute",
     bottom: 32,
-    right: 5,
+    right: 15,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",

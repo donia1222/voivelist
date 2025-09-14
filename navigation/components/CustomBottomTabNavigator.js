@@ -508,12 +508,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   }
 
   const handleContactPress = () => {
-    const emailBody = `
-      Device Model: ${DeviceInfo.getModel()}\n
-      OS Version: ${DeviceInfo.getSystemVersion()}\n
-    `
-    const mailtoURL = `mailto:info@lweb.ch?subject=Contact&body=${encodeURIComponent(emailBody)}`
-    Linking.openURL(mailtoURL).catch((err) => console.error("Failed to open mail app:", err))
+    setMenuModalVisible(false)
+    setActiveTab("Contact")
   }
 
   const handleSettingsPress = () => {
@@ -866,12 +862,18 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             <Stack.Screen name="PriceCalculatorScreen" component={PriceCalculatorScreen} />
           </Stack.Navigator>
         )
+      case "Contact":
+        return (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="ContactScreen" component={ContactScreen} />
+          </Stack.Navigator>
+        )
       default:
         return null
     }
   }
 
-  const isMenuScreen = ["Subscribe", "Subscription", "Information"].includes(activeTab)
+  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact"].includes(activeTab)
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -905,6 +907,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                               activeTab === "Subscribe" ? "#ff375f20" :
                               activeTab === "Subscription" ? "#ff375f20" :
                               activeTab === "Information" ? "#5856d620" :
+                              activeTab === "Contact" ? "#ff950020" :
                               activeTab === "PriceCalculator" ? "#dc262620" : "#4a6bff20",
               justifyContent: "center",
               alignItems: "center",
@@ -1006,11 +1009,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               <Ionicons
                 name={activeTab === "Subscribe" ? "star-outline" :
                       activeTab === "Subscription" ? "star" :
-                      activeTab === "Information" ? "information-circle-outline" : "storefront"}
+                      activeTab === "Information" ? "information-circle-outline" :
+                      activeTab === "Contact" ? "mail-outline" : "storefront"}
                 size={isSmallIPhone ? 20 : 24}
                 color={activeTab === "Subscribe" ? "#ff375f" :
                        activeTab === "Subscription" ? "#ff375f" :
-                       activeTab === "Information" ? "#5856d6" : "#4a6bff"}
+                       activeTab === "Information" ? "#5856d6" :
+                       activeTab === "Contact" ? "#ff9500" : "#4a6bff"}
               />
             )}
           </View>
@@ -1031,6 +1036,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
              activeTab === "Subscribe" ? currentTranslations.subscribe :
              activeTab === "Subscription" ? currentTranslations.mySubscription :
              activeTab === "Information" ? currentTranslations.information :
+             activeTab === "Contact" ? currentTranslations.contactUs :
              activeTab === "PriceCalculator" ? (currentTranslations.priceCalculator || "Price Calculator") :
              "Voice Grocery"}
           </Text>

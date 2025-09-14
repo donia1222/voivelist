@@ -894,6 +894,7 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
       shadowOpacity: 0.3,
       shadowRadius: 8,
       elevation: 4,
+      marginBottom: 40,
     },
     shareIcon: {
       marginRight: 8,
@@ -977,8 +978,10 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.sectionTitle}>{t.selectList}</Text>
-        
+        {savedLists.length > 0 && (
+          <Text style={styles.sectionTitle}>{t.selectList}</Text>
+        )}
+
         {savedLists.length === 0 ? (
           <View style={{ flex: 1 }}>
             <View style={styles.emptyState}>
@@ -1032,9 +1035,12 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
                         style={styles.viewPriceButton}
                         onPress={() => showHistoricalPrice(item)}
                       >
-                        <Text style={styles.viewPriceText} numberOfLines={1} ellipsizeMode="tail">
-                          {getHistoryForList(listId, country)?.city}
-                        </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                          <Ionicons name="location-outline" size={12} color="#dc2626" />
+                          <Text style={[styles.viewPriceText, { marginLeft: 4 }]} numberOfLines={1} ellipsizeMode="tail">
+                            {getHistoryForList(listId, country)?.city}
+                          </Text>
+                        </View>
                       </TouchableOpacity>
                     )}
                     <TouchableOpacity
@@ -1049,9 +1055,12 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
                         setCountryModalVisible(true)
                       }}
                     >
-                      <Text style={styles.calculateAgainSmallText} numberOfLines={1}>
-                        {t.calculate}
-                      </Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                        <Ionicons name="calculator-outline" size={12} color="#16a34a" />
+                        <Text style={[styles.calculateAgainSmallText, { marginLeft: 4 }]} numberOfLines={1}>
+                          {t.calculate}
+                        </Text>
+                      </View>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -1145,12 +1154,26 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
               {t.subscribeMessage}
             </Text>
 
-            <TouchableOpacity 
-              style={[styles.confirmButton, { backgroundColor: '#dc2626', flex: 0, alignSelf: 'center', paddingHorizontal: 40 }]}
-              onPress={() => setSubscriptionModalVisible(false)}
-            >
-              <Text style={[styles.buttonText, { color: '#fff' }]}>{t.cancel}</Text>
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TouchableOpacity
+                style={[styles.cancelButton, { flex: 1 }]}
+                onPress={() => setSubscriptionModalVisible(false)}
+              >
+                <Text style={[styles.buttonText, { color: '#dc2626' }]}>{t.cancel}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.confirmButton, { backgroundColor: '#dc2626', borderColor: '#dc2626', flex: 1 }]}
+                onPress={() => {
+                  setSubscriptionModalVisible(false)
+                  if (onNavigateToSubscribe) {
+                    onNavigateToSubscribe()
+                  }
+                }}
+              >
+                <Text style={[styles.buttonText, { color: '#fff' }]}>{t.subscribe}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>

@@ -250,24 +250,24 @@ const ContactScreen = ({ navigation }) => {
   const contactTypes = [
     {
       id: 'bug',
-      label: t.bug,
-      desc: t.bugDesc,
+      label: 'Bug',
+      desc: 'Report issue',
       icon: 'bug-outline',
-      color: '#ef4444',
-      gradient: ['#ef4444', '#dc2626']
+      color: '#a855f7',
+      gradient: ['#a855f7', '#9333ea']
     },
     {
       id: 'improvement',
-      label: t.improvement,
-      desc: t.improvementDesc,
+      label: 'Idea',
+      desc: 'Suggest feature',
       icon: 'bulb-outline',
       color: '#3b82f6',
       gradient: ['#3b82f6', '#2563eb']
     },
     {
       id: 'comment',
-      label: t.comment,
-      desc: t.commentDesc,
+      label: 'Comment',
+      desc: 'Share thoughts',
       icon: 'chatbubble-outline',
       color: '#10b981',
       gradient: ['#10b981', '#059669']
@@ -323,7 +323,7 @@ Language: ${deviceLanguage}
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme === 'dark' ? '#111827' : '#f9fafb',
+      backgroundColor: theme === 'dark' ? '#111827' : '#e7ead2',
     },
     header: {
       paddingTop: Platform.OS === 'ios' ? 20 : 10,
@@ -397,12 +397,10 @@ Language: ${deviceLanguage}
     typeLabel: {
       fontSize: isSmallIPhone ? 11 : 13,
       fontWeight: '600',
-      color: '#ffffff',
       textAlign: 'center',
     },
     typeDesc: {
       fontSize: isSmallIPhone ? 9 : 10,
-      color: 'rgba(255,255,255,0.8)',
       textAlign: 'center',
       marginTop: 2,
     },
@@ -439,6 +437,7 @@ Language: ${deviceLanguage}
       shadowOpacity: 0.3,
       shadowRadius: 8,
       elevation: 5,
+      marginBottom: 30,
     },
     sendButtonDisabled: {
       opacity: 0.5,
@@ -457,21 +456,6 @@ Language: ${deviceLanguage}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
-        <Animated.View style={[styles.header, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
-          <View style={styles.headerContent}>
-            <LinearGradient
-              colors={['#3b82f6', '#8b5cf6']}
-              style={styles.iconContainer}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-            >
-              <Ionicons name="mail-outline" size={32} color="#ffffff" />
-            </LinearGradient>
-            <Text style={styles.title}>{t.title}</Text>
-            <Text style={styles.subtitle}>{t.subtitle}</Text>
-          </View>
-        </Animated.View>
-
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={styles.scrollContent}
@@ -485,38 +469,40 @@ Language: ${deviceLanguage}
                 <TouchableOpacity
                   key={type.id}
                   onPress={() => setSelectedType(type.id)}
+                  style={[
+                    styles.typeCard,
+                    {
+                      backgroundColor: selectedType === type.id ? type.color : 'rgba(255, 255, 255, 0.4)',
+                      borderColor: selectedType === type.id ? type.color : 'rgba(229, 231, 235, 0.5)',
+                    },
+                    selectedType === type.id && styles.typeCardSelected
+                  ]}
                   activeOpacity={0.7}
                 >
-                  <LinearGradient
-                    colors={selectedType === type.id ? type.gradient : [type.color + '20', type.color + '30']}
-                    style={[
-                      styles.typeCard,
-                      selectedType === type.id && styles.typeCardSelected
-                    ]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                  >
-                    <Ionicons
-                      name={type.icon}
-                      size={isSmallIPhone ? 24 : 32}
-                      color={selectedType === type.id ? '#ffffff' : type.color}
-                      style={styles.typeIcon}
-                    />
-                    <Text style={[
-                      styles.typeLabel,
-                      { color: selectedType === type.id ? '#ffffff' : type.color }
-                    ]}>
-                      {type.label}
+                  <Ionicons
+                    name={type.icon}
+                    size={isSmallIPhone ? 24 : 32}
+                    color={selectedType === type.id ? '#ffffff' : type.color}
+                    style={styles.typeIcon}
+                  />
+                  <Text style={{
+                    fontSize: isSmallIPhone ? 11 : 13,
+                    fontWeight: '600',
+                    textAlign: 'center',
+                    color: selectedType === type.id ? '#ffffff' : '#1f2937'
+                  }}>
+                    {type.label}
+                  </Text>
+                  {!isSmallIPhone && (
+                    <Text style={{
+                      fontSize: isSmallIPhone ? 9 : 10,
+                      textAlign: 'center',
+                      marginTop: 2,
+                      color: selectedType === type.id ? 'rgba(255,255,255,0.8)' : '#6b7280'
+                    }}>
+                      {type.desc}
                     </Text>
-                    {!isSmallIPhone && (
-                      <Text style={[
-                        styles.typeDesc,
-                        { color: selectedType === type.id ? 'rgba(255,255,255,0.8)' : type.color + '99' }
-                      ]}>
-                        {type.desc}
-                      </Text>
-                    )}
-                  </LinearGradient>
+                  )}
                 </TouchableOpacity>
               ))}
             </View>

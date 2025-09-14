@@ -623,8 +623,7 @@ marginBottom:-0,
   },
 
   emptyStateTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 20,
     color: theme.text || "#2d3748",
     textAlign: "center",
     marginBottom: 32,

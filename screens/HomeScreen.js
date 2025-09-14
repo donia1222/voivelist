@@ -1658,14 +1658,7 @@ const HomeScreen = ({ navigation }) => {
                 </View>
               </View>
               
-              {/* Call to Action - Más prominente - No mostrar en iPhone SE */}
-              {!isSmallIPhone && (
-                <View style={modernStyles.ctaContainer}>
-                  <Text style={modernStyles.ctaText}>
-                    Tap the button below to start
-                  </Text>
-                </View>
-              )}
+        
     
             </View>
 
@@ -1674,7 +1667,14 @@ const HomeScreen = ({ navigation }) => {
           </Animated.View>
         </View>
       )}
-
+      {/* Call to Action - Más prominente - No mostrar en iPhone SE ni cuando hay banner de suscripción */}
+              {!isSmallIPhone && isSubscribed !== false && (
+                <View style={modernStyles.ctaContainer}>
+                  <Text style={modernStyles.ctaText}>
+                    Tap the button below to start
+                  </Text>
+                </View>
+              )}
       {!loading && showCreatingMessage && (
         <View style={modernStyles.creatingContainer}>
           {/* Solo mostrar el header cuando NO está grabando y NO hay resultados */}

@@ -510,7 +510,7 @@ export const getModernStyles = () => {
       marginBottom: isSmallIPhone ? 6 : 18,
       letterSpacing: -0.3,
       lineHeight: isSmallIPhone ? 26 : 32,
-      marginTop: isSmallIPhone ? -30 : -40,
+      marginTop: isSmallIPhone ? 20 : 40,
     },
     
     // Hero Subtitle - MÁS COMPACTO
@@ -563,7 +563,8 @@ export const getModernStyles = () => {
     // Call to Action Section - MÁS COMPACTO
     ctaContainer: {
       alignItems: "center",
-    marginBottom:-130,
+
+
     },
     
     ctaText: {
@@ -600,6 +601,7 @@ export const getModernStyles = () => {
       shadowOpacity: isSmallIPhone ? 0.15 : 0.20,
       shadowRadius: isSmallIPhone ? 10 : 15,
       elevation: isSmallIPhone ? 4 : 6,
+      marginTop: 40,
       marginBottom: isSmallIPhone ? 40 : 60,
     },
     languageButtonText: {
