@@ -34,6 +34,7 @@ import MySubscriptionScreen from "../../screens/MySubscriptionScreen"
 import InformationScreen from "../../screens/InformationScreen"
 import CalendarPlannerScreen from "../../screens/CalendarPlannerScreen"
 import PriceCalculatorScreen from "../../screens/PriceCalculatorScreen"
+import ContactScreen from "../../screens/ContactScreen"
 
 const Stack = createNativeStackNavigator()
 
@@ -741,8 +742,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       case "PriceCalculator":
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen 
-              name="PriceCalculatorScreen" 
+            <Stack.Screen
+              name="PriceCalculatorScreen"
               component={PriceCalculatorScreen}
               initialParams={{
                 onNavigateToSubscribe: () => setActiveTab("Subscribe")
@@ -898,9 +899,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               width: isSmallIPhone ? 32 : 40,
               height: isSmallIPhone ? 32 : 40,
               borderRadius: isSmallIPhone ? 8 : 10,
-              backgroundColor: activeTab === "Images" ? "#ff950020" : 
-                              activeTab === "History" ? "#34c75920" : 
-                              activeTab === "Calendar" ? "#6B728020" : 
+              backgroundColor: activeTab === "Images" ? "#ff950020" :
+                              activeTab === "History" ? "#34c75920" :
+                              activeTab === "Calendar" ? "#6B728020" :
                               activeTab === "Subscribe" ? "#ff375f20" :
                               activeTab === "Subscription" ? "#ff375f20" :
                               activeTab === "Information" ? "#5856d620" :
@@ -1023,8 +1024,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {activeTab === "Home" ? "Voice Grocery" : 
-             activeTab === "Images" ? currentTranslations.imageList : 
+            {activeTab === "Home" ? "Voice Grocery" :
+             activeTab === "Images" ? currentTranslations.imageList :
              activeTab === "Calendar" ? currentTranslations.calendar :
              activeTab === "History" ? currentTranslations.saved :
              activeTab === "Subscribe" ? currentTranslations.subscribe :

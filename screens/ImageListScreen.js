@@ -961,7 +961,7 @@ const ImageListScreen = ({ route }) => {
       )}
 
       {/* Main Action Button with Pulse Rings */}
-      {!loading && !isSubscribed && (
+      {!loading && isSubscribed && (
         <View style={[modernStyles.uploadButtonContainer, isSmallIPhone && {bottom: 10}]}>
           {/* Outer Pulse Ring - NARANJA */}
           <Animated.View style={[
@@ -1003,7 +1003,7 @@ const ImageListScreen = ({ route }) => {
       )}
 
       {/* Subscription Banner */}
-      {isSubscribed && (
+      {!isSubscribed && (
         <TouchableOpacity style={[modernStyles.subscriptionBanner, isSmallIPhone && {padding: 8, marginBottom: 12}]} onPress={() => {
           // Navigate to Subscribe screen through route params
           if (route.params?.onNavigateToSubscribe) {
@@ -1191,9 +1191,9 @@ const modernStyles = StyleSheet.create({
   },
 
   emptyStateTitle: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: "800",
-    color: "#1d2134a9",
+    color: "#1d213484",
     marginBottom: 16,
     textAlign: "center",
     marginTop: 40,

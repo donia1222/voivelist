@@ -441,10 +441,7 @@ const OnboardingScreen = ({ navigation }) => {
 
   const renderItem = ({ item }) => (
     <View style={[styles.slide, { width }]}>
-        {!isSmallIPhone && ( // No mostrar imágenes en iPhone SE
         <Animated.Image source={item.image} style={[styles.image, { transform: [{ translateY }] }]} />
-      )}
-
       <Text style={[styles.subtitle, isSmallIPhone && {fontSize: 16, marginVertical: 3, padding: 15}]}>{currentLabels[item.subtitleKey]}</Text>
       <Text style={[styles.description, isSmallIPhone && {fontSize: 14, marginHorizontal: 15}]}>{currentLabels[item.descriptionKey]}</Text>
     </View>

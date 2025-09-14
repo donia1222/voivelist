@@ -180,6 +180,7 @@ function HomeStackNavigator({ navigation }) {
             ),
         }}
       />
+
     </Stack.Navigator>
   )
 }

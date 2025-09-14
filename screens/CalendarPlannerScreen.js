@@ -967,7 +967,7 @@ const CalendarPlannerScreen = () => {
   const [selectedTime, setSelectedTime] = useState(new Date())
   const [repeatOption, setRepeatOption] = useState('never')
   const [reminderEnabled, setReminderEnabled] = useState(true)
-  const [syncWithCalendar, setSyncWithCalendar] = useState(true)
+  const [syncWithCalendar, setSyncWithCalendar] = useState(false)
   const [savedLists, setSavedLists] = useState([])
   const [selectedStore, setSelectedStore] = useState('')
   const [estimatedMinutes, setEstimatedMinutes] = useState('30')
@@ -987,6 +987,7 @@ const CalendarPlannerScreen = () => {
   const [expandedListModalVisible, setExpandedListModalVisible] = useState(false)
   const [selectedEventData, setSelectedEventData] = useState(null)
   const [dayActionsModalVisible, setDayActionsModalVisible] = useState(false)
+  const [permissionDeniedModalVisible, setPermissionDeniedModalVisible] = useState(false)
   const [selectedDayDate, setSelectedDayDate] = useState(null)
   const [selectedDayEvents, setSelectedDayEvents] = useState([])
   const [notificationSuccessVisible, setNotificationSuccessVisible] = useState(false)
@@ -1033,7 +1034,7 @@ const CalendarPlannerScreen = () => {
     const initializeCalendar = async () => {
       await loadEvents()
       await loadSavedLists()
-      await requestCalendarPermission()
+      // Removed automatic calendar permission request
       
       // Cargar el último valor de minutos de recordatorio usado
       try {
@@ -1126,29 +1127,22 @@ const CalendarPlannerScreen = () => {
   const requestCalendarPermission = async () => {
     try {
       const status = await RNCalendarEvents.requestPermissions()
-      console.log('Calendar permission status:', status)
-      
+      console.log('🔐 Calendar permission status:', status)
+
       if (status === 'denied' || status === 'restricted') {
-        Alert.alert(
-          t.calendarAccessRequired,
-          t.calendarAccessMessage,
-          [
-            { text: t.cancel, style: 'cancel' },
-            { text: t.openSettings, onPress: () => {
-              if (Platform.OS === 'ios') {
-                Linking.openURL('app-settings:')
-              }
-            }}
-          ]
-        )
+        console.log('🚫 Permission denied, showing modal')
+        setPermissionDeniedModalVisible(true)
+        return false
       } else if (status === 'authorized') {
-        console.log('Calendar access granted')
+        console.log('✅ Calendar access granted')
+        return true
       }
-      
-      return status === 'authorized'
+
+      // For other statuses like 'undetermined'
+      return false
     } catch (error) {
-      console.log('Calendar permission error:', error)
-      Alert.alert(t.error, t.unableToRequestPermission)
+      console.log('❌ Calendar permission error:', error)
+      setPermissionDeniedModalVisible(true)
       return false
     }
   }
@@ -2558,10 +2552,29 @@ const CalendarPlannerScreen = () => {
     },
     addControlButtonText: {
       color: '#16a34a'
+    },
+    modalSubtitle: {
+      fontSize: 14,
+      color: theme === 'dark' ? '#888' : '#6B7280',
+      marginBottom: 12
+    },
+    confirmButtonText: {
+      fontSize: 16,
+      color: '#fff',
+      fontWeight: '700'
+    },
+    confirmButton: {
+      flex: 1,
+      padding: 15,
+      borderRadius: 12,
+      backgroundColor: '#3b82f6',
+      alignItems: 'center',
+      justifyContent: 'center'
     }
   })
 
   return (
+    <>
     <SafeAreaView style={styles.container}>
       <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
 
@@ -3013,7 +3026,29 @@ const CalendarPlannerScreen = () => {
                   <Text style={styles.switchLabel}>{t.syncCalendar}</Text>
                   <Switch
                     value={syncWithCalendar}
-                    onValueChange={setSyncWithCalendar}
+                    onValueChange={async (value) => {
+                      console.log('🔄 Switch toggled:', value)
+                      if (value) {
+                        // Close the add event modal first
+                        setModalVisible(false)
+                        // Wait a moment for modal to close
+                        setTimeout(async () => {
+                          const hasPermission = await requestCalendarPermission()
+                          if (hasPermission) {
+                            setSyncWithCalendar(true)
+                            // Reopen the add event modal
+                            setModalVisible(true)
+                          } else {
+                            setSyncWithCalendar(false)
+                            // Show permission modal
+                            setPermissionDeniedModalVisible(true)
+                          }
+                        }, 300)
+                      } else {
+                        // Just turn off without permission check
+                        setSyncWithCalendar(false)
+                      }
+                    }}
                     trackColor={{ false: '#D1D5DB', true: '#16b038ff' }}
                     thumbColor={syncWithCalendar ? '#fff' : '#f4f3f4'}
                   />
@@ -3286,6 +3321,106 @@ const CalendarPlannerScreen = () => {
 
       </Animated.View>
     </SafeAreaView>
+
+    {/* Permission Denied Modal - Outside SafeAreaView */}
+    {console.log('🔴🔴🔴 Modal State:', permissionDeniedModalVisible)}
+    <Modal
+      visible={permissionDeniedModalVisible}
+      animationType="fade"
+      transparent={true}
+      onRequestClose={() => setPermissionDeniedModalVisible(false)}
+    >
+      <View style={{
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <View style={{
+          backgroundColor: 'white',
+          borderRadius: 20,
+          padding: 35,
+          alignItems: 'center',
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 4,
+          elevation: 5,
+          width: '90%',
+          maxWidth: 400
+        }}>
+          <Ionicons name="calendar-outline" size={48} color="#EF4444" />
+
+          <Text style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginTop: 15,
+            marginBottom: 15,
+            textAlign: 'center'
+          }}>
+            {t.calendarAccessRequired || 'Calendar Access Required'}
+          </Text>
+
+          <Text style={{
+            fontSize: 14,
+            color: '#666',
+            marginBottom: 20,
+            textAlign: 'center'
+          }}>
+            {t.calendarAccessMessage || 'Voice Grocery needs access to your calendar to create shopping events.'}
+          </Text>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#f0f0f0',
+                borderRadius: 10,
+                padding: 10,
+                flex: 1,
+                marginRight: 5
+              }}
+              onPress={() => {
+                console.log('🔴 Close button pressed')
+                setPermissionDeniedModalVisible(false)
+                // Reopen the add event modal
+                setModalVisible(true)
+              }}
+            >
+              <Text style={{ color: '#333', fontWeight: '600', textAlign: 'center' }}>
+                {t.close || 'Close'}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#3b82f6',
+                borderRadius: 10,
+                padding: 10,
+                flex: 1,
+                marginLeft: 5
+              }}
+              onPress={() => {
+                console.log('🔵 Settings button pressed')
+                setPermissionDeniedModalVisible(false)
+                if (Platform.OS === 'ios') {
+                  Linking.openURL('app-settings:')
+                } else {
+                  Linking.openSettings()
+                }
+              }}
+            >
+              <Text style={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>
+                {t.openSettings || 'Open Settings'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+    </>
   )
 }
 
