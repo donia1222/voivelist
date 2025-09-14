@@ -147,84 +147,84 @@ const HistoryScreen = ({ navigation }) => {
     )
   }, [])
 
-  // Update widget when currentIndex changes (sync widget with visible list)
+  // DISABLED: This reordering was causing issues with widget touch functionality
+  // The widget should always show the first (most recent) list, not reorder based on currentIndex
+  /*
   useEffect(() => {
-    // Skip widget update if we're just starting up to prevent overwriting widget changes
     if (!isFocused) return
-    
+
     if (history.length > 0 && currentIndex >= 0 && currentIndex < history.length) {
-      // Create array with current visible list first, then the rest
       const reorderedHistory = [history[currentIndex], ...history.filter((_, index) => index !== currentIndex)]
-      
-      // Create reordered completedItems to match reordered history (simple version)
       const reorderedCompletedItems = {
-        0: completedItems[currentIndex] || [] // Only send completed items for the current visible list
+        0: completedItems[currentIndex] || []
       }
-      
-      // Delay widget update slightly to ensure widget changes are synced first
       setTimeout(() => {
         WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
       }, 500)
     }
-  }, [currentIndex, history, completedItems, isFocused])
+  }, [currentIndex, history.length, isFocused])
+  */
 
   // Define syncWidgetChanges function outside of useEffect to reuse it
   const syncWidgetChanges = async () => {
     try {
       const changes = await WidgetService.syncWidgetChangesToApp()
-      
+
       // Handle array of changes
       if (changes && Array.isArray(changes)) {
         console.log('🔄 Processing', changes.length, 'widget changes')
-        
-        // Start with current completed items
-        const newCompletedItems = { ...completedItems }
+
+        // Create a completely new object to avoid mutation issues
+        const newCompletedItems = {}
+
+        // Copy all existing completed items
+        Object.keys(completedItems).forEach(key => {
+          newCompletedItems[key] = [...(completedItems[key] || [])]
+        })
+
         let hasChanges = false
-        
+
         // Process each change
         for (const change of changes) {
           if (change && change.type === 'itemToggle') {
             const { listIndex, itemIndex, isCompleted, timestamp } = change
-            
+
             // Only process recent changes (within last 60 seconds)
             if (Date.now() - (timestamp * 1000) < 60000) {
-              console.log('🔄 Syncing widget change to app - List:', listIndex, 'Item:', itemIndex, 'Completed:', isCompleted)
+              // Map widget listIndex 0 to current visible list index
+              const actualListIndex = currentIndex
+
+              console.log('🔄 Syncing widget change to app - Widget List:', listIndex, 'Actual List:', actualListIndex, 'Item:', itemIndex, 'Completed:', isCompleted)
               hasChanges = true
-              
+
               // Initialize array if needed
-              if (!newCompletedItems[listIndex]) {
-                newCompletedItems[listIndex] = []
+              if (!newCompletedItems[actualListIndex]) {
+                newCompletedItems[actualListIndex] = []
               }
-              
+
               if (isCompleted) {
                 // Add to completed if not already there
-                if (!newCompletedItems[listIndex].includes(itemIndex)) {
-                  newCompletedItems[listIndex].push(itemIndex)
+                if (!newCompletedItems[actualListIndex].includes(itemIndex)) {
+                  newCompletedItems[actualListIndex] = [...newCompletedItems[actualListIndex], itemIndex]
                 }
               } else {
                 // Remove from completed
-                newCompletedItems[listIndex] = newCompletedItems[listIndex].filter(i => i !== itemIndex)
+                newCompletedItems[actualListIndex] = newCompletedItems[actualListIndex].filter(i => i !== itemIndex)
               }
             }
           }
         }
-        
+
         if (hasChanges) {
           console.log('✅ Updated completed items from widget:', newCompletedItems)
           setCompletedItems(newCompletedItems)
-          
+
           // Save to AsyncStorage
           await AsyncStorage.setItem("@completed_items", JSON.stringify(newCompletedItems))
-          
-          // Update widget with merged data after a short delay
+
+          // Update widget with the updated completed items
           setTimeout(() => {
-            if (history.length > 0 && currentIndex >= 0 && currentIndex < history.length) {
-              const reorderedHistory = [history[currentIndex], ...history.filter((_, index) => index !== currentIndex)]
-              const reorderedCompletedItems = {
-                0: newCompletedItems[currentIndex] || []
-              }
-              WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
-            }
+            WidgetService.updateWidgetShoppingLists(history, newCompletedItems)
           }, 100)
         }
       }
@@ -1218,12 +1218,9 @@ const HistoryScreen = ({ navigation }) => {
             if (change.type === 'itemToggle') {
               const { listIndex, itemIndex, isCompleted } = change
               
-              // Widget always uses listIndex 0 for the first (newest) list
-              // In HistoryScreen, the newest list is at the END of the array (after reverse)
-              // So if we have 1 list: history[0] is the newest (and only) list
-              // If we have 2 lists: history[0] is newest, history[1] is older
-              // Widget index 0 = first list shown = newest = history[0] after reverse
-              const actualListIndex = listIndex // Use widget index directly since history is already reversed
+              // Widget always sends listIndex: 0, but we need to map it to the current visible list
+              // Use currentIndex to determine which list the user is actually viewing
+              const actualListIndex = currentIndex
               
               console.log('📝 Processing toggle - Widget listIndex:', listIndex, 'Item:', itemIndex, 'Completed:', isCompleted)
               console.log('📝 History length:', history.length, 'Using actualListIndex:', actualListIndex)
@@ -1261,7 +1258,7 @@ const HistoryScreen = ({ navigation }) => {
           console.log('🔄 DEBUG: HistoryScreen - Processing single widget change')
           if (widgetChanges.type === 'itemToggle') {
             const { listIndex, itemIndex, isCompleted } = widgetChanges
-            const actualListIndex = listIndex // Use widget index directly since history is already reversed
+            const actualListIndex = currentIndex // Map widget listIndex to current visible list
             
             const newCompletedItems = { ...completedItems }
             if (!newCompletedItems[actualListIndex]) {
@@ -1504,7 +1501,7 @@ const HistoryScreen = ({ navigation }) => {
               onPress={() => confirmRemoveListFromHistory(index)}
             >
               <Ionicons name="trash-outline" size={16} color="#ef4444" />
-              <Text style={modernStyles.deleteListText}>Eliminar lista</Text>
+         
             </TouchableOpacity>
           ) : (
             <View style={modernStyles.progressContainer}>
@@ -1612,10 +1609,33 @@ const HistoryScreen = ({ navigation }) => {
             setCurrentIndex(index)
           }}
           scrollEventThrottle={16}
-          onMomentumScrollEnd={(event) => {
+          onMomentumScrollEnd={async (event) => {
             const offsetX = event.nativeEvent.contentOffset.x
             const index = Math.round(offsetX / width)
             setSelectedListIndex(index)
+
+            // Update widget to show the currently visible list
+            if (history.length > 0 && index >= 0 && index < history.length) {
+              // Reorder history to put current list first for widget
+              const reorderedHistory = [
+                history[index],
+                ...history.filter((_, i) => i !== index)
+              ]
+
+              // Reorder completed items to match
+              const reorderedCompletedItems = {
+                0: completedItems[index] || [],
+                ...Object.keys(completedItems)
+                  .filter(key => parseInt(key) !== index)
+                  .reduce((acc, key, newIndex) => {
+                    acc[newIndex + 1] = completedItems[key]
+                    return acc
+                  }, {})
+              }
+
+              console.log('📱 Updating widget to show list at index:', index)
+              await WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
+            }
           }}
           onScrollToIndexFailed={(info) => {
             flatListRef.current?.scrollToOffset({ offset: info.averageItemLength * info.index, animated: true })
@@ -1635,10 +1655,26 @@ const HistoryScreen = ({ navigation }) => {
               modernStyles.arrowButton,
               currentIndex === 0 && modernStyles.arrowButtonDisabled
             ]}
-            onPress={() => {
+            onPress={async () => {
               if (currentIndex > 0) {
                 const newIndex = currentIndex - 1
                 flatListRef.current?.scrollToIndex({ index: newIndex, animated: true })
+
+                // Update widget immediately
+                const reorderedHistory = [
+                  history[newIndex],
+                  ...history.filter((_, i) => i !== newIndex)
+                ]
+                const reorderedCompletedItems = {
+                  0: completedItems[newIndex] || [],
+                  ...Object.keys(completedItems)
+                    .filter(key => parseInt(key) !== newIndex)
+                    .reduce((acc, key, idx) => {
+                      acc[idx + 1] = completedItems[key]
+                      return acc
+                    }, {})
+                }
+                await WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
               }
             }}
             disabled={currentIndex === 0}
@@ -1669,8 +1705,24 @@ const HistoryScreen = ({ navigation }) => {
                     history.length > 8 && modernStyles.smallDot, // Dots más pequeños si hay más de 8
                     currentIndex === index && modernStyles.activeDot
                   ]}
-                  onPress={() => {
+                  onPress={async () => {
                     flatListRef.current?.scrollToIndex({ index, animated: true })
+
+                    // Update widget immediately
+                    const reorderedHistory = [
+                      history[index],
+                      ...history.filter((_, i) => i !== index)
+                    ]
+                    const reorderedCompletedItems = {
+                      0: completedItems[index] || [],
+                      ...Object.keys(completedItems)
+                        .filter(key => parseInt(key) !== index)
+                        .reduce((acc, key, idx) => {
+                          acc[idx + 1] = completedItems[key]
+                          return acc
+                        }, {})
+                    }
+                    await WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
                   }}
                 />
               ))}
@@ -1683,10 +1735,26 @@ const HistoryScreen = ({ navigation }) => {
               modernStyles.arrowButton,
               currentIndex === history.length - 1 && modernStyles.arrowButtonDisabled
             ]}
-            onPress={() => {
+            onPress={async () => {
               if (currentIndex < history.length - 1) {
                 const newIndex = currentIndex + 1
                 flatListRef.current?.scrollToIndex({ index: newIndex, animated: true })
+
+                // Update widget immediately
+                const reorderedHistory = [
+                  history[newIndex],
+                  ...history.filter((_, i) => i !== newIndex)
+                ]
+                const reorderedCompletedItems = {
+                  0: completedItems[newIndex] || [],
+                  ...Object.keys(completedItems)
+                    .filter(key => parseInt(key) !== newIndex)
+                    .reduce((acc, key, idx) => {
+                      acc[idx + 1] = completedItems[key]
+                      return acc
+                    }, {})
+                }
+                await WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
               }
             }}
             disabled={currentIndex === history.length - 1}

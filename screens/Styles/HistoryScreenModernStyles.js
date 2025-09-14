@@ -424,11 +424,11 @@ marginBottom:-0,
   completionCounter: {
     paddingHorizontal: 2,
     paddingVertical: 8,
-    alignItems: 'flex-end',
+    alignSelf: 'center',
   },
 
   completionText: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '600',
     color: theme.text === '#ffffff' ? '#9ca3af' : '#6b7280',
   },
@@ -448,8 +448,8 @@ marginBottom:-0,
 
   progressRingBackground: {
     position: 'absolute',
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     borderRadius: 22,
     borderWidth: 4,
     borderColor: theme.text === '#ffffff' ? '#374151' : '#e5e7eb',
@@ -457,8 +457,8 @@ marginBottom:-0,
 
   progressRingFill: {
     position: 'absolute',
-    width: 44,
-    height: 44,
+    width: 38,
+    height: 38,
     borderRadius: 22,
     borderWidth: 4,
     borderColor: '#10b981',
@@ -473,7 +473,7 @@ marginBottom:-0,
   },
 
   progressNumber: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '700',
     color: theme.text === '#ffffff' ? '#9ca3af' : '#6b7280',
   },
@@ -484,14 +484,14 @@ marginBottom:-0,
   },
 
   progressSeparator: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '700',
     color: theme.text === '#ffffff' ? '#9ca3af' : '#6b7280',
     marginHorizontal: 1,
   },
 
   progressTotal: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '700',
     color: theme.text === '#ffffff' ? '#9ca3af' : '#6b7280',
   },
@@ -499,7 +499,7 @@ marginBottom:-0,
   deleteListButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.background || '#ffffff',
+
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
