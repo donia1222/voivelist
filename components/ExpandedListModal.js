@@ -269,6 +269,7 @@ const ExpandedListModal = ({
       marginRight: 15,
       letterSpacing: -0.5
     },
+    
     headerActions: {
       flexDirection: 'row',
       gap: 10
