@@ -67,6 +67,7 @@ const getMenuTexts = () => {
         "settings-outline": "Configuraciones de la app",
         "calendar-outline": "Planifica tus compras semanales",
         "create-outline": "Crea listas manualmente",
+        "pencil": "Escribe tus listas a mano",
       }
     },
     en: {
@@ -88,6 +89,7 @@ const getMenuTexts = () => {
         "settings-outline": "App settings",
         "calendar-outline": "Plan your weekly shopping",
         "create-outline": "Create lists manually",
+        "pencil": "Write your lists by hand",
       }
     },
     de: {
@@ -109,6 +111,7 @@ const getMenuTexts = () => {
         "settings-outline": "App-Einstellungen",
         "calendar-outline": "Plane deine wöchentlichen Einkäufe",
         "create-outline": "Listen manuell erstellen",
+        "pencil": "Schreiben Sie Ihre Listen von Hand",
       }
     },
     fr: {
@@ -130,6 +133,7 @@ const getMenuTexts = () => {
         "settings-outline": "Paramètres de l'app",
         "calendar-outline": "Planifiez vos achats hebdomadaires",
         "create-outline": "Créer des listes manuellement",
+        "pencil": "Écrivez vos listes à la main",
       }
     },
     it: {
@@ -151,6 +155,7 @@ const getMenuTexts = () => {
         "settings-outline": "Impostazioni dell'app",
         "calendar-outline": "Pianifica la tua spesa settimanale",
         "create-outline": "Crea liste manualmente",
+        "pencil": "Scrivi le tue liste a mano",
       }
     },
     tr: {
@@ -172,6 +177,7 @@ const getMenuTexts = () => {
         "settings-outline": "Uygulama ayarları",
         "calendar-outline": "Haftalık alışverişinizi planlayın",
         "create-outline": "Manuel olarak listeler oluşturun",
+        "pencil": "Listelerinizi elle yazın",
       }
     },
     pt: {
@@ -193,6 +199,7 @@ const getMenuTexts = () => {
         "settings-outline": "Configurações do app",
         "calendar-outline": "Planeje suas compras semanais",
         "create-outline": "Criar listas manualmente",
+        "pencil": "Escreva suas listas à mão",
       }
     },
     ru: {
@@ -214,6 +221,7 @@ const getMenuTexts = () => {
         "settings-outline": "Настройки приложения",
         "calendar-outline": "Планируйте еженедельные покупки",
         "create-outline": "Создавайте списки вручную",
+        "pencil": "Пишите свои списки от руки",
       }
     },
     ar: {
@@ -235,6 +243,7 @@ const getMenuTexts = () => {
         "settings-outline": "إعدادات التطبيق",
         "calendar-outline": "خطط لتسوقك الأسبوعي",
         "create-outline": "إنشاء قوائم يدويًا",
+        "pencil": "اكتب قوائمك بخط اليد",
       }
     },
     hu: {
@@ -256,6 +265,7 @@ const getMenuTexts = () => {
         "settings-outline": "Alkalmazás beállítások",
         "calendar-outline": "Tervezze meg heti bevásárlását",
         "create-outline": "Listák manuális létrehozása",
+        "pencil": "Írja kézzel a listáit",
       }
     },
     ja: {
@@ -277,6 +287,7 @@ const getMenuTexts = () => {
         "settings-outline": "アプリ設定",
         "calendar-outline": "週間ショッピングを計画",
         "create-outline": "手動でリストを作成",
+        "pencil": "リストを手書きで作成",
       }
     },
     hi: {
@@ -298,6 +309,7 @@ const getMenuTexts = () => {
         "settings-outline": "ऐप सेटिंग्स",
         "calendar-outline": "अपनी साप्ताहिक खरीदारी की योजना बनाएं",
         "create-outline": "मैन्युअल रूप से सूचियाँ बनाएं",
+        "pencil": "अपनी सूचियाँ हाथ से लिखें",
       }
     },
     nl: {
@@ -319,6 +331,7 @@ const getMenuTexts = () => {
         "settings-outline": "App-instellingen",
         "calendar-outline": "Plan uw wekelijkse boodschappen",
         "create-outline": "Maak handmatig lijsten",
+        "pencil": "Schrijf je lijsten met de hand",
       }
     }
   }

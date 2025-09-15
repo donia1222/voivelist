@@ -229,7 +229,7 @@ export const getModernStyles = () => {
       marginLeft: 8,
       color: "#ef4444",
       fontWeight: "700",
-      fontSize: 14,
+      fontSize: 12,
     },
     addButton: {
       flexDirection: "row",
@@ -250,7 +250,7 @@ export const getModernStyles = () => {
       marginLeft: 8,
       color: "#4a6bff",
       fontWeight: "700",
-      fontSize: 14,
+      fontSize: 12,
     },
     saveButton: {
       flexDirection: "row",
@@ -271,7 +271,7 @@ export const getModernStyles = () => {
       marginLeft: 8,
       color: "#10b981",
       fontWeight: "700",
-      fontSize: 14,
+      fontSize: 12,
     },
 
     // Ultra Modern Voice Button Styles - MÁS COMPACTO
@@ -352,37 +352,52 @@ export const getModernStyles = () => {
       justifyContent: "center",
     },
     
-    // Outer pulse ring - COLORES VIBRANTES
+    // Outer pulse ring - COLORES VIBRANTES MEJORADOS
     pulseRingOuter: {
       position: 'absolute',
       width: isSmallIPhone ? 160 : 200,
       height: isSmallIPhone ? 160 : 200,
       borderRadius: isSmallIPhone ? 80 : 100,
-      backgroundColor: 'rgba(74, 107, 255, 0.12)',
+      backgroundColor: 'rgba(0, 122, 255, 0.15)', // Azul más vibrante
       alignItems: 'center',
       justifyContent: 'center',
+      shadowColor: '#007AFF',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.3,
+      shadowRadius: 20,
+      elevation: 8,
     },
-    
-    // Middle pulse ring - AMARILLO
+
+    // Middle pulse ring - NARANJA VIBRANTE
     pulseRingMiddle: {
       position: 'absolute',
       width: isSmallIPhone ? 130 : 160,
       height: isSmallIPhone ? 130 : 160,
       borderRadius: isSmallIPhone ? 65 : 80,
-      backgroundColor: 'rgba(255, 149, 0, 0.18)',
+      backgroundColor: 'rgba(255, 69, 0, 0.18)', // Naranja más intenso
       alignItems: 'center',
       justifyContent: 'center',
+      shadowColor: '#FF4500',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.25,
+      shadowRadius: 15,
+      elevation: 6,
     },
-    
-    // Inner glow ring - LILA VIBRANTE
+
+    // Inner glow ring - VIOLETA VIBRANTE
     pulseRingInner: {
       position: 'absolute',
       width: isSmallIPhone ? 110 : 140,
       height: isSmallIPhone ? 110 : 140,
       borderRadius: isSmallIPhone ? 55 : 70,
-      backgroundColor: 'rgba(74, 107, 255, 0.25)',
+      backgroundColor: 'rgba(138, 43, 226, 0.22)', // Violeta más intenso
       alignItems: 'center',
       justifyContent: 'center',
+      shadowColor: '#8A2BE2',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.2,
+      shadowRadius: 12,
+      elevation: 4,
     },
     
     voiceButtonWrapper: {

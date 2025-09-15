@@ -1008,6 +1008,69 @@ const ImageListScreen = ({ route }) => {
       )}
 
 
+      {/* Upload Section - Only show when no items in list */}
+      {!loading && isSubscribed && shoppingList.length === 0 && (
+        <View style={modernStyles.uploadSectionContainer}>
+          {/* Title and Description Card */}
+          <View style={[
+            modernStyles.uploadInfoCards,
+        
+          ]}>
+            <View style={modernStyles.uploadIconContainere}>
+
+            </View>
+         
+
+          </View>
+
+          {/* Upload Button with Pulse Rings */}
+          <View style={[modernStyles.uploadButtonContainer, isSmallIPhone && {bottom: 10}]}>
+            {/* Outer Pulse Ring - NARANJA */}
+            <Animated.View style={[
+              modernStyles.pulseRingOuter,
+              isSmallIPhone && {width: 140, height: 140, borderRadius: 70},
+              { transform: [{ scale: pulseRingOuter }] }
+            ]} />
+
+            {/* Middle Pulse Ring - NARANJA */}
+            <Animated.View style={[
+              modernStyles.pulseRingMiddle,
+              isSmallIPhone && {width: 110, height: 110, borderRadius: 55},
+              { transform: [{ scale: pulseRingMiddle }] }
+            ]} />
+
+            {/* Inner Pulse Ring - NARANJA */}
+            <Animated.View style={[
+              modernStyles.pulseRingInner,
+              isSmallIPhone && {width: 90, height: 90, borderRadius: 45},
+              { transform: [{ scale: pulseRingInner }] }
+            ]} />
+
+            <TouchableOpacity style={[modernStyles.mainActionButton, isSmallIPhone && {
+              width: 60,
+              height: 60,
+              borderRadius: 30,
+              shadowOffset: { width: 0, height: 10 },
+              shadowRadius: 20,
+              elevation: 15
+            },
+            {
+              backgroundColor: 'rgba(251, 146, 60, 0.15)',
+              borderWidth: 2,
+              borderColor: 'rgba(251, 146, 60, 0.5)',
+              backdropFilter: 'blur(10px)'
+            }
+            ]} onPress={() => {
+              triggerHaptic('light')
+              setImageModalVisible(true)
+            }}>
+              <Animated.View style={[modernStyles.buttonContent, { transform: [{ scale: pulseAnim }] }]}>
+                <Ionicons name="cloud-upload-outline" size={isSmallIPhone ? 18 : 24} color="#f97316" />
+              </Animated.View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       {/* Subscription Banner */}
       {!isSubscribed && (
@@ -1665,6 +1728,7 @@ const modernStyles = StyleSheet.create({
   modalButtonText: {
     fontSize: 16,
     fontWeight: "700",
+    color: "#717171ff",
   },
 
   // Confirmation Modal

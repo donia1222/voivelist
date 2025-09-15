@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const GradientText = ({ text }) => (
   <View style={styles.textContainer}>
     <LinearGradient
-      colors={['#009688', '#3f51b5']}
+      colors={['#7B68EE', '#228B22']} // Gradiente azul-lila suave a verde
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.gradientBackground}
@@ -487,13 +487,13 @@ const OnboardingScreen = ({ navigation }) => {
       {buttonVisible && (
         currentIndex === filteredSlides.length - 1 ? (
           <TouchableOpacity style={styles.buttonterminar} onPress={navigate}>
-            <Ionicons name="mic-outline" size={24} color="white" style={styles.icon} />
-            <Text style={styles.buttonText}>{currentLabels.startButton}</Text>
+            <Ionicons name="mic-outline" size={24} color="#228B22" style={styles.icon} />
+            <Text style={styles.buttonTextTerminar}>{currentLabels.startButton}</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity style={styles.button} onPress={handleNext}>
             <Text style={styles.buttonText}>{currentLabels.nextButton}</Text>
-            <Ionicons name="arrow-forward-outline" size={24} color="white" style={styles.iconRight} />
+            <Ionicons name="arrow-forward-outline" size={24} color="#7B68EE" style={styles.iconRight} />
           </TouchableOpacity>
         )
       )}
@@ -561,52 +561,62 @@ const getStyles = (theme) => StyleSheet.create({
   paginationDotActive: {
     width: 12,
     height: 12,
-    backgroundColor: '#3f51b5',
+    backgroundColor: '#7B68EE', // Consistente con el botón azul-lila
   },
   paginationDotInactive: {
-    backgroundColor: 'gray',
+    backgroundColor: 'rgba(142, 142, 147, 0.6)', // Gris iOS más sutil
   },
   button: {
-    backgroundColor: '#3f51b5',
+    backgroundColor: 'rgba(123, 104, 238, 0.15)', // Fondo azul-lila suave semitransparente
     padding: isSmallIPhone ? 8 : 10,
     borderRadius: 50,
-marginBottom: isSmallIPhone ? -5 : -10,
+    marginBottom: isSmallIPhone ? -5 : -10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: isSmallIPhone ? 5 : 10,
-    // Sombras para Android
-    elevation: 5,
-    // Sombras para iOS
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    // Sombras mejoradas para Android
+    elevation: 8,
+    // Sombras mejoradas para iOS
+    shadowColor: '#7B68EE',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
     width: isSmallIPhone ? 160 : 180,
+    borderWidth: 2,
+    borderColor: 'rgba(123, 104, 238, 0.3)', // Borde del mismo color
   },
   buttonterminar: {
-    backgroundColor: '#009688',
+    backgroundColor: 'rgba(34, 139, 34, 0.15)', // Fondo verde semitransparente
     padding: isSmallIPhone ? 12 : 15,
     borderRadius: 50,
-
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: isSmallIPhone ? 5 : 10,
-    // Sombras para Android
-    elevation: 5,
-    // Sombras para iOS
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    // Sombras mejoradas para Android
+    elevation: 8,
+    // Sombras mejoradas para iOS
+    shadowColor: '#228B22',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
+    borderWidth: 2,
+    borderColor: 'rgba(34, 139, 34, 0.3)', // Borde del mismo color
   },
   
   
   buttonText: {
-    color: 'white',
+    color: '#7B68EE', // Color azul-lila suave intenso para botón "Siguiente"
     fontSize: isSmallIPhone ? 16 : 18,
     fontFamily: 'Poppins-Regular',
+    fontWeight: 'bold',
+  },
+  buttonTextTerminar: {
+    color: '#228B22', // Color verde intenso para botón "Crear Lista"
+    fontSize: isSmallIPhone ? 16 : 18,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: 'bold',
   },
   icon: {
     marginRight: 10,

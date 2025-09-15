@@ -35,7 +35,7 @@ export const translations = {
     saved: "Historial",
     calendar: "Calendario",
     priceCalculator: "Precios",
-    manualList: "Manual",
+    manualList: "Listas a mano",
     mySubscription: "Mi Suscripción",
     subscribe: "Suscribirse",
     information: "Información",
