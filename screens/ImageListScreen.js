@@ -45,9 +45,12 @@ const promptsAnalize = {
   it: "Sei un assistente utile che analizza immagini di liste della spesa. Rispondi in italiano e non fare commenti, aggiungi solo gli articoli presenti nella lista della spesa. Se l'immagine non contiene articoli per generare una lista, cerca sempre i testi per farne una. Se sono in un'altra lingua, traduci i prodotti nella lingua richiesta.",
   fr: "Tu es un assistant utile qui analyse des images de listes de courses. Réponds en français sans faire de commentaires, ajoute simplement les articles vus sur la liste de courses. Si l'image ne contient pas d'articles pour générer une liste, cherche toujours les textes pour en créer une. S'ils sont dans une autre langue, traduis les produits dans la langue demandée.",
   tr: "Sen, alışveriş listesi görüntülerini analiz eden yardımcı bir asistansın. Türkçe yanıt ver ve hiçbir yorum yapma, sadece alışveriş listesinde görülen ürünleri ekle. Görüntüde liste oluşturacak ürünler yoksa, her zaman metinleri ara ve bir liste oluştur. Eğer metin başka bir dildeyse, ürünleri istenilen dile çevir.",
-  ptru: "Você é um assistente útil que analisa imagens de listas de compras. Responda em português e não comente nada, apenas adicione os itens vistos na lista de compras. Se a imagem não contiver itens para gerar uma lista, sempre procure os textos para criar uma. Se estiver em outro idioma, traduza os produtos para o idioma solicitado.",
-  arhu: "أنت مساعد مفيد يحلل صور قوائم التسوق. أجب باللغة العربية ولا تعلق على أي شيء، فقط أضف العناصر الموجودة في قائمة التسوق. إذا لم تحتوي الصورة على عناصر لإنشاء قائمة، فابحث دائمًا عن النصوص لإنشاء قائمة. إذا كانت بلغة أخرى، ترجم المنتجات إلى اللغة المطلوبة.",
-  jahi: "あなたは買い物リストの画像を分析する有能なアシスタントです。日本語で回答し、コメントは一切せず、買い物リストに表示されている商品を追加してください。画像にリストを生成する商品が含まれていない場合は、常にテキストを探してリストを作成してください。別の言語で書かれている場合は、求められた言語に翻訳してください。",
+  pt: "Você é um assistente útil que analisa imagens de listas de compras. Responda em português e não comente nada, apenas adicione os itens vistos na lista de compras. Se a imagem não contiver itens para gerar uma lista, sempre procure os textos para criar uma. Se estiver em outro idioma, traduza os produtos para o idioma solicitado.",
+  ru: "Вы полезный помощник, который анализирует изображения списков покупок. Отвечайте на русском языке и не комментируйте, просто добавьте товары, видимые в списке покупок. Если изображение не содержит товаров для создания списка, всегда ищите тексты для создания списка. Если они на другом языке, переведите продукты на запрашиваемый язык.",
+  ar: "أنت مساعد مفيد يحلل صور قوائم التسوق. أجب باللغة العربية ولا تعلق على أي شيء، فقط أضف العناصر الموجودة في قائمة التسوق. إذا لم تحتوي الصورة على عناصر لإنشاء قائمة، فابحث دائمًا عن النصوص لإنشاء قائمة. إذا كانت بلغة أخرى، ترجم المنتجات إلى اللغة المطلوبة.",
+  hu: "Hasznos asszisztens vagy, aki bevásárlólisták képeit elemzi. Válaszolj magyarul és ne kommentálj semmit, csak add hozzá a bevásárlólistán látható termékeket. Ha a kép nem tartalmaz elemeket lista létrehozásához, mindig keress szövegeket lista készítéséhez. Ha más nyelven vannak, fordítsd le a termékeket a kért nyelvre.",
+  ja: "あなたは買い物リストの画像を分析する有能なアシスタントです。日本語で回答し、コメントは一切せず、買い物リストに表示されている商品を追加してください。画像にリストを生成する商品が含まれていない場合は、常にテキストを探してリストを作成してください。別の言語で書かれている場合は、求められた言語に翻訳してください。",
+  hi: "आप खरीदारी सूची की छवियों का विश्लेषण करने वाले एक सहायक हैं। हिंदी में उत्तर दें और कोई टिप्पणी न करें, बस खरीदारी सूची में दिखाई देने वाली वस्तुओं को जोड़ें। यदि छवि में सूची बनाने के लिए आइटम नहीं हैं, तो हमेशा सूची बनाने के लिए टेक्स्ट खोजें। यदि वे दूसरी भाषा में हैं, तो उत्पादों को अनुरोधित भाषा में अनुवाद करें।",
   nl: "Je bent een behulpzame assistent die afbeeldingen van boodschappenlijsten analyseert. Antwoord in het Nederlands en geef geen commentaar, voeg alleen de items toe die op de boodschappenlijst staan. Als de afbeelding geen items bevat om een lijst te genereren, zoek dan altijd naar teksten om een lijst te maken. Als deze in een andere taal zijn, vertaal de producten naar de gevraagde taal."
 };
 
@@ -59,9 +62,12 @@ const costEstimatePrompts = {
   it: "Sei un assistente che calcola il costo stimato di una lista della spesa in ${country}. Rispondi con il costo totale.",
   fr: "Tu es un assistant qui calcule le coût estimé d'une liste de courses en ${country}. Réponds avec le coût total.",
   tr: "${country} ülkesindeki bir alışveriş listesinin tahmini maliyetini hesaplayan bir asistansın. Toplam maliyeti belirterek yanıt ver.",
-  ptru: "Você é um assistente que calcula o custo estimado de uma lista de compras em ${country}. Responda com o custo total.",
-  arhu: "أنت مساعد يحسب التكلفة التقديرية لقائمة التسوق في ${country}. أجب بالتكلفة الإجمالية.",
-  jahi: "あなたは${country}における買い物リストの推定費用を計算するアシスタントです。合計金額を答えてください。",
+  pt: "Você é um assistente que calcula o custo estimado de uma lista de compras em ${country}. Responda com o custo total.",
+  ru: "Вы помощник, который рассчитывает примерную стоимость списка покупок в ${country}. Ответьте общей стоимостью.",
+  ar: "أنت مساعد يحسب التكلفة التقديرية لقائمة التسوق في ${country}. أجب بالتكلفة الإجمالية.",
+  hu: "Ön egy asszisztens, aki kiszámítja egy bevásárlólista becsült költségét ${country} országban. Válaszoljon a teljes költséggel.",
+  ja: "あなたは${country}における買い物リストの推定費用を計算するアシスタントです。合計金額を答えてください。",
+  hi: "आप ${country} में खरीदारी सूची की अनुमानित लागत की गणना करने वाले सहायक हैं। कुल लागत के साथ उत्तर दें।",
   nl: "Je bent een assistent die de geschatte kosten van een boodschappenlijst in ${country} berekent. Antwoord met de totale kosten."
 };
 
@@ -109,17 +115,29 @@ const modalTexts = {
     takePhoto: "Tirar uma foto",
     cancel: "Cancelar",
   },
-  arhu: {
+  ar: {
     title: "اختر أو التقط صورة لقائمة التسوق الخاصة بك",
     gallery: "اختر من المعرض",
     takePhoto: "التقط صورة",
     cancel: "إلغاء",
   },
-  jahi: {
+  hu: {
+    title: "Válasszon vagy készítsen fényképet a bevásárlólistájáról",
+    gallery: "Választás a galériából",
+    takePhoto: "Fénykép készítése",
+    cancel: "Mégse",
+  },
+  ja: {
     title: "買い物リストの写真を選択または撮影してください",
     gallery: "ギャラリーから選択",
     takePhoto: "写真を撮る",
     cancel: "キャンセル",
+  },
+  hi: {
+    title: "अपनी खरीदारी सूची की फोटो चुनें या लें",
+    gallery: "गैलरी से चुनें",
+    takePhoto: "फोटो लें",
+    cancel: "रद्द करें",
   },
   nl: {
     title: "Selecteer of maak een foto van je boodschappenlijst",
@@ -138,8 +156,8 @@ const suscribeButtonTranslations = {
   fr: "Abonne-toi pour analyser des listes de courses",
   tr: "Alışveriş listelerini analiz etmek için abone ol",
   ptru: "Assine para analisar listas de compras",
-  arhu: "اشترك لتحليل قوائم التسوق",
-  jahi: "買い物リストを分析するには購読してください",
+  ar: "اشترك لتحليل قوائم التسوق",
+  ja: "買い物リストを分析するには購読してください",
   nl: "Abonneer je om boodschappenlijsten te analyseren"
 };
 
@@ -277,7 +295,7 @@ const alertTexts = {
     errorAnalyzingImage: "Erro ao analisar a imagem: ",
     errorGettingCustomerInfo: "Erro ao obter informações do cliente:",
   },
-  arhu: {
+  ar: {
     subscriptionRequired: "الاشتراك مطلوب",
     subscriptionMessage: "يجب أن تكون مشتركًا لحساب التكلفة التقديرية.",
     subscribe: "اشترك",
@@ -296,7 +314,7 @@ const alertTexts = {
     errorAnalyzingImage: "خطأ في تحليل الصورة: ",
     errorGettingCustomerInfo: "خطأ في الحصول على معلومات العميل:",
   },
-  jahi: {
+  ja: {
     subscriptionRequired: "サブスクリプションが必要です",
     subscriptionMessage: "推定費用を計算するにはサブスクリプションが必要です。",
     subscribe: "購読する",

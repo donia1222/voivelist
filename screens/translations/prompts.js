@@ -15,7 +15,10 @@ const prompts = {
   ja: "買い物リストを作成し、ユーザーが指定した商品のみを選択します。1つの商品でも複数の商品でも構いません。コメントはしないでくださいが、ユーザーが指定していない場合は標準量を追加してください。",
   ko: "쇼핑 목록을 만들고, 사용자가 지정한 제품만 선택하세요. 하나의 제품이든 여러 제품이든 상관없습니다. 코멘트하지 말고, 사용자가 지정하지 않은 경우 표준 수량을 추가하세요.",
   ar: "أنشئ قائمة تسوق، واختر المنتجات أو المنتج الذي يحدده المستخدم فقط، يمكن أن يكون منتجًا واحدًا أو أكثر، لا تعلق ولكن أضف الكميات القياسية إذا لم يحددها المستخدم.",
-  he: "צור רשימת קניות, בחר רק את המוצרים או המוצר שהמשתמש מציין, זה יכול להיות מוצר אחד או מספר מוצרים, אל תהגיב אבל הוסף כמויות סטנדרטיות אם המשתמש לא מציין."
+  he: "צור רשימת קניות, בחר רק את המוצרים או המוצר שהמשתמש מציין, זה יכול להיות מוצר אחד או מספר מוצרים, אל תהגיב אבל הוסף כמויות סטנדרטיות אם המשתמש לא מציין.",
+  tr: "Alışveriş listesi oluştur, sadece kullanıcının belirttiği ürünleri veya ürünü seç, bir veya birden fazla ürün olabilir, yorum yapma ama kullanıcı belirtmezse standart miktarlar ekle ve emoji ekle.",
+  hu: "Készíts bevásárlólistát, csak a felhasználó által megadott termékeket válaszd ki, lehet egy vagy több termék, ne kommentálj, de adj hozzá standard mennyiségeket, ha a felhasználó nem adja meg őket, és adj hozzá hangulatjeleket.",
+  hi: "खरीदारी सूची बनाएं, केवल उन उत्पादों या उत्पाद को चुनें जो उपयोगकर्ता निर्दिष्ट करता है, यह एक या कई उत्पाद हो सकते हैं, टिप्पणी न करें लेकिन यदि उपयोगकर्ता उन्हें निर्दिष्ट नहीं करता है तो मानक मात्रा जोड़ें और इमोजी जोड़ें।"
 };
 
 export default prompts;

@@ -460,19 +460,26 @@ const HistoryScreen = ({ navigation }) => {
   }
 
   // Función para agregar un nuevo item a la lista expandida
-  const addNewItemToExpandedList = async (itemText = "") => {
+  const addNewItemToExpandedList = async (itemText) => {
     if (expandedListData.index !== null) {
       const newHistory = [...history]
       const newItemIndex = newHistory[expandedListData.index].list.length
-      newHistory[expandedListData.index].list.push(itemText)
-      
+
+      // Si itemText viene con contenido, agregarlo directamente
+      // Si no, agregar un item vacío y entrar en modo edición
+      if (itemText && itemText.trim()) {
+        newHistory[expandedListData.index].list.push(itemText)
+      } else {
+        newHistory[expandedListData.index].list.push("")
+      }
+
       // Actualizar los datos del modal expandido ANTES de guardar
       const updatedExpandedData = {
         ...expandedListData,
         list: newHistory[expandedListData.index].list
       }
       setExpandedListData(updatedExpandedData)
-      
+
       // Asegurar que el nuevo item NO esté marcado como completado
       const newCompletedItems = { ...completedItems }
       if (newCompletedItems[expandedListData.index]) {
@@ -483,14 +490,16 @@ const HistoryScreen = ({ navigation }) => {
       }
       setCompletedItems(newCompletedItems)
       saveCompletedItems(newCompletedItems)
-      
+
       // Guardar en storage
       await saveHistory(newHistory)
-      
-      // Comenzar a editar el nuevo item
-      setEditingListIndex(expandedListData.index)
-      setEditingItemIndex(newItemIndex)
-      setEditingItemText("")
+
+      // Solo entrar en modo edición si no se proporcionó texto
+      if (!itemText || !itemText.trim()) {
+        setEditingListIndex(expandedListData.index)
+        setEditingItemIndex(newItemIndex)
+        setEditingItemText("")
+      }
     }
   }
 
