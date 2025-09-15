@@ -29,7 +29,8 @@ const ExpandedListModal = ({
   onSaveList,
   onDeleteList,
   markedLists,
-  onSwitchList
+  onSwitchList,
+  autoOpenAddModal = false
 }) => {
   const { theme } = useTheme()
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
@@ -58,6 +59,15 @@ const ExpandedListModal = ({
       useNativeDriver: false
     }).start()
   }, [completedItems, listData])
+
+  // Auto-abrir modal de añadir productos si autoOpenAddModal es true
+  useEffect(() => {
+    if (visible && autoOpenAddModal) {
+      setTimeout(() => {
+        setShowAddItemModal(true)
+      }, 500) // Pequeño delay para que se abra el ExpandedListModal primero
+    }
+  }, [visible, autoOpenAddModal])
 
   const handleEditItem = (itemIndex, itemText) => {
     setEditingItemIndex(itemIndex)

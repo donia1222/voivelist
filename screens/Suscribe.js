@@ -214,19 +214,19 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 20,
     elevation: 15,
-    marginTop: isTablet ? -30 : -20,
+    marginTop: isTablet ? -40 : -50,
   },
 
   appIcon: {
-    width: isTablet ? 140 : isSmallIPhone ? 90 : 120,
-    height: isTablet ? 140 : isSmallIPhone ? 90 : 120,
+    width: isTablet ? 140 : isSmallIPhone ? 90 : 160,
+    height: isTablet ? 140 : isSmallIPhone ? 90 : 160,
     borderRadius: isTablet ? 40 : isSmallIPhone ? 25 : 35,
   },
 
   titleText: {
     fontSize: isTablet ? 36 : isSmallIPhone ? 26 : 32,
-    fontWeight: '800',
-    color: theme?.text || '#2c3e50',
+    fontWeight: '600',
+    color: theme?.text || '#2c3e50f6',
     textAlign: 'center',
     marginBottom: isSmallIPhone ? 6 : 10,
     letterSpacing: 0.5,
@@ -253,9 +253,9 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
 
   priceText: {
     fontSize: isTablet ? 20 : 18,
-    color: '#9b59b6',
+    color: '#2c29dbb7',
     textAlign: 'center',
-    fontWeight: '700',
+    fontWeight: '600',
     letterSpacing: 0.5,
   },
 
@@ -313,15 +313,18 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
     alignItems: 'center',
     marginBottom: isTablet ? 30 : 25,
     alignSelf: 'center',
+    marginTop: isTablet ? -30 : -40,
   },
 
   subscribeButtonGradient: {
     borderRadius: 30,
     marginBottom: 20,
-    backgroundColor: '#f1c40f',
-    shadowColor: '#f39c12',
+    backgroundColor: 'rgba(44, 41, 219, 0.15)', // Azul semitransparente moderno
+    borderWidth: 2,
+    borderColor: 'rgba(44, 41, 219, 0.3)',
+    shadowColor: '#2c29db',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     shadowRadius: 15,
     elevation: 10,
   },
@@ -336,7 +339,7 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
   },
 
   subscribeButtonText: {
-    color: '#2c3e50',
+    color: '#2c29db', // Azul intenso, mismo color que el fondo pero fuerte
     fontSize: isTablet ? 19 : isSmallIPhone ? 15 : 17,
     fontWeight: '800',
     letterSpacing: 1.5,
@@ -471,7 +474,9 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
   },
 
   loaderContainer: {
-    paddingVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: isTablet ? 23 : isSmallIPhone ? 18 : 20, // Misma altura que el texto
   },
 
   modalView: {
@@ -865,12 +870,11 @@ export default function Suscribe({ onClose }) {
                 activeOpacity={0.9}
                 style={styles.subscribeButtonGradient}
               >
-                <View style={[
-                  styles.subscribeButton,
-                  isSubscribing && styles.buttonDisabled
-                ]}>
+                <View style={styles.subscribeButton}>
                   {isSubscribing ? (
-                    <ActivityIndicator size="small" color='#FFFFFF' />
+                    <View style={styles.loaderContainer}>
+                      <ActivityIndicator size="small" color='#2c29db' />
+                    </View>
                   ) : (
                     <>
                       <Text style={[styles.subscribeButtonText, isSmallIPhone && {fontSize: 16}]}>Get Started →</Text>

@@ -161,6 +161,7 @@ const HistoryScreen = ({ navigation }) => {
   const [expandedLists, setExpandedLists] = useState({})
   const [expandedModalVisible, setExpandedModalVisible] = useState(false)
   const [expandedListData, setExpandedListData] = useState({ list: [], name: '', index: null })
+  const [autoOpenAddModal, setAutoOpenAddModal] = useState(false)
   const [editingItemIndex, setEditingItemIndex] = useState(null)
   const [editingListIndex, setEditingListIndex] = useState(null)
   const [editingItemText, setEditingItemText] = useState("")
@@ -2297,7 +2298,11 @@ const HistoryScreen = ({ navigation }) => {
       {/* Modal de lista expandida usando el componente reutilizable */}
       <ExpandedListModal
         visible={expandedModalVisible}
-        onClose={() => setExpandedModalVisible(false)}
+        onClose={() => {
+          setExpandedModalVisible(false)
+          setAutoOpenAddModal(false)
+        }}
+        autoOpenAddModal={autoOpenAddModal}
         listData={expandedListData}
         completedItems={completedItems[expandedListData.index] || []}
         markedLists={(() => {
@@ -2452,7 +2457,8 @@ const HistoryScreen = ({ navigation }) => {
               <TouchableOpacity
                 style={modernStyles.actionModalButton}
                 onPress={() => {
-                  openModal(selectedItemIndex)
+                  setAutoOpenAddModal(true)
+                  openExpandedListModal(selectedItemIndex)
                   setActionsModalVisible(false)
                 }}
               >

@@ -484,19 +484,7 @@ const OnboardingScreen = ({ navigation }) => {
           </View>
         </View>
       )}
-      {buttonVisible && (
-        currentIndex === filteredSlides.length - 1 ? (
-          <TouchableOpacity style={styles.buttonterminar} onPress={navigate}>
-            <Ionicons name="mic-outline" size={24} color="#228B22" style={styles.icon} />
-            <Text style={styles.buttonTextTerminar}>{currentLabels.startButton}</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.button} onPress={handleNext}>
-            <Text style={styles.buttonText}>{currentLabels.nextButton}</Text>
-            <Ionicons name="arrow-forward-outline" size={24} color="#7B68EE" style={styles.iconRight} />
-          </TouchableOpacity>
-        )
-      )}
+
 
     </View>
   );
