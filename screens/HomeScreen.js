@@ -2154,7 +2154,9 @@ const HomeScreen = ({ navigation }) => {
               style={modernStyles.modalImage}
             />
             <Text style={modernStyles.modalButtonTexte}>{currentLabels.changeLanguage}</Text>
-
+            {currentLabels.appLanguageInfo && (
+              <Text style={[modernStyles.modalButtonTexte, {marginTop: 15, fontSize: 14, lineHeight: 20, paddingHorizontal: 20}]}>{currentLabels.appLanguageInfo}</Text>
+            )}
             <TouchableOpacity onPress={handleCloseModal} style={modernStyles.closeButton}>
               <Ionicons name="close" size={32} color="#374151" />
             </TouchableOpacity>

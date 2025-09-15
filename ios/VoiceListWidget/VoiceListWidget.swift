@@ -189,6 +189,12 @@ struct VoiceListWidgetEntryView : View {
             MediumWidgetView(entry: entry)
         case .systemLarge:
             LargeWidgetView(entry: entry)
+        case .systemExtraLarge:
+            if #available(iOS 16.0, *) {
+                ExtraLargeWidgetView(entry: entry)
+            } else {
+                LargeWidgetView(entry: entry)
+            }
         default:
             SmallWidgetView(entry: entry)
         }
@@ -951,6 +957,331 @@ struct LargeWidgetView: View {
     }
 }
 
+@available(iOS 16.0, *)
+struct ExtraLargeWidgetView: View {
+    var entry: Provider.Entry
+    @AppStorage("widgetListIndex", store: UserDefaults(suiteName: "group.com.lwebch.VoiceList")) private var currentListIndex = 0
+
+    var body: some View {
+        if !entry.shoppingLists.isEmpty {
+            // Show shopping list with bounds checking
+            let safeIndex = min(max(0, currentListIndex), entry.shoppingLists.count - 1)
+            let currentList = entry.shoppingLists[safeIndex]
+            ZStack {
+                VStack(spacing: 0) {
+                    // Header: Logo izquierda, Título centro, Navegación derecha
+                    HStack {
+                        // Logo izquierda
+                        HStack(spacing: 8) {
+                            if let ui = UIImage(named: "icono34") {
+                                Image(uiImage: ui)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 36, height: 36)
+                            }
+                            Text("BuyVoice")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundColor(Color(hex: "8B5CF6"))
+                        }
+
+                        Spacer()
+
+                        // Título centrado
+                        VStack(spacing: 4) {
+                            Text(currentList.name)
+                                .font(.system(size: 24, weight: .bold))
+                                .foregroundColor(Color(hex: "1F2937"))
+                                .lineLimit(1)
+
+                            // List indicator dots
+                            if entry.shoppingLists.count > 1 {
+                                HStack(spacing: 4) {
+                                    ForEach(0..<min(entry.shoppingLists.count, 6), id: \.self) { index in
+                                        Circle()
+                                            .fill(index == safeIndex ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                            .frame(width: 6, height: 6)
+                                    }
+                                    if entry.shoppingLists.count > 6 {
+                                        Text("+\(entry.shoppingLists.count - 6)")
+                                            .font(.system(size: 10))
+                                            .foregroundColor(Color(hex: "6B7280"))
+                                    }
+                                }
+                            }
+                        }
+
+                        Spacer()
+
+                        // Navegación derecha
+                        HStack(spacing: 8) {
+                            if entry.shoppingLists.count > 1 {
+                                Button(intent: NavigateListIntent(direction: "previous", currentIndex: safeIndex, totalLists: entry.shoppingLists.count)) {
+                                    Image(systemName: "chevron.left")
+                                        .font(.system(size: 16, weight: .medium))
+                                        .foregroundColor(safeIndex > 0 ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                        .frame(width: 32, height: 32)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(hex: "8B5CF6").opacity(safeIndex > 0 ? 0.1 : 0.05))
+                                        )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .disabled(safeIndex == 0)
+
+                                Button(intent: NavigateListIntent(direction: "next", currentIndex: safeIndex, totalLists: entry.shoppingLists.count)) {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 16, weight: .medium))
+                                        .foregroundColor(safeIndex < entry.shoppingLists.count - 1 ? Color(hex: "8B5CF6") : Color(hex: "d1d5db"))
+                                        .frame(width: 32, height: 32)
+                                        .background(
+                                            Circle()
+                                                .fill(Color(hex: "8B5CF6").opacity(safeIndex < entry.shoppingLists.count - 1 ? 0.1 : 0.05))
+                                        )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .disabled(safeIndex == entry.shoppingLists.count - 1)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 32)
+                    .padding(.vertical, 12)
+
+                    // Lista de items en 3 columnas para aprovechar mejor el espacio extra
+                    let maxItemsToShow = 18
+                    let itemsToShow = Array(currentList.items.prefix(maxItemsToShow))
+                    let itemsPerColumn = (itemsToShow.count + 2) / 3 // Dividir en 3 columnas
+
+                    let column1 = Array(itemsToShow.prefix(itemsPerColumn))
+                    let column2 = Array(itemsToShow.dropFirst(itemsPerColumn).prefix(itemsPerColumn))
+                    let column3 = Array(itemsToShow.dropFirst(itemsPerColumn * 2).prefix(itemsPerColumn))
+
+                    HStack(alignment: .top, spacing: 24) {
+                        // Columna 1
+                        VStack(alignment: .leading, spacing: 4) {
+                            ForEach(Array(column1.enumerated()), id: \.offset) { index, item in
+                                Button(intent: ToggleItemIntent(listIndex: safeIndex, itemIndex: index)) {
+                                    HStack(spacing: 8) {
+                                        Circle()
+                                            .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
+                                            .frame(width: 10, height: 10)
+                                        Text(extractItemName(item.text))
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "4B5563"))
+                                            .strikethrough(item.isCompleted)
+                                            .lineLimit(1)
+                                        Spacer()
+                                    }
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+
+                        // Columna 2
+                        VStack(alignment: .leading, spacing: 4) {
+                            ForEach(Array(column2.enumerated()), id: \.offset) { index, item in
+                                let actualIndex = itemsPerColumn + index
+                                Button(intent: ToggleItemIntent(listIndex: safeIndex, itemIndex: actualIndex)) {
+                                    HStack(spacing: 8) {
+                                        Circle()
+                                            .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
+                                            .frame(width: 10, height: 10)
+                                        Text(extractItemName(item.text))
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "4B5563"))
+                                            .strikethrough(item.isCompleted)
+                                            .lineLimit(1)
+                                        Spacer()
+                                    }
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+
+                        // Columna 3
+                        VStack(alignment: .leading, spacing: 4) {
+                            ForEach(Array(column3.enumerated()), id: \.offset) { index, item in
+                                let actualIndex = (itemsPerColumn * 2) + index
+                                Button(intent: ToggleItemIntent(listIndex: safeIndex, itemIndex: actualIndex)) {
+                                    HStack(spacing: 8) {
+                                        Circle()
+                                            .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
+                                            .frame(width: 10, height: 10)
+                                        Text(extractItemName(item.text))
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "4B5563"))
+                                            .strikethrough(item.isCompleted)
+                                            .lineLimit(1)
+                                        Spacer()
+                                    }
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.top, 4)
+
+                    // Mostrar "y X más" si hay más items
+                    if currentList.items.count > maxItemsToShow {
+                        Text("... and \(currentList.items.count - maxItemsToShow) more")
+                            .font(.system(size: 12))
+                            .foregroundColor(Color(hex: "6B7280"))
+                            .italic()
+                            .padding(.top, 8)
+                    }
+
+                    Spacer()
+                }
+
+                // History button en esquina inferior derecha (más grande)
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Link(destination: URL(string: "voicelist://history")!) {
+                            Image(systemName: "list.bullet")
+                                .font(.system(size: 24, weight: .medium))
+                                .foregroundColor(Color(hex: "8B5CF6"))
+                                .frame(width: 50, height: 50)
+                                .background(
+                                    Circle()
+                                        .fill(Color(hex: "8B5CF6").opacity(0.1))
+                                )
+                        }
+                    }
+                }
+                .padding(20)
+            }
+        } else {
+            // Vista vacía para iPad extra grande
+            VStack(spacing: 16) {
+                // Header centrado
+                HStack {
+                    Spacer()
+                    VStack(spacing: 8) {
+                        if let ui = UIImage(named: "icono34") {
+                            Image(uiImage: ui)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 48, height: 48)
+                        } else {
+                            Image(systemName: "mic.circle.fill")
+                                .font(.system(size: 42, weight: .semibold))
+                                .foregroundColor(Color(hex: "8B5CF6"))
+                        }
+                        Text("BuyVoice")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(Color(hex: "6B7280"))
+                        Text("Get started by creating your first list")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(Color(hex: "9CA3AF"))
+                            .multilineTextAlignment(.center)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, 40)
+                .padding(.top, 16)
+
+                // Botones en una cuadrícula 2x2 más compacta
+                VStack(spacing: 12) {
+                    HStack(spacing: 12) {
+                        Link(destination: URL(string: "voicelist://history")!) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "mic.fill")
+                                    .font(.system(size: 24, weight: .medium))
+                                    .foregroundColor(Color(hex: "8B5CF6"))
+                                Text("Voice")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(Color(hex: "8B5CF6"))
+                            }
+                            .frame(width: 100, height: 80)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(hex: "8B5CF6").opacity(0.1))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .stroke(Color(hex: "8B5CF6"), lineWidth: 2)
+                                    )
+                            )
+                            .shadow(color: Color(hex: "8B5CF6").opacity(0.2), radius: 2, x: 0, y: 1)
+                        }
+
+                        Link(destination: URL(string: "voicelist://upload")!) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "photo.badge.plus")
+                                    .font(.system(size: 24, weight: .medium))
+                                    .foregroundColor(Color(hex: "F59E0B"))
+                                Text("Upload")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(Color(hex: "F59E0B"))
+                            }
+                            .frame(width: 100, height: 80)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(hex: "F59E0B").opacity(0.1))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .stroke(Color(hex: "F59E0B"), lineWidth: 2)
+                                    )
+                            )
+                            .shadow(color: Color(hex: "F59E0B").opacity(0.2), radius: 2, x: 0, y: 1)
+                        }
+
+                        Link(destination: URL(string: "voicelist://calculate")!) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "plus.forwardslash.minus")
+                                    .font(.system(size: 24, weight: .medium))
+                                    .foregroundColor(Color(hex: "10B981"))
+                                Text("Calculate")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(Color(hex: "10B981"))
+                            }
+                            .frame(width: 100, height: 80)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(hex: "10B981").opacity(0.1))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .stroke(Color(hex: "10B981"), lineWidth: 2)
+                                    )
+                            )
+                            .shadow(color: Color(hex: "10B981").opacity(0.2), radius: 2, x: 0, y: 1)
+                        }
+
+                        Link(destination: URL(string: "voicelist://calendar")!) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "calendar")
+                                    .font(.system(size: 24, weight: .medium))
+                                    .foregroundColor(Color(hex: "EF4444"))
+                                Text("Calendar")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(Color(hex: "EF4444"))
+                            }
+                            .frame(width: 100, height: 80)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(hex: "EF4444").opacity(0.1))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .stroke(Color(hex: "EF4444"), lineWidth: 2)
+                                    )
+                            )
+                            .shadow(color: Color(hex: "EF4444").opacity(0.2), radius: 2, x: 0, y: 1)
+                        }
+                    }
+                }
+                .padding(.horizontal, 40)
+
+                Spacer()
+            }
+            .widgetURL(URL(string: "voicelist://create"))
+        }
+    }
+}
+
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -1012,7 +1343,22 @@ struct VoiceListWidget: Widget {
         }
         .configurationDisplayName("BuyVoice")
         .description("Quick access to your shopping lists")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .supportedFamilies(supportedFamilies())
+    }
+}
+
+// MARK: - Device Detection and Widget Configuration
+func supportedFamilies() -> [WidgetFamily] {
+    if UIDevice.current.userInterfaceIdiom == .pad {
+        // iPad: solo mediano, grande y extra grande
+        if #available(iOS 16.0, *) {
+            return [.systemMedium, .systemLarge, .systemExtraLarge]
+        } else {
+            return [.systemMedium, .systemLarge]
+        }
+    } else {
+        // iPhone: todos los tamaños normales
+        return [.systemSmall, .systemMedium, .systemLarge]
     }
 }
 
