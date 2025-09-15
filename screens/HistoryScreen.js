@@ -45,6 +45,55 @@ const HistoryScreen = ({ navigation }) => {
   const styles = getStyles(theme)
   const modernStyles = getModernStyles(theme)
 
+  // Funciones para manejar categorías
+  const extractItemName = (item) => {
+    const itemText = typeof item === 'string' ? item : item.text || item.name || String(item)
+
+    if (itemText.includes(' - ')) {
+      const parts = itemText.split(' - ')
+      if (parts.length >= 2) {
+        let itemName = parts.slice(1).join(' - ')
+        itemName = itemName.replace(/\s*\([^)]*\)\s*/g, '')
+        itemName = itemName.replace(/\s*-\s*\$[\d.,]+\s*/g, '')
+        itemName = itemName.replace(/\s*🏪\s*$/, '')
+        return itemName.trim()
+      }
+    }
+    return itemText
+  }
+
+  const extractCategoryName = (item) => {
+    const itemText = typeof item === 'string' ? item : item.text || item.name || String(item)
+
+    if (itemText.includes(' - ')) {
+      const parts = itemText.split(' - ')
+      return parts[0].trim()
+    }
+    return null
+  }
+
+  const groupItemsByCategory = (list) => {
+    if (!list) return { categorized: {}, uncategorized: [] }
+
+    const categorized = {}
+    const uncategorized = []
+
+    list.forEach((item, index) => {
+      const categoryName = extractCategoryName(item)
+
+      if (categoryName) {
+        if (!categorized[categoryName]) {
+          categorized[categoryName] = []
+        }
+        categorized[categoryName].push({ item, index })
+      } else {
+        uncategorized.push({ item, index })
+      }
+    })
+
+    return { categorized, uncategorized }
+  }
+
   // Estados existentes...
   const [history, setHistory] = useState([])
   const [completedItems, setCompletedItems] = useState({})
@@ -342,8 +391,16 @@ const HistoryScreen = ({ navigation }) => {
   const saveItemEdit = async () => {
     if (editingListIndex !== null && editingItemIndex !== null) {
       const newHistory = [...history]
-      newHistory[editingListIndex].list[editingItemIndex] = editingItemText
-      
+      const originalItem = newHistory[editingListIndex].list[editingItemIndex]
+
+      // Mantener la categoría si existe
+      const categoryName = extractCategoryName(originalItem)
+      const newItemText = categoryName
+        ? `${categoryName} - ${editingItemText}`
+        : editingItemText
+
+      newHistory[editingListIndex].list[editingItemIndex] = newItemText
+
       // Si estamos en el modal expandido, actualizar también sus datos
       if (expandedListData.index === editingListIndex) {
         setExpandedListData({
@@ -351,9 +408,9 @@ const HistoryScreen = ({ navigation }) => {
           list: newHistory[editingListIndex].list
         })
       }
-      
+
       await saveHistory(newHistory)
-      
+
       // Limpiar estados de edición
       setEditingListIndex(null)
       setEditingItemIndex(null)
@@ -1425,13 +1482,76 @@ const HistoryScreen = ({ navigation }) => {
         </View>
       )}
 
-      <ScrollView 
+      <ScrollView
         style={modernStyles.listContent}
         showsVerticalScrollIndicator={false}
       >
-        {item.list.map((listItem, listItemIndex) => (
-          <View key={listItemIndex}>
-            {editingListIndex === index && editingItemIndex === listItemIndex ? (
+        {(() => {
+          const { categorized, uncategorized } = groupItemsByCategory(item.list)
+
+          // Definir orden de categorías usando las traducciones
+          const categoryOrder = [
+            currentLabels.supermarket || 'Supermercado',
+            currentLabels.pharmacy || 'Farmacia',
+            currentLabels.electronics || 'Electrónica',
+            currentLabels.homeAndCleaning || 'Hogar y Limpieza',
+            currentLabels.beverages || 'Bebidas',
+            currentLabels.butcher || 'Carnicería'
+          ]
+
+          // Ordenar categorías según el orden definido
+          const sortedCategories = Object.keys(categorized).sort((a, b) => {
+            const indexA = categoryOrder.indexOf(a)
+            const indexB = categoryOrder.indexOf(b)
+            if (indexA === -1 && indexB === -1) return 0
+            if (indexA === -1) return 1
+            if (indexB === -1) return -1
+            return indexA - indexB
+          })
+
+          const allItems = []
+
+          // Primero agregar items sin categoría
+          uncategorized.forEach(({ item: listItem, index: listItemIndex }) => {
+            allItems.push({ listItem, listItemIndex, category: null })
+          })
+
+          // Luego agregar items por categoría en orden
+          sortedCategories.forEach(category => {
+            categorized[category].forEach(({ item: listItem, index: listItemIndex }) => {
+              allItems.push({ listItem, listItemIndex, category })
+            })
+          })
+
+          return allItems.map(({ listItem, listItemIndex, category }, idx) => {
+            // Mostrar título de categoría si es el primer item de esa categoría
+            const showCategoryTitle = category && (
+              idx === 0 ||
+              allItems[idx - 1].category !== category
+            )
+
+            return (
+              <View key={listItemIndex}>
+                {showCategoryTitle && (
+                  <View style={{
+                    paddingHorizontal: 12,
+                    paddingVertical: 4,
+                    marginTop: idx === 0 ? 0 : 8,
+                    marginBottom: 4
+                  }}>
+                    <Text style={{
+                      fontSize: 11,
+                      fontWeight: '500',
+                      color: '#9ca3af',
+                      textTransform: 'uppercase',
+                      letterSpacing: 0.5
+                    }}>
+                      {category}
+                    </Text>
+                  </View>
+                )}
+
+                {editingListIndex === index && editingItemIndex === listItemIndex ? (
               // Modo edición
               <View style={modernStyles.listItemEditContainer}>
                 <TouchableOpacity
@@ -1492,7 +1612,7 @@ const HistoryScreen = ({ navigation }) => {
                         completedItems[index]?.includes(listItemIndex) && modernStyles.completedItemText,
                       ]}
                     >
-                      {listItem}
+                      {extractItemName(listItem)}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -1500,7 +1620,7 @@ const HistoryScreen = ({ navigation }) => {
                   onPress={() => {
                     setEditingListIndex(index)
                     setEditingItemIndex(listItemIndex)
-                    setEditingItemText(listItem)
+                    setEditingItemText(extractItemName(listItem))
                   }}
                   style={modernStyles.editIconButton}
                 >
@@ -1508,9 +1628,11 @@ const HistoryScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
             )}
-          </View>
-        ))}
-        
+              </View>
+            )
+          })
+        })()}
+
       </ScrollView>
 
       {/* Completion counter */}

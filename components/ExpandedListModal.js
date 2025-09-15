@@ -39,6 +39,7 @@ const ExpandedListModal = ({
   const [editingItemText, setEditingItemText] = useState("")
   const [listSwitcherVisible, setListSwitcherVisible] = useState(false)
   const [showAddItemModal, setShowAddItemModal] = useState(false)
+  const [selectedItemForMove, setSelectedItemForMove] = useState(null)
   const scrollViewRef = useRef(null)
   const progressAnimation = useRef(new Animated.Value(0)).current
 
@@ -124,6 +125,108 @@ const ExpandedListModal = ({
     const totalItems = getTotalCount()
     const completedCount = getCompletedCount()
     return totalItems > 0 && completedCount === totalItems
+  }
+
+  const extractItemName = (item) => {
+    const itemText = typeof item === 'string' ? item : item.text || item.name || String(item)
+
+    // If the item contains " - ", extract everything after the first " - "
+    if (itemText.includes(' - ')) {
+      const parts = itemText.split(' - ')
+      if (parts.length >= 2) {
+        // Get everything after the first " - " and remove extra details like quantity, price, store indicator
+        let itemName = parts.slice(1).join(' - ')
+
+        // Remove quantity info like (x2), (500g), etc.
+        itemName = itemName.replace(/\s*\([^)]*\)\s*/g, '')
+
+        // Remove price info like " - $5.50"
+        itemName = itemName.replace(/\s*-\s*\$[\d.,]+\s*/g, '')
+
+        // Remove store indicator emoji
+        itemName = itemName.replace(/\s*🏪\s*$/, '')
+
+        return itemName.trim()
+      }
+    }
+
+    // If no " - " found, return the original text
+    return itemText
+  }
+
+  const extractCategoryName = (item) => {
+    const itemText = typeof item === 'string' ? item : item.text || item.name || String(item)
+
+    // If the item contains " - ", extract everything before the first " - "
+    if (itemText.includes(' - ')) {
+      const parts = itemText.split(' - ')
+      return parts[0].trim()
+    }
+
+    // If no " - " found, return "Sin categoría"
+    return "Sin categoría"
+  }
+
+  // Default categories mapping for icons
+  const categoryIconMap = {
+    'Supermercado': 'cart',
+    'Farmacia': 'medkit',
+    'Mascotas': 'paw',
+    'Hogar y Limpieza': 'home',
+    'Bebidas': 'wine',
+    'Panadería': 'restaurant',
+    'Carnicería': 'nutrition',
+    'Frutas y Verduras': 'leaf',
+    'Electrónica': 'phone-portrait',
+    'Ropa': 'shirt',
+    'Congelados': 'snow',
+    'Lácteos': 'nutrition',
+    'Sin categoría': 'list'
+  }
+
+  const getCategoryIcon = (categoryName) => {
+    return categoryIconMap[categoryName] || 'list'
+  }
+
+  const groupItemsByCategory = () => {
+    if (!listData?.list) return { categorizedItems: [], uncategorizedItems: [] }
+
+    const grouped = {}
+    const uncategorized = []
+
+    listData.list.forEach((item, index) => {
+      const categoryName = extractCategoryName(item)
+
+      if (categoryName === "Sin categoría") {
+        // Add uncategorized items to separate array
+        uncategorized.push({ item, originalIndex: index })
+      } else {
+        // Group categorized items
+        if (!grouped[categoryName]) {
+          grouped[categoryName] = []
+        }
+        grouped[categoryName].push({ item, originalIndex: index })
+      }
+    })
+
+    const categorizedItems = Object.keys(grouped).map(categoryName => ({
+      categoryName,
+      icon: getCategoryIcon(categoryName),
+      items: grouped[categoryName]
+    }))
+
+    return { categorizedItems, uncategorizedItems: uncategorized }
+  }
+
+  const moveItemToCategory = (itemIndex, targetCategory) => {
+    if (!onSaveItem || !listData?.list) return
+
+    const item = listData.list[itemIndex]
+    const itemName = extractItemName(item)
+    const newItemText = targetCategory === 'none' ? itemName : `${targetCategory} - ${itemName}`
+
+    onSaveItem(itemIndex, newItemText)
+    setSelectedItemForMove(null)
   }
 
   const styles = StyleSheet.create({
@@ -385,6 +488,43 @@ const ExpandedListModal = ({
     },
     progressCheckmark: {
       position: 'absolute'
+    },
+    categorySection: {
+      marginVertical: 10
+    },
+    categoryHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      backgroundColor: theme === 'dark' ? '#374151' : '#f1f5f9',
+      borderRadius: 12,
+      marginBottom: 8,
+      borderLeftWidth: 4,
+      borderLeftColor: '#10b981'
+    },
+    categoryIcon: {
+      marginRight: 10
+    },
+    categoryTitle: {
+      fontSize: 16,
+      fontWeight: '700',
+      color: theme === 'dark' ? '#f9fafb' : '#374151',
+      flex: 1
+    },
+    categoryCount: {
+      backgroundColor: '#10b981',
+      borderRadius: 12,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      minWidth: 24,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    categoryCountText: {
+      fontSize: 12,
+      fontWeight: '600',
+      color: 'white'
     }
   })
 
@@ -476,99 +616,333 @@ const ExpandedListModal = ({
           </View>
         </View>
         
-        <ScrollView 
+        {selectedItemForMove !== null && (
+          <View style={{
+            backgroundColor: '#10b981',
+            padding: 12,
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 20
+          }}>
+            <Text style={{
+              color: 'white',
+              fontSize: 14,
+              fontWeight: '600'
+            }}>
+              Item seleccionado
+            </Text>
+            <TouchableOpacity
+              onPress={() => setSelectedItemForMove(null)}
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.3)',
+                paddingHorizontal: 10,
+                paddingVertical: 4,
+                borderRadius: 6
+              }}
+            >
+              <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>
+                CANCELAR
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        <ScrollView
           ref={scrollViewRef}
           style={styles.expandedModalContent}
-          keyboardShouldPersistTaps="handled"
+          keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
         >
-          {listData.list?.map((item, itemIndex) => (
-            <View key={itemIndex}>
-              {editingItemIndex === itemIndex ? (
-                // Modo edición
-                <View style={styles.expandedListItemEditContainer}>
-                  <View
-                    style={[
-                      styles.expandedCheckbox,
-                      completedItems?.includes(itemIndex) && styles.expandedCheckboxCompleted
-                    ]}
-                  >
-                    {completedItems?.includes(itemIndex) && (
-                      <Ionicons name="checkmark" size={20} color="white" />
+          {(() => {
+            const { categorizedItems, uncategorizedItems } = groupItemsByCategory()
+
+            return (
+              <>
+                {/* Render uncategorized items first - without header */}
+
+
+                {uncategorizedItems.filter(({ item, originalIndex }) => {
+                  // Si hay un item seleccionado, solo mostrar ese
+                  return selectedItemForMove === null || selectedItemForMove === originalIndex
+                }).map(({ item, originalIndex }) => (
+                  <View key={originalIndex}>
+                    {editingItemIndex === originalIndex ? (
+                      // Modo edición
+                      <View style={styles.expandedListItemEditContainer}>
+                        <View
+                          style={[
+                            styles.expandedCheckbox,
+                            completedItems?.includes(originalIndex) && styles.expandedCheckboxCompleted
+                          ]}
+                        >
+                          {completedItems?.includes(originalIndex) && (
+                            <Ionicons name="checkmark" size={20} color="white" />
+                          )}
+                        </View>
+                        <TextInput
+                          style={styles.expandedListItemEditInput}
+                          value={editingItemText}
+                          onChangeText={setEditingItemText}
+                          onSubmitEditing={handleSaveEdit}
+                          autoFocus
+                          selectTextOnFocus
+                        />
+                        <TouchableOpacity
+                          onPress={handleSaveEdit}
+                          style={styles.expandedSaveItemButton}
+                        >
+                          <Ionicons name="checkmark" size={20} color="#10b981" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={handleCancelEdit}
+                          style={styles.expandedCancelItemButton}
+                        >
+                          <Ionicons name="close" size={18} color="#ef4444" />
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      // Modo normal
+                      <>
+                        <TouchableOpacity
+                          onPress={() => {
+                            if (selectedItemForMove === originalIndex) {
+                              setSelectedItemForMove(null)
+                            } else if (onToggleItem) {
+                              onToggleItem(originalIndex)
+                            }
+                          }}
+                          onLongPress={() => {
+                            setSelectedItemForMove(originalIndex)
+                          }}
+                          delayLongPress={300}
+                          style={[
+                            styles.expandedListItem,
+                            selectedItemForMove === originalIndex && {
+                              backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                              borderWidth: 2,
+                              borderColor: '#10b981'
+                            }
+                          ]}
+                        >
+                          <View style={styles.expandedListItemContent}>
+                            <View
+                              style={[
+                                styles.expandedCheckbox,
+                                completedItems?.includes(originalIndex) && styles.expandedCheckboxCompleted
+                              ]}
+                            >
+                              {completedItems?.includes(originalIndex) && (
+                                <Ionicons name="checkmark" size={20} color="white" />
+                              )}
+                            </View>
+                            <Text
+                              style={[
+                                styles.expandedListItemText,
+                                completedItems?.includes(originalIndex) && styles.expandedListItemTextCompleted
+                              ]}
+                            >
+                              {extractItemName(item)}
+                            </Text>
+                            <View style={styles.expandedItemActions}>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  const itemText = extractItemName(item)
+                                  handleEditItem(originalIndex, itemText)
+                                }}
+                                style={styles.expandedEditButton}
+                              >
+                                <Ionicons name="pencil" size={14} color={theme === 'dark' ? '#fff' : '#6b7280'} />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  setSelectedItemForMove(originalIndex)
+                                }}
+                                style={styles.expandedEditButton}
+                              >
+                                <Ionicons name="move" size={16} color="#10b981" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+
+                        {/* Mostrar categorías justo debajo del item seleccionado */}
+                        {selectedItemForMove === originalIndex && (
+                          <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
+                            {[
+                              currentLabels.supermarket || 'Supermercado',
+                              currentLabels.pharmacy || 'Farmacia',
+                              currentLabels.electronics || 'Electrónica',
+                              currentLabels.homeAndCleaning || 'Hogar y Limpieza',
+                              currentLabels.beverages || 'Bebidas',
+                              currentLabels.butcher || 'Carnicería'
+                            ].map((categoryName) => (
+                              <TouchableOpacity
+                                key={categoryName}
+                                onPress={() => {
+                                  moveItemToCategory(selectedItemForMove, categoryName)
+                                }}
+                                style={{
+                                  backgroundColor: '#10b981',
+                                  padding: 10,
+                                  marginVertical: 3,
+                                  borderRadius: 8,
+                                  flexDirection: 'row',
+                                  alignItems: 'center'
+                                }}
+                              >
+                                <Ionicons
+                                  name={getCategoryIcon(categoryName)}
+                                  size={20}
+                                  color="white"
+                                  style={{ marginRight: 8 }}
+                                />
+                                <Text style={{
+                                  color: 'white',
+                                  fontSize: 14,
+                                  fontWeight: '600'
+                                }}>
+                                  {categoryName}
+                                </Text>
+                              </TouchableOpacity>
+                            ))}
+                          </View>
+                        )}
+                      </>
                     )}
                   </View>
-                  <TextInput
-                    style={styles.expandedListItemEditInput}
-                    value={editingItemText}
-                    onChangeText={setEditingItemText}
-                    onSubmitEditing={handleSaveEdit}
-                    autoFocus
-                    selectTextOnFocus
-                  />
-                  <TouchableOpacity
-                    onPress={handleSaveEdit}
-                    style={styles.expandedSaveItemButton}
-                  >
-                    <Ionicons name="checkmark" size={20} color="#10b981" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleCancelEdit}
-                    style={styles.expandedCancelItemButton}
-                  >
-                    <Ionicons name="close" size={18} color="#ef4444" />
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                // Modo normal
-                <TouchableOpacity
-                  onPress={() => {
-                    if (onToggleItem) {
-                      onToggleItem(itemIndex)
-                    }
-                  }}
-                  style={styles.expandedListItem}
-                >
-                  <View style={styles.expandedListItemContent}>
-                    <View
-                      style={[
-                        styles.expandedCheckbox,
-                        completedItems?.includes(itemIndex) && styles.expandedCheckboxCompleted
-                      ]}
-                    >
-                      {completedItems?.includes(itemIndex) && (
-                        <Ionicons name="checkmark" size={20} color="white" />
-                      )}
+                ))}
+
+
+                {/* Render categorized items with headers after uncategorized */}
+                {selectedItemForMove === null && categorizedItems.map((categoryGroup, groupIndex) => (
+                  <View key={groupIndex} style={styles.categorySection}>
+                    {/* Category Header */}
+                    <View style={styles.categoryHeader}>
+                      <Ionicons
+                        name={categoryGroup.icon}
+                        size={20}
+                        color="#10b981"
+                        style={styles.categoryIcon}
+                      />
+                      <Text style={styles.categoryTitle}>
+                        {categoryGroup.categoryName}
+                      </Text>
+                      <View style={styles.categoryCount}>
+                        <Text style={styles.categoryCountText}>
+                          {categoryGroup.items.length}
+                        </Text>
+                      </View>
                     </View>
-                    <Text
-                      style={[
-                        styles.expandedListItemText,
-                        completedItems?.includes(itemIndex) && styles.expandedListItemTextCompleted
-                      ]}
-                    >
-                      {typeof item === 'string' ? item : item.text || item.name || String(item)}
-                    </Text>
-                    <View style={styles.expandedItemActions}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          const itemText = typeof item === 'string' ? item : item.text || item.name || String(item)
-                          handleEditItem(itemIndex, itemText)
-                        }}
-                        style={styles.expandedEditButton}
-                      >
-                        <Ionicons name="pencil" size={14} color={theme === 'dark' ? '#fff' : '#6b7280'} />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => handleDeleteItem(itemIndex)}
-                        style={styles.expandedDeleteButton}
-                      >
-                        <Ionicons name="trash-outline" size={14} color="#ef4444" />
-                      </TouchableOpacity>
-                    </View>
+
+                    {/* Category Items */}
+                    {categoryGroup.items.map(({ item, originalIndex }) => (
+                      <View key={originalIndex}>
+                        {editingItemIndex === originalIndex ? (
+                          // Modo edición
+                          <View style={styles.expandedListItemEditContainer}>
+                            <View
+                              style={[
+                                styles.expandedCheckbox,
+                                completedItems?.includes(originalIndex) && styles.expandedCheckboxCompleted
+                              ]}
+                            >
+                              {completedItems?.includes(originalIndex) && (
+                                <Ionicons name="checkmark" size={20} color="white" />
+                              )}
+                            </View>
+                            <TextInput
+                              style={styles.expandedListItemEditInput}
+                              value={editingItemText}
+                              onChangeText={setEditingItemText}
+                              onSubmitEditing={handleSaveEdit}
+                              autoFocus
+                              selectTextOnFocus
+                            />
+                            <TouchableOpacity
+                              onPress={handleSaveEdit}
+                              style={styles.expandedSaveItemButton}
+                            >
+                              <Ionicons name="checkmark" size={20} color="#10b981" />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={handleCancelEdit}
+                              style={styles.expandedCancelItemButton}
+                            >
+                              <Ionicons name="close" size={18} color="#ef4444" />
+                            </TouchableOpacity>
+                          </View>
+                        ) : (
+                          // Modo normal
+                          <TouchableOpacity
+                            onPress={() => {
+                              if (selectedItemForMove === originalIndex) {
+                                setSelectedItemForMove(null)
+                              } else if (onToggleItem) {
+                                onToggleItem(originalIndex)
+                              }
+                            }}
+                            onLongPress={() => {
+                              setSelectedItemForMove(originalIndex)
+                            }}
+                            delayLongPress={300}
+                            style={[
+                              styles.expandedListItem,
+                              selectedItemForMove === originalIndex && {
+                                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                                borderWidth: 2,
+                                borderColor: '#10b981'
+                              }
+                            ]}
+                          >
+                            <View style={styles.expandedListItemContent}>
+                              <View
+                                style={[
+                                  styles.expandedCheckbox,
+                                  completedItems?.includes(originalIndex) && styles.expandedCheckboxCompleted
+                                ]}
+                              >
+                                {completedItems?.includes(originalIndex) && (
+                                  <Ionicons name="checkmark" size={20} color="white" />
+                                )}
+                              </View>
+                              <Text
+                                style={[
+                                  styles.expandedListItemText,
+                                  completedItems?.includes(originalIndex) && styles.expandedListItemTextCompleted
+                                ]}
+                              >
+                                {extractItemName(item)}
+                              </Text>
+                              <View style={styles.expandedItemActions}>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    const itemText = extractItemName(item)
+                                    handleEditItem(originalIndex, itemText)
+                                  }}
+                                  style={styles.expandedEditButton}
+                                >
+                                  <Ionicons name="pencil" size={14} color={theme === 'dark' ? '#fff' : '#6b7280'} />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    setSelectedItemForMove(originalIndex)
+                                  }}
+                                  style={styles.expandedEditButton}
+                                >
+                                  <Ionicons name="move" size={16} color="#10b981" />
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    ))}
                   </View>
-                </TouchableOpacity>
-              )}
-            </View>
-          ))}
+                ))}
+              </>
+            )
+          })()}
         </ScrollView>
         
         <View style={styles.expandedModalFooter}>
