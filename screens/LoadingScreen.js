@@ -164,7 +164,7 @@ const LoadingScreen = () => {
             },
           ]}
         >
-          <Text style={styles.title}>Voice Grocery</Text>
+          <Text style={styles.title}>BuyVoice</Text>
           <Text style={styles.tagline}>🎙️ Shop with your voice</Text>
         </Animated.View>
 

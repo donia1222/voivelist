@@ -765,7 +765,7 @@ export default function Suscribe({ onClose }) {
             />
           </View>
           
-          <Text style={[styles.titleText, isSmallIPhone && {fontSize: 28}]}>Voice Grocery</Text>
+          <Text style={[styles.titleText, isSmallIPhone && {fontSize: 28}]}>BuyVoice</Text>
           <Text style={[styles.subtitleText, isSmallIPhone && {fontSize: 14}]}>Unlock Full Potential</Text>
           
           <View style={[styles.priceContainer, isSmallIPhone && {marginBottom: 15}]}>

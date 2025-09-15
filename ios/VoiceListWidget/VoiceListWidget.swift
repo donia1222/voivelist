@@ -193,16 +193,17 @@ struct SmallWidgetView: View {
             let currentList = entry.shoppingLists[safeIndex]
             ZStack {
                 VStack(alignment: .leading, spacing: 5) {
-                    HStack(spacing: 5) {
+                    HStack(spacing: 4) {
                         if let ui = UIImage(named: "icono34") {
                             Image(uiImage: ui)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 32, height: 32)
+                                .frame(width: 30, height: 30)
                         }
-                        Text(currentList.name)
-                            .font(.system(size: 16, weight: .bold))
+                        Text(currentList.name.count > 10 ? String(currentList.name.prefix(10)) + "..." : currentList.name)
+                            .font(.system(size: 14, weight: .bold))
                             .foregroundColor(Color(hex: "1F2937"))
+                            .lineLimit(1)
                         Spacer()
                     }
                 
@@ -252,7 +253,7 @@ struct SmallWidgetView: View {
                 
                     Spacer()
                 }
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 8)
                 .padding(.top, 0)
                 .padding(.bottom, 10)
                 
@@ -281,7 +282,7 @@ struct SmallWidgetView: View {
         } else {
             // Show buttons when no lists
             VStack(spacing: 12) {
-            HStack {
+            HStack(spacing: 4) {
                 if let ui = UIImage(named: "icono34") {
                     Image(uiImage: ui)
                         .resizable()
@@ -292,9 +293,10 @@ struct SmallWidgetView: View {
                         .font(.system(size: 24, weight: .semibold))
                         .foregroundColor(Color(hex: "8B5CF6"))
                 }
-                Text("Voice Grocery")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(Color(hex: "1F2937"))
+                Text("BuyVoice")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(Color(hex: "6B7280"))
+                    .fixedSize(horizontal: true, vertical: false)
                 Spacer()
             }
             .padding(.horizontal, 6)
@@ -304,10 +306,10 @@ struct SmallWidgetView: View {
                 Link(destination: URL(string: "voicelist://history")!) {
                     VStack(spacing: 6) {
                         Image(systemName: "mic.fill")
-                            .font(.system(size: 22, weight: .medium))
+                            .font(.system(size: 20, weight: .medium))
                             .foregroundColor(Color(hex: "8B5CF6"))
                     }
-                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .frame(maxWidth: .infinity, minHeight: 44)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
                             .fill(Color(hex: "8B5CF6").opacity(0.1))
@@ -319,14 +321,14 @@ struct SmallWidgetView: View {
                     .cornerRadius(12)
                     .shadow(color: Color(hex: "8B5CF6").opacity(0.2), radius: 3, x: 0, y: 1)
                 }
-                
+
                 Link(destination: URL(string: "voicelist://upload")!) {
                     VStack(spacing: 6) {
                         Image(systemName: "photo.badge.plus")
-                            .font(.system(size: 22, weight: .medium))
+                            .font(.system(size: 20, weight: .medium))
                             .foregroundColor(Color(hex: "F59E0B"))
                     }
-                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .frame(maxWidth: .infinity, minHeight: 44)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
                             .fill(Color(hex: "F59E0B").opacity(0.1))
@@ -540,9 +542,9 @@ struct MediumWidgetView: View {
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(Color(hex: "8B5CF6"))
                 }
-                Text("Voice Grocery")
+                Text("BuyVoice")
                     .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(Color(hex: "1F2937"))
+                    .foregroundColor(Color(hex: "6B7280"))
                 Spacer()
             }
             .padding(.horizontal, 16)
@@ -825,9 +827,9 @@ struct LargeWidgetView: View {
                         .font(.system(size: 28, weight: .semibold))
                         .foregroundColor(Color(hex: "8B5CF6"))
                 }
-                Text("Voice Grocery")
+                Text("BuyVoice")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(Color(hex: "1F2937"))
+                    .foregroundColor(Color(hex: "6B7280"))
                 Spacer()
             }
             .padding(.horizontal, 24)
@@ -995,7 +997,7 @@ struct VoiceListWidget: Widget {
                     )
             }
         }
-        .configurationDisplayName("Voice Grocery")
+        .configurationDisplayName("BuyVoice")
         .description("Quick access to your shopping lists")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }

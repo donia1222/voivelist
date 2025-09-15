@@ -1703,18 +1703,12 @@ const HomeScreen = ({ navigation }) => {
         </View>
       )}
 
+
+
       {!loading && showEmptyListText && !showCreatingMessage && (
         <View style={modernStyles.emptyStateContainer}>
           {renderFloatingFoodIcons()}
-                        {isContentVisible && (
-              <TouchableOpacity onPress={handlePress} style={[modernStyles.languageButton, isSmallIPhone && {paddingHorizontal: 12, paddingVertical: 8}]}>
-                <Ionicons name="globe-outline" size={isSmallIPhone ? 18 : 22} color="#4a6bff" />
-                <Text style={[modernStyles.languageButtonText, isSmallIPhone && {fontSize: 13}]}>
-                  {currentLabels.welcomeMessage} {languageName}
-                </Text>
-              </TouchableOpacity>
-            )}
-
+  
           <Animated.View style={[modernStyles.emptyStateContent, { zIndex: 10, position: 'relative', opacity: emptyStateFadeAnim }]}>
 
 
@@ -1745,7 +1739,17 @@ const HomeScreen = ({ navigation }) => {
                   <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>{currentLabels.superEasy}</Text>
                 </View>
               </View>
-              
+                                    {isContentVisible && (
+                               
+              <TouchableOpacity onPress={handlePress} style={[modernStyles.languageButton, isSmallIPhone && {paddingHorizontal: 12, paddingVertical: 8}]}>
+                <Ionicons name="globe-outline" size={isSmallIPhone ? 18 : 22} color="#4a6bff" />
+                <Text style={[modernStyles.superEasy, isSmallIPhone && {fontSize: 13}]}>
+                  {currentLabels.welcomeMessage} {languageName}
+                </Text>
+              </TouchableOpacity>
+
+            )}
+
         
     
             </View>

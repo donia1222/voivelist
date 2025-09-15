@@ -1083,7 +1083,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {activeTab === "Home" ? "Voice Grocery" :
+            {activeTab === "Home" ? "BuyVoice" :
              activeTab === "Images" ? currentTranslations.imageList :
              activeTab === "Calendar" ? currentTranslations.calendar :
              activeTab === "History" ? currentTranslations.saved :
@@ -1093,7 +1093,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
              activeTab === "Contact" ? currentTranslations.contactUs :
              activeTab === "PriceCalculator" ? (currentTranslations.priceCalculator || "Price Calculator") :
              activeTab === "HandwrittenList" ? (currentTranslations.manualList || "Manual List") :
-             "Voice Grocery"}
+             "BuyVoice"}
           </Text>
         </View>
         

@@ -627,8 +627,8 @@ export const getModernStyles = () => {
       shadowOpacity: isSmallIPhone ? 0.15 : 0.20,
       shadowRadius: isSmallIPhone ? 10 : 15,
       elevation: isSmallIPhone ? 4 : 6,
-      marginTop: 40,
-      marginBottom: isSmallIPhone ? 40 : 60,
+
+      marginBottom: isSmallIPhone ? -10 : -10,
     },
     languageButtonText: {
       marginLeft: isSmallIPhone ? 8 : 12,

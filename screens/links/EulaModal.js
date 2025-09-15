@@ -3,7 +3,7 @@ import { Modal, ScrollView, Text, TouchableOpacity, StyleSheet, View } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { PanGestureHandler, State, GestureHandlerRootView } from 'react-native-gesture-handler';
 
-// Contenido de términos moderno y adaptado para VoiceList
+// Contenido de términos moderno y adaptado para BuyVoice
 const termsData = {
   header: {
     title: "Terms of Service",
@@ -16,7 +16,7 @@ const termsData = {
       color: "#2ecc71",
       content: [
         {
-          text: "By downloading, installing or using VoiceList, you agree to be bound by these Terms of Service. If you do not agree with these terms, please do not use the app."
+          text: "By downloading, installing or using BuyVoice, you agree to be bound by these Terms of Service. If you do not agree with these terms, please do not use the app."
         }
       ]
     },
@@ -27,7 +27,7 @@ const termsData = {
       content: [
         {
           subtitle: "✅ What you can do:",
-          text: "We grant you a limited, non-exclusive, non-transferable and revocable license to use VoiceList for your personal use on devices you control."
+          text: "We grant you a limited, non-exclusive, non-transferable and revocable license to use BuyVoice for your personal use on devices you control."
         },
         {
           subtitle: "❌ What you cannot do:",
