@@ -49,15 +49,17 @@ class WidgetService {
       const shoppingLists = history.slice(0, 5).map((item, listIndex) => ({
         name: item.name || 'Shopping List',
         items: Array.isArray(item.list) ? item.list.slice(0, 12).map((listItem, itemIndex) => {
-          const itemText = typeof listItem === 'string' ? listItem : 
+          const itemText = typeof listItem === 'string' ? listItem :
                           (listItem && listItem.text) ? listItem.text :
                           (listItem && listItem.name) ? listItem.name : String(listItem);
-          
-          const isCompleted = completedItems[listIndex] && completedItems[listIndex].includes(itemIndex);
-          
+
+          // IMPORTANT: Always initialize isCompleted to false if not explicitly set
+          // This ensures widget can toggle items even if they were never marked in the app
+          const isCompleted = completedItems[listIndex] && completedItems[listIndex].includes(itemIndex) ? true : false;
+
           return {
             text: itemText,
-            isCompleted: isCompleted
+            isCompleted: isCompleted  // Always explicitly set to boolean
           };
         }).filter(item => item.text && item.text.length > 0) : [],
         completedItems: completedItems[listIndex] || []
