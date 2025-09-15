@@ -164,6 +164,19 @@ struct SimpleEntry: TimelineEntry {
     let isSubscribed: Bool // Estado de suscripción
 }
 
+// Helper function to extract item name without category
+func extractItemName(_ text: String) -> String {
+    // Check if text contains category separator " - "
+    if text.contains(" - ") {
+        let parts = text.split(separator: " - ", maxSplits: 1)
+        if parts.count >= 2 {
+            // Return everything after the first " - "
+            return String(parts[1])
+        }
+    }
+    return text
+}
+
 struct VoiceListWidgetEntryView : View {
     var entry: Provider.Entry
     @Environment(\.widgetFamily) var family
@@ -215,7 +228,7 @@ struct SmallWidgetView: View {
                                 Circle()
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
                                     .frame(width: 6, height: 6)
-                                Text(item.text)
+                                Text(extractItemName(item.text))
                                     .font(.system(size: 13, weight: .semibold))
                                     .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "4B5563"))
                                     .strikethrough(item.isCompleted)
@@ -231,7 +244,7 @@ struct SmallWidgetView: View {
                                     Circle()
                                         .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
                                         .frame(width: 6, height: 6)
-                                    Text(item.text)
+                                    Text(extractItemName(item.text))
                                         .font(.system(size: 13))
                                         .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
                                         .strikethrough(item.isCompleted)
@@ -467,7 +480,7 @@ struct MediumWidgetView: View {
                                 Circle()
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
                                     .frame(width: 7, height: 7)
-                                Text(item.text)
+                                Text(extractItemName(item.text))
                                     .font(.system(size: 15, weight: .semibold))
                                     .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "4B5563"))
                                     .strikethrough(item.isCompleted)
@@ -483,7 +496,7 @@ struct MediumWidgetView: View {
                                     Circle()
                                         .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
                                         .frame(width: 6, height: 6)
-                                    Text(item.text)
+                                    Text(extractItemName(item.text))
                                         .font(.system(size: 13))
                                         .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
                                         .strikethrough(item.isCompleted)
@@ -752,7 +765,7 @@ struct LargeWidgetView: View {
                                 Circle()
                                     .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
                                     .frame(width: 12, height: 12)
-                                Text(item.text)
+                                Text(extractItemName(item.text))
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "4B5563"))
                                     .strikethrough(item.isCompleted)
@@ -768,7 +781,7 @@ struct LargeWidgetView: View {
                                     Circle()
                                         .fill(item.isCompleted ? Color.red : Color(hex: "8B5CF6"))
                                         .frame(width: 6, height: 6)
-                                    Text(item.text)
+                                    Text(extractItemName(item.text))
                                         .font(.system(size: 13))
                                         .foregroundColor(item.isCompleted ? Color.red.opacity(0.6) : Color(hex: "374151"))
                                         .strikethrough(item.isCompleted)

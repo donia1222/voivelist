@@ -925,10 +925,27 @@ const HandwrittenListScreen = ({ route }) => {
       const existingHistory = await AsyncStorage.getItem("@shopping_history")
       let history = existingHistory ? JSON.parse(existingHistory) : []
 
-      // Convert to flat list format for compatibility
-      const flatList = Object.entries(listItems).flatMap(([, items]) =>
-        items.map(item => `${item.name} (${item.quantity})`)
-      )
+      // Convert to flat list format for compatibility with categories
+      const flatList = Object.entries(listItems).flatMap(([categoryId, items]) => {
+        // Get category name - check if it's a custom category or default
+        let categoryName = null
+        const category = categories.find(cat => cat.id === categoryId)
+
+        if (category) {
+          if (category.isCustom) {
+            categoryName = category.name
+          } else {
+            // Use translated name for default categories
+            categoryName = t.categories[categoryId] || categoryId
+          }
+        }
+
+        // Map items with category prefix format
+        return items.map(item => {
+          const itemText = `${item.name} (${item.quantity})`
+          return categoryName ? `${categoryName} - ${itemText}` : itemText
+        })
+      })
 
       // Add to history in compatible format
       history.push({

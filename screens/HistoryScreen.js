@@ -1447,7 +1447,7 @@ const HistoryScreen = ({ navigation }) => {
                 }}
                 style={modernStyles.menuButton}
               >
-                <Ionicons name="add-outline" size={26} color="#12542eff" />
+                <Ionicons name="settings-outline" size={24} color="#4b5563" />
               </TouchableOpacity>
             </View>
           </View>

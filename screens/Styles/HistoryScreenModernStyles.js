@@ -151,7 +151,7 @@ marginBottom:-0,
   },
 
   cardTitle: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: "bold",
     color: theme.text || "#2d3748",
     flex: 1,

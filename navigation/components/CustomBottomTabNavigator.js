@@ -108,6 +108,7 @@ const getMenuTexts = () => {
         "document-text-outline": "Lies unsere Bedingungen",
         "settings-outline": "App-Einstellungen",
         "calendar-outline": "Plane deine wöchentlichen Einkäufe",
+        "create-outline": "Listen manuell erstellen",
       }
     },
     fr: {
@@ -128,6 +129,7 @@ const getMenuTexts = () => {
         "document-text-outline": "Lisez nos conditions",
         "settings-outline": "Paramètres de l'app",
         "calendar-outline": "Planifiez vos achats hebdomadaires",
+        "create-outline": "Créer des listes manuellement",
       }
     },
     it: {
@@ -148,6 +150,7 @@ const getMenuTexts = () => {
         "document-text-outline": "Leggi i nostri termini",
         "settings-outline": "Impostazioni dell'app",
         "calendar-outline": "Pianifica la tua spesa settimanale",
+        "create-outline": "Crea liste manualmente",
       }
     },
     tr: {
@@ -168,6 +171,7 @@ const getMenuTexts = () => {
         "document-text-outline": "Şartlarımızı okuyun",
         "settings-outline": "Uygulama ayarları",
         "calendar-outline": "Haftalık alışverişinizi planlayın",
+        "create-outline": "Manuel olarak listeler oluşturun",
       }
     },
     pt: {
@@ -188,6 +192,7 @@ const getMenuTexts = () => {
         "document-text-outline": "Leia nossos termos",
         "settings-outline": "Configurações do app",
         "calendar-outline": "Planeje suas compras semanais",
+        "create-outline": "Criar listas manualmente",
       }
     },
     ru: {
@@ -208,6 +213,112 @@ const getMenuTexts = () => {
         "document-text-outline": "Прочитайте наши условия",
         "settings-outline": "Настройки приложения",
         "calendar-outline": "Планируйте еженедельные покупки",
+        "create-outline": "Создавайте списки вручную",
+      }
+    },
+    ar: {
+      menuTitle: "القائمة",
+      menuSubtitle: "خيارات إضافية",
+      closeButton: "إغلاق",
+      settings: "الإعدادات",
+      error: "خطأ",
+      errorSavingList: "تعذر حفظ القائمة",
+      descriptions: {
+        "star": "إدارة اشتراكك",
+        "star-outline": "فتح جميع الميزات",
+        "calculator": "حساب أسعار القوائم",
+        "information-circle-outline": "حول التطبيق",
+        "share-social-outline": "شارك مع الأصدقاء",
+        "mail-outline": "اتصل بنا للدعم",
+        "shield-outline": "اقرأ سياستنا",
+        "document-text-outline": "اقرأ شروطنا",
+        "settings-outline": "إعدادات التطبيق",
+        "calendar-outline": "خطط لتسوقك الأسبوعي",
+        "create-outline": "إنشاء قوائم يدويًا",
+      }
+    },
+    hu: {
+      menuTitle: "Menü",
+      menuSubtitle: "További opciók",
+      closeButton: "Bezárás",
+      settings: "Beállítások",
+      error: "Hiba",
+      errorSavingList: "Nem sikerült menteni a listát",
+      descriptions: {
+        "star": "Előfizetés kezelése",
+        "star-outline": "Összes funkció feloldása",
+        "calculator": "Listaárak kiszámítása",
+        "information-circle-outline": "Az alkalmazásról",
+        "share-social-outline": "Megosztás barátokkal",
+        "mail-outline": "Kapcsolatfelvétel támogatásért",
+        "shield-outline": "Olvassa el irányelveinket",
+        "document-text-outline": "Olvassa el feltételeinket",
+        "settings-outline": "Alkalmazás beállítások",
+        "calendar-outline": "Tervezze meg heti bevásárlását",
+        "create-outline": "Listák manuális létrehozása",
+      }
+    },
+    ja: {
+      menuTitle: "メニュー",
+      menuSubtitle: "追加オプション",
+      closeButton: "閉じる",
+      settings: "設定",
+      error: "エラー",
+      errorSavingList: "リストを保存できませんでした",
+      descriptions: {
+        "star": "サブスクリプションを管理",
+        "star-outline": "すべての機能をロック解除",
+        "calculator": "リスト価格を計算",
+        "information-circle-outline": "アプリについて",
+        "share-social-outline": "友達と共有",
+        "mail-outline": "サポートに連絡",
+        "shield-outline": "ポリシーを読む",
+        "document-text-outline": "利用規約を読む",
+        "settings-outline": "アプリ設定",
+        "calendar-outline": "週間ショッピングを計画",
+        "create-outline": "手動でリストを作成",
+      }
+    },
+    hi: {
+      menuTitle: "मेनू",
+      menuSubtitle: "अतिरिक्त विकल्प",
+      closeButton: "बंद करें",
+      settings: "सेटिंग्स",
+      error: "त्रुटि",
+      errorSavingList: "सूची सहेजी नहीं जा सकी",
+      descriptions: {
+        "star": "अपनी सदस्यता प्रबंधित करें",
+        "star-outline": "सभी सुविधाएं अनलॉक करें",
+        "calculator": "सूची मूल्य की गणना करें",
+        "information-circle-outline": "ऐप के बारे में",
+        "share-social-outline": "दोस्तों के साथ साझा करें",
+        "mail-outline": "समर्थन के लिए संपर्क करें",
+        "shield-outline": "हमारी नीति पढ़ें",
+        "document-text-outline": "हमारी शर्तें पढ़ें",
+        "settings-outline": "ऐप सेटिंग्स",
+        "calendar-outline": "अपनी साप्ताहिक खरीदारी की योजना बनाएं",
+        "create-outline": "मैन्युअल रूप से सूचियाँ बनाएं",
+      }
+    },
+    nl: {
+      menuTitle: "Menu",
+      menuSubtitle: "Extra opties",
+      closeButton: "Sluiten",
+      settings: "Instellingen",
+      error: "Fout",
+      errorSavingList: "Kon lijst niet opslaan",
+      descriptions: {
+        "star": "Beheer uw abonnement",
+        "star-outline": "Ontgrendel alle functies",
+        "calculator": "Bereken lijstprijzen",
+        "information-circle-outline": "Over de app",
+        "share-social-outline": "Deel met vrienden",
+        "mail-outline": "Neem contact op voor ondersteuning",
+        "shield-outline": "Lees ons beleid",
+        "document-text-outline": "Lees onze voorwaarden",
+        "settings-outline": "App-instellingen",
+        "calendar-outline": "Plan uw wekelijkse boodschappen",
+        "create-outline": "Maak handmatig lijsten",
       }
     }
   }
@@ -467,21 +578,21 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const topActionTabs = [
     {
       key: "clear",
-      label: "Borrar",
+      label: currentTranslations.delete || "Borrar",
       icon: "trash-outline",
       color: "#ef4444",
       onPress: clearShoppingList,
     },
     {
       key: "add",
-      label: "Añadir",
+      label: currentTranslations.add || "Añadir",
       icon: "add-circle",
-      color: "#4a6bff", 
+      color: "#4a6bff",
       onPress: addNewItem,
     },
     {
       key: "save",
-      label: "Guardar",
+      label: currentTranslations.save || "Guardar",
       icon: "checkmark-circle-outline",
       color: "#10b981",
       onPress: saveToHistory,
@@ -792,8 +903,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const headerMenuItems = [
     {
       label: currentTranslations.manualList || "Manual List",
-      icon: "create-outline",
-      color: "#10b981",
+      icon: "pencil",
+      color: "#4a6bff",
       onPress: () => {
         setMenuModalVisible(false)
         setActiveTab("HandwrittenList")
@@ -1064,7 +1175,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                 name={activeTab === "Subscribe" ? "star-outline" :
                       activeTab === "Subscription" ? "star" :
                       activeTab === "Information" ? "information-circle-outline" :
-                      activeTab === "Contact" ? "mail-outline" : "storefront"}
+                      activeTab === "Contact" ? "mail-outline" :
+                      activeTab === "HandwrittenList" ? "pencil" : "storefront"}
                 size={isSmallIPhone ? 20 : 24}
                 color={activeTab === "Subscribe" ? "#ff375f" :
                        activeTab === "Subscription" ? "#ff375f" :

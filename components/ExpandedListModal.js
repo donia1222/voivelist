@@ -185,6 +185,15 @@ const ExpandedListModal = ({
   }
 
   const getCategoryIcon = (categoryName) => {
+    // Check if it's a translated category name
+    if (categoryName === currentLabels.supermarket) return 'cart'
+    if (categoryName === currentLabels.pharmacy) return 'medkit'
+    if (categoryName === currentLabels.electronics) return 'phone-portrait'
+    if (categoryName === currentLabels.homeAndCleaning) return 'home'
+    if (categoryName === currentLabels.beverages) return 'wine'
+    if (categoryName === currentLabels.butcher) return 'nutrition'
+
+    // Fall back to original mapping
     return categoryIconMap[categoryName] || 'list'
   }
 
@@ -253,7 +262,7 @@ const ExpandedListModal = ({
       elevation: 5
     },
     expandedModalTitle: {
-      fontSize: 24,
+      fontSize: 18,
       fontWeight: '800',
       color: '#15803d',
       flex: 1,
@@ -662,10 +671,7 @@ const ExpandedListModal = ({
                 {/* Render uncategorized items first - without header */}
 
 
-                {uncategorizedItems.filter(({ item, originalIndex }) => {
-                  // Si hay un item seleccionado, solo mostrar ese
-                  return selectedItemForMove === null || selectedItemForMove === originalIndex
-                }).map(({ item, originalIndex }) => (
+                {uncategorizedItems.map(({ item, originalIndex }) => (
                   <View key={originalIndex}>
                     {editingItemIndex === originalIndex ? (
                       // Modo edición
@@ -695,10 +701,10 @@ const ExpandedListModal = ({
                           <Ionicons name="checkmark" size={20} color="#10b981" />
                         </TouchableOpacity>
                         <TouchableOpacity
-                          onPress={handleCancelEdit}
+                          onPress={() => handleDeleteItem(originalIndex)}
                           style={styles.expandedCancelItemButton}
                         >
-                          <Ionicons name="close" size={18} color="#ef4444" />
+                          <Ionicons name="trash-outline" size={18} color="#ef4444" />
                         </TouchableOpacity>
                       </View>
                     ) : (
@@ -815,7 +821,7 @@ const ExpandedListModal = ({
 
 
                 {/* Render categorized items with headers after uncategorized */}
-                {selectedItemForMove === null && categorizedItems.map((categoryGroup, groupIndex) => (
+                {categorizedItems.map((categoryGroup, groupIndex) => (
                   <View key={groupIndex} style={styles.categorySection}>
                     {/* Category Header */}
                     <View style={styles.categoryHeader}>
@@ -866,10 +872,10 @@ const ExpandedListModal = ({
                               <Ionicons name="checkmark" size={20} color="#10b981" />
                             </TouchableOpacity>
                             <TouchableOpacity
-                              onPress={handleCancelEdit}
+                              onPress={() => handleDeleteItem(originalIndex)}
                               style={styles.expandedCancelItemButton}
                             >
-                              <Ionicons name="close" size={18} color="#ef4444" />
+                              <Ionicons name="trash-outline" size={18} color="#ef4444" />
                             </TouchableOpacity>
                           </View>
                         ) : (
@@ -935,6 +941,49 @@ const ExpandedListModal = ({
                               </View>
                             </View>
                           </TouchableOpacity>
+                        )}
+
+                        {/* Mostrar categorías justo debajo del item seleccionado */}
+                        {selectedItemForMove === originalIndex && (
+                          <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
+                            {[
+                              currentLabels.supermarket || 'Supermercado',
+                              currentLabels.pharmacy || 'Farmacia',
+                              currentLabels.electronics || 'Electrónica',
+                              currentLabels.homeAndCleaning || 'Hogar y Limpieza',
+                              currentLabels.beverages || 'Bebidas',
+                              currentLabels.butcher || 'Carnicería'
+                            ].map((categoryName) => (
+                              <TouchableOpacity
+                                key={categoryName}
+                                onPress={() => {
+                                  moveItemToCategory(selectedItemForMove, categoryName)
+                                }}
+                                style={{
+                                  backgroundColor: '#10b981',
+                                  padding: 10,
+                                  marginVertical: 3,
+                                  borderRadius: 8,
+                                  flexDirection: 'row',
+                                  alignItems: 'center'
+                                }}
+                              >
+                                <Ionicons
+                                  name={getCategoryIcon(categoryName)}
+                                  size={20}
+                                  color="white"
+                                  style={{ marginRight: 8 }}
+                                />
+                                <Text style={{
+                                  color: 'white',
+                                  fontSize: 14,
+                                  fontWeight: '600'
+                                }}>
+                                  {categoryName}
+                                </Text>
+                              </TouchableOpacity>
+                            ))}
+                          </View>
                         )}
                       </View>
                     ))}
