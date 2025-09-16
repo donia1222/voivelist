@@ -1,24 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Dimensions, ActivityIndicator, Animated, Linking, Platform } from 'react-native';
-import { useTheme } from '../ThemeContext'; // Importa el hook useTheme
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Dimensions, ActivityIndicator, Animated, Linking, Platform, StatusBar } from 'react-native';
+import { useTheme } from '../ThemeContext';
 import * as RNLocalize from 'react-native-localize';
 import { Ionicons } from 'react-native-vector-icons';
 import Purchases from 'react-native-purchases';
-import RNRestart from 'react-native-restart'; // Importa para reiniciar la app (si es necesario)
+import RNRestart from 'react-native-restart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
+
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const isSmallIPhone = Platform.OS === 'ios' && (screenWidth <= 375 || screenHeight <= 667);
-import LinearGradient from 'react-native-linear-gradient';
-const GradientText = ({ text }) => (
-  <View style={styles.textContainer}>
+const GradientText = ({ text, style }) => (
+  <View style={styles.gradientTextContainer}>
     <LinearGradient
-      colors={['#7B68EE', '#228B22']} // Gradiente azul-lila suave a verde
+      colors={['#667eea', '#764ba2']}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={styles.gradientBackground}
+      style={styles.gradientTextBackground}
     >
-      <Text style={styles.text}>{text}</Text>
+      <Text style={[styles.gradientText, style]}>{text}</Text>
     </LinearGradient>
   </View>
 );
@@ -389,9 +390,12 @@ const OnboardingScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const translateY = useRef(new Animated.Value(0)).current;
+  const scaleValue = useRef(new Animated.Value(1)).current;
+  const opacityValue = useRef(new Animated.Value(0)).current;
+  const slideAnimation = useRef(new Animated.Value(0)).current;
   const filteredSlides = isSubscribed ? slides.slice(0, 3) : slides;
-  const [buttonVisible, setButtonVisible] = useState(true); // Estado para manejar la visibilidad del botón
-  const [showCloseIcon, setShowCloseIcon] = useState(false); // Estado para manejar la visibilidad del icono de cerrar
+  const [buttonVisible, setButtonVisible] = useState(true);
+  const [showCloseIcon, setShowCloseIcon] = useState(false);
 
   useEffect(() => {
     const checkSubscription = async () => {
@@ -414,37 +418,73 @@ const OnboardingScreen = ({ navigation }) => {
     const checkButtonVisibility = async () => {
       const hasButtonShown = await AsyncStorage.getItem('hasButtonShown');
       if (hasButtonShown !== null) {
-        setButtonVisible(false); // Si ya se ha mostrado, no mostrar el botón
-        setShowCloseIcon(true); // Mostrar el icono de cerrar
+        setButtonVisible(false);
+        setShowCloseIcon(true);
       }
     };
 
     checkButtonVisibility();
+
+    // Initial fade-in animation
+    Animated.timing(opacityValue, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
   }, []);
 
   const navigate = async () => {
-    await AsyncStorage.setItem('hasButtonShown', 'true'); // Guardar que el botón ya se mostró
-    RNRestart.Restart(); // Esto reiniciará la app
+    await AsyncStorage.setItem('hasButtonShown', 'true');
+    RNRestart.Restart();
   };
 
   const handleScroll = (event) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / width);
     setCurrentIndex(index);
 
-    // Reiniciar y ejecutar animación
-    translateY.setValue(-400);
-    Animated.spring(translateY, {
-      toValue: 0,
-      useNativeDriver: true,
-    }).start();
+    // Enhanced animations
+    translateY.setValue(-50);
+    scaleValue.setValue(0.95);
+
+    Animated.parallel([
+      Animated.spring(translateY, {
+        toValue: 0,
+        tension: 80,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleValue, {
+        toValue: 1,
+        tension: 80,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
   const renderItem = ({ item }) => (
-    <View style={[styles.slide, { width }]}>
-        <Animated.Image source={item.image} style={[styles.image, { transform: [{ translateY }] }]} />
-      <Text style={[styles.subtitle, isSmallIPhone && {fontSize: 16, marginVertical: 3, padding: 15}]}>{currentLabels[item.subtitleKey]}</Text>
-      <Text style={[styles.description, isSmallIPhone && {fontSize: 14, marginHorizontal: 15}]}>{currentLabels[item.descriptionKey]}</Text>
-    </View>
+    <Animated.View style={[styles.slide, { width, opacity: opacityValue, transform: [{ scale: scaleValue }] }]}>
+      <View style={styles.imageContainer}>
+        <Animated.Image
+          source={item.image}
+          style={[styles.image, { transform: [{ translateY }] }]}
+        />
+        <View style={styles.imageGlow} />
+      </View>
+
+      <View style={styles.contentContainer}>
+        <GradientText
+          text={currentLabels[item.subtitleKey]}
+          style={[styles.subtitle, isSmallIPhone && {fontSize: 16}]}
+        />
+
+        <View style={styles.descriptionContainer}>
+          <Text style={[styles.description, isSmallIPhone && {fontSize: 14}]}>
+            {currentLabels[item.descriptionKey]}
+          </Text>
+        </View>
+      </View>
+    </Animated.View>
   );
 
   const handleNext = () => {
@@ -454,7 +494,24 @@ const OnboardingScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={theme.background === '#FFFFFF' ? ['#f8fafc', '#e2e8f0', '#cbd5e1'] : ['#1a202c', '#2d3748', '#4a5568']}
+      style={styles.container}
+    >
+      <StatusBar
+        backgroundColor="transparent"
+        barStyle={theme.background === '#FFFFFF' ? 'dark-content' : 'light-content'}
+        translucent
+      />
+
+      <View style={styles.headerContainer}>
+        <View style={styles.headerGradient}>
+          <LinearGradient
+            colors={['rgba(102, 126, 234, 0.1)', 'rgba(118, 75, 162, 0.1)']}
+            style={styles.headerAccent}
+          />
+        </View>
+      </View>
 
       <FlatList
         data={filteredSlides}
@@ -465,196 +522,214 @@ const OnboardingScreen = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
         ref={flatListRef}
+        contentContainerStyle={styles.flatListContent}
+        decelerationRate="fast"
+        snapToInterval={width}
+        snapToAlignment="center"
       />
+
       <View style={styles.paginationContainer}>
         {filteredSlides.map((_, index) => (
-          <View
+          <Animated.View
             key={index}
             style={[
               styles.paginationDot,
-              currentIndex === index ? styles.paginationDotActive : styles.paginationDotInactive
+              currentIndex === index ? styles.paginationDotActive : styles.paginationDotInactive,
+              {
+                transform: [
+                  {
+                    scale: currentIndex === index ? 1.2 : 1,
+                  },
+                ],
+              },
             ]}
           />
         ))}
       </View>
+
       {loading && (
         <View style={styles.overlay}>
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color='#009688' />
-          </View>
+          <LinearGradient
+            colors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.6)']}
+            style={styles.loaderContainer}
+          >
+            <ActivityIndicator size="large" color='#667eea' />
+          </LinearGradient>
         </View>
       )}
-
-
-    </View>
+    </LinearGradient>
   );
 };
 
 const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.background,
+  },
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 100,
+    zIndex: 1,
+  },
+  headerGradient: {
+    flex: 1,
+  },
+  headerAccent: {
+    flex: 1,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  flatListContent: {
     alignItems: 'center',
-    justifyContent: 'center',
-   paddingBottom:40,
   },
   slide: {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
+    paddingTop: 120,
+    paddingHorizontal: 20,
+  },
+  imageContainer: {
+    position: 'relative',
+    marginBottom: isSmallIPhone ? 30 : 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
-    width: isSmallIPhone ? 100 : 150,
-    height: isSmallIPhone ? 100 : 150,
+    width: isSmallIPhone ? 120 : 180,
+    height: isSmallIPhone ? 120 : 180,
     resizeMode: 'contain',
-    marginBottom: isSmallIPhone ? 20 : 40,
+    borderRadius: isSmallIPhone ? 60 : 90,
+    shadowColor: '#667eea',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
   },
-  title: {
-    fontSize: 24,
-    fontFamily: 'Poppins-Bold',
-    textAlign: 'center',
-    marginVertical: 10,
-    color: theme.text,
-    padding: 20,
+  imageGlow: {
+    position: 'absolute',
+    width: isSmallIPhone ? 140 : 200,
+    height: isSmallIPhone ? 140 : 200,
+    borderRadius: isSmallIPhone ? 70 : 100,
+    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+    top: -10,
+    left: -10,
+    zIndex: -1,
+  },
+  contentContainer: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingBottom: 100,
   },
   subtitle: {
-    fontSize: isSmallIPhone ? 16 : 18,
+    fontSize: isSmallIPhone ? 16 : 20,
     textAlign: 'center',
-    color: theme.text,
-    marginVertical: isSmallIPhone ? 3 : 5,
-    padding: isSmallIPhone ? 15 : 20,
     fontFamily: 'Poppins-Bold',
-
+    marginBottom: isSmallIPhone ? 15 : 25,
+  },
+  descriptionContainer: {
+    backgroundColor: theme.background === '#FFFFFF' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(45, 55, 72, 0.9)',
+    borderRadius: 20,
+    padding: isSmallIPhone ? 20 : 25,
+    marginHorizontal: 10,
+    shadowColor: theme.background === '#FFFFFF' ? '#000' : '#667eea',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 15,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: theme.background === '#FFFFFF' ? 'rgba(102, 126, 234, 0.1)' : 'rgba(102, 126, 234, 0.3)',
   },
   description: {
     fontSize: isSmallIPhone ? 14 : 16,
     textAlign: 'center',
     color: theme.text,
-    marginHorizontal: isSmallIPhone ? 15 : 20,
     fontFamily: 'Poppins-Regular',
-
+    lineHeight: isSmallIPhone ? 20 : 24,
+    letterSpacing: 0.3,
   },
   paginationContainer: {
     flexDirection: 'row',
-    marginTop: 20,
-    marginBottom: 10,
+    position: 'absolute',
+    bottom: isSmallIPhone ? 120 : 140,
+    alignSelf: 'center',
+    backgroundColor: theme.background === '#FFFFFF' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(45, 55, 72, 0.8)',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 25,
+    shadowColor: '#667eea',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 5,
   },
   paginationDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginHorizontal: 5,
-    marginTop: -10,
-  },
-  paginationDotActive: {
     width: 12,
     height: 12,
-    backgroundColor: '#7B68EE', // Consistente con el botón azul-lila
+    borderRadius: 6,
+    marginHorizontal: 6,
+    backgroundColor: 'rgba(102, 126, 234, 0.3)',
+  },
+  paginationDotActive: {
+    width: 32,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#667eea',
+    shadowColor: '#667eea',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    elevation: 3,
   },
   paginationDotInactive: {
-    backgroundColor: 'rgba(142, 142, 147, 0.6)', // Gris iOS más sutil
+    backgroundColor: theme.background === '#FFFFFF' ? 'rgba(142, 142, 147, 0.4)' : 'rgba(226, 232, 240, 0.4)',
   },
-  button: {
-    backgroundColor: 'rgba(123, 104, 238, 0.15)', // Fondo azul-lila suave semitransparente
-    padding: isSmallIPhone ? 8 : 10,
-    borderRadius: 50,
-    marginBottom: isSmallIPhone ? -5 : -10,
-    flexDirection: 'row',
-    alignItems: 'center',
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'center',
-    marginTop: isSmallIPhone ? 5 : 10,
-    // Sombras mejoradas para Android
-    elevation: 8,
-    // Sombras mejoradas para iOS
-    shadowColor: '#7B68EE',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.6,
-    shadowRadius: 8,
-    width: isSmallIPhone ? 160 : 180,
-    borderWidth: 2,
-    borderColor: 'rgba(123, 104, 238, 0.3)', // Borde del mismo color
-  },
-  buttonterminar: {
-    backgroundColor: 'rgba(34, 139, 34, 0.15)', // Fondo verde semitransparente
-    padding: isSmallIPhone ? 12 : 15,
-    borderRadius: 50,
-    flexDirection: 'row',
     alignItems: 'center',
+  },
+  loaderContainer: {
+    flex: 1,
     justifyContent: 'center',
-    marginTop: isSmallIPhone ? 5 : 10,
-    // Sombras mejoradas para Android
-    elevation: 8,
-    // Sombras mejoradas para iOS
-    shadowColor: '#228B22',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.6,
-    shadowRadius: 8,
-    borderWidth: 2,
-    borderColor: 'rgba(34, 139, 34, 0.3)', // Borde del mismo color
-  },
-  
-  
-  buttonText: {
-    color: '#7B68EE', // Color azul-lila suave intenso para botón "Siguiente"
-    fontSize: isSmallIPhone ? 16 : 18,
-    fontFamily: 'Poppins-Regular',
-    fontWeight: 'bold',
-  },
-  buttonTextTerminar: {
-    color: '#228B22', // Color verde intenso para botón "Crear Lista"
-    fontSize: isSmallIPhone ? 16 : 18,
-    fontFamily: 'Poppins-Regular',
-    fontWeight: 'bold',
-  },
-  icon: {
-    marginRight: 10,
-  },
-  loginText: {
-    marginTop: 20,
-    color: theme.text,
-  },
-  loginLink: {
-    color: 'blue',
-    fontWeight: 'bold',
-  },
-  iconRight: {
-    marginLeft: 10,
-  },
-  homeButtonText: {
-position: 'absolute',
-top:10,
-right:20,
+    alignItems: 'center',
+    borderRadius: 20,
   },
 
 });
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  gradientTextContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    
+    width: '100%',
+    marginBottom: 15,
   },
-  textContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width:'90%',
+  gradientTextBackground: {
+    paddingHorizontal: isSmallIPhone ? 20 : 25,
+    paddingVertical: isSmallIPhone ? 12 : 15,
+    borderRadius: 25,
+    shadowColor: '#667eea',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
-  gradientBackground: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-
-  },
-  text: {
-    fontSize: 21,
+  gradientText: {
+    fontSize: isSmallIPhone ? 18 : 22,
     fontFamily: 'Poppins-Bold',
     color: '#FFFFFF',
-    textAlign:'center',
-    marginTop:10,
-    marginBottom: 10,
+    textAlign: 'center',
+    letterSpacing: 0.5,
   },
 });
 

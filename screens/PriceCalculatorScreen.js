@@ -52,7 +52,8 @@ const translations = {
     shareList: "Share List",
     viewPrice: "View Price",
     price: "Price",
-    calculate: "Calculate"
+    calculate: "Calculate",
+    shareError: "Could not share the list"
   },
   es: {
     title: "Calculadora de Precios",
@@ -80,7 +81,8 @@ const translations = {
     shareList: "Compartir Lista",
     viewPrice: "Ver Precio",
     price: "Precio",
-    calculate: "Calcular"
+    calculate: "Calcular",
+    shareError: "No se pudo compartir la lista"
   },
   de: {
     title: "Preisrechner",
@@ -108,7 +110,8 @@ const translations = {
     shareList: "Liste teilen",
     viewPrice: "Preis ansehen",
     price: "Preis",
-    calculate: "Berechnen"
+    calculate: "Berechnen",
+    shareError: "Liste konnte nicht geteilt werden"
   },
   it: {
     title: "Calcolatore di Prezzi",
@@ -136,7 +139,8 @@ const translations = {
     shareList: "Condividi Lista",
     viewPrice: "Vedi Prezzo",
     price: "Prezzo",
-    calculate: "Calcola"
+    calculate: "Calcola",
+    shareError: "Impossibile condividere la lista"
   },
   fr: {
     title: "Calculateur de Prix",
@@ -164,7 +168,8 @@ const translations = {
     shareList: "Partager la liste",
     viewPrice: "Voir le prix",
     price: "Prix",
-    calculate: "Calculer"
+    calculate: "Calculer",
+    shareError: "Impossible de partager la liste"
   },
   tr: {
     title: "Fiyat Hesaplayıcı",
@@ -192,7 +197,8 @@ const translations = {
     shareList: "Listeyi Paylaş",
     viewPrice: "Fiyatı Gör",
     price: "Fiyat",
-    calculate: "Hesapla"
+    calculate: "Hesapla",
+    shareError: "Liste paylaşılamadı"
   },
   pt: {
     title: "Calculadora de Preços",
@@ -220,7 +226,8 @@ const translations = {
     shareList: "Compartilhar Lista",
     viewPrice: "Ver Preço",
     price: "Preço",
-    calculate: "Calcular"
+    calculate: "Calcular",
+    shareError: "Não foi possível compartilhar a lista"
   },
   ru: {
     title: "Калькулятор цен",
@@ -248,7 +255,8 @@ const translations = {
     shareList: "Поделиться списком",
     viewPrice: "Посмотреть цену",
     price: "Цена",
-    calculate: "Рассчитать"
+    calculate: "Рассчитать",
+    shareError: "Не удалось поделиться списком"
   },
   ar: {
     title: "حاسبة الأسعار",
@@ -277,7 +285,8 @@ const translations = {
     shareList: "شارك القائمة",
     viewPrice: "عرض السعر",
     price: "السعر",
-    calculate: "احسب"
+    calculate: "احسب",
+    shareError: "لم يتمكن من مشاركة القائمة"
   },
   hu: {
     title: "Árkalkulátor",
@@ -305,7 +314,8 @@ const translations = {
     shareList: "Lista megosztása",
     viewPrice: "Ár megtekintése",
     price: "Ár",
-    calculate: "Számítás"
+    calculate: "Számítás",
+    shareError: "Nem sikerült megosztani a listát"
   },
   ja: {
     title: "価格計算機",
@@ -333,7 +343,8 @@ const translations = {
     shareList: "リストを共有",
     viewPrice: "価格を見る",
     price: "価格",
-    calculate: "計算"
+    calculate: "計算",
+    shareError: "リストを共有できませんでした"
   },
   hi: {
     title: "मूल्य कैलकुलेटर",
@@ -361,7 +372,8 @@ const translations = {
     shareList: "सूची साझा करें",
     viewPrice: "मूल्य देखें",
     price: "मूल्य",
-    calculate: "गणना करें"
+    calculate: "गणना करें",
+    shareError: "सूची साझा नहीं कर सके"
   },
   nl: {
     title: "Prijscalculator",
@@ -389,7 +401,8 @@ const translations = {
     shareList: "Lijst delen",
     viewPrice: "Prijs bekijken",
     price: "Prijs",
-    calculate: "Berekenen"
+    calculate: "Berekenen",
+    shareError: "Kon de lijst niet delen"
   }
 }
 
@@ -659,7 +672,7 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
       })
     } catch (error) {
       console.error("Error sharing shopping list: ", error)
-      Alert.alert(t.error, "Could not share the list")
+      Alert.alert(t.error, t.shareError)
     }
   }
 

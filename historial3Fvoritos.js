@@ -335,7 +335,7 @@ const HistoryScreen = ({ navigation }) => {
       });
     } catch (error) {
       console.error("Error sharing shopping list: ", error);
-      Alert.alert("Error", "Could not share the shopping list.");
+      Alert.alert(currentLabels.shareError || "Error", currentLabels.shareErrorMessage || "Could not share the shopping list.");
     }
   };
 
@@ -347,7 +347,7 @@ const HistoryScreen = ({ navigation }) => {
       });
     } catch (error) {
       console.error("Error printing shopping list: ", error);
-      Alert.alert("Error", "Could not print the shopping list.");
+      Alert.alert(currentLabels.shareError || "Error", currentLabels.printErrorMessage || "Could not print the shopping list.");
     }
   };
 

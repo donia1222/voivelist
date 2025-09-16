@@ -174,7 +174,7 @@ const ExpandedListModal = ({
     }
 
     // If no " - " found, return "Sin categoría"
-    return "Sin categoría"
+    return currentLabels.noCategory || "Sin categoría"
   }
 
   // Default categories mapping for icons
@@ -191,7 +191,7 @@ const ExpandedListModal = ({
     'Ropa': 'shirt',
     'Congelados': 'snow',
     'Lácteos': 'nutrition',
-    'Sin categoría': 'list'
+    [currentLabels.noCategory || 'Sin categoría']: 'list'
   }
 
   const getCategoryIcon = (categoryName) => {
@@ -216,7 +216,7 @@ const ExpandedListModal = ({
     listData.list.forEach((item, index) => {
       const categoryName = extractCategoryName(item)
 
-      if (categoryName === "Sin categoría") {
+      if (categoryName === (currentLabels.noCategory || "Sin categoría")) {
         // Add uncategorized items to separate array
         uncategorized.push({ item, originalIndex: index })
       } else {
@@ -650,7 +650,7 @@ const ExpandedListModal = ({
               fontSize: 14,
               fontWeight: '600'
             }}>
-              Item seleccionado
+{currentLabels.itemSelected || 'Item seleccionado'}
             </Text>
             <TouchableOpacity
               onPress={() => setSelectedItemForMove(null)}
@@ -662,7 +662,7 @@ const ExpandedListModal = ({
               }}
             >
               <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>
-                CANCELAR
+                {currentLabels.cancelSelection || 'CANCELAR'}
               </Text>
             </TouchableOpacity>
           </View>

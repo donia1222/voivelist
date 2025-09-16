@@ -105,7 +105,11 @@ const translations = {
     september: "September",
     october: "October",
     november: "November",
-    december: "December"
+    december: "December",
+    unnamedList: "Unnamed List",
+    selectedDay: "Selected Day",
+    yourShoppingList: "Your shopping list",
+    list: "List"
   },
   es: {
     title: "Calendario de Compras",
@@ -183,7 +187,11 @@ const translations = {
     september: "Septiembre",
     october: "Octubre",
     november: "Noviembre",
-    december: "Diciembre"
+    december: "Diciembre",
+    unnamedList: "Lista sin nombre",
+    selectedDay: "Día seleccionado",
+    yourShoppingList: "Tu lista de compras",
+    list: "Lista"
   },
   de: {
     title: "Einkaufskalender",
@@ -252,7 +260,11 @@ const translations = {
     september: "September",
     october: "Oktober",
     november: "November",
-    december: "Dezember"
+    december: "Dezember",
+    unnamedList: "Unbenannte Liste",
+    selectedDay: "Ausgewählter Tag",
+    yourShoppingList: "Ihre Einkaufsliste",
+    list: "Liste"
   },
   it: {
     title: "Calendario della Spesa",
@@ -321,7 +333,11 @@ const translations = {
     september: "Settembre",
     october: "Ottobre",
     november: "Novembre",
-    december: "Dicembre"
+    december: "Dicembre",
+    unnamedList: "Lista senza nome",
+    selectedDay: "Giorno selezionato",
+    yourShoppingList: "La tua lista della spesa",
+    list: "Lista"
   },
   fr: {
     title: "Calendrier des Courses",
@@ -390,7 +406,11 @@ const translations = {
     september: "Septembre",
     october: "Octobre",
     november: "Novembre",
-    december: "Décembre"
+    december: "Décembre",
+    unnamedList: "Liste sans nom",
+    selectedDay: "Jour sélectionné",
+    yourShoppingList: "Votre liste de courses",
+    list: "Liste"
   },
   tr: {
     title: "Alışveriş Takvimi",
@@ -459,7 +479,11 @@ const translations = {
     september: "Eylül",
     october: "Ekim",
     november: "Kasım",
-    december: "Aralık"
+    december: "Aralık",
+    unnamedList: "Adsız Liste",
+    selectedDay: "Seçili Gün",
+    yourShoppingList: "Alışveriş listeniz",
+    list: "Liste"
   },
   pt: {
     title: "Calendário de Compras",
@@ -528,7 +552,11 @@ const translations = {
     september: "Setembro",
     october: "Outubro",
     november: "Novembro",
-    december: "Dezembro"
+    december: "Dezembro",
+    unnamedList: "Lista sem nome",
+    selectedDay: "Dia selecionado",
+    yourShoppingList: "Sua lista de compras",
+    list: "Lista"
   },
   ru: {
     title: "Календарь покупок",
@@ -606,7 +634,11 @@ const translations = {
     september: "Сентябрь",
     october: "Октябрь",
     november: "Ноябрь",
-    december: "Декабрь"
+    december: "Декабрь",
+    unnamedList: "Список без названия",
+    selectedDay: "Выбранный день",
+    yourShoppingList: "Ваш список покупок",
+    list: "Список"
   },
   ar: {
     title: "تقويم التسوق",
@@ -675,7 +707,11 @@ const translations = {
     september: "سبتمبر",
     october: "أكتوبر",
     november: "نوفمبر",
-    december: "ديسمبر"
+    december: "ديسمبر",
+    unnamedList: "قائمة بلا اسم",
+    selectedDay: "اليوم المختار",
+    yourShoppingList: "قائمة التسوق الخاصة بك",
+    list: "قائمة"
   },
   hu: {
     title: "Bevásárlási naptár",
@@ -744,7 +780,11 @@ const translations = {
     september: "Szeptember",
     october: "Október",
     november: "November",
-    december: "December"
+    december: "December",
+    unnamedList: "Névtelen lista",
+    selectedDay: "Kiválasztott nap",
+    yourShoppingList: "Az ön bevásárlólistája",
+    list: "Lista"
   },
   ja: {
     title: "買い物カレンダー",
@@ -813,7 +853,11 @@ const translations = {
     september: "9月",
     october: "10月",
     november: "11月",
-    december: "12月"
+    december: "12月",
+    unnamedList: "名前のないリスト",
+    selectedDay: "選択された日",
+    yourShoppingList: "あなたの買い物リスト",
+    list: "リスト"
   },
   hi: {
     title: "खरीदारी कैलेंडर",
@@ -882,7 +926,11 @@ const translations = {
     september: "सितंबर",
     october: "अक्टूबर",
     november: "नवंबर",
-    december: "दिसंबर"
+    december: "दिसंबर",
+    unnamedList: "बिना नाम की सूची",
+    selectedDay: "चयनित दिन",
+    yourShoppingList: "आपकी खरीदारी सूची",
+    list: "सूची"
   },
   nl: {
     title: "Boodschappen Kalender",
@@ -951,7 +999,11 @@ const translations = {
     september: "September",
     october: "Oktober",
     november: "November",
-    december: "December"
+    december: "December",
+    unnamedList: "Naamloze lijst",
+    selectedDay: "Geselecteerde dag",
+    yourShoppingList: "Uw boodschappenlijst",
+    list: "Lijst"
   }
 }
 
@@ -978,7 +1030,7 @@ const CalendarPlannerScreen = () => {
   const [showTimeSelector, setShowTimeSelector] = useState(false)
   const [currentWeek, setCurrentWeek] = useState([])
   const [currentWeekIndex, setCurrentWeekIndex] = useState(0)
-  const [currentMonth, setCurrentMonth] = useState('Enero')
+  const [currentMonth, setCurrentMonth] = useState('')
   const [currentYear, setCurrentYear] = useState('2025')
   const [showListExpanded, setShowListExpanded] = useState(false)
   const [showAllLists, setShowAllLists] = useState(false)
@@ -993,6 +1045,13 @@ const CalendarPlannerScreen = () => {
   const [notificationSuccessVisible, setNotificationSuccessVisible] = useState(false)
   const fadeAnim = useRef(new Animated.Value(0)).current
   const scrollViewRef = useRef(null)
+
+  // Initialize current month with proper translation
+  useEffect(() => {
+    if (!currentMonth) {
+      setCurrentMonth(t.january)
+    }
+  }, [t, currentMonth])
 
   // Configurar notificaciones push
   useEffect(() => {
@@ -1233,7 +1292,7 @@ const CalendarPlannerScreen = () => {
         typeof item === 'string' ? item : item.text || item.name || String(item)
       ) || []
 
-      const listName = selectedList.name || selectedList.title || selectedList.listName || 'Lista sin nombre'
+      const listName = selectedList.name || selectedList.title || selectedList.listName || t.unnamedList
 
       let updatedEvents
       let newEvent
@@ -1416,7 +1475,7 @@ const CalendarPlannerScreen = () => {
     }
 
     const notificationId = `calendar_reminder_${eventData.id}_${Date.now()}`
-    const listItemsPreview = eventData.listItems?.slice(0, 3).join(', ') || 'Tu lista de compras'
+    const listItemsPreview = eventData.listItems?.slice(0, 3).join(', ') || t.yourShoppingList
     const moreItemsText = eventData.listItems?.length > 3 ? `... y ${eventData.listItems.length - 3} más` : ''
 
     try {
@@ -1653,7 +1712,7 @@ const CalendarPlannerScreen = () => {
       const event = selectedDayEvents[0] // Tomar el primer evento
       setSelectedEventData({
         list: event.listItems || [],
-        name: event.title ? event.title.replace('Shopping: ', '') : 'Lista',
+        name: event.title ? event.title.replace('Shopping: ', '') : t.list,
         date: event.date,
         id: event.id
       })
@@ -2722,7 +2781,7 @@ const CalendarPlannerScreen = () => {
                   </View>
                   <View style={styles.eventInfo}>
                     <Text style={styles.eventTitle}>
-                      {event.originalListName || event.title.replace('Shopping: ', '') || 'Lista'}
+                      {event.originalListName || event.title.replace('Shopping: ', '') || t.list}
                     </Text>
                     <Text style={styles.eventSubtitle}>
                       {new Date(event.date).toLocaleDateString()} • {event.store || t.store}
@@ -2793,7 +2852,7 @@ const CalendarPlannerScreen = () => {
                     }}
                   >
                     <Text style={styles.listSelectorText}>
-                      {selectedList ? (selectedList.name || 'Lista sin nombre') : t.selectList}
+                      {selectedList ? (selectedList.name || t.unnamedList) : t.selectList}
                     </Text>
                     <Ionicons 
                       name={showListExpanded ? "chevron-up" : "chevron-down"} 
@@ -3246,7 +3305,7 @@ const CalendarPlannerScreen = () => {
             <View style={[styles.modalContent, { maxHeight: 300 }]}>
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>
-                  {selectedDayDate?.toLocaleDateString() || 'Día seleccionado'}
+                  {selectedDayDate?.toLocaleDateString() || t.selectedDay}
                 </Text>
                 <TouchableOpacity 
                   style={styles.closeButton}

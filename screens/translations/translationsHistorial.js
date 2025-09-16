@@ -74,6 +74,9 @@ const translationsHistorial = {
     homeAndCleaning: "Home & Cleaning",
     beverages: "Beverages",
     butcher: "Butcher",
+    noCategory: "No Category",
+    shareErrorMessage: "Could not share the shopping list.",
+    printErrorMessage: "Could not print the shopping list.",
   },
   es: {
     noHistory: "No hay listas en el historial",
@@ -150,6 +153,9 @@ const translationsHistorial = {
     homeAndCleaning: "Hogar y Limpieza",
     beverages: "Bebidas",
     butcher: "Carnicería",
+    noCategory: "Sin categoría",
+    shareErrorMessage: "No se pudo compartir la lista de compras.",
+    printErrorMessage: "No se pudo imprimir la lista de compras.",
   },
   de: {
     noHistory: "Keine Listen im Verlauf",
@@ -226,6 +232,9 @@ const translationsHistorial = {
     homeAndCleaning: "Haushalt & Reinigung",
     beverages: "Getränke",
     butcher: "Metzgerei",
+    noCategory: "Keine Kategorie",
+    shareErrorMessage: "Die Einkaufsliste konnte nicht geteilt werden.",
+    printErrorMessage: "Die Einkaufsliste konnte nicht gedruckt werden.",
   },
   it: {
     noHistory: "Non ci sono liste nella cronologia",
@@ -302,6 +311,9 @@ const translationsHistorial = {
     homeAndCleaning: "Casa e Pulizia",
     beverages: "Bevande",
     butcher: "Macelleria",
+    noCategory: "Nessuna Categoria",
+    shareErrorMessage: "Impossibile condividere la lista della spesa.",
+    printErrorMessage: "Impossibile stampare la lista della spesa.",
   },
   fr: {
     noHistory: "Il n'y a pas de listes dans l'historique",
@@ -378,6 +390,9 @@ const translationsHistorial = {
     homeAndCleaning: "Maison et Nettoyage",
     beverages: "Boissons",
     butcher: "Boucherie",
+    noCategory: "Sans Catégorie",
+    shareErrorMessage: "Impossible de partager la liste de courses.",
+    printErrorMessage: "Impossible d'imprimer la liste de courses.",
   },
   tr: {
     noHistory: "Geçmişte liste bulunmamaktadır",
@@ -454,6 +469,9 @@ const translationsHistorial = {
     homeAndCleaning: "Ev ve Temizlik",
     beverages: "İçecekler",
     butcher: "Kasap",
+    noCategory: "Kategori Yok",
+    shareErrorMessage: "Alışveriş listesi paylaşılamadı.",
+    printErrorMessage: "Alışveriş listesi yazdırılamadı.",
   },
   pt: {
     noHistory: "Não há listas no histórico",
@@ -530,6 +548,9 @@ const translationsHistorial = {
     homeAndCleaning: "Casa e Limpeza",
     beverages: "Bebidas",
     butcher: "Açougue",
+    noCategory: "Sem Categoria",
+    shareErrorMessage: "Não foi possível compartilhar a lista de compras.",
+    printErrorMessage: "Não foi possível imprimir a lista de compras.",
   },
   ru: {
     noHistory: "История пуста",
@@ -606,6 +627,9 @@ const translationsHistorial = {
     homeAndCleaning: "Дом и Уборка",
     beverages: "Напитки",
     butcher: "Мясная лавка",
+    noCategory: "Без Категории",
+    shareErrorMessage: "Не удалось поделиться списком покупок.",
+    printErrorMessage: "Не удалось распечатать список покупок.",
   },
   ar: {
     noHistory: "لا توجد قوائم في التاريخ",
@@ -682,6 +706,9 @@ const translationsHistorial = {
     homeAndCleaning: "المنزل والتنظيف",
     beverages: "مشروبات",
     butcher: "جزار",
+    noCategory: "بلا فئة",
+    shareErrorMessage: "لم يتمكن من مشاركة قائمة التسوق.",
+    printErrorMessage: "لم يتمكن من طباعة قائمة التسوق.",
   },
   hu: {
     noHistory: "Nincsenek listák a történetben",
@@ -758,6 +785,9 @@ const translationsHistorial = {
     homeAndCleaning: "Otthon és Takarítás",
     beverages: "Italok",
     butcher: "Hússzék",
+    noCategory: "Nincs Kategória",
+    shareErrorMessage: "Nem sikerült megosztani a bevásárlólistát.",
+    printErrorMessage: "Nem sikerült kinyomtatni a bevásárlólistát.",
   },
   ja: {
     noHistory: "履歴にリストがありません",
@@ -834,6 +864,9 @@ const translationsHistorial = {
     homeAndCleaning: "家庭用品と清掃",
     beverages: "飲み物",
     butcher: "肉屋",
+    noCategory: "カテゴリなし",
+    shareErrorMessage: "ショッピングリストを共有できませんでした。",
+    printErrorMessage: "ショッピングリストを印刷できませんでした。",
   },
   hi: {
     noHistory: "इतिहास में कोई सूची नहीं है",
@@ -910,6 +943,9 @@ const translationsHistorial = {
     homeAndCleaning: "घर और सफाई",
     beverages: "पेय पदार्थ",
     butcher: "मांस की दुकान",
+    noCategory: "कोई श्रेणी नहीं",
+    shareErrorMessage: "शॉपिंग लिस्ट साझा नहीं कर सके।",
+    printErrorMessage: "शॉपिंग लिस्ट प्रिंट नहीं कर सके।",
   },
   nl: {
     noHistory: "Er zijn geen lijsten in de geschiedenis",
@@ -986,6 +1022,9 @@ const translationsHistorial = {
     homeAndCleaning: "Huis en Schoonmaak",
     beverages: "Dranken",
     butcher: "Slagerij",
+    noCategory: "Geen Categorie",
+    shareErrorMessage: "Kon de boodschappenlijst niet delen.",
+    printErrorMessage: "Kon de boodschappenlijst niet afdrukken.",
   },
 };
 

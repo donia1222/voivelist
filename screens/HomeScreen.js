@@ -1452,7 +1452,7 @@ const HomeScreen = ({ navigation }) => {
               </TouchableOpacity>
               <TouchableOpacity style={modernStyles.cancelButton} onPress={onClose}>
                 <Text style={modernStyles.cancelButtonText}>
-                  {deviceLanguage === 'es' ? 'Cerrar' : 'Close'}
+{currentLabels.close || 'Close'}
                 </Text>
               </TouchableOpacity>
             </View>
