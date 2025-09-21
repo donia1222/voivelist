@@ -19,6 +19,7 @@ const translationsHistorial = {
     notificationsDisabled: "Notifications are disabled. Please enable them in settings.",
     active: "Activate",
     createShoppingList: "Create a shopping list",
+    switchList: "Switch List",
     confirmDelete: "Confirm deletion",
     areYouSure: "Are you sure you want to delete this list?",
     delete: "Delete",
@@ -77,6 +78,7 @@ const translationsHistorial = {
     noCategory: "No Category",
     shareErrorMessage: "Could not share the shopping list.",
     printErrorMessage: "Could not print the shopping list.",
+    switchList: "Switch List",
   },
   es: {
     noHistory: "No hay listas en el historial",
@@ -98,6 +100,7 @@ const translationsHistorial = {
     notificationsDisabled: "Las notificaciones están desactivadas. Por favor, actívalas en los ajustes.",
     active: "Activar",
     createShoppingList: "Crear una lista de compras",
+    switchList: "Cambiar lista",
     confirmDelete: "Confirmar eliminación",
     areYouSure: "¿Estás seguro de que deseas eliminar esta lista?",
     delete: "Eliminar",
@@ -156,6 +159,7 @@ const translationsHistorial = {
     noCategory: "Sin categoría",
     shareErrorMessage: "No se pudo compartir la lista de compras.",
     printErrorMessage: "No se pudo imprimir la lista de compras.",
+    switchList: "Cambiar lista",
   },
   de: {
     noHistory: "Keine Listen im Verlauf",
@@ -235,6 +239,7 @@ const translationsHistorial = {
     noCategory: "Keine Kategorie",
     shareErrorMessage: "Die Einkaufsliste konnte nicht geteilt werden.",
     printErrorMessage: "Die Einkaufsliste konnte nicht gedruckt werden.",
+    switchList: "Liste wechseln",
   },
   it: {
     noHistory: "Non ci sono liste nella cronologia",
@@ -314,6 +319,7 @@ const translationsHistorial = {
     noCategory: "Nessuna Categoria",
     shareErrorMessage: "Impossibile condividere la lista della spesa.",
     printErrorMessage: "Impossibile stampare la lista della spesa.",
+    switchList: "Cambia lista",
   },
   fr: {
     noHistory: "Il n'y a pas de listes dans l'historique",
@@ -393,6 +399,7 @@ const translationsHistorial = {
     noCategory: "Sans Catégorie",
     shareErrorMessage: "Impossible de partager la liste de courses.",
     printErrorMessage: "Impossible d'imprimer la liste de courses.",
+    switchList: "Changer de liste",
   },
   tr: {
     noHistory: "Geçmişte liste bulunmamaktadır",
@@ -472,6 +479,7 @@ const translationsHistorial = {
     noCategory: "Kategori Yok",
     shareErrorMessage: "Alışveriş listesi paylaşılamadı.",
     printErrorMessage: "Alışveriş listesi yazdırılamadı.",
+    switchList: "Liste değiştir",
   },
   pt: {
     noHistory: "Não há listas no histórico",
@@ -551,6 +559,7 @@ const translationsHistorial = {
     noCategory: "Sem Categoria",
     shareErrorMessage: "Não foi possível compartilhar a lista de compras.",
     printErrorMessage: "Não foi possível imprimir a lista de compras.",
+    switchList: "Trocar lista",
   },
   ru: {
     noHistory: "История пуста",
@@ -630,6 +639,7 @@ const translationsHistorial = {
     noCategory: "Без Категории",
     shareErrorMessage: "Не удалось поделиться списком покупок.",
     printErrorMessage: "Не удалось распечатать список покупок.",
+    switchList: "Переключить список",
   },
   ar: {
     noHistory: "لا توجد قوائم في التاريخ",
@@ -709,6 +719,7 @@ const translationsHistorial = {
     noCategory: "بلا فئة",
     shareErrorMessage: "لم يتمكن من مشاركة قائمة التسوق.",
     printErrorMessage: "لم يتمكن من طباعة قائمة التسوق.",
+    switchList: "تبديل القائمة",
   },
   hu: {
     noHistory: "Nincsenek listák a történetben",
@@ -788,6 +799,7 @@ const translationsHistorial = {
     noCategory: "Nincs Kategória",
     shareErrorMessage: "Nem sikerült megosztani a bevásárlólistát.",
     printErrorMessage: "Nem sikerült kinyomtatni a bevásárlólistát.",
+    switchList: "Lista váltása",
   },
   ja: {
     noHistory: "履歴にリストがありません",
@@ -867,6 +879,7 @@ const translationsHistorial = {
     noCategory: "カテゴリなし",
     shareErrorMessage: "ショッピングリストを共有できませんでした。",
     printErrorMessage: "ショッピングリストを印刷できませんでした。",
+    switchList: "リストを切り替え",
   },
   hi: {
     noHistory: "इतिहास में कोई सूची नहीं है",
@@ -946,6 +959,7 @@ const translationsHistorial = {
     noCategory: "कोई श्रेणी नहीं",
     shareErrorMessage: "शॉपिंग लिस्ट साझा नहीं कर सके।",
     printErrorMessage: "शॉपिंग लिस्ट प्रिंट नहीं कर सके।",
+    switchList: "सूची बदलें",
   },
   nl: {
     noHistory: "Er zijn geen lijsten in de geschiedenis",
@@ -1025,6 +1039,7 @@ const translationsHistorial = {
     noCategory: "Geen Categorie",
     shareErrorMessage: "Kon de boodschappenlijst niet delen.",
     printErrorMessage: "Kon de boodschappenlijst niet afdrukken.",
+    switchList: "Lijst omschakelen",
   },
 };
 

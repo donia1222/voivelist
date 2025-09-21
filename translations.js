@@ -20,7 +20,8 @@ export const translations = {
     contactUs: "Contact",
     privacyPolicy: "Privacy",
     termsAndConditions: "Terms",
-    shareMessage: "Check out BuyVoice - Create shopping lists with your voice! Download it here: https://apps.apple.com/app/buyvoice"
+    shareMessage: "Check out BuyVoice - Create shopping lists with your voice! Download it here: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "To keep prices affordable, we limit to 10 analyses every 10 hours. Please wait!"
   },
   es: {
     delete: "Borrar",
@@ -43,7 +44,8 @@ export const translations = {
     contactUs: "Contacto",
     privacyPolicy: "Privacidad",
     termsAndConditions: "Términos",
-    shareMessage: "¡Mira BuyVoice - Crea listas de compras con tu voz! Descárgala aquí: https://apps.apple.com/app/buyvoice"
+    shareMessage: "¡Mira BuyVoice - Crea listas de compras con tu voz! Descárgala aquí: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "Para mantener precios accesibles, limitamos a 10 análisis cada 10 horas. ¡Espera un poco!"
   },
   de: {
     delete: "Löschen",
@@ -66,7 +68,8 @@ export const translations = {
     contactUs: "Kontakt",
     privacyPolicy: "Datenschutz",
     termsAndConditions: "Bedingungen",
-    shareMessage: "Schau dir BuyVoice an - Erstelle Einkaufslisten mit deiner Stimme! Hier herunterladen: https://apps.apple.com/app/buyvoice"
+    shareMessage: "Schau dir BuyVoice an - Erstelle Einkaufslisten mit deiner Stimme! Hier herunterladen: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "Um die Preise erschwinglich zu halten, begrenzen wir auf 10 Analysen alle 10 Stunden. Bitte warten!"
   },
   fr: {
     delete: "Supprimer",
@@ -89,7 +92,8 @@ export const translations = {
     contactUs: "Contact",
     privacyPolicy: "Confidentialité",
     termsAndConditions: "Conditions",
-    shareMessage: "Découvrez BuyVoice - Créez des listes de courses avec votre voix ! Téléchargez ici : https://apps.apple.com/app/buyvoice"
+    shareMessage: "Découvrez BuyVoice - Créez des listes de courses avec votre voix ! Téléchargez ici : https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "Pour maintenir des prix abordables, nous limitons à 10 analyses toutes les 10 heures. Veuillez patienter !"
   },
   it: {
     delete: "Elimina",
@@ -112,7 +116,8 @@ export const translations = {
     contactUs: "Contatto",
     privacyPolicy: "Privacy",
     termsAndConditions: "Termini",
-    shareMessage: "Scopri BuyVoice - Crea liste della spesa con la tua voce! Scarica qui: https://apps.apple.com/app/buyvoice"
+    shareMessage: "Scopri BuyVoice - Crea liste della spesa con la tua voce! Scarica qui: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "Per mantenere prezzi accessibili, limitiamo a 10 analisi ogni 10 ore. Attendere prego!"
   },
   tr: {
     delete: "Sil",
@@ -135,7 +140,8 @@ export const translations = {
     contactUs: "İletişim",
     privacyPolicy: "Gizlilik",
     termsAndConditions: "Şartlar",
-    shareMessage: "BuyVoice'u keşfet - Sesinle alışveriş listeleri oluştur! Buradan indir: https://apps.apple.com/app/buyvoice"
+    shareMessage: "BuyVoice'u keşfet - Sesinle alışveriş listeleri oluştur! Buradan indir: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "Fiyatları uygun tutmak için her 10 saatte 10 analizle sınırlıyoruz. Lütfen bekleyin!"
   },
   pt: {
     delete: "Excluir",
@@ -158,7 +164,8 @@ export const translations = {
     contactUs: "Contato",
     privacyPolicy: "Privacidade",
     termsAndConditions: "Termos",
-    shareMessage: "Confira BuyVoice - Crie listas de compras com sua voz! Baixe aqui: https://apps.apple.com/app/buyvoice"
+    shareMessage: "Confira BuyVoice - Crie listas de compras com sua voz! Baixe aqui: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "Para manter preços acessíveis, limitamos a 10 análises a cada 10 horas. Por favor, aguarde!"
   },
   ru: {
     delete: "Удалить",
@@ -181,7 +188,8 @@ export const translations = {
     contactUs: "Контакты",
     privacyPolicy: "Конфиденциальность",
     termsAndConditions: "Условия",
-    shareMessage: "Посмотрите BuyVoice - Создавайте списки покупок голосом! Скачать здесь: https://apps.apple.com/app/buyvoice"
+    shareMessage: "Посмотрите BuyVoice - Создавайте списки покупок голосом! Скачать здесь: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "Чтобы цены оставались доступными, мы ограничиваем до 10 анализов каждые 10 часов. Пожалуйста, подождите!"
   },
   ar: {
     delete: "حذف",
@@ -204,7 +212,8 @@ export const translations = {
     contactUs: "اتصل بنا",
     privacyPolicy: "الخصوصية",
     termsAndConditions: "الشروط",
-    shareMessage: "تحقق من BuyVoice - أنشئ قوائم التسوق بصوتك! حمل من هنا: https://apps.apple.com/app/buyvoice"
+    shareMessage: "تحقق من BuyVoice - أنشئ قوائم التسوق بصوتك! حمل من هنا: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "للحفاظ على أسعار معقولة، نحد من 10 تحليلات كل 10 ساعات. يرجى الانتظار!"
   },
   hu: {
     delete: "Törlés",
@@ -227,7 +236,8 @@ export const translations = {
     contactUs: "Kapcsolat",
     privacyPolicy: "Adatvédelem",
     termsAndConditions: "Feltételek",
-    shareMessage: "Nézd meg a BuyVoice-t - Készíts bevásárlólistákat a hangoddal! Töltsd le itt: https://apps.apple.com/app/buyvoice"
+    shareMessage: "Nézd meg a BuyVoice-t - Készíts bevásárlólistákat a hangoddal! Töltsd le itt: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "Az árak megfizhetősége érdekében 10 óránként 10 elemzésre korlátozzuk. Kérjük, várjon!"
   },
   ja: {
     delete: "削除",
@@ -250,7 +260,8 @@ export const translations = {
     contactUs: "お問い合わせ",
     privacyPolicy: "プライバシー",
     termsAndConditions: "利用規約",
-    shareMessage: "BuyVoiceをチェック - 音声で買い物リストを作成！ここからダウンロード: https://apps.apple.com/app/buyvoice"
+    shareMessage: "BuyVoiceをチェック - 音声で買い物リストを作成！ここからダウンロード: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "価格を手頃に保つため、10時間ごとに10回の分析に制限しています。お待ちください！"
   },
   hi: {
     delete: "हटाएं",
@@ -273,7 +284,8 @@ export const translations = {
     contactUs: "संपर्क करें",
     privacyPolicy: "गोपनीयता",
     termsAndConditions: "शर्तें",
-    shareMessage: "BuyVoice देखें - अपनी आवाज़ से खरीदारी सूची बनाएं! यहाँ डाउनलोड करें: https://apps.apple.com/app/buyvoice"
+    shareMessage: "BuyVoice देखें - अपनी आवाज़ से खरीदारी सूची बनाएं! यहाँ डाउनलोड करें: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "कीमतों को किफायती रखने के लिए, हम हर 10 घंटे में 10 विश्लेषण तक सीमित करते हैं। कृपया प्रतीक्षा करें!"
   },
   nl: {
     delete: "Verwijderen",
@@ -296,6 +308,7 @@ export const translations = {
     contactUs: "Contact",
     privacyPolicy: "Privacy",
     termsAndConditions: "Voorwaarden",
-    shareMessage: "Bekijk BuyVoice - Maak boodschappenlijsten met je stem! Download hier: https://apps.apple.com/app/buyvoice"
+    shareMessage: "Bekijk BuyVoice - Maak boodschappenlijsten met je stem! Download hier: https://apps.apple.com/app/buyvoice",
+    imageLimitReached: "Om prijzen betaalbaar te houden, beperken we tot 10 analyses elke 10 uur. Even geduld alstublieft!"
   }
 }

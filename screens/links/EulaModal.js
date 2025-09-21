@@ -42,7 +42,7 @@ const termsData = {
       content: [
         {
           subtitle: "🌟 Premium Features:",
-          text: "Premium subscription unlocks unlimited voice lists, unlimited image analysis, advanced AI processing, and removes usage limits."
+          text: "Premium subscription unlocks unlimited voice lists, image analysis (limited to 10 analyses every 10 hours), advanced AI processing, and priority support."
         },
         {
           subtitle: "💳 Billing:",
@@ -65,7 +65,7 @@ const termsData = {
         },
         {
           subtitle: "📸 Image Analysis:",
-          text: "Image processing uses AI to recognize shopping lists from photos. We are not responsible for decisions made based on AI responses."
+          text: "Image processing uses AI to recognize shopping lists from photos. Subscribers are limited to 10 image analyses every 10 hours to maintain affordable pricing and ensure fair usage. We are not responsible for decisions made based on AI responses."
         }
       ]
     },

@@ -837,12 +837,12 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
     },
     resultContainer: {
       flex: 1,
-      backgroundColor: theme === 'dark' ? '#1a1a1a' : '#f8f9fa',
-      padding: 20,
-      paddingTop: 50,
+marginTop:-10,
+      padding: 15,
+
     },
     resultCard: {
-      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#fff',
+      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff9a',
       borderRadius: 24,
       padding: 25,
       shadowColor: '#000',
@@ -851,14 +851,14 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
       shadowRadius: 20,
       elevation: 8,
       width: '100%',
-      maxHeight: screenHeight * 0.75,
+      maxHeight: screenHeight * 0.85,
       borderWidth: 1,
       borderColor: theme === 'dark' ? '#333' : '#f0f0f0',
     },
     resultTitle: {
-      fontSize: 22,
-      fontWeight: '700',
-      color: theme.text,
+      fontSize: 21,
+      fontWeight: '600',
+      color: '#3e3e3eff',
       marginBottom: 20,
       textAlign: 'center',
     },
@@ -872,7 +872,7 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
     },
     resultCountry: {
       fontSize: 16,
-      color: '#dc2626',
+     color: '#2a8c32ff',
       marginBottom: 25,
       textAlign: 'center',
       fontWeight: '600',
@@ -907,7 +907,7 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
       shadowOpacity: 0.3,
       shadowRadius: 8,
       elevation: 4,
-      marginBottom: 40,
+      marginBottom: 80,
     },
     shareIcon: {
       marginRight: 8,
@@ -964,9 +964,9 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
             <ActivityIndicator size="large" color="#dc2626" />
           ) : (
             <ScrollView style={styles.resultCard} showsVerticalScrollIndicator={false}>
-              <Text style={styles.resultTitle}>{t.estimatedCost}</Text>
+              <Text style={styles.resultTitle}>💰{t.estimatedCost}</Text>
               <Text style={styles.resultCost}>{estimatedCost}</Text>
-              <Text style={styles.resultCountry}>{country}</Text>
+              <Text style={styles.resultCountry}>📍{country}</Text>
               <TouchableOpacity 
                 style={styles.tryAnotherButton}
                 onPress={resetCalculator}

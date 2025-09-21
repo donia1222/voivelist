@@ -2,9 +2,9 @@
 // config.php - Configuración de base de datos para VoiceList
 
 // Configuración de la base de datos
-define('DB_HOST', 'owoxogis.mysql.db.internal');
-define('DB_NAME', 'owoxogis_voicelist');
-define('DB_USER', 'owoxogis_voice');
+define('DB_HOST', '.mysql.db.internal');
+define('DB_NAME', '_voicelist');
+define('DB_USER', '_voice');
 define('DB_PASS', 'TU_PASSWORD_AQUI'); // Debes poner tu password real aquí
 
 // Función para conectar a la base de datos

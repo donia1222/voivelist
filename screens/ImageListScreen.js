@@ -28,8 +28,10 @@ import { useTheme } from "../ThemeContext"
 import { useHaptic } from "../HapticContext"
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 import texts from "./translations/texts"
+import { translations } from "../translations"
 import RNFS from "react-native-fs"
 import { request, PERMISSIONS, RESULTS } from "react-native-permissions"
+import DeviceInfo from 'react-native-device-info'
 const { width, height } = Dimensions.get("window")
 const screenWidth = width
 const screenHeight = height
@@ -109,7 +111,7 @@ const modalTexts = {
     takePhoto: "Fotoğraf çek",
     cancel: "İptal",
   },
-  ptru: {
+  pt: {
     title: "Selecione ou tire uma foto da sua lista de compras",
     gallery: "Selecionar da galeria",
     takePhoto: "Tirar uma foto",
@@ -155,7 +157,7 @@ const suscribeButtonTranslations = {
   it: "Iscriviti per analizzare le liste della spesa",
   fr: "Abonne-toi pour analyser des listes de courses",
   tr: "Alışveriş listelerini analiz etmek için abone ol",
-  ptru: "Assine para analisar listas de compras",
+  pt: "Assine para analisar listas de compras",
   ar: "اشترك لتحليل قوائم التسوق",
   ja: "買い物リストを分析するには購読してください",
   nl: "Abonneer je om boodschappenlijsten te analyseren"
@@ -276,7 +278,7 @@ const alertTexts = {
     errorAnalyzingImage: "Görüntü analiz edilirken hata: ",
     errorGettingCustomerInfo: "Müşteri bilgileri alınırken hata:",
   },
-  ptru: {
+  pt: {
     subscriptionRequired: "Assinatura Necessária",
     subscriptionMessage: "Você precisa estar assinado para calcular o custo estimado.",
     subscribe: "Assinar",
@@ -399,6 +401,10 @@ const uiTexts = {
     uploadImageDescription: "Mache ein Foto oder wähle ein Bild deiner Einkaufsliste, um es automatisch zu analysieren",
     saveList: "Liste speichern",
     listSaved: "Liste gespeichert!",
+    listName: "Listenname",
+    enterListName: "Listennamen eingeben",
+    save: "Speichern",
+    cancel: "Abbrechen",
     selectCountry: "Land auswählen",
     cityNamePlaceholder: "Stadt- oder Landesname eingeben",
     viewCost: "Kosten anzeigen in",
@@ -413,12 +419,178 @@ const uiTexts = {
     uploadImageDescription: "Prenez une photo ou sélectionnez une image de votre liste de courses pour l'analyser automatiquement",
     saveList: "Enregistrer la liste",
     listSaved: "Liste enregistrée !",
+    listName: "Nom de la liste",
+    enterListName: "Entrez le nom de la liste",
+    save: "Enregistrer",
+    cancel: "Annuler",
     selectCountry: "Sélectionner un pays",
     cityNamePlaceholder: "Entrez le nom de la ville ou du pays",
     viewCost: "Voir le coût en",
     subscriptionRequired: "Abonnement requis",
     costOfList: "Coût de la liste",
     imageListPrefix: "Liste d'image",
+  },
+  it: {
+    creatingList: "Creazione lista",
+    analyzingImage: "Analisi della tua immagine...",
+    uploadImage: "Carica un'immagine",
+    uploadImageDescription: "Scatta una foto o seleziona un'immagine della tua lista della spesa per analizzarla automaticamente",
+    saveList: "Salva Lista",
+    listSaved: "Lista Salvata!",
+    listName: "Nome Lista",
+    enterListName: "Inserisci nome lista",
+    save: "Salva",
+    cancel: "Annulla",
+    selectCountry: "Seleziona Paese",
+    cityNamePlaceholder: "Inserisci il nome della città o del paese",
+    viewCost: "Visualizza costo in",
+    subscriptionRequired: "Abbonamento richiesto",
+    costOfList: "Costo della lista",
+    imageListPrefix: "Lista Immagine",
+  },
+  tr: {
+    creatingList: "Liste oluşturuluyor",
+    analyzingImage: "Görüntünüz analiz ediliyor...",
+    uploadImage: "Bir görüntü yükle",
+    uploadImageDescription: "Alışveriş listenizin fotoğrafını çekin veya bir görüntü seçin, otomatik olarak analiz edilsin",
+    saveList: "Liste Kaydet",
+    listSaved: "Liste Kaydedildi!",
+    listName: "Liste Adı",
+    enterListName: "Liste adı girin",
+    save: "Kaydet",
+    cancel: "İptal",
+    selectCountry: "Ülke Seç",
+    cityNamePlaceholder: "Şehir veya ülke adı girin",
+    viewCost: "Maliyeti görüntüle:",
+    subscriptionRequired: "Abonelik Gerekli",
+    costOfList: "Liste maliyeti",
+    imageListPrefix: "Görüntü Listesi",
+  },
+  pt: {
+    creatingList: "Criando lista",
+    analyzingImage: "Analisando sua imagem...",
+    uploadImage: "Carregar uma imagem",
+    uploadImageDescription: "Tire uma foto ou selecione uma imagem da sua lista de compras para analisá-la automaticamente",
+    saveList: "Salvar Lista",
+    listSaved: "Lista Salva!",
+    listName: "Nome da Lista",
+    enterListName: "Digite o nome da lista",
+    save: "Salvar",
+    cancel: "Cancelar",
+    selectCountry: "Selecionar País",
+    cityNamePlaceholder: "Digite o nome da cidade ou país",
+    viewCost: "Ver custo em",
+    subscriptionRequired: "Assinatura Necessária",
+    costOfList: "Custo da lista",
+    imageListPrefix: "Lista de Imagem",
+  },
+  ru: {
+    creatingList: "Создание списка",
+    analyzingImage: "Анализ вашего изображения...",
+    uploadImage: "Загрузить изображение",
+    uploadImageDescription: "Сделайте фото или выберите изображение вашего списка покупок для автоматического анализа",
+    saveList: "Сохранить список",
+    listSaved: "Список сохранён!",
+    listName: "Название списка",
+    enterListName: "Введите название списка",
+    save: "Сохранить",
+    cancel: "Отмена",
+    selectCountry: "Выбрать страну",
+    cityNamePlaceholder: "Введите название города или страны",
+    viewCost: "Посмотреть стоимость в",
+    subscriptionRequired: "Требуется подписка",
+    costOfList: "Стоимость списка",
+    imageListPrefix: "Список изображений",
+  },
+  ar: {
+    creatingList: "إنشاء القائمة",
+    analyzingImage: "تحليل صورتك...",
+    uploadImage: "تحميل صورة",
+    uploadImageDescription: "التقط صورة أو اختر صورة لقائمة التسوق الخاصة بك لتحليلها تلقائياً",
+    saveList: "حفظ القائمة",
+    listSaved: "تم حفظ القائمة!",
+    listName: "اسم القائمة",
+    enterListName: "أدخل اسم القائمة",
+    save: "حفظ",
+    cancel: "إلغاء",
+    selectCountry: "اختر البلد",
+    cityNamePlaceholder: "أدخل اسم المدينة أو البلد",
+    viewCost: "عرض التكلفة في",
+    subscriptionRequired: "الاشتراك مطلوب",
+    costOfList: "تكلفة القائمة",
+    imageListPrefix: "قائمة الصور",
+  },
+  hu: {
+    creatingList: "Lista létrehozása",
+    analyzingImage: "A kép elemzése...",
+    uploadImage: "Kép feltöltése",
+    uploadImageDescription: "Készítsen fényképet vagy válasszon egy képet a bevásárlólistájáról az automatikus elemzéshez",
+    saveList: "Lista mentése",
+    listSaved: "Lista elmentve!",
+    listName: "Lista neve",
+    enterListName: "Adja meg a lista nevét",
+    save: "Mentés",
+    cancel: "Mégse",
+    selectCountry: "Ország kiválasztása",
+    cityNamePlaceholder: "Adja meg a város vagy ország nevét",
+    viewCost: "Költség megtekintése:",
+    subscriptionRequired: "Előfizetés szükséges",
+    costOfList: "Lista költsége",
+    imageListPrefix: "Kép lista",
+  },
+  ja: {
+    creatingList: "リスト作成中",
+    analyzingImage: "画像を分析中...",
+    uploadImage: "画像をアップロード",
+    uploadImageDescription: "買い物リストの写真を撮るか画像を選択して、自動的に分析してください",
+    saveList: "リストを保存",
+    listSaved: "リストが保存されました！",
+    listName: "リスト名",
+    enterListName: "リスト名を入力",
+    save: "保存",
+    cancel: "キャンセル",
+    selectCountry: "国を選択",
+    cityNamePlaceholder: "都市または国名を入力",
+    viewCost: "コストを表示：",
+    subscriptionRequired: "サブスクリプションが必要",
+    costOfList: "リストのコスト",
+    imageListPrefix: "画像リスト",
+  },
+  hi: {
+    creatingList: "सूची बना रहे हैं",
+    analyzingImage: "आपकी छवि का विश्लेषण कर रहे हैं...",
+    uploadImage: "एक छवि अपलोड करें",
+    uploadImageDescription: "अपनी खरीदारी सूची की तस्वीर लें या छवि चुनें और इसे स्वचालित रूप से विश्लेषित करें",
+    saveList: "सूची सहेजें",
+    listSaved: "सूची सहेजी गई!",
+    listName: "सूची का नाम",
+    enterListName: "सूची का नाम दर्ज करें",
+    save: "सहेजें",
+    cancel: "रद्द करें",
+    selectCountry: "देश चुनें",
+    cityNamePlaceholder: "शहर या देश का नाम दर्ज करें",
+    viewCost: "लागत देखें:",
+    subscriptionRequired: "सदस्यता आवश्यक",
+    costOfList: "सूची की लागत",
+    imageListPrefix: "छवि सूची",
+  },
+  nl: {
+    creatingList: "Lijst maken",
+    analyzingImage: "Uw afbeelding analyseren...",
+    uploadImage: "Een afbeelding uploaden",
+    uploadImageDescription: "Maak een foto of selecteer een afbeelding van uw boodschappenlijst om deze automatisch te analyseren",
+    saveList: "Lijst opslaan",
+    listSaved: "Lijst opgeslagen!",
+    listName: "Lijstnaam",
+    enterListName: "Voer lijstnaam in",
+    save: "Opslaan",
+    cancel: "Annuleren",
+    selectCountry: "Land selecteren",
+    cityNamePlaceholder: "Voer stad- of landnaam in",
+    viewCost: "Kosten bekijken in",
+    subscriptionRequired: "Abonnement vereist",
+    costOfList: "Kosten van lijst",
+    imageListPrefix: "Afbeeldingslijst",
   },
 }
 
@@ -450,6 +622,10 @@ const ImageListScreen = ({ route }) => {
   const [nameModalVisible, setNameModalVisible] = useState(false)
   const [listName, setListName] = useState("")
 
+  // Image analysis states
+  const [canAnalyzeImage, setCanAnalyzeImage] = useState(true)
+  const [dailyImageCount, setDailyImageCount] = useState(0)
+
   // Animations
   const pulseAnim = useRef(new Animated.Value(1)).current
   const bounceAnim = useRef(new Animated.Value(0)).current
@@ -467,6 +643,9 @@ const ImageListScreen = ({ route }) => {
   const modalText = modalTexts[deviceLanguage] || modalTexts["en"]
   const alertText = alertTexts[deviceLanguage] || alertTexts["en"]
   const uiText = uiTexts[deviceLanguage] || uiTexts["en"]
+  console.log('🌐 Device language for uiText:', deviceLanguage)
+  console.log('🔍 Available uiTexts languages:', Object.keys(uiTexts))
+  console.log('📝 Using uiText for listName:', uiText.listName)
 
   // Initialize animations
   useEffect(() => {
@@ -595,6 +774,20 @@ const ImageListScreen = ({ route }) => {
     loadCountry()
   }, [])
 
+  // Check image analysis limits on mount and periodically
+  useEffect(() => {
+    if (isSubscribed) {
+      checkImageAnalysisLimits()
+
+      // Auto-refresh every 30 seconds to check if limit has reset
+      const interval = setInterval(() => {
+        checkImageAnalysisLimits()
+      }, 30000) // 30 seconds
+
+      return () => clearInterval(interval)
+    }
+  }, [isSubscribed])
+
   const handleCountryChange = (text) => {
     setCountry(text)
     setIsCountryEmpty(text.trim() === "")
@@ -707,6 +900,15 @@ const ImageListScreen = ({ route }) => {
   }
 
   const analyzeImage = async (imageUri) => {
+    // Check if user can analyze image
+    if (!canAnalyzeImage) {
+      Alert.alert(
+        deviceLanguage === 'es' ? 'Límite alcanzado' : 'Limit reached',
+        translations[deviceLanguage]?.imageLimitReached || translations.en.imageLimitReached
+      )
+      return
+    }
+
     setLoading(true)
     setEstimatedCost(null)
 
@@ -767,6 +969,9 @@ const ImageListScreen = ({ route }) => {
           .filter((item) => item)
         setShoppingList(items)
         saveShoppingList(items)
+
+        // Increment image analysis count after successful analysis
+        incrementImageAnalysis()
       } else {
         Alert.alert(alertText.error, alertText.noValidAnalysis)
       }
@@ -834,6 +1039,68 @@ const ImageListScreen = ({ route }) => {
 
     const nextNumber = existingNumbers.length > 0 ? Math.max(...existingNumbers) + 1 : 1
     return `${prefix} ${nextNumber}`
+  }
+
+  // Simple functions for image analysis
+  const getDeviceId = async () => {
+    try {
+      return await DeviceInfo.getUniqueId()
+    } catch (error) {
+      return `fallback_${Date.now()}`
+    }
+  }
+
+  const checkImageAnalysisLimits = async () => {
+    console.log('🔍 Checking image analysis limits...')
+    if (!isSubscribed) {
+      console.log('❌ User not subscribed')
+      return { canAnalyze: false, reason: 'not_subscribed' }
+    }
+
+    try {
+      const deviceId = await getDeviceId()
+      console.log('📱 Device ID:', deviceId)
+      const response = await fetch(`https://web.lweb.ch/voice/image_check.php?device_id=${deviceId}`)
+      const data = await response.json()
+      console.log('🔍 Image limits response:', data)
+
+      if (data.success) {
+        setCanAnalyzeImage(data.can_analyze)
+        setDailyImageCount(data.daily_count)
+        console.log(`📊 Análisis usados: ${data.daily_count}/10`)
+        console.log(`⏰ Puede analizar: ${data.can_analyze ? 'SÍ' : 'NO'}`)
+        console.log(`📈 Quedan: ${data.remaining} análisis`)
+        if (data.time_until_reset > 0) {
+          console.log(`🕒 Próximo reset en: ${data.time_remaining_text}`)
+        }
+        return { canAnalyze: data.can_analyze, remaining: data.remaining }
+      }
+    } catch (error) {
+      console.error('Error checking limits:', error)
+    }
+
+    return { canAnalyze: true, remaining: 1 } // Fallback
+  }
+
+  const incrementImageAnalysis = async () => {
+    try {
+      const deviceId = await getDeviceId()
+      const response = await fetch(`https://web.lweb.ch/voice/image_increment.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ device_id: deviceId })
+      })
+      const data = await response.json()
+
+      if (data.success) {
+        setCanAnalyzeImage(data.can_analyze)
+        setDailyImageCount(data.daily_count)
+        return data.limit_reached
+      }
+    } catch (error) {
+      console.error('Error incrementing:', error)
+    }
+    return false
   }
 
   const saveToHistory = async () => {
@@ -946,7 +1213,7 @@ const ImageListScreen = ({ route }) => {
     <Modal visible={confirmationModalVisible} transparent={true} animationType="fade">
       <View style={modernStyles.confirmationModalContainer}>
         <View style={modernStyles.confirmationModalContent}>
-          <Image source={require("../assets/images/checked.png")} style={modernStyles.confirmationImage} />
+          <Ionicons name="checkmark-circle" size={60} color="#10b981" />
           <Text style={modernStyles.confirmationText}>{uiText.listSaved || "List Saved!"}</Text>
         </View>
       </View>
@@ -1009,7 +1276,7 @@ const ImageListScreen = ({ route }) => {
 
 
       {/* Upload Section - Only show when no items in list */}
-      {!loading && isSubscribed && shoppingList.length === 0 && (
+      {!loading && isSubscribed && canAnalyzeImage && shoppingList.length === 0 && (
         <View style={modernStyles.uploadSectionContainer}>
           {/* Title and Description Card */}
           <View style={[
@@ -1087,6 +1354,16 @@ const ImageListScreen = ({ route }) => {
         </TouchableOpacity>
       )}
 
+      {/* Daily Limit Banner for Subscribers - Only show when no items in list */}
+      {isSubscribed && !canAnalyzeImage && shoppingList.length === 0 && (
+        <View style={[modernStyles.subscriptionBanner, isSmallIPhone && {padding: 8, marginBottom: 12}]}>
+          <Ionicons name="time-outline" size={isSmallIPhone ? 16 : 20} color="#ef4444" />
+          <Text style={[modernStyles.subscriptionBannerText, isSmallIPhone && {fontSize: 12}]}>
+            {translations[deviceLanguage]?.imageLimitReached || translations.en.imageLimitReached}
+          </Text>
+        </View>
+      )}
+
       {/* Cancel Button - Left side when items exist */}
       {shoppingList.length > 0 && !loading && (
         <TouchableOpacity
@@ -1105,7 +1382,7 @@ const ImageListScreen = ({ route }) => {
       {/* Save Button - Right side */}
       {shoppingList.length > 0 && !loading && (
         <TouchableOpacity onPress={saveToHistory} style={modernStyles.saveButton}>
-          <Ionicons name="checkmark-circle-outline" size={24} color="#10b981" />
+          <Ionicons name="checkmark-circle-outline" size={24} color="#ffffffff" />
           <Text style={modernStyles.saveButtonText}>{uiText.saveList}</Text>
         </TouchableOpacity>
       )}
@@ -1595,7 +1872,7 @@ const modernStyles = StyleSheet.create({
     right: 15,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor:"#10b981",
     paddingHorizontal: 12,
     paddingVertical: 12,
     borderRadius: 24,
@@ -1610,7 +1887,7 @@ const modernStyles = StyleSheet.create({
     marginLeft: 8,
     fontSize: isSmallIPhone ? 12 : 16,
     fontWeight: "600",
-    color: "#10b981",
+    color: "#ffffffff",
   },
 
   subscriptionBanner: {
@@ -1630,10 +1907,12 @@ const modernStyles = StyleSheet.create({
 
   subscriptionBannerText: {
     marginLeft: 8,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "600",
     color: "#ef4444",
     textAlign: "center",
+    padding:4,
+
   },
 
   // Modals
@@ -1792,7 +2071,7 @@ const modernStyles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderColor: "#fecaca",
-    marginTop:-90
+    marginTop:-70
   },
 
 
