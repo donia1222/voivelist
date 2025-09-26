@@ -167,30 +167,6 @@ const packageDurationTranslations = {
     three_months: "3 Meses",
     six_months: "6 Meses",
     one_year: "1 Año"
-  },
-  de: {
-    one_month: "1 Monat",
-    three_months: "3 Monate",
-    six_months: "6 Monate",
-    one_year: "1 Jahr"
-  },
-  fr: {
-    one_month: "1 Mois",
-    three_months: "3 Mois",
-    six_months: "6 Mois",
-    one_year: "1 An"
-  },
-  it: {
-    one_month: "1 Mese",
-    three_months: "3 Mesi",
-    six_months: "6 Mesi",
-    one_year: "1 Anno"
-  },
-  pt: {
-    one_month: "1 Mês",
-    three_months: "3 Meses",
-    six_months: "6 Meses",
-    one_year: "1 Ano"
   }
 };
 
@@ -203,26 +179,6 @@ const packageBadgeTranslations = {
   es: {
     basic: "Básico",
     best_value: "Mejor Valor",
-    premium: "Premium"
-  },
-  de: {
-    basic: "Basis",
-    best_value: "Bester Wert",
-    premium: "Premium"
-  },
-  fr: {
-    basic: "Basique",
-    best_value: "Meilleure Valeur",
-    premium: "Premium"
-  },
-  it: {
-    basic: "Base",
-    best_value: "Miglior Valore",
-    premium: "Premium"
-  },
-  pt: {
-    basic: "Básico",
-    best_value: "Melhor Valor",
     premium: "Premium"
   }
 };
@@ -244,131 +200,6 @@ const monthTranslations = {
   ar: "شهر تجديد تلقائي, الإلغاء في أي وقت",
   hi: "महीना स्वचालित नवीनीकरण, किसी भी समय रद्द करें",
   el: "Μήνας με αυτόματη ανανέωση, ακύρωση ανά πάσα στιγμή."
-};
-
-// Traducciones para los períodos de suscripción
-const subscriptionPeriodsTranslations = {
-  en: {
-    three_months: "/3 months",
-    six_months: "/6 months",
-    one_year: "/year"
-  },
-  es: {
-    three_months: "/3 meses",
-    six_months: "/6 meses",
-    one_year: "/año"
-  },
-  de: {
-    three_months: "/3 Monate",
-    six_months: "/6 Monate",
-    one_year: "/Jahr"
-  },
-  fr: {
-    three_months: "/3 mois",
-    six_months: "/6 mois",
-    one_year: "/an"
-  },
-  it: {
-    three_months: "/3 mesi",
-    six_months: "/6 mesi",
-    one_year: "/anno"
-  },
-  tr: {
-    three_months: "/3 ay",
-    six_months: "/6 ay",
-    one_year: "/yıl"
-  },
-  pt: {
-    three_months: "/3 meses",
-    six_months: "/6 meses",
-    one_year: "/ano"
-  },
-  ru: {
-    three_months: "/3 месяца",
-    six_months: "/6 месяцев",
-    one_year: "/год"
-  },
-  zh: {
-    three_months: "/3个月",
-    six_months: "/6个月",
-    one_year: "/年"
-  },
-  ja: {
-    three_months: "/3ヶ月",
-    six_months: "/6ヶ月",
-    one_year: "/年"
-  },
-  ar: {
-    three_months: "/3 أشهر",
-    six_months: "/6 أشهر",
-    one_year: "/سنة"
-  },
-  hi: {
-    three_months: "/3 महीने",
-    six_months: "/6 महीने",
-    one_year: "/साल"
-  },
-  el: {
-    three_months: "/3 Μήνες",
-    six_months: "/6 Μήνες",
-    one_year: "/χρόνος"
-  }
-};
-
-// Traducciones para los botones de suscripción
-const subscriptionButtonTranslations = {
-  en: {
-    select_plan: "Select Plan",
-    choose_best_option: "Choose Best Option"
-  },
-  es: {
-    select_plan: "Seleccionar Plan",
-    choose_best_option: "Elegir Mejor Opción"
-  },
-  de: {
-    select_plan: "Plan Wählen",
-    choose_best_option: "Beste Option Wählen"
-  },
-  fr: {
-    select_plan: "Sélectionner le Plan",
-    choose_best_option: "Choisir la Meilleure Option"
-  },
-  it: {
-    select_plan: "Seleziona Piano",
-    choose_best_option: "Scegli l'Opzione Migliore"
-  },
-  tr: {
-    select_plan: "Plan Seç",
-    choose_best_option: "En İyi Seçeneği Seç"
-  },
-  pt: {
-    select_plan: "Selecionar Plano",
-    choose_best_option: "Escolher Melhor Opção"
-  },
-  ru: {
-    select_plan: "Выбрать План",
-    choose_best_option: "Выбрать Лучший Вариант"
-  },
-  zh: {
-    select_plan: "选择计划",
-    choose_best_option: "选择最佳方案"
-  },
-  ja: {
-    select_plan: "プランを選択",
-    choose_best_option: "ベストオプションを選択"
-  },
-  ar: {
-    select_plan: "اختر الخطة",
-    choose_best_option: "اختر أفضل خيار"
-  },
-  hi: {
-    select_plan: "प्लान चुनें",
-    choose_best_option: "सबसे अच्छा विकल्प चुनें"
-  },
-  el: {
-    select_plan: "Επιλογή Σχεδίου",
-    choose_best_option: "Επιλογή Καλύτερης Επιλογής"
-  }
 };
 
 // Estilos modernos y responsivos
@@ -547,11 +378,11 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
     paddingHorizontal: isTablet ? 35 : isSmallIPhone ? 22 : 30,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: 'rgba(158, 50, 201, 0.54)',
+    borderColor: 'rgba(155, 89, 182, 0.3)',
   },
 
   restoreButtonText: {
-    color: '#8659b6ff',
+    color: '#9b59b6',
     fontSize: isTablet ? 16 : isSmallIPhone ? 12 : 14,
     fontWeight: '700',
     textAlign: 'center',
@@ -887,7 +718,6 @@ export default function Suscribe() {
   const [allOfferings, setAllOfferings] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubscribing, setIsSubscribing] = useState(false);
-  const [loadingPackageId, setLoadingPackageId] = useState(null);
   const systemLanguage = RNLocalize.getLocales()[0]?.languageCode || 'en';
   const alertTexts = suscribeAlerts[systemLanguage] || suscribeAlerts['en'];
   const [isPrivacyModalVisible, setIsPrivacyModalVisible] = useState(false);
@@ -1033,7 +863,6 @@ export default function Suscribe() {
     console.log('🛍️ Iniciando compra del paquete:', pkg.product.identifier);
     animateButtonPress();
     setIsSubscribing(true);
-    setLoadingPackageId(pkg.product.identifier);
 
     try {
       const purchaseMade = await Purchases.purchasePackage(pkg);
@@ -1071,7 +900,6 @@ export default function Suscribe() {
       }
     } finally {
       setIsSubscribing(false);
-      setLoadingPackageId(null);
     }
   };
 
@@ -1258,26 +1086,15 @@ export default function Suscribe() {
                       const priceB = offeringB.availablePackages[0]?.product?.price || 0;
                       return priceA - priceB;
                     })
-                    .map(([offeringKey, offering], offeringIndex) =>
-                      offering.availablePackages.map((pkg, packageIndex) => {
-                        // Crear un índice global único para todos los paquetes
-                        let globalIndex = 0;
-                        Object.entries(allOfferings).forEach(([key, off], idx) => {
-                          if (idx < offeringIndex) {
-                            globalIndex += off.availablePackages.length;
-                          }
-                        });
-                        globalIndex += packageIndex;
+                    .map(([offeringKey, offering]) =>
+                      offering.availablePackages.map((pkg, index) => {
                         // Validar el paquete
                         if (!pkg?.product?.identifier) {
                           console.warn('⚠️ Paquete sin identificador:', pkg);
                           return null;
                         }
 
-                        // Log temporal para diagnosticar
-                        console.log('🔍 Producto identificador:', pkg.product.identifier);
-
-                        // Determinar el diseño según el producto e índice
+                        // Determinar el diseño según el producto
                         let iconColor = "#6366f1";
                         let gradientColors = ['rgba(99, 102, 241, 0.08)', 'rgba(99, 102, 241, 0.04)'];
                         let buttonGradient = ['rgba(99, 102, 241, 0.9)', 'rgba(79, 70, 229, 0.9)'];
@@ -1286,49 +1103,40 @@ export default function Suscribe() {
                         let cardStyle = styles.packageCardHorizontal;
                         let badgeText = '';
 
-                        // Asignar propiedades basándose en el índice global (0, 1, 2)
-                        if (globalIndex === 0) {
-                          // Primera carta - 3 meses (rojo)
-                            iconColor = "#10b981";
-                              iconColor = "#10b981";
+                        if (pkg.product.identifier === '1981') {
+                          iconColor = "#10b981";
                           gradientColors = ['rgba(16, 185, 129, 0.06)', 'rgba(16, 185, 129, 0.03)'];
                           buttonGradient = ['rgba(16, 185, 129, 0.9)', 'rgba(5, 150, 105, 0.9)'];
-                          duration = systemLanguage === 'es' ? '3 Meses' : '3 Months';
-                          badgeText = systemLanguage === 'es' ? 'Básico' : 'Basic';
-                        } else if (globalIndex === 1) {
-                          // Segunda carta - 6 meses (rojo)
-                           iconColor = "#10b981";
-                              iconColor = "#10b981";
-                          gradientColors = ['rgba(16, 185, 129, 0.06)', 'rgba(16, 185, 129, 0.03)'];
-                          buttonGradient = ['rgba(16, 185, 129, 0.9)', 'rgba(5, 150, 105, 0.9)'];
-                          duration = systemLanguage === 'es' ? '6 Meses' : '6 Months';
-                          badgeText = systemLanguage === 'es' ? 'Básico' : 'Basic';
-                        } else if (globalIndex === 2) {
-                          // Tercera carta - 1 año (verde - mejor opción)
-                         iconColor = "#ef7744ff";
-                          gradientColors = ['rgba(239, 68, 68, 0.12)', 'rgba(239, 68, 68, 0.06)'];
-                          buttonGradient = ['rgba(220, 123, 38, 0.95)', 'rgba(220, 123, 38, 0.95)'];
-                          duration = systemLanguage === 'es' ? '1 Año' : '1 Year';
+                          duration = packageDurationTranslations[systemLanguage]?.three_months || '3 Months';
+                          badgeText = packageBadgeTranslations[systemLanguage]?.basic || 'Basic';
+                        } else if (pkg.product.identifier === 'ente2') {
+                          iconColor = "#f59e0b";
+                          gradientColors = ['rgba(245, 158, 11, 0.12)', 'rgba(245, 158, 11, 0.06)'];
+                          buttonGradient = ['rgba(245, 158, 11, 0.95)', 'rgba(217, 119, 6, 0.95)'];
+                          duration = packageDurationTranslations[systemLanguage]?.six_months || '6 Months';
                           isBestOption = true;
                           cardStyle = styles.packageCardBest;
-                          badgeText = systemLanguage === 'es' ? 'Mejor Valor' : 'Best Value';
+                          badgeText = packageBadgeTranslations[systemLanguage]?.best_value || 'Best Value';
+                        } else if (pkg.product.identifier === 'ente3') {
+                          iconColor = "#8b5cf6";
+                          gradientColors = ['rgba(139, 92, 246, 0.08)', 'rgba(139, 92, 246, 0.04)'];
+                          buttonGradient = ['rgba(139, 92, 246, 0.9)', 'rgba(124, 58, 237, 0.9)'];
+                          duration = packageDurationTranslations[systemLanguage]?.one_year || '1 Year';
+                          badgeText = packageBadgeTranslations[systemLanguage]?.premium || 'Premium';
                         } else {
-                          // Fallback para más cartas
-                          duration = systemLanguage === 'es' ? '1 Mes' : '1 Month';
-                          badgeText = systemLanguage === 'es' ? 'Básico' : 'Basic';
+                          // Fallback para productos no identificados
+                          duration = packageDurationTranslations[systemLanguage]?.one_month || '1 Month';
+                          badgeText = packageBadgeTranslations[systemLanguage]?.basic || 'Basic';
                         }
 
-                        // Log temporal para verificar la asignación de duration
-                        console.log('🏷️ Duration asignado:', duration, 'para ID:', pkg.product.identifier);
-
-                        const uniqueKey = `${offeringKey}_${pkg.product.identifier}_${globalIndex}`;
+                        const uniqueKey = `${offeringKey}_${pkg.product.identifier}_${index}`;
 
                         return (
                           <TouchableOpacity
                             key={uniqueKey}
                             style={[cardStyle, isBestOption && styles.bestOptionShadow]}
                             onPress={() => purchaseSubscription(pkg)}
-                            disabled={loadingPackageId !== null}
+                            disabled={isSubscribing}
                             activeOpacity={0.8}
                           >
                             <View style={[styles.packageCardInnerHorizontal, {backgroundColor: 'rgba(255,255,255,0.05)', borderColor: iconColor + '30', borderWidth: 1}]}>
@@ -1339,18 +1147,15 @@ export default function Suscribe() {
                                 <Text style={[styles.typeBadgeText, { color: iconColor }]}>{badgeText}</Text>
                               </View>
 
-                              <Text style={[styles.packageTitleHorizontal, { color: theme?.text || '#2c3e50', marginTop: 16 }]}>
-                                {duration}
-                              </Text>
+                              <Text style={[styles.packageTitleHorizontal, { color: theme?.text || '#2c3e50', marginTop: 16 }]}>{duration}</Text>
 
 
                               <View style={styles.packagePriceContainerHorizontal}>
-                                <Text style={[styles.packagePriceHorizontal, { color: theme?.isDark ? '#FFFFFF' : '#2c3e50' }]}>{pkg.product.priceString}</Text>
-                                <Text style={[styles.packagePricePerMonth, { color: theme?.isDark ? '#CCCCCC' : '#666666' }]}>
-                                  {globalIndex === 0 && (systemLanguage === 'es' ? '/3 meses' : '/3 months')}
-                                  {globalIndex === 1 && (systemLanguage === 'es' ? '/6 meses' : '/6 months')}
-                                  {globalIndex === 2 && (systemLanguage === 'es' ? '/año' : '/year')}
-                                  {globalIndex > 2 && (systemLanguage === 'es' ? '/mes' : '/month')}
+                                <Text style={[styles.packagePriceHorizontal, { color: theme?.text || '#2c3e50' }]}>{pkg.product.priceString}</Text>
+                                <Text style={[styles.packagePricePerMonth, { color: theme?.textSecondary || '#666' }]}>
+                                  {pkg.product.identifier === '1981' && '/3 meses'}
+                                  {pkg.product.identifier === 'ente2' && '/6 meses'}
+                                  {pkg.product.identifier === 'ente3' && '/año'}
                                 </Text>
                               </View>
 
@@ -1358,14 +1163,11 @@ export default function Suscribe() {
                                 <View
                                   style={[styles.subscribeButtonGradientHorizontal, { backgroundColor: iconColor }]}
                                 >
-                                  {loadingPackageId === pkg.product.identifier ? (
+                                  {isSubscribing ? (
                                     <ActivityIndicator size="small" color="white" />
                                   ) : (
                                     <Text style={styles.subscribeButtonTextHorizontal}>
-                                      {isBestOption ?
-                                        (subscriptionButtonTranslations[systemLanguage]?.choose_best_option || subscriptionButtonTranslations['en'].choose_best_option) :
-                                        (subscriptionButtonTranslations[systemLanguage]?.select_plan || subscriptionButtonTranslations['en'].select_plan)
-                                      }
+                                      {isBestOption ? 'Elegir Mejor Opción' : 'Seleccionar Plan'}
                                     </Text>
                                   )}
                                 </View>

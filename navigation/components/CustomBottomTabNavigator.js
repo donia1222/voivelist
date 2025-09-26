@@ -1082,8 +1082,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               backgroundColor: activeTab === "Images" ? "#ff950020" :
                               activeTab === "History" ? "#34c75920" :
                               activeTab === "Calendar" ? "#6B728020" :
-                              activeTab === "Subscribe" ? "#ff375f20" :
-                              activeTab === "Subscription" ? "#ff375f20" :
+                              activeTab === "Subscribe" ? "#34c75920" :
+                              activeTab === "Subscription" ? "#29863220" :
                               activeTab === "Information" ? "#5856d620" :
                               activeTab === "Contact" ? "#ff950020" :
                               activeTab === "PriceCalculator" ? "#dc262620" : "#4a6bff20",
@@ -1191,8 +1191,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                       activeTab === "Contact" ? "mail-outline" :
                       activeTab === "HandwrittenList" ? "pencil" : "storefront"}
                 size={isSmallIPhone ? 20 : 24}
-                color={activeTab === "Subscribe" ? "#ff375f" :
-                       activeTab === "Subscription" ? "#ff375f" :
+                color={activeTab === "Subscribe" ? "#33b850ff" :
+                       activeTab === "Subscription" ? "#33b850ff" :
                        activeTab === "Information" ? "#5856d6" :
                        activeTab === "Contact" ? "#ff9500" : "#4a6bff"}
               />

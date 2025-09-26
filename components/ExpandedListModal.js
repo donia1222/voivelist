@@ -597,13 +597,13 @@ const ExpandedListModal = ({
                 opacity: markedLists && markedLists.length > 0 ? 1 : 0.7
               }}
             >
-              <Ionicons name="menu" size={22} color="#15803d" />
+              <Ionicons name="menu" size={22} color="#073bf5ff" />
               {markedLists && markedLists.length > 0 && (
                 <View style={{
                   position: 'absolute',
                   top: -4,
                   right: -4,
-                  backgroundColor: '#15803d',
+                  backgroundColor: '#073bf5b8',
                   borderRadius: 10,
                   width: 20,
                   height: 20,

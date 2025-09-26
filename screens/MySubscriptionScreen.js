@@ -102,7 +102,60 @@ const MySubscriptionScreen = () => {
   const styles = getStyles(theme);
   
   const productNames = {
-    '12981': texts.monthly,
+    '12981': texts.monthly, // 1 mes
+    'semana16': '1 Week / 1 Semana', // Suscripción de 1 semana
+    '06mes': '6 Months / 6 Meses', // Suscripción de 6 meses
+    'year': '1 Year / 1 Año', // Suscripción de 1 año
+    'premium': 'Premium', // Fallback
+    // Añadir más identificadores según aparezcan en los logs
+  };
+
+  // Función para determinar la duración basándose en el entitlement y productIdentifier
+  const getSubscriptionDuration = (subscription) => {
+    if (!subscription) {
+      return 'Premium Subscription';
+    }
+
+    // Verificar por entitlement ID (más confiable)
+    const entitlementId = subscription.identifier || subscription.entitlementId;
+    console.log('🔍 DEBUG: Entitlement ID:', entitlementId);
+    console.log('🔍 DEBUG: Product ID:', subscription.productIdentifier);
+
+    // Verificar todos los tipos de suscripción
+    if (entitlementId === '12981' || subscription.productIdentifier === '12981') {
+      console.log('🏷️ Detectado: 1 Mes (12981)');
+      return texts.monthly || '1 Month';
+    }
+
+    if (entitlementId === '06mes') {
+      console.log('🏷️ Detectado: 6 Meses (06mes)');
+      return '6 Months / 6 Meses';
+    }
+
+    if (entitlementId === 'year') {
+      console.log('🏷️ Detectado: 1 Año (year)');
+      return '1 Year / 1 Año';
+    }
+
+    if (entitlementId === 'semana16') {
+      console.log('🏷️ Detectado: 1 Semana (semana16)');
+      return '1 Week / 1 Semana';
+    }
+
+    if (entitlementId === 'premium') {
+      console.log('🏷️ Detectado: Premium (fallback)');
+      return 'Premium';
+    }
+
+    // Fallback: usar productNames o el productIdentifier
+    const productId = subscription.productIdentifier;
+    if (productNames[productId]) {
+      console.log('🏷️ Encontrado en productNames:', productNames[productId]);
+      return productNames[productId];
+    }
+
+    console.log('⚠️ Tipo de suscripción no reconocido, usando productId:', productId);
+    return productId || 'Premium Subscription';
   };
   
   const handlePrivacyPress = () => {
@@ -119,7 +172,7 @@ const MySubscriptionScreen = () => {
 
   const handleSupportPress = async () => {
     try {
-      const restoredPurchases = await Purchases.restorePurchases();
+      await Purchases.restorePurchases();
       const customerInfo = await Purchases.getCustomerInfo();
       
       const subscription = customerInfo.entitlements.active['semana16'] || {};
@@ -153,12 +206,71 @@ const MySubscriptionScreen = () => {
     const fetchSubscriptionInfo = async () => {
       try {
         const customerInfo = await Purchases.getCustomerInfo();
-        if (customerInfo.entitlements.active['12981']) {
-          const subscription = customerInfo.entitlements.active['12981'];
-          subscription.purchaseDate = customerInfo.allPurchaseDates['12981'];
-          subscription.expirationDate = customerInfo.allExpirationDates['12981'];
-          setSubscriptionInfo(subscription);
+
+        // ✅ LOGS PARA DEBUG - ver todos los entitlements activos
+        console.log('🔍 DEBUG: Todos los entitlements activos:', customerInfo.entitlements.active);
+        console.log('🔍 DEBUG: Todas las fechas de compra:', customerInfo.allPurchaseDates);
+        console.log('🔍 DEBUG: Todas las fechas de expiración:', customerInfo.allExpirationDates);
+        console.log('🔍 DEBUG: Active subscriptions:', customerInfo.activeSubscriptions);
+
+        // Buscar la suscripción activa más reciente
+        let foundSubscription = null;
+        const activeEntitlements = customerInfo.entitlements.active;
+
+        // Obtener todas las suscripciones activas
+        const allActiveSubscriptions = [];
+
+        // Verificar cada tipo de suscripción y recopilar información
+        const entitlementTypes = ['06mes', 'year', 'semana16', '12981', 'premium'];
+
+        entitlementTypes.forEach(entitlementId => {
+          if (activeEntitlements[entitlementId]) {
+            const subscription = activeEntitlements[entitlementId];
+            const productId = subscription.productIdentifier;
+
+            // Obtener fechas
+            subscription.purchaseDate = entitlementId === '12981'
+              ? customerInfo.allPurchaseDates['12981']
+              : customerInfo.allPurchaseDates[productId];
+            subscription.expirationDate = entitlementId === '12981'
+              ? customerInfo.allExpirationDates['12981']
+              : customerInfo.allExpirationDates[productId];
+
+            console.log(`🔍 Suscripción encontrada (${entitlementId}):`, subscription);
+            console.log(`📅 Expira: ${subscription.expirationDate}`);
+
+            allActiveSubscriptions.push({
+              entitlementId,
+              subscription,
+              expirationDate: new Date(subscription.expirationDate)
+            });
+          }
+        });
+
+        // Si hay múltiples suscripciones, elegir la que expire más tarde (más reciente)
+        if (allActiveSubscriptions.length > 0) {
+          // Ordenar por fecha de expiración (más tardía primero)
+          allActiveSubscriptions.sort((a, b) => b.expirationDate - a.expirationDate);
+
+          const latestSubscription = allActiveSubscriptions[0];
+          foundSubscription = latestSubscription.subscription;
+
+          console.log(`✅ Suscripción activa seleccionada: ${latestSubscription.entitlementId}`);
+          console.log('📅 Expira el:', latestSubscription.expirationDate);
+
+          // Log de todas las suscripciones para debug
+          console.log('📋 Todas las suscripciones activas:', allActiveSubscriptions.map(s => ({
+            tipo: s.entitlementId,
+            expira: s.expirationDate.toLocaleDateString()
+          })));
         }
+
+        if (foundSubscription) {
+          setSubscriptionInfo(foundSubscription);
+        } else {
+          console.log('❌ No se encontró ninguna suscripción activa');
+        }
+
         setUserId(customerInfo.originalAppUserId);
       } catch (error) {
         console.log('Error fetching subscription info:', error);
@@ -214,7 +326,7 @@ const MySubscriptionScreen = () => {
             
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>{texts.activeSubscription}:</Text>
-              <Text style={styles.infoValue}>{productNames[subscriptionInfo.productIdentifier] || subscriptionInfo.productIdentifier}</Text>
+              <Text style={styles.infoValue}>{getSubscriptionDuration(subscriptionInfo)}</Text>
             </View>
             
             <View style={styles.infoRow}>
@@ -240,26 +352,27 @@ const MySubscriptionScreen = () => {
           </View>
         )}
 
-        <Text style={styles.footerText}>
-          {texts.autoRenewal}
-        </Text>
 
         <View style={styles.linksContainer}>
-          <TouchableOpacity onPress={handlePrivacyPress} style={styles.linkButton}>
-            <Text style={styles.linkText}>Privacy Policy</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity onPress={handleEULAPress} style={styles.linkButton}>
-            <Text style={styles.linkText}>EULA</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity onPress={handleGDPRPress} style={styles.linkButton}>
-            <Text style={styles.linkText}>T&C</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity onPress={handleSupportPress} style={[styles.linkButton, styles.supportButton]}>
-            <Text style={[styles.linkText, styles.supportButtonText]}>📧 Support</Text>
-          </TouchableOpacity>
+          <View style={styles.linksRow}>
+            <TouchableOpacity onPress={handlePrivacyPress} style={styles.linkButton}>
+              <Text style={styles.linkText}>Privacy Policy</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={handleEULAPress} style={styles.linkButton}>
+              <Text style={styles.linkText}>EULA</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.linksRow}>
+            <TouchableOpacity onPress={handleGDPRPress} style={styles.linkButton}>
+              <Text style={styles.linkText}>T&C</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={handleSupportPress} style={[styles.linkButton, styles.supportButton]}>
+              <Text style={[styles.linkText, styles.supportButtonText]}>📧 Support</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
 
@@ -300,13 +413,7 @@ const getStyles = (theme) => StyleSheet.create({
     marginBottom: 40,
     paddingHorizontal: 20,
   },
-  title: {
-    fontSize: 28,
-    fontFamily: 'Poppins-SemiBold',
-    color: theme.buttonBackground,
-    marginBottom: 15,
-    textAlign: 'center',
-  },
+
   badgeContainer: {
     backgroundColor: 'rgba(34, 197, 94, 0.3)',
     borderWidth: 1,
@@ -320,16 +427,17 @@ const getStyles = (theme) => StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 6,
+    marginTop: -20,
   },
   badgeText: {
     color: '#16a34a',
     fontFamily: 'Poppins-Bold',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '700',
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     marginBottom: 16,
   },
   welcomeText: {
@@ -409,33 +517,41 @@ const getStyles = (theme) => StyleSheet.create({
   },
   linksContainer: {
     flexDirection: 'column',
-    alignItems: 'stretch',
+    width: '100%',
     marginTop: 24,
     paddingHorizontal: 16,
     gap: 12,
   },
+  linksRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    gap: 10,
+  },
   linkButton: {
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 12,
+    flex: 1,
+    minHeight: 45,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
     backgroundColor: theme === 'dark' ? 'rgba(79, 70, 229, 0.2)' : 'rgba(79, 70, 229, 0.1)',
     borderWidth: 1,
     borderColor: theme === 'dark' ? 'rgba(79, 70, 229, 0.3)' : 'rgba(79, 70, 229, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   linkText: {
     fontSize: 16,
-    fontFamily: 'Poppins-SemiBold',
-    color: '#4f46e5',
-    textAlign: 'center',
     fontWeight: '600',
+    color: theme === 'dark' ? '#8b7df7' : '#4f46e5',
+    textAlign: 'center',
   },
   supportButton: {
     backgroundColor: theme === 'dark' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(34, 197, 94, 0.1)',
     borderColor: theme === 'dark' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(34, 197, 94, 0.2)',
-    marginTop: 8,
   },
   supportButtonText: {
-    color: '#16a34a',
+    color: theme === 'dark' ? '#4ade80' : '#16a34a',
   },
 });
 

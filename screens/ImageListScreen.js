@@ -1639,7 +1639,7 @@ const modernStyles = StyleSheet.create({
     marginTop: -20,
     backgroundColor: "#93b0b0",
     shadowColor: "#93b0b0",
-    borderWidth: 4,
+    borderWidth: 2,
     borderColor: "#93b0b0",
     borderRadius: 20,
     width: 240,
@@ -1649,7 +1649,7 @@ const modernStyles = StyleSheet.create({
   emptyStateTitle: {
     fontSize: 24,
     fontWeight: "800",
-    color: "#1d213484",
+    color: "#e67812ba",
     marginBottom: 16,
     textAlign: "center",
     marginTop: 40,
@@ -1823,8 +1823,8 @@ const modernStyles = StyleSheet.create({
   // Middle pulse ring - NARANJA
   pulseRingMiddle: {
     position: 'absolute',
-    width: 104,
-    height: 104,
+    width: 94,
+    height: 94,
   borderRadius: 80,
     backgroundColor: 'rgba(255, 149, 0, 0.08)',
     alignItems: 'center',
@@ -1834,8 +1834,8 @@ const modernStyles = StyleSheet.create({
   // Inner pulse ring - NARANJA VIBRANTE
   pulseRingInner: {
     position: 'absolute',
-    width: 104,
-    height: 104,
+    width: 84,
+    height: 84,
   borderRadius: 80,
     backgroundColor: 'rgba(255, 149, 0, 0.10)',
     alignItems: 'center',
@@ -1844,8 +1844,8 @@ const modernStyles = StyleSheet.create({
   },
   
   mainActionButton: {
-   width: 84,
-    height: 84,
+   width: 64,
+    height: 64,
     backgroundColor: 'rgba(251, 146, 60, 0.15)',
   borderRadius: 80,
     alignItems: "center",
