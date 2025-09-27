@@ -45,9 +45,15 @@ const RecommendationsScreen = ({ navigation }) => {
   const [hasCurrentList, setHasCurrentList] = useState(false)
   const [recommendationType, setRecommendationType] = useState('history') // 'history', 'seasonal' o 'diet'
 
-  // Animaciones
+  // Estados para auto-carga
+  const [displayedCount, setDisplayedCount] = useState(0) // Trackea cuántos de los 60 se han mostrado
+  const [isLoadingMore, setIsLoadingMore] = useState(false) // Loader para cargar más productos
+  const [canLoadMore, setCanLoadMore] = useState(true) // Si puede cargar más de los 60
+
+  // Animaciones y referencias
   const fadeAnim = useRef(new Animated.Value(0)).current
   const slideAnim = useRef(new Animated.Value(30)).current
+  const scrollViewRef = useRef(null)
 
   // Traducciones
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
@@ -62,7 +68,7 @@ const RecommendationsScreen = ({ navigation }) => {
         const hasCleared = await AsyncStorage.getItem("@cache_cleared_diet_format_v5")
         if (!hasCleared) {
           console.log("🥗 Limpiando cache de dieta para revertir formato...")
-          await RecommendationService.clearCurrentDietCache()
+          await RecommendationService.clearDietCache()
           await AsyncStorage.setItem("@cache_cleared_diet_format_v5", "true")
           console.log("✅ Cache de dieta v5 limpiado - formato revertido")
         }
@@ -78,9 +84,55 @@ const RecommendationsScreen = ({ navigation }) => {
   }, [])
 
   // Funciones principales
+  const loadMoreRecommendations = async () => {
+    if (isLoadingMore || !canLoadMore || displayedCount >= 60) return
+
+    try {
+      setIsLoadingMore(true)
+      const currentType = recommendationType
+
+      // Obtener productos ya mostrados para evitar duplicados
+      const currentItems = recommendations.map(rec => rec.item.toLowerCase())
+
+      let newRecs = []
+
+      if (currentType === 'seasonal') {
+        newRecs = await RecommendationService.getSeasonalRecommendations(null, false, currentItems)
+      } else if (currentType === 'diet') {
+        newRecs = await RecommendationService.getDietRecommendations(6, false, currentItems)
+      } else {
+        newRecs = await RecommendationService.getRecommendations(6, false)
+      }
+
+      if (newRecs.length > 0) {
+        setRecommendations(prev => [...prev, ...newRecs])
+        setDisplayedCount(prev => prev + newRecs.length)
+
+        // Si ya llegamos a 60 o no hay más productos, no se puede cargar más
+        if (displayedCount + newRecs.length >= 60 || newRecs.length < 6) {
+          setCanLoadMore(false)
+        }
+      } else {
+        setCanLoadMore(false)
+      }
+
+    } catch (error) {
+      console.error('Error loading more recommendations:', error)
+      setCanLoadMore(false)
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }
+
   const loadRecommendations = async (shuffle = false, type = null) => {
     try {
       setLoading(true)
+
+      // Reset estados de auto-carga al iniciar nueva carga
+      setDisplayedCount(6) // Los primeros 6
+      setCanLoadMore(true)
+      setIsLoadingMore(false)
+
       const currentType = type || recommendationType
 
       // Verificar si hay historial de compras
@@ -313,7 +365,24 @@ const RecommendationsScreen = ({ navigation }) => {
     triggerHaptic()
     setRecommendationType(type)
     setAddedItems(new Set()) // Limpiar items agregados al cambiar
+
+    // Reset estados de auto-carga al cambiar de tab
+    setDisplayedCount(0)
+    setCanLoadMore(true)
+    setIsLoadingMore(false)
+
     loadRecommendations(false, type)
+  }
+
+  const handleScroll = (event) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent
+    const isCloseToBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 50
+
+    // Si está cerca del final y puede cargar más, cargar automáticamente
+    if (isCloseToBottom && canLoadMore && !isLoadingMore && displayedCount < 60) {
+      console.log(`🔄 Auto-cargando más productos... Mostrados: ${displayedCount}/60`)
+      loadMoreRecommendations()
+    }
   }
 
   // Estilos
@@ -576,6 +645,19 @@ const RecommendationsScreen = ({ navigation }) => {
       fontSize: 14,
       fontWeight: '600',
       marginLeft: 8,
+    },
+    loadingMoreContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 20,
+      marginTop: 10,
+      marginBottom: 30,
+    },
+    loadingMoreText: {
+      color: theme.textSecondary,
+      fontSize: 14,
+      marginLeft: 10,
     },
     subscriptionButton: {
       flexDirection: 'row',
@@ -900,7 +982,13 @@ const RecommendationsScreen = ({ navigation }) => {
       </View>
 
       {/* Content */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.content}
+        showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
 
         {/* Estadísticas */}
         {stats && (
@@ -1061,14 +1149,24 @@ const RecommendationsScreen = ({ navigation }) => {
           </Animated.View>
         )}
       <Text style={styles.subtitle}>{t.subtitle}</Text>
-        {/* Reload button */}
-        <TouchableOpacity
-          style={styles.reloadButton}
-          onPress={() => loadRecommendations(true, recommendationType)}
-        >
-          <Ionicons name="refresh" size={18} color="#4a6bff" />
-          <Text style={styles.reloadButtonText}>{t.reload}</Text>
-        </TouchableOpacity>
+
+        {/* Auto-load UI: Loader o botón de recarga */}
+        {isLoadingMore ? (
+          // Mostrar loader cuando está cargando más productos
+          <View style={styles.loadingMoreContainer}>
+            <ActivityIndicator size="small" color="#4a6bff" />
+            <Text style={styles.loadingMoreText}>{t.loadingMore || fallback.loadingMore}</Text>
+          </View>
+        ) : !canLoadMore || displayedCount >= 60 ? (
+          // Mostrar botón "Recargar lista" cuando ya no se pueden cargar más
+          <TouchableOpacity
+            style={styles.reloadButton}
+            onPress={() => loadRecommendations(true, recommendationType)}
+          >
+            <Ionicons name="refresh" size={18} color="#4a6bff" />
+            <Text style={styles.reloadButtonText}>Recargar lista</Text>
+          </TouchableOpacity>
+        ) : null}
 
   
       </ScrollView>
