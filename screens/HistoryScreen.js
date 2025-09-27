@@ -35,6 +35,7 @@ import { request, PERMISSIONS, RESULTS } from "react-native-permissions"
 import PushNotification from "react-native-push-notification"
 import WidgetService from "../services/WidgetService"
 import ExpandedListModal from "../components/ExpandedListModal"
+import { productTranslations } from "../services/SeasonalProductsData"
 
 const screenWidth = Dimensions.get("window").width
 const { width, height } = Dimensions.get("window")
@@ -1664,35 +1665,19 @@ const HistoryScreen = ({ navigation }) => {
               onPress={() => confirmRemoveListFromHistory(index)}
             >
               <Ionicons name="trash-outline" size={16} color="#ef4444" />
-         
             </TouchableOpacity>
           ) : (
-            <View style={modernStyles.progressContainer}>
-              <View style={modernStyles.progressRingContainer}>
-                <View style={modernStyles.progressRingBackground} />
+            <View style={modernStyles.progressBarContainer}>
+              <View style={modernStyles.progressBarBackground}>
                 <Animated.View
                   style={[
-                    modernStyles.progressRingFill,
+                    modernStyles.progressBarFill,
                     {
-                      opacity: completedCount === 0 ? 0 : 1,
-                      transform: [{
-                        rotate: `${-90 + (progress * 360)}deg`
-                      }]
+                      width: `${progress * 100}%`,
+                      opacity: completedCount === 0 ? 0.3 : 1,
                     }
                   ]}
                 />
-                <View style={modernStyles.progressNumbersContainer}>
-                  <Text style={[
-                    modernStyles.progressNumber,
-                    completedCount > 0 && modernStyles.progressNumberActive
-                  ]}>
-                    {completedCount}
-                  </Text>
-                  <Text style={modernStyles.progressSeparator}>/</Text>
-                  <Text style={modernStyles.progressTotal}>
-                    {totalCount}
-                  </Text>
-                </View>
               </View>
             </View>
           );

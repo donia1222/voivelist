@@ -16,11 +16,13 @@ import {
   Alert,
   Switch,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Image
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import * as RNLocalize from "react-native-localize"
+import { BarCodeScanner } from 'expo-barcode-scanner'
 import { useNavigation } from "@react-navigation/native"
 import { useHaptic } from "../HapticContext"
 
@@ -64,6 +66,7 @@ const availableColors = [
 
 // Default categories
 const defaultCategories = [
+  { id: 'barcode', icon: 'qr-code', color: '#8B5CF6', gradient: ['#8B5CF6', '#A78BFA'], isDefault: true, isBarcode: true },
   { id: 'groceries', icon: 'cart', color: '#4CAF50', gradient: ['#4CAF50', '#66BB6A'], isDefault: true },
   { id: 'pharmacy', icon: 'medkit', color: '#FF5722', gradient: ['#FF5722', '#FF7043'], isDefault: true },
   { id: 'pets', icon: 'paw', color: '#9C27B0', gradient: ['#9C27B0', '#BA68C8'], isDefault: true },
@@ -108,6 +111,7 @@ const translations = {
     emptyList: "Your list is empty",
     emptyListSubtitle: "Select a category and add items to get started",
     categories: {
+      barcode: "Barcode",
       groceries: "Groceries",
       pharmacy: "Pharmacy",
       pets: "Pets",
@@ -123,7 +127,12 @@ const translations = {
     },
     items: "items",
     total: "Total",
-    manualList: "Manual List"
+    manualList: "Manual List",
+    barcodeScanned: "Scanned Product",
+    requestingCameraPermission: "Requesting camera permissions...",
+    noCameraAccess: "No camera access",
+    pointCameraAtBarcode: "Point the camera at the barcode",
+    addToList: "Add to list"
   },
   es: {
     title: "Crear Lista Manual",
@@ -154,6 +163,7 @@ const translations = {
     emptyList: "Tu lista está vacía",
     emptyListSubtitle: "Selecciona una categoría y añade artículos para comenzar",
     categories: {
+      barcode: "Código de barras",
       groceries: "Supermercado",
       pharmacy: "Farmacia",
       pets: "Mascotas",
@@ -169,7 +179,12 @@ const translations = {
     },
     items: "artículos",
     total: "Total",
-    manualList: "Lista Manual"
+    manualList: "Lista Manual",
+    barcodeScanned: "Producto Escaneado",
+    requestingCameraPermission: "Solicitando permisos de cámara...",
+    noCameraAccess: "Sin acceso a la cámara",
+    pointCameraAtBarcode: "Apunta la cámara al código de barras",
+    addToList: "Añadir a lista"
   },
   de: {
     title: "Manuelle Liste erstellen",
@@ -200,6 +215,7 @@ const translations = {
     emptyList: "Ihre Liste ist leer",
     emptyListSubtitle: "Wählen Sie eine Kategorie und fügen Sie Artikel hinzu",
     categories: {
+      barcode: "Barcode",
       groceries: "Lebensmittel",
       pharmacy: "Apotheke",
       pets: "Haustiere",
@@ -215,7 +231,12 @@ const translations = {
     },
     items: "Artikel",
     total: "Gesamt",
-    manualList: "Manuelle Liste"
+    manualList: "Manuelle Liste",
+    barcodeScanned: "Gescanntes Produkt",
+    requestingCameraPermission: "Kamera-Berechtigung wird angefordert...",
+    noCameraAccess: "Kein Kamera-Zugriff",
+    pointCameraAtBarcode: "Richten Sie die Kamera auf den Barcode",
+    addToList: "Zur Liste hinzufügen"
   },
   fr: {
     title: "Créer une liste manuelle",
@@ -246,6 +267,7 @@ const translations = {
     emptyList: "Votre liste est vide",
     emptyListSubtitle: "Sélectionnez une catégorie et ajoutez des articles",
     categories: {
+      barcode: "Code-barres",
       groceries: "Épicerie",
       pharmacy: "Pharmacie",
       pets: "Animaux",
@@ -261,7 +283,12 @@ const translations = {
     },
     items: "articles",
     total: "Total",
-    manualList: "Liste manuelle"
+    manualList: "Liste manuelle",
+    barcodeScanned: "Produit scanné",
+    requestingCameraPermission: "Demande d'autorisation de caméra...",
+    noCameraAccess: "Pas d'accès à la caméra",
+    pointCameraAtBarcode: "Pointez la caméra vers le code-barres",
+    addToList: "Ajouter à la liste"
   },
   it: {
     title: "Crea lista manuale",
@@ -292,6 +319,7 @@ const translations = {
     emptyList: "La tua lista è vuota",
     emptyListSubtitle: "Seleziona una categoria e aggiungi articoli per iniziare",
     categories: {
+      barcode: "Codice a barre",
       groceries: "Alimentari",
       pharmacy: "Farmacia",
       pets: "Animali",
@@ -307,7 +335,12 @@ const translations = {
     },
     items: "articoli",
     total: "Totale",
-    manualList: "Lista manuale"
+    manualList: "Lista manuale",
+    barcodeScanned: "Prodotto scansionato",
+    requestingCameraPermission: "Richiesta permessi fotocamera...",
+    noCameraAccess: "Nessun accesso alla fotocamera",
+    pointCameraAtBarcode: "Punta la fotocamera verso il codice a barre",
+    addToList: "Aggiungi alla lista"
   },
   tr: {
     title: "Manuel Liste Oluştur",
@@ -338,6 +371,7 @@ const translations = {
     emptyList: "Listeniz boş",
     emptyListSubtitle: "Bir kategori seçin ve öğeler ekleyin",
     categories: {
+      barcode: "Barkod",
       groceries: "Market",
       pharmacy: "Eczane",
       pets: "Evcil Hayvanlar",
@@ -353,7 +387,12 @@ const translations = {
     },
     items: "öğeler",
     total: "Toplam",
-    manualList: "Manuel Liste"
+    manualList: "Manuel Liste",
+    barcodeScanned: "Taranan Ürün",
+    requestingCameraPermission: "Kamera izni isteniyor...",
+    noCameraAccess: "Kamera erişimi yok",
+    pointCameraAtBarcode: "Kamerayı barkoda yöneltin",
+    addToList: "Listeye ekle"
   },
   pt: {
     title: "Criar Lista Manual",
@@ -384,6 +423,7 @@ const translations = {
     emptyList: "Sua lista está vazia",
     emptyListSubtitle: "Selecione uma categoria e adicione itens para começar",
     categories: {
+      barcode: "Código de barras",
       groceries: "Mercearia",
       pharmacy: "Farmácia",
       pets: "Animais",
@@ -399,7 +439,12 @@ const translations = {
     },
     items: "itens",
     total: "Total",
-    manualList: "Lista Manual"
+    manualList: "Lista Manual",
+    barcodeScanned: "Produto Escaneado",
+    requestingCameraPermission: "Solicitando permissões da câmera...",
+    noCameraAccess: "Sem acesso à câmera",
+    pointCameraAtBarcode: "Aponte a câmera para o código de barras",
+    addToList: "Adicionar à lista"
   },
   ru: {
     title: "Создать ручной список",
@@ -430,6 +475,7 @@ const translations = {
     emptyList: "Ваш список пуст",
     emptyListSubtitle: "Выберите категорию и добавьте товары для начала",
     categories: {
+      barcode: "Штрих-код",
       groceries: "Продукты",
       pharmacy: "Аптека",
       pets: "Животные",
@@ -445,7 +491,12 @@ const translations = {
     },
     items: "товаров",
     total: "Итого",
-    manualList: "Ручной список"
+    manualList: "Ручной список",
+    barcodeScanned: "Отсканированный продукт",
+    requestingCameraPermission: "Запрос разрешения камеры...",
+    noCameraAccess: "Нет доступа к камере",
+    pointCameraAtBarcode: "Направьте камеру на штрих-код",
+    addToList: "Добавить в список"
   },
   ar: {
     title: "إنشاء قائمة يدوية",
@@ -476,6 +527,7 @@ const translations = {
     emptyList: "قائمتك فارغة",
     emptyListSubtitle: "اختر فئة وأضف عناصر للبدء",
     categories: {
+      barcode: "رمز شريطي",
       groceries: "البقالة",
       pharmacy: "صيدلية",
       pets: "الحيوانات الأليفة",
@@ -491,7 +543,12 @@ const translations = {
     },
     items: "عناصر",
     total: "المجموع",
-    manualList: "قائمة يدوية"
+    manualList: "قائمة يدوية",
+    barcodeScanned: "منتج ممسوح ضوئياً",
+    requestingCameraPermission: "طلب إذن الكاميرا...",
+    noCameraAccess: "لا يوجد وصول للكاميرا",
+    pointCameraAtBarcode: "وجه الكاميرا إلى الرمز الشريطي",
+    addToList: "إضافة إلى القائمة"
   },
   ja: {
     title: "手動リストを作成",
@@ -522,6 +579,7 @@ const translations = {
     emptyList: "リストは空です",
     emptyListSubtitle: "カテゴリーを選択してアイテムを追加してください",
     categories: {
+      barcode: "バーコード",
       groceries: "食料品",
       pharmacy: "薬局",
       pets: "ペット",
@@ -537,7 +595,12 @@ const translations = {
     },
     items: "アイテム",
     total: "合計",
-    manualList: "手動リスト"
+    manualList: "手動リスト",
+    barcodeScanned: "スキャンされた製品",
+    requestingCameraPermission: "カメラの許可をリクエスト中...",
+    noCameraAccess: "カメラアクセスなし",
+    pointCameraAtBarcode: "バーコードにカメラを向けてください",
+    addToList: "リストに追加"
   },
   hu: {
     title: "Kézi lista létrehozása",
@@ -568,6 +631,7 @@ const translations = {
     emptyList: "A lista üres",
     emptyListSubtitle: "Válasszon kategóriát és adjon hozzá elemeket",
     categories: {
+      barcode: "Vonalkód",
       groceries: "Élelmiszer",
       pharmacy: "Gyógyszertár",
       pets: "Háziállatok",
@@ -583,7 +647,12 @@ const translations = {
     },
     items: "elemek",
     total: "Összesen",
-    manualList: "Kézi lista"
+    manualList: "Kézi lista",
+    barcodeScanned: "Beolvasott termék",
+    requestingCameraPermission: "Kamera engedély kérése...",
+    noCameraAccess: "Nincs kamera hozzáférés",
+    pointCameraAtBarcode: "Irányítsa a kamerát a vonalkódra",
+    addToList: "Hozzáadás a listához"
   },
   hi: {
     title: "मैनुअल सूची बनाएं",
@@ -614,6 +683,7 @@ const translations = {
     emptyList: "आपकी सूची खाली है",
     emptyListSubtitle: "एक श्रेणी चुनें और आइटम जोड़ें",
     categories: {
+      barcode: "बारकोड",
       groceries: "किराने का सामान",
       pharmacy: "फार्मेसी",
       pets: "पालतू जानवर",
@@ -629,7 +699,12 @@ const translations = {
     },
     items: "आइटम",
     total: "कुल",
-    manualList: "मैनुअल सूची"
+    manualList: "मैनुअल सूची",
+    barcodeScanned: "स्कैन किया गया उत्पाद",
+    requestingCameraPermission: "कैमरा अनुमति का अनुरोध...",
+    noCameraAccess: "कैमरा पहुंच नहीं",
+    pointCameraAtBarcode: "बारकोड पर कैमरा को इंगित करें",
+    addToList: "सूची में जोड़ें"
   },
   nl: {
     title: "Handmatige lijst maken",
@@ -660,6 +735,7 @@ const translations = {
     emptyList: "Uw lijst is leeg",
     emptyListSubtitle: "Selecteer een categorie en voeg items toe om te beginnen",
     categories: {
+      barcode: "Barcode",
       groceries: "Boodschappen",
       pharmacy: "Apotheek",
       pets: "Huisdieren",
@@ -675,7 +751,12 @@ const translations = {
     },
     items: "items",
     total: "Totaal",
-    manualList: "Handmatige lijst"
+    manualList: "Handmatige lijst",
+    barcodeScanned: "Gescand product",
+    requestingCameraPermission: "Camera toestemming aanvragen...",
+    noCameraAccess: "Geen camera toegang",
+    pointCameraAtBarcode: "Richt de camera op de barcode",
+    addToList: "Toevoegen aan lijst"
   }
 }
 
@@ -707,6 +788,16 @@ const HandwrittenListScreen = ({ route }) => {
   const [showIconPicker, setShowIconPicker] = useState(false)
   const [deleteMode, setDeleteMode] = useState(null) // ID de la categoría en modo eliminar
 
+  // Barcode scanner states
+  const [showCamera, setShowCamera] = useState(false)
+  const [scanned, setScanned] = useState(false)
+  const [hasPermission, setHasPermission] = useState(null)
+  const [productInfo, setProductInfo] = useState(null)
+  const [productImage, setProductImage] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [barcodeResultVisible, setBarcodeResultVisible] = useState(false)
+  const [barcodeQuantity, setBarcodeQuantity] = useState("1")
+
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current
   const scaleAnim = useRef(new Animated.Value(0.9)).current
@@ -714,6 +805,15 @@ const HandwrittenListScreen = ({ route }) => {
     categories.map(() => new Animated.Value(0))
   ).current
   const shakeAnimation = useRef(new Animated.Value(0)).current
+
+  // Request camera permissions
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync()
+      setHasPermission(status === 'granted')
+    }
+    getBarCodeScannerPermissions()
+  }, [])
 
   useEffect(() => {
     // Load custom categories on mount
@@ -763,12 +863,140 @@ const HandwrittenListScreen = ({ route }) => {
     }
   }
 
+  // Barcode scanning functions
+  const fetchProductData = async (barcode) => {
+    setIsLoading(true)
+    const cleanBarcode = barcode.replace(/[^0-9]/g, '')
+
+    try {
+      // Try UPC Database first
+      const upcResult = await tryUPCDatabase(cleanBarcode)
+      if (upcResult) {
+        displayProduct(upcResult)
+        return
+      }
+
+      // Try Open Food Facts as fallback
+      const offResult = await tryOpenFoodFacts(cleanBarcode)
+      if (offResult) {
+        displayProduct(offResult)
+        return
+      }
+
+      // If nothing found, create basic product info
+      const basicProduct = {
+        product_name: `Producto ${cleanBarcode}`,
+        nutrition_grades: 'unknown',
+        nutriments: {
+          'energy-kcal_100g': 0,
+          carbohydrates_100g: 0,
+          sugars_100g: 0,
+          fat_100g: 0,
+          proteins_100g: 0,
+          salt_100g: 0
+        }
+      }
+      displayProduct(basicProduct)
+
+    } catch (error) {
+      Alert.alert("Error", "No se pudo buscar el producto.")
+    } finally {
+      setShowCamera(false)
+      setScanned(false)
+      setIsLoading(false)
+    }
+  }
+
+  // UPC Database API
+  const tryUPCDatabase = async (barcode) => {
+    try {
+      const response = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${barcode}`)
+      const data = await response.json()
+
+      if (data.code === "OK" && data.items && data.items.length > 0) {
+        const item = data.items[0]
+        return {
+          product_name: item.title || item.brand || "Producto encontrado",
+          nutrition_grades: 'unknown',
+          nutriments: {
+            'energy-kcal_100g': 0,
+            carbohydrates_100g: 0,
+            sugars_100g: 0,
+            fat_100g: 0,
+            proteins_100g: 0,
+            salt_100g: 0
+          },
+          brand: item.brand || '',
+          category: item.category || ''
+        }
+      }
+    } catch (error) {
+      console.log("UPC Database failed")
+    }
+    return null
+  }
+
+  // Open Food Facts API
+  const tryOpenFoodFacts = async (barcode) => {
+    try {
+      const fields = "product_name,nutriscore_data,nutriments,nutrition_grades,labels_tags,selected_images,additives_tags"
+      const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json?fields=${fields}`)
+      const data = await response.json()
+
+      if (data.status === 1 && data.product) {
+        return data.product
+      }
+    } catch (error) {
+      console.log("Open Food Facts failed")
+    }
+    return null
+  }
+
+  // Display product info
+  const displayProduct = (product) => {
+    setProductInfo(product)
+    const imageUrl = product.selected_images?.front?.display?.en ||
+                    product.selected_images?.front?.display?.fr ||
+                    product.selected_images?.front?.small?.en ||
+                    product.selected_images?.front?.small?.fr ||
+                    null
+    setProductImage(imageUrl)
+    setBarcodeResultVisible(true)
+  }
+
+  // Handle barcode scanned
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true)
+    setShowCamera(false)
+    fetchProductData(data)
+  }
+
   const handleCategoryPress = (category) => {
     if (deleteMode) {
       // Si está en modo eliminar, salir del modo
       setDeleteMode(null)
       return
     }
+
+    // Handle barcode category differently
+    if (category.isBarcode) {
+      if (hasPermission) {
+        // Reset all barcode scanner states first
+        setProductInfo(null)
+        setProductImage(null)
+        setBarcodeResultVisible(false)
+        setScanned(false)
+        setIsLoading(false)
+        setBarcodeQuantity("1")
+
+        // Then open camera
+        setShowCamera(true)
+      } else {
+        Alert.alert('Permiso requerido', 'Necesitamos acceso a la cámara para escanear códigos de barras')
+      }
+      return
+    }
+
     triggerHaptic('light')
     setSelectedCategory(category)
     setModalVisible(true)
@@ -840,6 +1068,34 @@ const HandwrittenListScreen = ({ route }) => {
     setPrice("")
     setIsStore(false)
     setModalVisible(false)
+
+    triggerHaptic('success')
+  }
+
+  // Handle adding barcode product to list
+  const handleAddBarcodeProduct = () => {
+    if (!productInfo) return
+
+    const newItem = {
+      id: Date.now().toString(),
+      name: productInfo.product_name,
+      quantity: parseInt(barcodeQuantity) || 1,
+      unit: 'units',
+      price: 0,
+      isStore: false,
+      category: 'barcode'
+    }
+
+    setListItems(prev => ({
+      ...prev,
+      ['barcode']: [...(prev['barcode'] || []), newItem]
+    }))
+
+    // Reset barcode states
+    setProductInfo(null)
+    setProductImage(null)
+    setBarcodeResultVisible(false)
+    setBarcodeQuantity("1")
 
     triggerHaptic('success')
   }
@@ -1460,6 +1716,132 @@ const HandwrittenListScreen = ({ route }) => {
           </View>
         </View>
       </Modal>
+
+      {/* Camera Scanner Modal */}
+      <Modal
+        visible={showCamera}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowCamera(false)}
+      >
+        <View style={styles.cameraContainer}>
+          {hasPermission === null && (
+            <View style={styles.permissionContainer}>
+              <Text style={styles.permissionText}>{t.requestingCameraPermission}</Text>
+            </View>
+          )}
+          {hasPermission === false && (
+            <View style={styles.permissionContainer}>
+              <Text style={styles.permissionText}>{t.noCameraAccess}</Text>
+              <TouchableOpacity style={styles.cancelButton} onPress={() => setShowCamera(false)}>
+                <Text style={styles.cancelButtonText}>{t.cancel}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {hasPermission === true && (
+            <View style={styles.cameraView}>
+              <BarCodeScanner
+                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                style={styles.camera}
+              />
+              <View style={styles.cameraOverlay}>
+                <View style={styles.scanFrame}>
+                  <View style={styles.scanFrameCorner} />
+                  <View style={[styles.scanFrameCorner, styles.topRight]} />
+                  <View style={[styles.scanFrameCorner, styles.bottomLeft]} />
+                  <View style={[styles.scanFrameCorner, styles.bottomRight]} />
+                </View>
+                <Text style={styles.scanInstructions}>{t.pointCameraAtBarcode}</Text>
+                <TouchableOpacity
+                  style={styles.cancelCameraButton}
+                  onPress={() => setShowCamera(false)}
+                >
+                  <Ionicons name="close" size={20} color="#fff" />
+                  <Text style={styles.cancelCameraText}>{t.cancel}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </View>
+      </Modal>
+
+      {/* Barcode Result Modal */}
+      <Modal
+        visible={barcodeResultVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setBarcodeResultVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.barcodeResultModal}>
+            <View style={styles.barcodeResultHeader}>
+              <Text style={styles.barcodeResultTitle}>{t.barcodeScanned}</Text>
+              <TouchableOpacity onPress={() => setBarcodeResultVisible(false)}>
+                <Ionicons name="close" size={24} color="#6b7280" />
+              </TouchableOpacity>
+            </View>
+
+            {productInfo && (
+              <>
+                {productImage && (
+                  <Image source={{ uri: productImage }} style={styles.barcodeProductImage} />
+                )}
+                <Text style={styles.barcodeProductName}>{productInfo.product_name}</Text>
+
+                {productInfo.brand && (
+                  <Text style={styles.barcodeProductBrand}>{productInfo.brand}</Text>
+                )}
+
+                <View style={styles.barcodeQuantitySection}>
+                  <Text style={styles.barcodeQuantityLabel}>{t.quantity}</Text>
+                  <View style={styles.barcodeQuantityControls}>
+                    <TouchableOpacity
+                      style={styles.barcodeQuantityButton}
+                      onPress={() => {
+                        const val = parseInt(barcodeQuantity)
+                        setBarcodeQuantity(String(Math.max(1, val - 1)))
+                      }}
+                    >
+                      <Ionicons name="remove" size={20} color="#6b7280" />
+                    </TouchableOpacity>
+                    <TextInput
+                      style={styles.barcodeQuantityInput}
+                      value={barcodeQuantity}
+                      onChangeText={setBarcodeQuantity}
+                      keyboardType="numeric"
+                    />
+                    <TouchableOpacity
+                      style={styles.barcodeQuantityButton}
+                      onPress={() => {
+                        const val = parseInt(barcodeQuantity)
+                        setBarcodeQuantity(String(val + 1))
+                      }}
+                    >
+                      <Ionicons name="add" size={20} color="#6b7280" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                <View style={styles.barcodeModalButtons}>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.cancelButton]}
+                    onPress={() => setBarcodeResultVisible(false)}
+                  >
+                    <Text style={styles.cancelButtonText}>{t.cancel}</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.addButton]}
+                    onPress={handleAddBarcodeProduct}
+                  >
+                    <Text style={styles.addButtonText}>{t.addToList}</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   )
 }
@@ -1952,6 +2334,184 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderColor: '#e2e8f0',
+  },
+
+  // Camera styles
+  cameraContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#000',
+  },
+  permissionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+  },
+  permissionText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  cameraView: {
+    flex: 1,
+  },
+  camera: {
+    flex: 1,
+  },
+  cameraOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scanFrame: {
+    width: 250,
+    height: 250,
+    position: 'relative',
+  },
+  scanFrameCorner: {
+    position: 'absolute',
+    width: 30,
+    height: 30,
+    borderColor: '#fff',
+    top: 0,
+    left: 0,
+    borderTopWidth: 3,
+    borderLeftWidth: 3,
+  },
+  topRight: {
+    top: 0,
+    right: 0,
+    left: 'auto',
+    borderTopWidth: 3,
+    borderRightWidth: 3,
+    borderLeftWidth: 0,
+  },
+  bottomLeft: {
+    bottom: 0,
+    top: 'auto',
+    borderBottomWidth: 3,
+    borderLeftWidth: 3,
+    borderTopWidth: 0,
+  },
+  bottomRight: {
+    bottom: 0,
+    right: 0,
+    top: 'auto',
+    left: 'auto',
+    borderBottomWidth: 3,
+    borderRightWidth: 3,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+  },
+  scanInstructions: {
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 30,
+    paddingHorizontal: 20,
+  },
+  cancelCameraButton: {
+    position: 'absolute',
+    bottom: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  cancelCameraText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  // Barcode result modal styles
+  barcodeResultModal: {
+    backgroundColor: 'white',
+    borderRadius: 24,
+    padding: 24,
+    width: '90%',
+    maxHeight: '80%',
+  },
+  barcodeResultHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  barcodeResultTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1e293b',
+  },
+  barcodeProductImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 12,
+    marginBottom: 16,
+    resizeMode: 'contain',
+  },
+  barcodeProductName: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#333',
+    textAlign: 'center',
+  },
+  barcodeProductBrand: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  barcodeModalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 20,
+  },
+  barcodeQuantitySection: {
+    marginVertical: 20,
+    paddingHorizontal: 4,
+  },
+  barcodeQuantityLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#475569',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  barcodeQuantityControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    paddingHorizontal: 8,
+  },
+  barcodeQuantityButton: {
+    padding: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  barcodeQuantityInput: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: '600',
+    paddingVertical: 12,
+    color: '#1e293b',
   },
 })
 

@@ -496,6 +496,28 @@ marginBottom:-0,
     color: theme.text === '#ffffff' ? '#9ca3af' : '#6b7280',
   },
 
+  // New progress bar styles
+  progressBarContainer: {
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    alignSelf: 'center',
+  },
+
+  progressBarBackground: {
+    width: 120,
+    height: 6,
+    backgroundColor: theme.text === '#ffffff' ? '#374151' : '#e5e7eb',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#10b981',
+    borderRadius: 3,
+    minWidth: 2,
+  },
+
   deleteListButton: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -124,7 +124,12 @@ const ExpandedListModal = ({
   }
 
   const getCompletedCount = () => {
-    return completedItems?.length || 0
+    // Filter to only include valid indices for this list
+    const totalItems = getTotalCount()
+    const validCompletedItems = (completedItems || []).filter(index =>
+      index >= 0 && index < totalItems
+    )
+    return validCompletedItems.length
   }
 
   const getTotalCount = () => {

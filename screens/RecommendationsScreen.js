@@ -43,6 +43,7 @@ const RecommendationsScreen = ({ navigation }) => {
   const [stats, setStats] = useState(null)
   const [hasHistory, setHasHistory] = useState(false)
   const [hasCurrentList, setHasCurrentList] = useState(false)
+  const [recommendationType, setRecommendationType] = useState('history') // 'history', 'seasonal' o 'diet'
 
   // Animaciones
   const fadeAnim = useRef(new Animated.Value(0)).current
@@ -51,25 +52,66 @@ const RecommendationsScreen = ({ navigation }) => {
   // Traducciones
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const t = recommendationsTranslations[deviceLanguage] || recommendationsTranslations.en
+  const fallback = recommendationsTranslations.en
 
   // Efectos
   useEffect(() => {
+    // Limpiar cache una vez para usuarios existentes (para revertir formato de dieta)
+    const clearCacheOnce = async () => {
+      try {
+        const hasCleared = await AsyncStorage.getItem("@cache_cleared_diet_format_v5")
+        if (!hasCleared) {
+          console.log("🥗 Limpiando cache de dieta para revertir formato...")
+          await RecommendationService.clearCurrentDietCache()
+          await AsyncStorage.setItem("@cache_cleared_diet_format_v5", "true")
+          console.log("✅ Cache de dieta v5 limpiado - formato revertido")
+        }
+      } catch (error) {
+        console.error("Error limpiando cache:", error)
+      }
+    }
+
+    clearCacheOnce()
     loadRecommendations()
     loadStats()
     startAnimations()
   }, [])
 
   // Funciones principales
-  const loadRecommendations = async (shuffle = false) => {
+  const loadRecommendations = async (shuffle = false, type = null) => {
     try {
       setLoading(true)
+      const currentType = type || recommendationType
 
       // Verificar si hay historial de compras
       const historyData = await AsyncStorage.getItem("@shopping_history")
       const hasHistoryData = historyData && JSON.parse(historyData).length > 0
       setHasHistory(hasHistoryData)
 
-      const recs = await RecommendationService.getRecommendations(8, shuffle) // Más recomendaciones en pantalla dedicada
+      let recs = []
+
+      if (currentType === 'seasonal') {
+        // Obtener productos ya mostrados para evitar duplicados
+        const currentItems = recommendations.map(rec => rec.item.toLowerCase())
+        console.log("🔄 Productos actuales a evitar:", currentItems)
+
+        // Cargar recomendaciones estacionales (ahora con lógica local)
+        recs = await RecommendationService.getSeasonalRecommendations(null, shuffle, currentItems)
+        console.log("🌿 Recomendaciones estacionales cargadas:", recs.length)
+      } else if (currentType === 'diet') {
+        // Obtener productos ya mostrados para evitar duplicados
+        const currentItems = recommendations.map(rec => rec.item.toLowerCase())
+        console.log("🔄 Productos actuales a evitar:", currentItems)
+
+        // Cargar recomendaciones de dieta/bajos en calorías
+        recs = await RecommendationService.getDietRecommendations(6, shuffle, currentItems)
+        console.log("🥗 Recomendaciones de dieta cargadas:", recs.length)
+      } else {
+        // Cargar recomendaciones por historial (ahora con cache)
+        recs = await RecommendationService.getRecommendations(6, shuffle)
+        console.log("🤖 Recomendaciones por historial cargadas:", recs.length)
+      }
+
       setRecommendations(recs)
     } catch (error) {
       console.error('Error loading recommendations:', error)
@@ -143,7 +185,10 @@ const RecommendationsScreen = ({ navigation }) => {
       setRecommendations(prevRecs => {
         const filteredRecs = prevRecs.filter(rec => rec.item !== recommendation.item)
         if (filteredRecs.length < 4) {
-          setTimeout(() => loadRecommendations(true), 100)
+          setTimeout(() => {
+            console.log("Loading more recommendations from cache after adding to specific list")
+            loadRecommendations(true, recommendationType)
+          }, 100)
         }
         return filteredRecs
       })
@@ -190,11 +235,11 @@ const RecommendationsScreen = ({ navigation }) => {
       setRecommendations(prevRecs => {
         const filteredRecs = prevRecs.filter(rec => rec.item !== selectedRecommendation.item)
 
-        // Si quedan menos de 4 productos, cargar más
+        // Si quedan menos de 4 productos, cargar más del cache
         if (filteredRecs.length < 4) {
           setTimeout(() => {
-            console.log("Loading new recommendations to replace added item")
-            loadRecommendations(true)
+            console.log("Loading new recommendations from cache to replace added item")
+            loadRecommendations(true, recommendationType)
           }, 100)
         }
 
@@ -204,7 +249,7 @@ const RecommendationsScreen = ({ navigation }) => {
       Alert.alert('✅', `${selectedRecommendation.item} agregado a tu lista`)
     } catch (error) {
       console.error('Error adding to list:', error)
-      Alert.alert('Error', 'No se pudo agregar el producto')
+      Alert.alert(t.error || fallback.error, t.couldNotAddProduct || fallback.couldNotAddProduct)
     }
   }
 
@@ -230,11 +275,11 @@ const RecommendationsScreen = ({ navigation }) => {
       setRecommendations(prevRecs => {
         const filteredRecs = prevRecs.filter(rec => rec.item !== selectedRecommendation.item)
 
-        // Si quedan menos de 4 productos, cargar más
+        // Si quedan menos de 4 productos, cargar más del cache
         if (filteredRecs.length < 4) {
           setTimeout(() => {
-            console.log("Loading new recommendations to replace added item")
-            loadRecommendations(true)
+            console.log("Loading new recommendations from cache to replace added item")
+            loadRecommendations(true, recommendationType)
           }, 100)
         }
 
@@ -244,7 +289,7 @@ const RecommendationsScreen = ({ navigation }) => {
       Alert.alert('✅', `${selectedRecommendation.item} agregado a la lista actual`)
     } catch (error) {
       console.error('Error adding to current list:', error)
-      Alert.alert('Error', 'No se pudo agregar el producto')
+      Alert.alert(t.error || fallback.error, t.couldNotAddProduct || fallback.couldNotAddProduct)
     }
   }
 
@@ -262,6 +307,13 @@ const RecommendationsScreen = ({ navigation }) => {
         useNativeDriver: true,
       })
     ]).start()
+  }
+
+  const handleTabChange = (type) => {
+    triggerHaptic()
+    setRecommendationType(type)
+    setAddedItems(new Set()) // Limpiar items agregados al cambiar
+    loadRecommendations(false, type)
   }
 
   // Estilos
@@ -299,13 +351,12 @@ const RecommendationsScreen = ({ navigation }) => {
       justifyContent: 'space-between',
       backgroundColor: theme.backgroundtres + '10',
       borderRadius: 15,
-      paddingVertical:10,
+      paddingVertical: 12,
       paddingHorizontal: 25,
       marginHorizontal: 10,
-marginBottom: 5,
+      marginBottom: 15,
       borderWidth: 1,
       borderColor: theme.backgroundtres + '20',
-      marginTop: -40,
     },
     statItem: {
       alignItems: 'center',
@@ -486,16 +537,21 @@ marginBottom: 5,
       opacity: 0.8,
     },
     cardButton: {
-      backgroundColor: '#4a6bff',
-      borderRadius: 25,
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-      flexDirection: 'row',
+      backgroundColor: 'rgba(74, 107, 255, 0.8)',
+      borderRadius: 20,
+      width: 36,
+      height: 36,
+      justifyContent: 'center',
       alignItems: 'center',
-      gap: 6,
+      shadowColor: '#4a6bff',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 3,
     },
     cardButtonAdded: {
-      backgroundColor: '#10b981',
+      backgroundColor: 'rgba(16, 185, 129, 0.9)',
+      shadowColor: '#10b981',
     },
     cardButtonText: {
       color: 'white',
@@ -616,6 +672,116 @@ marginBottom: 5,
       fontSize: 14,
       fontWeight: '600',
     },
+    // Estilos para navegación de tabs
+    tabsContainer: {
+      flexDirection: 'row',
+      backgroundColor: theme.backgroundtres + '10',
+      marginHorizontal: 10,
+      marginTop: 8,
+      marginBottom: 2,
+      borderRadius: 10,
+      padding: 1,
+      borderWidth: 1,
+      borderColor: theme.backgroundtres + '20',
+      marginTop: isSmallIPhone ? -20 : -30,
+    },
+    tab: {
+      flex: 1,
+      paddingVertical: 8,
+      paddingHorizontal: 12,
+      borderRadius: 7,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    activeTab: {
+      backgroundColor: '#4a6bff',
+      shadowColor: '#4a6bff',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    tabText: {
+      fontSize: isSmallIPhone ? 12 : 13,
+      fontWeight: '600',
+      color: theme.textSecondary,
+    },
+    activeTabText: {
+      color: 'white',
+    },
+    tabIcon: {
+      marginRight: 4,
+    },
+    tabSubtitle: {
+      fontSize: 9,
+      color: theme.textSecondary,
+      textAlign: 'center',
+      marginTop: 1,
+      opacity: 0.7,
+    },
+    activeTabSubtitle: {
+      color: 'white',
+      opacity: 0.9,
+    },
+    // Estilos para mensaje sin historial en recomendaciones
+    noHistoryRecommendationContainer: {
+      width: '100%',
+      alignItems: 'center',
+      paddingVertical: 40,
+      paddingHorizontal: 20,
+      backgroundColor: theme.background,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: theme.backgroundtres + '20',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 5,
+    },
+    noHistoryRecommendationIcon: {
+      marginBottom: 16,
+      opacity: 0.7,
+    },
+    noHistoryRecommendationTitle: {
+      fontSize: isSmallIPhone ? 18 : 20,
+      fontWeight: 'bold',
+      color: theme.text,
+      textAlign: 'center',
+      marginBottom: 12,
+    },
+    noHistoryRecommendationMessage: {
+      fontSize: isSmallIPhone ? 14 : 15,
+      color: theme.textSecondary,
+      textAlign: 'center',
+      lineHeight: 20,
+      marginBottom: 24,
+    },
+    createFirstListButton: {
+      backgroundColor: '#4a6bff',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      borderRadius: 12,
+      shadowColor: '#4a6bff',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 4,
+    },
+    createFirstListButtonIcon: {
+      marginRight: 8,
+    },
+    createFirstListButtonText: {
+      color: 'white',
+      fontSize: 15,
+      fontWeight: '600',
+    },
   }
 
   // Render
@@ -635,27 +801,159 @@ marginBottom: 5,
 
         </Animated.View>
 
+
+        {/* Navegación de Tabs */}
+        <View style={styles.tabsContainer}>
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              recommendationType === 'history' && styles.activeTab
+            ]}
+            onPress={() => handleTabChange('history')}
+          >
+            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons
+                  name="time-outline"
+                  size={16}
+                  color={recommendationType === 'history' ? 'white' : theme.textSecondary}
+                  style={styles.tabIcon}
+                />
+                <Text style={[
+                  styles.tabText,
+                  recommendationType === 'history' && styles.activeTabText
+                ]}>
+                  {t.historyTab}
+                </Text>
+              </View>
+              <Text style={[
+                styles.tabSubtitle,
+                recommendationType === 'history' && styles.activeTabSubtitle
+              ]}>
+                {t.historySubtitle}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              recommendationType === 'seasonal' && styles.activeTab
+            ]}
+            onPress={() => handleTabChange('seasonal')}
+          >
+            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons
+                  name="calendar-outline"
+                  size={16}
+                  color={recommendationType === 'seasonal' ? 'white' : theme.textSecondary}
+                  style={styles.tabIcon}
+                />
+                <Text style={[
+                  styles.tabText,
+                  recommendationType === 'seasonal' && styles.activeTabText
+                ]}>
+                  {t.seasonalTab}
+                </Text>
+              </View>
+              <Text style={[
+                styles.tabSubtitle,
+                recommendationType === 'seasonal' && styles.activeTabSubtitle
+              ]}>
+                {t.seasonalSubtitle}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              recommendationType === 'diet' && styles.activeTab
+            ]}
+            onPress={() => handleTabChange('diet')}
+          >
+            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons
+                  name="fitness-outline"
+                  size={16}
+                  color={recommendationType === 'diet' ? 'white' : theme.textSecondary}
+                  style={styles.tabIcon}
+                />
+                <Text style={[
+                  styles.tabText,
+                  recommendationType === 'diet' && styles.activeTabText
+                ]}>
+                  {t.dietTab}
+                </Text>
+              </View>
+              <Text style={[
+                styles.tabSubtitle,
+                recommendationType === 'diet' && styles.activeTabSubtitle
+              ]}>
+                {t.dietSubtitle}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Content */}
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+
         {/* Estadísticas */}
         {stats && (
           <View style={styles.statsContainer}>
-            <View style={styles.statItem}>
-
-              <Text style={styles.statNumber}>{stats.totalAnalyzedLists || 0}</Text>
-              <Text style={styles.statLabel}>{t.analyzedLists}</Text>
-            </View>
-            <View style={styles.statItem}>
-
-              <Text style={styles.statNumber}>{stats.uniqueProducts || 0}</Text>
-              <Text style={styles.statLabel}>{t.uniqueProducts}</Text>
-            </View>
-
-
+            {recommendationType === 'seasonal' ? (
+              // Estadísticas para modo temporada
+              <>
+                <View style={styles.statItem}>
+                  <Text style={styles.statNumber}>
+                    {(() => {
+                      const localDate = RecommendationService.getLocalDate()
+                      const monthNames = t.monthNames || fallback.monthNames
+                      const monthName = monthNames[localDate.getMonth() + 1] || monthNames[1]
+                      return monthName.charAt(0).toUpperCase() + monthName.slice(1)
+                    })()}
+                  </Text>
+                  <Text style={styles.statLabel}>{t.currentMonth}</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <Text style={styles.statNumber}>
+                    {RecommendationService.getLocalDate().getDate()}
+                  </Text>
+                  <Text style={styles.statLabel}>{t.day}</Text>
+                </View>
+              </>
+            ) : recommendationType === 'diet' ? (
+              // Estadísticas para modo dieta
+              <>
+                <View style={styles.statItem}>
+                  <Text style={styles.statNumber}>🥗</Text>
+                  <Text style={styles.statLabel}>{t.diet}</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <Text style={styles.statNumber}>{t.low}</Text>
+                  <Text style={styles.statLabel}>{t.calories}</Text>
+                </View>
+              </>
+            ) : (
+              // Estadísticas para modo historial
+              <>
+                <View style={styles.statItem}>
+                  <Text style={styles.statNumber}>{stats.totalAnalyzedLists || 0}</Text>
+                  <Text style={styles.statLabel}>{t.analyzedLists}</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <Text style={styles.statNumber}>{stats.uniqueProducts || 0}</Text>
+                  <Text style={styles.statLabel}>{t.uniqueProducts}</Text>
+                </View>
+              </>
+            )}
           </View>
         )}
-      </View>
-    
-      {/* Content */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#4a6bff" />
@@ -699,6 +997,28 @@ marginBottom: 5,
             {recommendations.map((rec, index) => {
               const isAdded = addedItems.has(rec.item)
 
+              // Caso especial: Sin historial disponible
+              if (rec.type === 'no_history') {
+                return (
+                  <View key={`no-history-${index}`} style={styles.noHistoryRecommendationContainer}>
+                    <Ionicons name="list-outline" size={48} color="#6b7280" style={styles.noHistoryRecommendationIcon} />
+                    <Text style={styles.noHistoryRecommendationTitle}>
+                      {rec.item}
+                    </Text>
+                    <Text style={styles.noHistoryRecommendationMessage}>
+                      {rec.reason}
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.createFirstListButton}
+                      onPress={() => navigation.navigate('HomeScreen')}
+                    >
+                      <Ionicons name="add-circle" size={20} color="white" style={styles.createFirstListButtonIcon} />
+                      <Text style={styles.createFirstListButtonText}>Crear mi primera lista</Text>
+                    </TouchableOpacity>
+                  </View>
+                )
+              }
+
               return (
                 <TouchableOpacity
                   key={`${rec.item}-${index}`}
@@ -709,9 +1029,6 @@ marginBottom: 5,
                   onPress={() => !isAdded && handleAddToList(rec)}
                   disabled={isAdded}
                 >
-                  <Text style={styles.cardIcon}>
-                    {rec.icon || '🛒'}
-                  </Text>
 
                   <Text style={[
                     styles.cardTitle,
@@ -734,12 +1051,9 @@ marginBottom: 5,
                   >
                     <Ionicons
                       name={isAdded ? "checkmark" : "add"}
-                      size={16}
+                      size={18}
                       color="white"
                     />
-                    <Text style={styles.cardButtonText}>
-                      {isAdded ? 'Agregado' : t.addToList}
-                    </Text>
                   </TouchableOpacity>
                 </TouchableOpacity>
               )
@@ -750,7 +1064,7 @@ marginBottom: 5,
         {/* Reload button */}
         <TouchableOpacity
           style={styles.reloadButton}
-          onPress={() => loadRecommendations(true)}
+          onPress={() => loadRecommendations(true, recommendationType)}
         >
           <Ionicons name="refresh" size={18} color="#4a6bff" />
           <Text style={styles.reloadButtonText}>{t.reload}</Text>

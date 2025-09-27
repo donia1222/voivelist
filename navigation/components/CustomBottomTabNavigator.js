@@ -56,6 +56,7 @@ const getMenuTexts = () => {
       settings: "Ajustes",
       error: "Error",
       errorSavingList: "No se pudo guardar la lista",
+      recommendations: "Recomendaciones",
       descriptions: {
         "star": "Gestiona tu suscripción",
         "star-outline": "Desbloquea todas las funciones",
@@ -78,6 +79,7 @@ const getMenuTexts = () => {
       settings: "Settings",
       error: "Error",
       errorSavingList: "Could not save the list",
+      recommendations: "Recommendations",
       descriptions: {
         "star": "Manage your subscription",
         "star-outline": "Unlock all features",
@@ -100,6 +102,7 @@ const getMenuTexts = () => {
       settings: "Einstellungen",
       error: "Fehler",
       errorSavingList: "Liste konnte nicht gespeichert werden",
+      recommendations: "Empfehlungen",
       descriptions: {
         "star": "Verwalte dein Abonnement",
         "star-outline": "Alle Funktionen freischalten",
@@ -122,6 +125,7 @@ const getMenuTexts = () => {
       settings: "Paramètres",
       error: "Erreur",
       errorSavingList: "Impossible d'enregistrer la liste",
+      recommendations: "Recommandations",
       descriptions: {
         "star": "Gérez votre abonnement",
         "star-outline": "Débloquez toutes les fonctionnalités",
@@ -144,6 +148,7 @@ const getMenuTexts = () => {
       settings: "Impostazioni",
       error: "Errore",
       errorSavingList: "Impossibile salvare la lista",
+      recommendations: "Raccomandazioni",
       descriptions: {
         "star": "Gestisci il tuo abbonamento",
         "star-outline": "Sblocca tutte le funzionalità",
@@ -166,6 +171,7 @@ const getMenuTexts = () => {
       settings: "Ayarlar",
       error: "Hata",
       errorSavingList: "Liste kaydedilemedi",
+      recommendations: "Öneriler",
       descriptions: {
         "star": "Aboneliğinizi yönetin",
         "star-outline": "Tüm özellikleri kilidini açın",
@@ -188,6 +194,7 @@ const getMenuTexts = () => {
       settings: "Configurações",
       error: "Erro",
       errorSavingList: "Não foi possível salvar a lista",
+      recommendations: "Recomendações",
       descriptions: {
         "star": "Gerencie sua assinatura",
         "star-outline": "Desbloqueie todos os recursos",
@@ -210,6 +217,7 @@ const getMenuTexts = () => {
       settings: "Настройки",
       error: "Ошибка",
       errorSavingList: "Не удалось сохранить список",
+      recommendations: "Рекомендации",
       descriptions: {
         "star": "Управляйте подпиской",
         "star-outline": "Разблокируйте все функции",
@@ -232,6 +240,7 @@ const getMenuTexts = () => {
       settings: "الإعدادات",
       error: "خطأ",
       errorSavingList: "تعذر حفظ القائمة",
+      recommendations: "التوصيات",
       descriptions: {
         "star": "إدارة اشتراكك",
         "star-outline": "فتح جميع الميزات",
@@ -254,6 +263,7 @@ const getMenuTexts = () => {
       settings: "Beállítások",
       error: "Hiba",
       errorSavingList: "Nem sikerült menteni a listát",
+      recommendations: "Ajánlások",
       descriptions: {
         "star": "Előfizetés kezelése",
         "star-outline": "Összes funkció feloldása",
@@ -276,6 +286,7 @@ const getMenuTexts = () => {
       settings: "設定",
       error: "エラー",
       errorSavingList: "リストを保存できませんでした",
+      recommendations: "推奨事項",
       descriptions: {
         "star": "サブスクリプションを管理",
         "star-outline": "すべての機能をロック解除",
@@ -298,6 +309,7 @@ const getMenuTexts = () => {
       settings: "सेटिंग्स",
       error: "त्रुटि",
       errorSavingList: "सूची सहेजी नहीं जा सकी",
+      recommendations: "सिफारिशें",
       descriptions: {
         "star": "अपनी सदस्यता प्रबंधित करें",
         "star-outline": "सभी सुविधाएं अनलॉक करें",
@@ -320,6 +332,7 @@ const getMenuTexts = () => {
       settings: "Instellingen",
       error: "Fout",
       errorSavingList: "Kon lijst niet opslaan",
+      recommendations: "Aanbevelingen",
       descriptions: {
         "star": "Beheer uw abonnement",
         "star-outline": "Ontgrendel alle functies",
@@ -930,7 +943,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       }
     },
     {
-      label: "Recomendaciones",
+      label: menuTexts.recommendations || "Recomendaciones",
       icon: "bulb",
       color: "#8B5CF6",
       onPress: () => {
@@ -1242,7 +1255,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
              activeTab === "Contact" ? currentTranslations.contactUs :
              activeTab === "PriceCalculator" ? (currentTranslations.priceCalculator || "Price Calculator") :
              activeTab === "HandwrittenList" ? (currentTranslations.manualList || "Manual List") :
-             activeTab === "Recommendations" ? "Recomendaciones" :
+             activeTab === "Recommendations" ? (menuTexts.recommendations || "Recomendaciones") :
              "BuyVoice"}
           </Text>
         </View>

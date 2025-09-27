@@ -40,8 +40,58 @@ const recommendationsTranslations = {
     noListsModalTitle: "No Lists Available",
     noListsModalMessage: "You need to create shopping lists first so the AI can analyze your shopping history and recommend products based on your shopping history.",
     goCreateList: "Go Create a List",
+    // Tab labels
+    historyTab: "History",
+    seasonalTab: "Seasonal",
+    dietTab: "Diet",
+    // Tab subtitles
+    historySubtitle: "Based on your shopping history",
+    seasonalSubtitle: "Ideal products for current month",
+    dietSubtitle: "Low-calorie products",
+    // Stats labels
+    currentMonth: "Current month",
+    day: "Day",
+    diet: "Diet",
+    low: "Low",
+    calories: "Calories",
+    // Error messages
+    error: "Error",
+    couldNotAddProduct: "Could not add product",
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "You are an intelligent shopping assistant. RESPOND ONLY IN ENGLISH. IMPORTANT: Every product MUST ALWAYS include an appropriate emoji without exception.",
+    userPreviousPurchases: "The user has previously bought: {items}.",
+    generateRecommendations: "Generate {limit} DIFFERENT product recommendations for a shopping list.",
+    includeVariety: "Include variety: dairy, meat, fruits, vegetables, cleaning, drinks, etc.",
+    responseFormat: "Respond ONLY with a comma-separated list, without numbering or explanations.",
+    exampleFormat: "Example: Milk 🥛, Bread 🍞, Eggs 🥚, Cheese 🧀, Tomatoes 🍅, Oil 🫒",
+    recommendedFor: "Recommended for",
+    // Seasonal prompts
+    seasonalExpertIntro: "You are an expert in seasonal products and seasonal nutrition.",
+    currentDateContext: "We are in {month} of {year}, day {day}.",
+    generateSeasonalProducts: "Generate {limit} food products ideal for this season that consider:",
+    seasonalFruits: "1) Seasonal fruits and vegetables of {month}",
+    typicalClimate: "2) Typical climate of {month}",
+    festivalsAndTraditions: "3) Festivals and traditions of {month}",
+    culinaryPreparations: "4) Typical culinary preparations of this time",
+    excludeAlreadyShown: "IMPORTANT: DO NOT include these products that are already shown: {excludeItems}.",
+    seasonalResponseFormat: "Respond ONLY with a list of products separated by commas, without numbering or explanations",
+    seasonalExample: "Example: Chestnuts, Pumpkin, Mushrooms, Grapes, Apples, Pomegranates and always with an emoji.",
+    // Diet prompts
+    dietExpertIntro: "You are an expert in nutrition and healthy eating. RESPOND ONLY IN ENGLISH. IMPORTANT: Every product MUST ALWAYS include an appropriate emoji without exception.",
+    generateDietProducts: "Generate {limit} DIFFERENT low-calorie, healthy diet products for a shopping list.",
+    includeNutritionalInfo: "Include nutritional information (calories per 100g, protein, fiber content) in the reason for each product.",
+    lowCalorieOptions: "Focus on low-calorie foods (under 50 calories per 100g when possible).",
+    healthyProtein: "Include lean proteins and plant-based protein sources.",
+    fiberRichFoods: "Include high-fiber foods that aid digestion and satiety.",
+    lowFatOptions: "Include low-fat and fat-free options when available.",
+    dietResponseFormat: "Respond with one product per line in format: Product Name - nutritional description",
+    dietExample: "Example:\nCucumber 🥒 - Only 16 calories per 100g, high water content\nSpinach 🥬 - 23 calories per 100g, rich in iron and fiber",
+    // Month names
+    monthNames: ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     // Translation variables for RecommendationService
     frequentProduct: "Frequent product ({times} times)",
+    idealFor: "Ideal for",
+    seasonalProduct: "seasonal product",
     defaultItems: {
       milk: "Milk",
       bread: "Bread",
@@ -112,8 +162,58 @@ const recommendationsTranslations = {
     noListsModalTitle: "No Hay Listas Disponibles",
     noListsModalMessage: "Necesitas crear listas de compras primero para que la IA pueda analizar tu historial de compras y recomendar productos basándose en tu historial de compras.",
     goCreateList: "Ir a Crear Lista",
+    // Tab labels
+    historyTab: "Historial",
+    seasonalTab: "Temporada",
+    dietTab: "Dieta",
+    // Tab subtitles
+    historySubtitle: "Basado en tu historial de compras",
+    seasonalSubtitle: "Productos ideales para el mes actual",
+    dietSubtitle: "Productos bajos en calorías",
+    // Stats labels
+    currentMonth: "Mes actual",
+    day: "Día",
+    diet: "Dieta",
+    low: "Bajo",
+    calories: "Calorías",
+    // Error messages
+    error: "Error",
+    couldNotAddProduct: "No se pudo agregar el producto",
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "Eres un asistente inteligente de compras. RESPONDE SOLO EN ESPAÑOL. IMPORTANTE: Cada producto DEBE incluir SIEMPRE un emoji apropiado sin excepción.",
+    userPreviousPurchases: "El usuario ha comprado antes: {items}.",
+    generateRecommendations: "Genera {limit} recomendaciones de productos DIFERENTES para una lista de compras.",
+    includeVariety: "Incluye variedad: lácteos, carnes, frutas, verduras, limpieza, bebidas, etc.",
+    responseFormat: "Responde SOLO con una lista separada por comas, sin numeración ni explicaciones.",
+    exampleFormat: "Ejemplo: Leche 🥛, Pan 🍞, Huevos 🥚, Queso 🧀, Tomates 🍅, Aceite 🫒",
+    recommendedFor: "Recomendado para",
+    // Seasonal prompts
+    seasonalExpertIntro: "Eres un experto en productos de temporada y alimentación estacional.",
+    currentDateContext: "Estamos en {month} de {year}, día {day}.",
+    generateSeasonalProducts: "Genera {limit} productos alimentarios ideales para esta temporada que consideren:",
+    seasonalFruits: "1) Frutas y verduras de temporada de {month}",
+    typicalClimate: "2) Clima típico de {month}",
+    festivalsAndTraditions: "3) Festividades y tradiciones de {month}",
+    culinaryPreparations: "4) Preparaciones culinarias típicas de esta época",
+    excludeAlreadyShown: "IMPORTANTE: NO incluyas estos productos que ya están mostrados: {excludeItems}.",
+    seasonalResponseFormat: "Responde SOLO con una lista de productos separados por comas, sin numeración ni explicaciones",
+    seasonalExample: "Ejemplo: Castañas, Calabaza, Setas, Uvas, Manzanas, Granadas y siempre con un emoticono.",
+    // Diet prompts
+    dietExpertIntro: "Eres un experto en nutrición y alimentación saludable. RESPONDE SOLO EN ESPAÑOL. IMPORTANTE: Cada producto DEBE incluir SIEMPRE un emoji apropiado sin excepción.",
+    generateDietProducts: "Genera {limit} productos DIFERENTES de dieta bajos en calorías y saludables para una lista de compras.",
+    includeNutritionalInfo: "Incluye información nutricional (calorías por 100g, proteína, contenido de fibra) en la razón de cada producto.",
+    lowCalorieOptions: "Enfócate en alimentos bajos en calorías (menos de 50 calorías por 100g cuando sea posible).",
+    healthyProtein: "Incluye proteínas magras y fuentes de proteína vegetal.",
+    fiberRichFoods: "Incluye alimentos ricos en fibra que ayuden a la digestión y saciedad.",
+    lowFatOptions: "Incluye opciones bajas en grasa y sin grasa cuando estén disponibles.",
+    dietResponseFormat: "Responde con un producto por línea en formato: Nombre del Producto - descripción nutricional",
+    dietExample: "Ejemplo:\nPepino 🥒 - Solo 16 calorías por 100g, alto contenido de agua\nEspinacas 🥬 - 23 calorías por 100g, ricas en hierro y fibra",
+    // Month names
+    monthNames: ['', 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
     // Translation variables for RecommendationService
     frequentProduct: "Producto frecuente ({times} veces)",
+    idealFor: "Ideal para",
+    seasonalProduct: "producto de temporada",
     defaultItems: {
       milk: "Leche",
       bread: "Pan",
@@ -183,8 +283,27 @@ const recommendationsTranslations = {
     noListsModalTitle: "Keine Listen Verfügbar",
     noListsModalMessage: "Sie müssen zuerst Einkaufslisten erstellen, damit die KI Ihren Einkaufsverlauf analysieren und Produkte basierend auf Ihrer Einkaufshistorie empfehlen kann.",
     goCreateList: "Liste Erstellen",
+    // Tab labels
+    historyTab: "Verlauf",
+    seasonalTab: "Saisonal",
+    dietTab: "Diät",
+    // Tab subtitles
+    historySubtitle: "Basierend auf Ihrer Einkaufshistorie",
+    seasonalSubtitle: "Ideale Produkte für aktuellen Monat",
+    dietSubtitle: "Kalorienarme Produkte",
+    // Stats labels
+    currentMonth: "Aktueller Monat",
+    day: "Tag",
+    diet: "Diät",
+    low: "Niedrig",
+    calories: "Kalorien",
+    // Error messages
+    error: "Fehler",
+    couldNotAddProduct: "Produkt konnte nicht hinzugefügt werden",
     // Translation variables for RecommendationService
     frequentProduct: "Häufiges Produkt ({times} mal)",
+    idealFor: "Ideal für",
+    seasonalProduct: "Saisonprodukt",
     defaultItems: {
       milk: "Milch",
       bread: "Brot",
@@ -206,7 +325,37 @@ const recommendationsTranslations = {
       hotSeason: "Heiße Jahreszeit",
       backToSchool: "Schulanfang",
       weekend: "Wochenende"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "Sie sind ein intelligenter Einkaufsassistent. ANTWORTEN SIE NUR AUF DEUTSCH. WICHTIG: Jedes Produkt MUSS IMMER ein entsprechendes Emoji enthalten, ohne Ausnahme.",
+    userPreviousPurchases: "Der Benutzer hat zuvor gekauft: {items}.",
+    generateRecommendations: "Generieren Sie {limit} VERSCHIEDENE Produktempfehlungen für eine Einkaufsliste.",
+    includeVariety: "Inkludieren Sie Vielfalt: Milchprodukte, Fleisch, Obst, Gemüse, Reinigung, Getränke, etc.",
+    responseFormat: "Antworten Sie NUR mit einer kommagetrennten Liste, ohne Nummerierung oder Erklärungen.",
+    exampleFormat: "Beispiel: Milch 🥛, Brot 🍞, Äpfel 🍎",
+    recommendedFor: "Empfohlen für",
+    // Seasonal prompts
+    seasonalExpertIntro: "Sie sind ein Experte für saisonale Produkte und saisonale Ernährung.",
+    currentDateContext: "Wir sind im {month} {year}, Tag {day}.",
+    generateSeasonalProducts: "Generieren Sie {limit} Lebensmittel, die ideal für diese Saison sind und berücksichtigen:",
+    seasonalFruits: "1) Saisonale Früchte und Gemüse vom {month}",
+    typicalClimate: "2) Typisches Klima vom {month}",
+    festivalsAndTraditions: "3) Feste und Traditionen vom {month}",
+    culinaryPreparations: "4) Typische kulinarische Zubereitungen dieser Zeit",
+    excludeAlreadyShown: "WICHTIG: Schließen Sie diese bereits gezeigten Produkte NICHT ein: {excludeItems}.",
+    seasonalResponseFormat: "Antworten Sie NUR mit einer Liste von Produkten getrennt durch Kommas, ohne Nummerierung oder Erklärungen",
+    seasonalExample: "Beispiel: Kastanien, Kürbis, Pilze, Trauben, Äpfel, Granatäpfel und immer mit einem Emoji.",
+    monthNames: ['', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+    // Diet prompts
+    dietExpertIntro: "Sie sind ein Experte für Ernährung und gesunde Ernährung. ANTWORTEN SIE NUR AUF DEUTSCH. WICHTIG: Jedes Produkt MUSS IMMER ein entsprechendes Emoji enthalten, ohne Ausnahme.",
+    generateDietProducts: "Generieren Sie {limit} VERSCHIEDENE kalorienarme, gesunde Diätprodukte für eine Einkaufsliste.",
+    includeNutritionalInfo: "Fügen Sie Nährwertangaben (Kalorien pro 100g, Protein, Ballaststoffgehalt) in die Begründung für jedes Produkt ein.",
+    lowCalorieOptions: "Konzentrieren Sie sich auf kalorienarme Lebensmittel (unter 50 Kalorien pro 100g wenn möglich).",
+    healthyProtein: "Fügen Sie magere Proteine und pflanzliche Proteinquellen hinzu.",
+    fiberRichFoods: "Fügen Sie ballaststoffreiche Lebensmittel hinzu, die die Verdauung und Sättigung fördern.",
+    lowFatOptions: "Fügen Sie fettarme und fettfreie Optionen hinzu, wenn verfügbar.",
+    dietResponseFormat: "Antworten Sie mit einem Produkt pro Zeile im Format: Produktname - Nährstoffbeschreibung",
+    dietExample: "Beispiel:\nGurke 🥒 - Nur 16 Kalorien pro 100g, hoher Wassergehalt\nSpinat 🥬 - 23 Kalorien pro 100g, reich an Eisen und Ballaststoffen"
   },
   it: {
     title: "Raccomandazioni",
@@ -248,8 +397,27 @@ const recommendationsTranslations = {
     noListsModalTitle: "Nessuna Lista Disponibile",
     noListsModalMessage: "Devi prima creare delle liste della spesa affinché l'IA possa analizzare la tua cronologia di acquisti e raccomandare prodotti basati sui tuoi modelli.",
     goCreateList: "Vai a Creare una Lista",
+    // Tab labels
+    historyTab: "Cronologia",
+    seasonalTab: "Stagionale",
+    dietTab: "Dieta",
+    // Tab subtitles
+    historySubtitle: "Basato sui tuoi modelli di acquisto",
+    seasonalSubtitle: "Prodotti ideali per il mese corrente",
+    dietSubtitle: "Prodotti a basso contenuto calorico",
+    // Stats labels
+    currentMonth: "Mese corrente",
+    day: "Giorno",
+    diet: "Dieta",
+    low: "Basso",
+    calories: "Calorie",
+    // Error messages
+    error: "Errore",
+    couldNotAddProduct: "Impossibile aggiungere il prodotto",
     // Translation variables for RecommendationService
     frequentProduct: "Prodotto frequente ({times} volte)",
+    idealFor: "Ideale per",
+    seasonalProduct: "prodotto stagionale",
     defaultItems: {
       milk: "Latte",
       bread: "Pane",
@@ -271,7 +439,36 @@ const recommendationsTranslations = {
       hotSeason: "Stagione calda",
       backToSchool: "Rientro a scuola",
       weekend: "Fine settimana"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "Sei un assistente intelligente per la spesa. RISPONDI SOLO IN ITALIANO. IMPORTANTE: Ogni prodotto DEVE SEMPRE includere un'emoji appropriata senza eccezione.",
+    userPreviousPurchases: "L'utente ha precedentemente acquistato: {items}.",
+    generateRecommendations: "Genera {limit} raccomandazioni di prodotti DIVERSI per una lista della spesa.",
+    includeVariety: "Includi varietà: latticini, carne, frutta, verdura, pulizia, bevande, ecc.",
+    responseFormat: "Rispondi SOLO con un elenco separato da virgole, senza numerazione o spiegazioni.",
+    exampleFormat: "Esempio: Latte 🥛, Pane 🍞, Mele 🍎",
+    // Seasonal prompts
+    seasonalExpertIntro: "Sei un esperto di prodotti stagionali e alimentazione stagionale.",
+    currentDateContext: "Siamo in {month} {year}, giorno {day}.",
+    generateSeasonalProducts: "Genera {limit} prodotti alimentari ideali per questa stagione che considerano:",
+    seasonalFruits: "1) Frutta e verdura di stagione di {month}",
+    typicalClimate: "2) Clima tipico di {month}",
+    festivalsAndTraditions: "3) Festival e tradizioni di {month}",
+    culinaryPreparations: "4) Preparazioni culinarie tipiche di questo periodo",
+    excludeAlreadyShown: "IMPORTANTE: NON includere questi prodotti già mostrati: {excludeItems}.",
+    seasonalResponseFormat: "Rispondi SOLO con un elenco di prodotti separati da virgole, senza numerazione o spiegazioni",
+    seasonalExample: "Esempio: Castagne, Zucca, Funghi, Uva, Mele, Melograni e sempre con un'emoji.",
+    monthNames: ['', 'gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'],
+    // Diet prompts
+    dietExpertIntro: "Sei un esperto di nutrizione e alimentazione sana. RISPONDI SOLO IN ITALIANO. IMPORTANTE: Ogni prodotto DEVE SEMPRE includere un'emoji appropriata senza eccezione.",
+    generateDietProducts: "Genera {limit} prodotti dietetici DIVERSI a basso contenuto calorico e salutari per una lista della spesa.",
+    includeNutritionalInfo: "Includi informazioni nutrizionali (calorie per 100g, proteine, contenuto di fibre) nella motivazione per ogni prodotto.",
+    lowCalorieOptions: "Concentrati su cibi a basso contenuto calorico (sotto le 50 calorie per 100g quando possibile).",
+    healthyProtein: "Includi proteine magre e fonti di proteine vegetali.",
+    fiberRichFoods: "Includi cibi ricchi di fibre che aiutano la digestione e la sazietà.",
+    lowFatOptions: "Includi opzioni a basso contenuto di grassi e senza grassi quando disponibili.",
+    dietResponseFormat: "Rispondi con un prodotto per riga nel formato: Nome Prodotto - descrizione nutrizionale",
+    dietExample: "Esempio:\nCetriolo 🥒 - Solo 16 calorie per 100g, alto contenuto d'acqua\nSpinaci 🥬 - 23 calorie per 100g, ricchi di ferro e fibre"
   },
   fr: {
     title: "Recommandations",
@@ -313,8 +510,27 @@ const recommendationsTranslations = {
     noListsModalTitle: "Aucune Liste Disponible",
     noListsModalMessage: "Vous devez d'abord créer des listes de courses pour que l'IA puisse analyser votre historique d'achats et recommander des produits basés sur vos habitudes.",
     goCreateList: "Aller Créer une Liste",
+    // Tab labels
+    historyTab: "Historique",
+    seasonalTab: "Saisonnier",
+    dietTab: "Régime",
+    // Tab subtitles
+    historySubtitle: "Basé sur vos habitudes d'achat",
+    seasonalSubtitle: "Produits idéaux pour le mois actuel",
+    dietSubtitle: "Produits faibles en calories",
+    // Stats labels
+    currentMonth: "Mois actuel",
+    day: "Jour",
+    diet: "Régime",
+    low: "Faible",
+    calories: "Calories",
+    // Error messages
+    error: "Erreur",
+    couldNotAddProduct: "Impossible d'ajouter le produit",
     // Translation variables for RecommendationService
     frequentProduct: "Produit fréquent ({times} fois)",
+    idealFor: "Idéal pour",
+    seasonalProduct: "produit de saison",
     defaultItems: {
       milk: "Lait",
       bread: "Pain",
@@ -336,7 +552,36 @@ const recommendationsTranslations = {
       hotSeason: "Saison chaude",
       backToSchool: "Rentrée scolaire",
       weekend: "Week-end"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "Vous êtes un assistant intelligent pour les achats. RÉPONDEZ UNIQUEMENT EN FRANÇAIS. IMPORTANT: Chaque produit DOIT TOUJOURS inclure un emoji approprié sans exception.",
+    userPreviousPurchases: "L'utilisateur a précédemment acheté: {items}.",
+    generateRecommendations: "Générez {limit} recommandations de produits DIFFÉRENTS pour une liste de courses.",
+    includeVariety: "Incluez de la variété: produits laitiers, viande, fruits, légumes, nettoyage, boissons, etc.",
+    responseFormat: "Répondez UNIQUEMENT avec une liste séparée par des virgules, sans numérotation ni explications.",
+    exampleFormat: "Exemple: Lait 🥛, Pain 🍞, Pommes 🍎",
+    // Seasonal prompts
+    seasonalExpertIntro: "Vous êtes un expert en produits saisonniers et alimentation saisonnière.",
+    currentDateContext: "Nous sommes en {month} {year}, jour {day}.",
+    generateSeasonalProducts: "Générez {limit} produits alimentaires idéaux pour cette saison qui considèrent:",
+    seasonalFruits: "1) Fruits et légumes de saison de {month}",
+    typicalClimate: "2) Climat typique de {month}",
+    festivalsAndTraditions: "3) Festivals et traditions de {month}",
+    culinaryPreparations: "4) Préparations culinaires typiques de cette période",
+    excludeAlreadyShown: "IMPORTANT: N'incluez PAS ces produits déjà montrés: {excludeItems}.",
+    seasonalResponseFormat: "Répondez UNIQUEMENT avec une liste de produits séparés par des virgules, sans numérotation ni explications",
+    seasonalExample: "Exemple: Châtaignes, Citrouille, Champignons, Raisins, Pommes, Grenades et toujours avec un emoji.",
+    monthNames: ['', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+    // Diet prompts
+    dietExpertIntro: "Vous êtes un expert en nutrition et alimentation saine. RÉPONDEZ UNIQUEMENT EN FRANÇAIS. IMPORTANT: Chaque produit DOIT TOUJOURS inclure un emoji approprié sans exception.",
+    generateDietProducts: "Générez {limit} produits diététiques DIFFÉRENTS faibles en calories et sains pour une liste de courses.",
+    includeNutritionalInfo: "Incluez des informations nutritionnelles (calories pour 100g, protéines, teneur en fibres) dans la raison de chaque produit.",
+    lowCalorieOptions: "Concentrez-vous sur les aliments faibles en calories (moins de 50 calories pour 100g si possible).",
+    healthyProtein: "Incluez des protéines maigres et des sources de protéines végétales.",
+    fiberRichFoods: "Incluez des aliments riches en fibres qui aident la digestion et la satiété.",
+    lowFatOptions: "Incluez des options faibles en gras et sans gras lorsque disponibles.",
+    dietResponseFormat: "Répondez avec un produit par ligne au format: Nom du Produit - description nutritionnelle",
+    dietExample: "Exemple:\nConcombre 🥒 - Seulement 16 calories pour 100g, forte teneur en eau\nÉpinards 🥬 - 23 calories pour 100g, riches en fer et fibres"
   },
   pt: {
     title: "Recomendações",
@@ -378,8 +623,26 @@ const recommendationsTranslations = {
     noListsModalTitle: "Nenhuma Lista Disponível",
     noListsModalMessage: "Você precisa criar listas de compras primeiro para que a IA possa analisar seu histórico de compras e recomendar produtos baseados em seus padrões.",
     goCreateList: "Ir Criar uma Lista",
+    // Tab labels
+    historyTab: "Histórico",
+    seasonalTab: "Sazonal",
+    dietTab: "Dieta",
+    // Tab subtitles
+    historySubtitle: "Baseado nos seus padrões de compra",
+    seasonalSubtitle: "Produtos ideais para o mês atual",
+    dietSubtitle: "Produtos com baixas calorias",
+    // Stats labels
+    currentMonth: "Mês atual",
+    day: "Dia",
+    diet: "Dieta",
+    low: "Baixo",
+    calories: "Calorias",
+    // Error messages
+    error: "Erro",
+    couldNotAddProduct: "Não foi possível adicionar o produto",
     // Translation variables for RecommendationService
     frequentProduct: "Produto frequente ({times} vezes)",
+    idealFor: "Ideal para",
     defaultItems: {
       milk: "Leite",
       bread: "Pão",
@@ -401,7 +664,36 @@ const recommendationsTranslations = {
       hotSeason: "Temporada quente",
       backToSchool: "Volta às aulas",
       weekend: "Fim de semana"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "Você é um assistente inteligente de compras. RESPONDA APENAS EM PORTUGUÊS. IMPORTANTE: Cada produto DEVE incluir SEMPRE um emoji apropriado sem exceção.",
+    userPreviousPurchases: "O usuário comprou anteriormente: {items}.",
+    generateRecommendations: "Gere {limit} recomendações de produtos DIFERENTES para uma lista de compras.",
+    includeVariety: "Inclua variedade: laticínios, carnes, frutas, vegetais, limpeza, bebidas, etc.",
+    responseFormat: "Responda APENAS com uma lista separada por vírgulas, sem numeração ou explicações.",
+    exampleFormat: "Exemplo: Leite 🥛, Pão 🍞, Maçãs 🍎",
+    // Seasonal prompts
+    seasonalExpertIntro: "Você é um especialista em produtos sazonais e alimentação sazonal.",
+    currentDateContext: "Estamos em {month} de {year}, dia {day}.",
+    generateSeasonalProducts: "Gere {limit} produtos alimentares ideais para esta estação que considerem:",
+    seasonalFruits: "1) Frutas e vegetais da estação de {month}",
+    typicalClimate: "2) Clima típico de {month}",
+    festivalsAndTraditions: "3) Festivais e tradições de {month}",
+    culinaryPreparations: "4) Preparações culinárias típicas desta época",
+    excludeAlreadyShown: "IMPORTANTE: NÃO inclua estes produtos já mostrados: {excludeItems}.",
+    seasonalResponseFormat: "Responda APENAS com uma lista de produtos separados por vírgulas, sem numeração ou explicações",
+    seasonalExample: "Exemplo: Castanhas, Abóbora, Cogumelos, Uvas, Maçãs, Romãs e sempre com um emoji.",
+    monthNames: ['', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+    // Diet prompts
+    dietExpertIntro: "Você é um especialista em nutrição e alimentação saudável. RESPONDA APENAS EM PORTUGUÊS. IMPORTANTE: Cada produto DEVE incluir SEMPRE um emoji apropriado sem exceção.",
+    generateDietProducts: "Gere {limit} produtos dietéticos DIFERENTES com baixas calorias e saudáveis para uma lista de compras.",
+    includeNutritionalInfo: "Inclua informações nutricionais (calorias por 100g, proteína, teor de fibras) na razão de cada produto.",
+    lowCalorieOptions: "Foque em alimentos com baixas calorias (menos de 50 calorias por 100g quando possível).",
+    healthyProtein: "Inclua proteínas magras e fontes de proteína vegetal.",
+    fiberRichFoods: "Inclua alimentos ricos em fibras que ajudem na digestão e saciedade.",
+    lowFatOptions: "Inclua opções com baixo teor de gordura e sem gordura quando disponíveis.",
+    dietResponseFormat: "Responda com um produto por linha no formato: Nome do Produto - descrição nutricional",
+    dietExample: "Exemplo:\nPepino 🥒 - Apenas 16 calorias por 100g, alto teor de água\nEspinafre 🥬 - 23 calorias por 100g, rico em ferro e fibras"
   },
   ru: {
     title: "Рекомендации",
@@ -443,8 +735,26 @@ const recommendationsTranslations = {
     noListsModalTitle: "Нет Доступных Списков",
     noListsModalMessage: "Сначала вам нужно создать списки покупок, чтобы ИИ мог проанализировать вашу историю покупок и рекомендовать товары на основе ваших привычек.",
     goCreateList: "Создать Список",
+    // Tab labels
+    historyTab: "История",
+    seasonalTab: "Сезонные",
+    dietTab: "Диета",
+    // Tab subtitles
+    historySubtitle: "На основе ваших покупательских привычек",
+    seasonalSubtitle: "Идеальные продукты для текущего месяца",
+    dietSubtitle: "Низкокалорийные продукты",
+    // Stats labels
+    currentMonth: "Текущий месяц",
+    day: "День",
+    diet: "Диета",
+    low: "Низкий",
+    calories: "Калории",
+    // Error messages
+    error: "Ошибка",
+    couldNotAddProduct: "Не удалось добавить товар",
     // Translation variables for RecommendationService
     frequentProduct: "Частый товар ({times} раз)",
+    idealFor: "Идеально для",
     defaultItems: {
       milk: "Молоко",
       bread: "Хлеб",
@@ -466,7 +776,36 @@ const recommendationsTranslations = {
       hotSeason: "Жаркий сезон",
       backToSchool: "Начало учебного года",
       weekend: "Выходные"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "Вы умный помощник по покупкам. ОТВЕЧАЙТЕ ТОЛЬКО НА РУССКОМ ЯЗЫКЕ. ВАЖНО: Каждый продукт ДОЛЖЕН ВСЕГДА включать соответствующий эмодзи без исключения.",
+    userPreviousPurchases: "Пользователь ранее покупал: {items}.",
+    generateRecommendations: "Сгенерируйте {limit} рекомендаций РАЗНЫХ продуктов для списка покупок.",
+    includeVariety: "Включите разнообразие: молочные продукты, мясо, фрукты, овощи, уборка, напитки и т.д.",
+    responseFormat: "Отвечайте ТОЛЬКО списком через запятую, без нумерации или объяснений.",
+    exampleFormat: "Пример: Молоко 🥛, Хлеб 🍞, Яблоки 🍎",
+    // Seasonal prompts
+    seasonalExpertIntro: "Вы эксперт по сезонным продуктам и сезонному питанию.",
+    currentDateContext: "Мы находимся в {month} {year} года, день {day}.",
+    generateSeasonalProducts: "Сгенерируйте {limit} пищевых продуктов, идеальных для этого сезона, которые учитывают:",
+    seasonalFruits: "1) Сезонные фрукты и овощи {month}",
+    typicalClimate: "2) Типичный климат {month}",
+    festivalsAndTraditions: "3) Праздники и традиции {month}",
+    culinaryPreparations: "4) Типичные кулинарные приготовления этого времени",
+    excludeAlreadyShown: "ВАЖНО: НЕ включайте эти уже показанные продукты: {excludeItems}.",
+    seasonalResponseFormat: "Отвечайте ТОЛЬКО списком продуктов через запятую, без нумерации или объяснений",
+    seasonalExample: "Пример: Каштаны, Тыква, Грибы, Виноград, Яблоки, Гранаты и всегда с эмодзи.",
+    monthNames: ['', 'январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
+    // Diet prompts
+    dietExpertIntro: "Вы эксперт по питанию и здоровому питанию. ОТВЕЧАЙТЕ ТОЛЬКО НА РУССКОМ ЯЗЫКЕ. ВАЖНО: Каждый продукт ДОЛЖЕН ВСЕГДА включать соответствующий эмодзи без исключения.",
+    generateDietProducts: "Сгенерируйте {limit} РАЗНЫХ диетических продуктов с низким содержанием калорий и полезных для списка покупок.",
+    includeNutritionalInfo: "Включите питательную информацию (калории на 100г, белки, содержание клетчатки) в обоснование каждого продукта.",
+    lowCalorieOptions: "Сосредоточьтесь на низкокалорийных продуктах (менее 50 калорий на 100г, когда возможно).",
+    healthyProtein: "Включите постные белки и растительные источники белка.",
+    fiberRichFoods: "Включите продукты, богатые клетчаткой, которые помогают пищеварению и насыщению.",
+    lowFatOptions: "Включите обезжиренные и с низким содержанием жира варианты, когда доступны.",
+    dietResponseFormat: "Отвечайте одним продуктом на строку в формате: Название Продукта - питательное описание",
+    dietExample: "Пример:\nОгурец 🥒 - Только 16 калорий на 100г, высокое содержание воды\nШпинат 🥬 - 23 калории на 100г, богат железом и клетчаткой"
   },
   ar: {
     title: "توصيات شخصية",
@@ -508,8 +847,23 @@ const recommendationsTranslations = {
     noListsModalTitle: "لا توجد قوائم متاحة",
     noListsModalMessage: "تحتاج إلى إنشاء قوائم تسوق أولاً حتى يتمكن الذكاء الاصطناعي من تحليل تاريخ التسوق الخاص بك والتوصية بالمنتجات بناءً على أنماطك.",
     goCreateList: "الذهاب لإنشاء قائمة",
+    // Tab labels
+    historyTab: "التاريخ",
+    seasonalTab: "موسمي",
+    dietTab: "حمية",
+    // Tab subtitles
+    historySubtitle: "بناءً على أنماط التسوق الخاصة بك",
+    seasonalSubtitle: "منتجات مثالية للشهر الحالي",
+    dietSubtitle: "منتجات قليلة السعرات",
+    // Stats labels
+    currentMonth: "الشهر الحالي",
+    day: "يوم",
+    diet: "حمية",
+    low: "منخفض",
+    calories: "سعرات حرارية",
     // Translation variables for RecommendationService
     frequentProduct: "منتج متكرر ({times} مرات)",
+    idealFor: "مثالي لـ",
     defaultItems: {
       milk: "حليب",
       bread: "خبز",
@@ -531,7 +885,36 @@ const recommendationsTranslations = {
       hotSeason: "الموسم الحار",
       backToSchool: "العودة إلى المدرسة",
       weekend: "نهاية الأسبوع"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "أنت مساعد ذكي للتسوق. أجب فقط باللغة العربية. مهم: كل منتج يجب أن يتضمن دائماً رمز تعبيري مناسب بدون استثناء.",
+    userPreviousPurchases: "المستخدم اشترى سابقاً: {items}.",
+    generateRecommendations: "أنشئ {limit} توصيات منتجات مختلفة لقائمة تسوق.",
+    includeVariety: "ضمّن تنوعاً: منتجات الألبان، اللحوم، الفواكه، الخضار، التنظيف، المشروبات، إلخ.",
+    responseFormat: "أجب فقط بقائمة مفصولة بفواصل، بدون ترقيم أو شروحات.",
+    exampleFormat: "مثال: حليب 🥛، خبز 🍞، تفاح 🍎",
+    // Seasonal prompts
+    seasonalExpertIntro: "أنت خبير في المنتجات الموسمية والتغذية الموسمية.",
+    currentDateContext: "نحن في {month} {year}، اليوم {day}.",
+    generateSeasonalProducts: "أنشئ {limit} منتجات غذائية مثالية لهذا الموسم التي تعتبر:",
+    seasonalFruits: "1) الفواكه والخضروات الموسمية لـ {month}",
+    typicalClimate: "2) المناخ النموذجي لـ {month}",
+    festivalsAndTraditions: "3) المهرجانات والتقاليد لـ {month}",
+    culinaryPreparations: "4) التحضيرات الطهي النموذجية لهذا الوقت",
+    excludeAlreadyShown: "مهم: لا تشمل هذه المنتجات المعروضة بالفعل: {excludeItems}.",
+    seasonalResponseFormat: "أجب فقط بقائمة من المنتجات مفصولة بفواصل، بدون ترقيم أو شروحات",
+    seasonalExample: "مثال: كستناء، يقطين، فطر، عنب، تفاح، رمان ودائماً مع رمز تعبيري.",
+    monthNames: ['', 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
+    // Diet prompts
+    dietExpertIntro: "أنت خبير في التغذية والأكل الصحي. أجب فقط باللغة العربية. مهم: كل منتج يجب أن يتضمن دائماً رمز تعبيري مناسب بدون استثناء.",
+    generateDietProducts: "أنشئ {limit} منتجات حمية مختلفة قليلة السعرات وصحية لقائمة تسوق.",
+    includeNutritionalInfo: "اشمل معلومات غذائية (سعرات حرارية لكل 100غ، بروتين، محتوى الألياف) في سبب كل منتج.",
+    lowCalorieOptions: "ركز على الأطعمة قليلة السعرات (أقل من 50 سعرة لكل 100غ عند الإمكان).",
+    healthyProtein: "اشمل البروتينات الخالية من الدهون ومصادر البروتين النباتي.",
+    fiberRichFoods: "اشمل الأطعمة الغنية بالألياف التي تساعد في الهضم والشبع.",
+    lowFatOptions: "اشمل خيارات قليلة الدهون وخالية من الدهون عند التوفر.",
+    dietResponseFormat: "أجب بمنتج واحد لكل سطر بالتنسيق: اسم المنتج - وصف غذائي",
+    dietExample: "مثال:\nخيار 🥒 - فقط 16 سعرة حرارية لكل 100غ، محتوى عالي من الماء\nسبانخ 🥬 - 23 سعرة حرارية لكل 100غ، غني بالحديد والألياف"
   },
   hu: {
     title: "Személyre Szabott Ajánlások",
@@ -573,8 +956,23 @@ const recommendationsTranslations = {
     noListsModalTitle: "Nincsenek Elérhető Listák",
     noListsModalMessage: "Először bevásárlólistákat kell létrehoznia, hogy az AI elemezhesse vásárlási előzményeit és termékeket ajánlhasson a mintái alapján.",
     goCreateList: "Lista Létrehozása",
+    // Tab labels
+    historyTab: "Előzmények",
+    seasonalTab: "Szezonális",
+    dietTab: "Diéta",
+    // Tab subtitles
+    historySubtitle: "A vásárlási szokásai alapján",
+    seasonalSubtitle: "Ideális termékek a jelenlegi hónapra",
+    dietSubtitle: "Alacsony kalóriatartalmú termékek",
+    // Stats labels
+    currentMonth: "Jelenlegi hónap",
+    day: "Nap",
+    diet: "Diéta",
+    low: "Alacsony",
+    calories: "Kalóriák",
     // Translation variables for RecommendationService
     frequentProduct: "Gyakori termék ({times} alkalommal)",
+    idealFor: "Ideális",
     defaultItems: {
       milk: "Tej",
       bread: "Kenyér",
@@ -596,7 +994,36 @@ const recommendationsTranslations = {
       hotSeason: "Meleg évszak",
       backToSchool: "Iskolakezdés",
       weekend: "Hétvége"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "Ön egy intelligens vásárlási asszisztens. CSAK MAGYARUL VÁLASZOLJON. FONTOS: Minden terméknek MINDIG tartalmaznia KELL egy megfelelő emodzsit kivétel nélkül.",
+    userPreviousPurchases: "A felhasználó korábban vásárolt: {items}.",
+    generateRecommendations: "Generáljon {limit} KÜLÖNBÖZŐ termékajánlást egy bevásárlólistához.",
+    includeVariety: "Tartalmazzon változatosságot: tejtermékek, hús, gyümölcsök, zöldségek, tisztítószerek, italok, stb.",
+    responseFormat: "Válaszoljon CSAK egy vesszővel elválasztott listával, számozás vagy magyarázatok nélkül.",
+    exampleFormat: "Példa: Tej 🥛, Kenyér 🍞, Alma 🍎",
+    // Seasonal prompts
+    seasonalExpertIntro: "Ön a szezonális termékek és szezonális táplálkozás szakértője.",
+    currentDateContext: "{month} {year}-ben vagyunk, {day}. nap.",
+    generateSeasonalProducts: "Generáljon {limit} ideális élelmiszer terméket ehhez az évszakhoz, amelyek figyelembe veszik:",
+    seasonalFruits: "1) {month} szezonális gyümölcsöket és zöldségeket",
+    typicalClimate: "2) {month} jellemző éghajlatát",
+    festivalsAndTraditions: "3) {month} fesztiváljait és hagyományait",
+    culinaryPreparations: "4) Ennek az időszaknak jellemző kulináris készítményeit",
+    excludeAlreadyShown: "FONTOS: NE tartalmazza ezeket a már megjelenített termékeket: {excludeItems}.",
+    seasonalResponseFormat: "Válaszoljon CSAK vesszővel elválasztott terméklista formában, számozás vagy magyarázat nélkül",
+    seasonalExample: "Példa: Gesztenye, Tök, Gomba, Szőlő, Alma, Gránátalma és mindig emodzsi-val.",
+    monthNames: ['', 'január', 'február', 'március', 'április', 'május', 'június', 'július', 'augusztus', 'szeptember', 'október', 'november', 'december'],
+    // Diet prompts
+    dietExpertIntro: "Ön a táplálkozás és egészséges étkezés szakértője. CSAK MAGYARUL VÁLASZOLJON. FONTOS: Minden terméknek MINDIG tartalmaznia KELL egy megfelelő emodzsit kivétel nélkül.",
+    generateDietProducts: "Generáljon {limit} KÜLÖNBÖZŐ alacsony kalóriatartalmú, egészséges diétás terméket egy bevásárlólistához.",
+    includeNutritionalInfo: "Tartalmazzon tápláló információkat (kalória 100g-onként, fehérje, rosttartalom) minden termék indoklásában.",
+    lowCalorieOptions: "Összpontosítson alacsony kalóriatartalmú ételekre (50 kalória alatt 100g-onként, amikor lehetséges).",
+    healthyProtein: "Tartalmazzon sovány fehérjéket és növényi fehérjeforrásokat.",
+    fiberRichFoods: "Tartalmazzon rostban gazdag ételeket, amelyek segítik az emésztést és a jóllakottságot.",
+    lowFatOptions: "Tartalmazzon alacsony zsírtartalmú és zsírmentes opciókat, amikor elérhetők.",
+    dietResponseFormat: "Válaszoljon egy termékkel soronként a következő formátumban: Termék Neve - táplálkozási leírás",
+    dietExample: "Példa:\nUborka 🥒 - Csak 16 kalória 100g-onként, magas víztartalom\nSpenót 🥬 - 23 kalória 100g-onként, gazdag vasban és rostban"
   },
   ja: {
     title: "パーソナライズされた推奨事項",
@@ -638,8 +1065,23 @@ const recommendationsTranslations = {
     noListsModalTitle: "利用可能なリストがありません",
     noListsModalMessage: "AIがお客様の購買履歴を分析し、パターンに基づいて商品を推奨できるよう、まず買い物リストを作成する必要があります。",
     goCreateList: "リストを作成する",
+    // Tab labels
+    historyTab: "履歴",
+    seasonalTab: "季節",
+    dietTab: "ダイエット",
+    // Tab subtitles
+    historySubtitle: "お客様の購買パターンに基づいて",
+    seasonalSubtitle: "今月に最適な商品",
+    dietSubtitle: "低カロリー商品",
+    // Stats labels
+    currentMonth: "今月",
+    day: "日",
+    diet: "ダイエット",
+    low: "低",
+    calories: "カロリー",
     // Translation variables for RecommendationService
     frequentProduct: "頻繁な商品（{times}回）",
+    idealFor: "最適",
     defaultItems: {
       milk: "牛乳",
       bread: "パン",
@@ -661,7 +1103,36 @@ const recommendationsTranslations = {
       hotSeason: "暑い季節",
       backToSchool: "新学期",
       weekend: "週末"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "あなたは賢いショッピングアシスタントです。日本語のみでお答えください。重要：すべての商品には例外なく適切な絵文字を必ず含めてください。",
+    userPreviousPurchases: "ユーザーは以前に購入しました：{items}。",
+    generateRecommendations: "{limit}個の異なる商品の推奨事項をショッピングリスト用に生成してください。",
+    includeVariety: "多様性を含めてください：乳製品、肉、果物、野菜、清掃用品、飲み物など。",
+    responseFormat: "番号付けや説明なしで、カンマで区切られたリストのみで回答してください。",
+    exampleFormat: "例：牛乳 🥛、パン 🍞、りんご 🍎",
+    // Seasonal prompts
+    seasonalExpertIntro: "あなたは季節商品と季節栄養の専門家です。",
+    currentDateContext: "{year}年{month}、{day}日です。",
+    generateSeasonalProducts: "この季節に理想的な{limit}個の食品を生成してください。以下を考慮してください：",
+    seasonalFruits: "1) {month}の季節の果物と野菜",
+    typicalClimate: "2) {month}の典型的な気候",
+    festivalsAndTraditions: "3) {month}の祭りと伝統",
+    culinaryPreparations: "4) この時期の典型的な料理の準備",
+    excludeAlreadyShown: "重要：すでに表示されているこれらの商品は含めないでください：{excludeItems}。",
+    seasonalResponseFormat: "カンマで区切られた商品のリストのみで回答してください。番号付けや説明は不要です",
+    seasonalExample: "例：栗、かぼちゃ、きのこ、ぶどう、りんご、ざくろ、常に絵文字付き。",
+    monthNames: ['', '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+    // Diet prompts
+    dietExpertIntro: "あなたは栄養と健康的な食事の専門家です。日本語のみでお答えください。重要：すべての商品には例外なく適切な絵文字を必ず含めてください。",
+    generateDietProducts: "{limit}個の異なる低カロリーで健康的なダイエット商品をショッピングリスト用に生成してください。",
+    includeNutritionalInfo: "各商品の理由に栄養情報（100gあたりのカロリー、タンパク質、繊維含量）を含めてください。",
+    lowCalorieOptions: "低カロリー食品（可能な場合は100gあたり50カロリー未満）に焦点を当ててください。",
+    healthyProtein: "赤身のタンパク質と植物性タンパク質源を含めてください。",
+    fiberRichFoods: "消化と満腹感を助ける繊維豊富な食品を含めてください。",
+    lowFatOptions: "利用可能な場合は低脂肪および無脂肪オプションを含めてください。",
+    dietResponseFormat: "1行に1つの商品を次の形式で回答してください：商品名 - 栄養説明",
+    dietExample: "例：\nきゅうり 🥒 - 100gあたりわずか16カロリー、水分含有量が高い\nほうれん草 🥬 - 100gあたり23カロリー、鉄分と繊維が豊富"
   },
   tr: {
     title: "Kişiselleştirilmiş Öneriler",
@@ -703,8 +1174,23 @@ const recommendationsTranslations = {
     noListsModalTitle: "Mevcut Liste Yok",
     noListsModalMessage: "AI'nın alışveriş geçmişinizi analiz edebilmesi ve desenlerinize dayalı ürün önerebilmesi için önce alışveriş listeleri oluşturmanız gerekir.",
     goCreateList: "Liste Oluşturmaya Git",
+    // Tab labels
+    historyTab: "Geçmiş",
+    seasonalTab: "Mevsimlik",
+    dietTab: "Diyet",
+    // Tab subtitles
+    historySubtitle: "Alışveriş alışkanlıklarınıza dayalı",
+    seasonalSubtitle: "Mevcut ay için ideal ürünler",
+    dietSubtitle: "Düşük kalorili ürünler",
+    // Stats labels
+    currentMonth: "Mevcut ay",
+    day: "Gün",
+    diet: "Diyet",
+    low: "Düşük",
+    calories: "Kalori",
     // Translation variables for RecommendationService
     frequentProduct: "Sık alınan ürün ({times} kez)",
+    idealFor: "İdeal",
     defaultItems: {
       milk: "Süt",
       bread: "Ekmek",
@@ -726,7 +1212,36 @@ const recommendationsTranslations = {
       hotSeason: "Sıcak mevsim",
       backToSchool: "Okul dönemi",
       weekend: "Hafta sonu"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "Siz akıllı bir alışveriş asistanısınız. SADECE TÜRKÇE YANIT VERİN. ÖNEMLİ: Her ürün istisna olmaksızın uygun bir emoji içermelidir.",
+    userPreviousPurchases: "Kullanıcı daha önce satın aldı: {items}.",
+    generateRecommendations: "Bir alışveriş listesi için {limit} FARKLI ürün önerisi oluşturun.",
+    includeVariety: "Çeşitlilik ekleyin: süt ürünleri, et, meyve, sebze, temizlik, içecekler, vb.",
+    responseFormat: "SADECE virgülle ayrılmış bir liste ile yanıt verin, numaralama veya açıklamalar olmadan.",
+    exampleFormat: "Örnek: Süt 🥛, Ekmek 🍞, Elma 🍎",
+    // Seasonal prompts
+    seasonalExpertIntro: "Siz mevsimlik ürünler ve mevsimlik beslenme uzmanısınız.",
+    currentDateContext: "{year} {month} ayında, {day}. günündeyiz.",
+    generateSeasonalProducts: "Bu mevsim için ideal olan {limit} gıda ürünü oluşturun. Şunları dikkate alın:",
+    seasonalFruits: "1) {month} ayının mevsimlik meyve ve sebzeleri",
+    typicalClimate: "2) {month} ayının tipik iklimi",
+    festivalsAndTraditions: "3) {month} ayının festivalleri ve gelenekleri",
+    culinaryPreparations: "4) Bu dönemin tipik mutfak hazırlıkları",
+    excludeAlreadyShown: "ÖNEMLİ: Zaten gösterilen bu ürünleri DAHİL ETMEYİN: {excludeItems}.",
+    seasonalResponseFormat: "SADECE virgülle ayrılmış ürün listesi ile yanıt verin, numaralama veya açıklamalar olmadan",
+    seasonalExample: "Örnek: Kestane, Kabak, Mantar, Üzüm, Elma, Nar ve her zaman emoji ile.",
+    monthNames: ['', 'ocak', 'şubat', 'mart', 'nisan', 'mayıs', 'haziran', 'temmuz', 'ağustos', 'eylül', 'ekim', 'kasım', 'aralık'],
+    // Diet prompts
+    dietExpertIntro: "Siz beslenme ve sağlıklı yemek uzmanısınız. SADECE TÜRKÇE YANIT VERİN. ÖNEMLİ: Her ürün istisna olmaksızın uygun bir emoji içermelidir.",
+    generateDietProducts: "Bir alışveriş listesi için {limit} FARKLI düşük kalorili, sağlıklı diyet ürünü oluşturun.",
+    includeNutritionalInfo: "Her ürünün gerekçesine beslenme bilgilerini (100g başına kalori, protein, lif içeriği) dahil edin.",
+    lowCalorieOptions: "Düşük kalorili gıdalara odaklanın (mümkün olduğunda 100g başına 50 kalorinın altında).",
+    healthyProtein: "Yağsız proteinler ve bitkisel protein kaynaklarını dahil edin.",
+    fiberRichFoods: "Sindirime ve tokluk hissine yardımcı olan lifli gıdaları dahil edin.",
+    lowFatOptions: "Mevcut olduğunda düşük yağlı ve yağsız seçenekleri dahil edin.",
+    dietResponseFormat: "Şu formatta satır başına bir ürün ile yanıt verin: Ürün Adı - beslenme açıklaması",
+    dietExample: "Örnek:\nSalatalık 🥒 - 100g başına sadece 16 kalori, yüksek su içeriği\nIspanak 🥬 - 100g başına 23 kalori, demir ve lifçe zengin"
   },
   hi: {
     title: "व्यक्तिगत सिफारिशें",
@@ -768,8 +1283,23 @@ const recommendationsTranslations = {
     noListsModalTitle: "कोई सूची उपलब्ध नहीं",
     noListsModalMessage: "आपको पहले खरीदारी सूचियां बनानी होंगी ताकि AI आपके खरीदारी इतिहास का विश्लेषण कर सके और आपके पैटर्न के आधार पर उत्पादों की सिफारिश कर सके।",
     goCreateList: "सूची बनाने जाएं",
+    // Tab labels
+    historyTab: "इतिहास",
+    seasonalTab: "मौसमी",
+    dietTab: "आहार",
+    // Tab subtitles
+    historySubtitle: "आपके खरीदारी पैटर्न के आधार पर",
+    seasonalSubtitle: "वर्तमान माह के लिए आदर्श उत्पाद",
+    dietSubtitle: "कम कैलोरी वाले उत्पाद",
+    // Stats labels
+    currentMonth: "वर्तमान माह",
+    day: "दिन",
+    diet: "आहार",
+    low: "कम",
+    calories: "कैलोरी",
     // Translation variables for RecommendationService
     frequentProduct: "बार-बार खरीदा जाने वाला उत्पाद ({times} बार)",
+    idealFor: "आदर्श",
     defaultItems: {
       milk: "दूध",
       bread: "रोटी",
@@ -791,7 +1321,36 @@ const recommendationsTranslations = {
       hotSeason: "गर्म मौसम",
       backToSchool: "स्कूल वापसी",
       weekend: "सप्ताहांत"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "आप एक बुद्धिमान खरीदारी सहायक हैं। केवल हिंदी में उत्तर दें। महत्वपूर्ण: हर उत्पाद में बिना किसी अपवाद के हमेशा एक उपयुक्त इमोजी शामिल होना चाहिए।",
+    userPreviousPurchases: "उपयोगकर्ता ने पहले खरीदा है: {items}।",
+    generateRecommendations: "एक खरीदारी सूची के लिए {limit} अलग उत्पाद सिफारिशें बनाएं।",
+    includeVariety: "विविधता शामिल करें: डेयरी, मांस, फल, सब्जियां, सफाई, पेय पदार्थ, आदि।",
+    responseFormat: "केवल कॉमा से अलग की गई सूची के साथ उत्तर दें, बिना संख्या या स्पष्टीकरण के।",
+    exampleFormat: "उदाहरण: दूध 🥛, रोटी 🍞, सेब 🍎",
+    // Seasonal prompts
+    seasonalExpertIntro: "आप मौसमी उत्पादों और मौसमी पोषण के विशेषज्ञ हैं।",
+    currentDateContext: "हम {year} के {month} महीने में हैं, दिन {day}।",
+    generateSeasonalProducts: "इस मौसम के लिए आदर्श {limit} खाद्य उत्पाद उत्पन्न करें जो निम्नलिखित पर विचार करें:",
+    seasonalFruits: "1) {month} के मौसमी फल और सब्जियां",
+    typicalClimate: "2) {month} की विशिष्ट जलवायु",
+    festivalsAndTraditions: "3) {month} के त्योहार और परंपराएं",
+    culinaryPreparations: "4) इस समय की विशिष्ट पाक तैयारियां",
+    excludeAlreadyShown: "महत्वपूर्ण: इन पहले से दिखाए गए उत्पादों को शामिल न करें: {excludeItems}।",
+    seasonalResponseFormat: "केवल कॉमा से अलग किए गए उत्पादों की सूची के साथ उत्तर दें, बिना संख्या या स्पष्टीकरण के",
+    seasonalExample: "उदाहरण: शाहबलूत, कद्दू, मशरूम, अंगूर, सेब, अनार और हमेशा इमोजी के साथ।",
+    monthNames: ['', 'जनवरी', 'फरवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'],
+    // Diet prompts
+    dietExpertIntro: "आप पोषण और स्वस्थ भोजन के विशेषज्ञ हैं। केवल हिंदी में उत्तर दें। महत्वपूर्ण: हर उत्पाद में बिना किसी अपवाद के हमेशा एक उपयुक्त इमोजी शामिल होना चाहिए।",
+    generateDietProducts: "एक खरीदारी सूची के लिए {limit} अलग कम कैलोरी, स्वस्थ आहार उत्पाद उत्पन्न करें।",
+    includeNutritionalInfo: "प्रत्येक उत्पाद के कारण में पोषण संबंधी जानकारी (100 ग्राम प्रति कैलोरी, प्रोटीन, फाइबर सामग्री) शामिल करें।",
+    lowCalorieOptions: "कम कैलोरी वाले खाद्य पदार्थों पर ध्यान दें (संभव हो तो 100 ग्राम प्रति 50 कैलोरी से कम)।",
+    healthyProtein: "लीन प्रोटीन और पौधे-आधारित प्रोटीन स्रोत शामिल करें।",
+    fiberRichFoods: "फाइबर से भरपूर खाद्य पदार्थ शामिल करें जो पाचन और तृप्ति में सहायता करते हैं।",
+    lowFatOptions: "उपलब्ध होने पर कम वसा और वसा रहित विकल्प शामिल करें।",
+    dietResponseFormat: "निम्नलिखित प्रारूप में प्रति पंक्ति एक उत्पाद के साथ उत्तर दें: उत्पाद का नाम - पोषण विवरण",
+    dietExample: "उदाहरण:\nखीरा 🥒 - प्रति 100 ग्राम केवल 16 कैलोरी, उच्च पानी की मात्रा\nपालक 🥬 - प्रति 100 ग्राम 23 कैलोरी, आयरन और फाइबर से भरपूर"
   },
   nl: {
     title: "Gepersonaliseerde Aanbevelingen",
@@ -833,8 +1392,23 @@ const recommendationsTranslations = {
     noListsModalTitle: "Geen Lijsten Beschikbaar",
     noListsModalMessage: "U moet eerst boodschappenlijsten maken zodat de AI uw winkelgeschiedenis kan analyseren en producten kan aanbevelen op basis van uw patronen.",
     goCreateList: "Ga een Lijst Maken",
+    // Tab labels
+    historyTab: "Geschiedenis",
+    seasonalTab: "Seizoensgebonden",
+    dietTab: "Dieet",
+    // Tab subtitles
+    historySubtitle: "Gebaseerd op uw winkelpatronen",
+    seasonalSubtitle: "Ideale producten voor huidige maand",
+    dietSubtitle: "Calorieanne producten",
+    // Stats labels
+    currentMonth: "Huidige maand",
+    day: "Dag",
+    diet: "Dieet",
+    low: "Laag",
+    calories: "Calorieën",
     // Translation variables for RecommendationService
     frequentProduct: "Frequent product ({times} keer)",
+    idealFor: "Ideaal voor",
     defaultItems: {
       milk: "Melk",
       bread: "Brood",
@@ -856,7 +1430,36 @@ const recommendationsTranslations = {
       hotSeason: "Warme seizoen",
       backToSchool: "Terug naar school",
       weekend: "Weekend"
-    }
+    },
+    // AI Prompts for RecommendationService
+    aiAssistantIntro: "U bent een intelligente winkelassistent. ANTWOORD ALLEEN IN HET NEDERLANDS. BELANGRIJK: Elk product MOET ALTIJD een geschikte emoji bevatten zonder uitzondering.",
+    userPreviousPurchases: "De gebruiker heeft eerder gekocht: {items}.",
+    generateRecommendations: "Genereer {limit} VERSCHILLENDE productaanbevelingen voor een boodschappenlijst.",
+    includeVariety: "Voeg variatie toe: zuivel, vlees, fruit, groenten, schoonmaak, dranken, enz.",
+    responseFormat: "Antwoord ALLEEN met een door komma's gescheiden lijst, zonder nummering of uitleg.",
+    exampleFormat: "Voorbeeld: Melk 🥛, Brood 🍞, Appels 🍎",
+    // Seasonal prompts
+    seasonalExpertIntro: "U bent een expert in seizoensproducten en seizoensvoeding.",
+    currentDateContext: "We zijn in {month} {year}, dag {day}.",
+    generateSeasonalProducts: "Genereer {limit} voedingsmiddelen die ideaal zijn voor dit seizoen en overweeg:",
+    seasonalFruits: "1) Seizoensgebonden fruit en groenten van {month}",
+    typicalClimate: "2) Typisch klimaat van {month}",
+    festivalsAndTraditions: "3) Festivals en tradities van {month}",
+    culinaryPreparations: "4) Typische culinaire bereidingen van deze tijd",
+    excludeAlreadyShown: "BELANGRIJK: Neem deze reeds getoonde producten NIET op: {excludeItems}.",
+    seasonalResponseFormat: "Antwoord ALLEEN met een lijst van producten gescheiden door komma's, zonder nummering of uitleg",
+    seasonalExample: "Voorbeeld: Kastanjes, Pompoen, Paddenstoelen, Druiven, Appels, Granaatappels en altijd met een emoji.",
+    monthNames: ['', 'januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
+    // Diet prompts
+    dietExpertIntro: "U bent een expert in voeding en gezond eten. ANTWOORD ALLEEN IN HET NEDERLANDS. BELANGRIJK: Elk product MOET ALTIJD een geschikte emoji bevatten zonder uitzondering.",
+    generateDietProducts: "Genereer {limit} VERSCHILLENDE calorieanne, gezonde dieetproducten voor een boodschappenlijst.",
+    includeNutritionalInfo: "Voeg voedingsinformatie (calorieën per 100g, proteïne, vezelgehalte) toe in de reden voor elk product.",
+    lowCalorieOptions: "Focus op calorieanne voedingsmiddelen (onder de 50 calorieën per 100g wanneer mogelijk).",
+    healthyProtein: "Voeg magere eiwitten en plantaardige eiwitbronnen toe.",
+    fiberRichFoods: "Voeg vezelrijke voedingsmiddelen toe die helpen bij vertering en verzadiging.",
+    lowFatOptions: "Voeg vetarme en vetvrije opties toe wanneer beschikbaar.",
+    dietResponseFormat: "Antwoord met één product per regel in het formaat: Productnaam - voedingsbeschrijving",
+    dietExample: "Voorbeeld:\nKomkommer 🥒 - Slechts 16 calorieën per 100g, hoog watergehalte\nSpinaze 🥬 - 23 calorieën per 100g, rijk aan ijzer en vezels"
   }
 }
 
