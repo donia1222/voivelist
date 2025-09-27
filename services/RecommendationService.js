@@ -459,7 +459,7 @@ class RecommendationService {
       }
 
       prompt += (t.seasonalResponseFormat || fallback.seasonalResponseFormat) + " "
-      prompt += (t.seasonalExample || fallback.seasonalExample)
+      prompt += (t.seasonalExampleWithDescription || fallback.seasonalExampleWithDescription)
 
       console.log("📤 Enviando prompt estacional a GPT-4.1:", prompt)
 
@@ -474,17 +474,29 @@ class RecommendationService {
       const aiResponse = response.data.choices[0].message.content.trim()
       console.log("📥 Respuesta IA estacional:", aiResponse)
 
-      // Procesar respuesta de IA
-      const aiItems = aiResponse.split(',').map(item => item.trim()).filter(item => item.length > 0)
+      // Procesar respuesta de IA - formato: "Producto - descripción específica"
+      const lines = aiResponse.split('\n').filter(line => line.trim().length > 0)
 
-      // Convertir a formato de recomendaciones
-      const recommendations = aiItems.slice(0, limit).map(item => ({
-        item: item,
-        reason: `Ideal para ${currentMonth} - producto de temporada`,
-        confidence: 0.9,
-        type: 'ai_seasonal',
-        priority: 'high'
-      }))
+      const recommendations = lines.slice(0, limit).map(line => {
+        // Limpiar formato de lista numerada o viñetas
+        const cleanLine = line.replace(/^\d+\.\s*/, '').replace(/^[-*]\s*/, '').trim()
+
+        let item, reason
+        if (cleanLine.includes(' - ')) {
+          [item, reason] = cleanLine.split(' - ', 2)
+        } else {
+          item = cleanLine
+          reason = ""
+        }
+
+        return {
+          item: this.ensureItemHasEmoji(item.trim()),
+          reason: reason.trim(),
+          confidence: 0.9,
+          type: 'ai_seasonal',
+          priority: 'high'
+        }
+      })
 
       console.log("🤖 Recomendaciones estacionales IA:", recommendations.length, "productos generados")
       return recommendations
@@ -775,6 +787,102 @@ class RecommendationService {
     }
 
     return '🛒' // Icono por defecto
+  }
+
+  /**
+   * Asegura que el producto tenga un emoji apropiado
+   */
+  static ensureItemHasEmoji(item) {
+    // Regex para detectar emojis Unicode
+    const emojiRegex = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u
+
+    // Si ya tiene emoji, devolverlo tal como está
+    if (emojiRegex.test(item)) {
+      return item
+    }
+
+    // Si no tiene emoji, añadir uno basado en palabras clave
+    const lowerItem = item.toLowerCase()
+
+    // Mapeo ampliado de palabras clave a emojis
+    const emojiMap = {
+      // Frutas
+      'manzana': '🍎', 'apple': '🍎', 'pomme': '🍎', 'apfel': '🍎', 'mela': '🍎', 'maçã': '🍎',
+      'naranja': '🍊', 'orange': '🍊', 'arancia': '🍊', 'laranja': '🍊',
+      'plátano': '🍌', 'banana': '🍌', 'banane': '🍌', 'banane': '🍌',
+      'limón': '🍋', 'lemon': '🍋', 'citron': '🍋', 'zitrone': '🍋', 'limone': '🍋', 'limão': '🍋',
+      'uva': '🍇', 'grape': '🍇', 'raisin': '🍇', 'traube': '🍇', 'uva': '🍇',
+      'fresas': '🍓', 'strawberr': '🍓', 'fraise': '🍓', 'erdbeere': '🍓', 'fragola': '🍓', 'morango': '🍓',
+      'pera': '🍐', 'pear': '🍐', 'poire': '🍐', 'birne': '🍐', 'pera': '🍐',
+      'sandía': '🍉', 'watermelon': '🍉', 'pastèque': '🍉', 'wassermelone': '🍉', 'anguria': '🍉', 'melancia': '🍉',
+      'melón': '🍈', 'melon': '🍈', 'melone': '🍈',
+
+      // Verduras
+      'tomate': '🍅', 'tomato': '🍅', 'pomodoro': '🍅',
+      'cebolla': '🧅', 'onion': '🧅', 'oignon': '🧅', 'zwiebel': '🧅', 'cipolla': '🧅', 'cebola': '🧅',
+      'ajo': '🧄', 'garlic': '🧄', 'ail': '🧄', 'knoblauch': '🧄', 'aglio': '🧄', 'alho': '🧄',
+      'zanahoria': '🥕', 'carrot': '🥕', 'carotte': '🥕', 'karotte': '🥕', 'carota': '🥕', 'cenoura': '🥕',
+      'papa': '🥔', 'potato': '🥔', 'pomme de terre': '🥔', 'kartoffel': '🥔', 'patata': '🥔', 'batata': '🥔',
+      'brócoli': '🥦', 'broccoli': '🥦', 'brocoli': '🥦',
+      'lechuga': '🥬', 'lettuce': '🥬', 'laitue': '🥬', 'salat': '🥬', 'lattuga': '🥬', 'alface': '🥬',
+      'pepino': '🥒', 'cucumber': '🥒', 'concombre': '🥒', 'gurke': '🥒', 'cetriolo': '🥒', 'pepino': '🥒',
+      'calabaza': '🎃', 'pumpkin': '🎃', 'citrouille': '🎃', 'kürbis': '🎃', 'zucca': '🎃', 'abóbora': '🎃',
+      'calabacín': '🥒', 'zucchini': '🥒', 'courgette': '🥒', 'zucchine': '🥒',
+      'berenjena': '🍆', 'eggplant': '🍆', 'aubergine': '🍆', 'melanzana': '🍆', 'berinjela': '🍆',
+      'pimiento': '🌶️', 'pepper': '🌶️', 'poivron': '🌶️', 'paprika': '🌶️', 'peperone': '🌶️', 'pimentão': '🌶️',
+      'setas': '🍄', 'mushroom': '🍄', 'champignon': '🍄', 'pilz': '🍄', 'fungo': '🍄', 'cogumelo': '🍄',
+      'espinaca': '🥬', 'spinach': '🥬', 'épinard': '🥬', 'spinat': '🥬', 'spinaci': '🥬', 'espinafre': '🥬',
+
+      // Lácteos
+      'leche': '🥛', 'milk': '🥛', 'lait': '🥛', 'milch': '🥛', 'latte': '🥛', 'leite': '🥛',
+      'queso': '🧀', 'cheese': '🧀', 'fromage': '🧀', 'käse': '🧀', 'formaggio': '🧀', 'queijo': '🧀',
+      'yogur': '🥛', 'yogurt': '🥛', 'yaourt': '🥛', 'joghurt': '🥛', 'yogurt': '🥛', 'iogurte': '🥛',
+      'mantequilla': '🧈', 'butter': '🧈', 'beurre': '🧈', 'butter': '🧈', 'burro': '🧈', 'manteiga': '🧈',
+
+      // Carnes
+      'pollo': '🍗', 'chicken': '🍗', 'poulet': '🍗', 'hähnchen': '🍗', 'pollo': '🍗', 'frango': '🍗',
+      'carne': '🥩', 'meat': '🥩', 'viande': '🥩', 'fleisch': '🥩', 'carne': '🥩',
+      'pescado': '🐟', 'fish': '🐟', 'poisson': '🐟', 'fisch': '🐟', 'pesce': '🐟', 'peixe': '🐟',
+      'cerdo': '🐷', 'pork': '🐷', 'porc': '🐷', 'schwein': '🐷', 'maiale': '🐷', 'porco': '🐷',
+      'jamón': '🥓', 'ham': '🥓', 'jambon': '🥓', 'schinken': '🥓', 'prosciutto': '🥓', 'presunto': '🥓',
+
+      // Huevos
+      'huevo': '🥚', 'egg': '🥚', 'oeuf': '🥚', 'ei': '🥚', 'uovo': '🥚', 'ovo': '🥚',
+
+      // Panadería
+      'pan': '🍞', 'bread': '🍞', 'pain': '🍞', 'brot': '🍞', 'pane': '🍞', 'pão': '🍞',
+      'galleta': '🍪', 'cookie': '🍪', 'biscuit': '🍪', 'keks': '🍪', 'biscotto': '🍪', 'biscoito': '🍪',
+      'pastel': '🎂', 'cake': '🎂', 'gâteau': '🎂', 'kuchen': '🎂', 'torta': '🎂', 'bolo': '🎂',
+
+      // Bebidas
+      'agua': '💧', 'water': '💧', 'eau': '💧', 'wasser': '💧', 'acqua': '💧', 'água': '💧',
+      'café': '☕', 'coffee': '☕', 'café': '☕', 'kaffee': '☕', 'caffè': '☕',
+      'té': '🍵', 'tea': '🍵', 'thé': '🍵', 'tee': '🍵', 'tè': '🍵', 'chá': '🍵',
+      'jugo': '🧃', 'juice': '🧃', 'jus': '🧃', 'saft': '🧃', 'succo': '🧃', 'suco': '🧃',
+      'cerveza': '🍺', 'beer': '🍺', 'bière': '🍺', 'bier': '🍺', 'birra': '🍺', 'cerveja': '🍺',
+      'vino': '🍷', 'wine': '🍷', 'vin': '🍷', 'wein': '🍷', 'vino': '🍷', 'vinho': '🍷',
+
+      // Condimentos y granos
+      'arroz': '🍚', 'rice': '🍚', 'riz': '🍚', 'reis': '🍚', 'riso': '🍚', 'arroz': '🍚',
+      'pasta': '🍝', 'pasta': '🍝', 'pâtes': '🍝', 'nudeln': '🍝', 'massa': '🍝',
+      'aceite': '🫒', 'oil': '🫒', 'huile': '🫒', 'öl': '🫒', 'olio': '🫒', 'óleo': '🫒',
+      'sal': '🧂', 'salt': '🧂', 'sel': '🧂', 'salz': '🧂', 'sale': '🧂',
+      'azúcar': '🧂', 'sugar': '🧂', 'sucre': '🧂', 'zucker': '🧂', 'zucchero': '🧂', 'açúcar': '🧂',
+
+      // Frutos secos
+      'nuez': '🥜', 'nut': '🥜', 'noix': '🥜', 'nuss': '🥜', 'noce': '🥜', 'noz': '🥜',
+      'castaña': '🌰', 'chestnut': '🌰', 'châtaigne': '🌰', 'kastanie': '🌰', 'castagna': '🌰', 'castanha': '🌰'
+    }
+
+    // Buscar coincidencia en palabras clave
+    for (const [keyword, emoji] of Object.entries(emojiMap)) {
+      if (lowerItem.includes(keyword)) {
+        return `${item} ${emoji}`
+      }
+    }
+
+    // Si no se encuentra coincidencia específica, añadir emoji genérico
+    return `${item} 🛒`
   }
 
   /**

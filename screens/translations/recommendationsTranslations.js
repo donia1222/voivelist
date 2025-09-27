@@ -66,7 +66,7 @@ const recommendationsTranslations = {
     exampleFormat: "Example: Milk 🥛, Bread 🍞, Eggs 🥚, Cheese 🧀, Tomatoes 🍅, Oil 🫒",
     recommendedFor: "Recommended for",
     // Seasonal prompts
-    seasonalExpertIntro: "You are an expert in seasonal products and seasonal nutrition.",
+    seasonalExpertIntro: "You are an expert in seasonal products and seasonal nutrition. RESPOND ONLY IN ENGLISH. IMPORTANT: Every product MUST ALWAYS include an appropriate emoji without exception.",
     currentDateContext: "We are in {month} of {year}, day {day}.",
     generateSeasonalProducts: "Generate {limit} food products ideal for this season that consider:",
     seasonalFruits: "1) Seasonal fruits and vegetables of {month}",
@@ -74,8 +74,8 @@ const recommendationsTranslations = {
     festivalsAndTraditions: "3) Festivals and traditions of {month}",
     culinaryPreparations: "4) Typical culinary preparations of this time",
     excludeAlreadyShown: "IMPORTANT: DO NOT include these products that are already shown: {excludeItems}.",
-    seasonalResponseFormat: "Respond ONLY with a list of products separated by commas, without numbering or explanations",
-    seasonalExample: "Example: Chestnuts, Pumpkin, Mushrooms, Grapes, Apples, Pomegranates and always with an emoji.",
+    seasonalResponseFormat: "Respond with one product per line in format: Product Name - specific seasonal description",
+    seasonalExampleWithDescription: "Example:\nOranges 🍊 - rich in vitamin C ideal for winter\nPumpkin 🎃 - rich in fiber and beta-carotenes from autumn\nMushrooms 🍄 - fresh seasonal with plant protein",
     // Diet prompts
     dietExpertIntro: "You are an expert in nutrition and healthy eating. RESPOND ONLY IN ENGLISH. IMPORTANT: Every product MUST ALWAYS include an appropriate emoji without exception.",
     generateDietProducts: "Generate {limit} DIFFERENT low-calorie, healthy diet products for a shopping list.",
@@ -188,7 +188,7 @@ const recommendationsTranslations = {
     exampleFormat: "Ejemplo: Leche 🥛, Pan 🍞, Huevos 🥚, Queso 🧀, Tomates 🍅, Aceite 🫒",
     recommendedFor: "Recomendado para",
     // Seasonal prompts
-    seasonalExpertIntro: "Eres un experto en productos de temporada y alimentación estacional.",
+    seasonalExpertIntro: "Eres un experto en productos de temporada y alimentación estacional. RESPONDE SOLO EN ESPAÑOL. IMPORTANTE: Cada producto DEBE incluir SIEMPRE un emoji apropiado sin excepción.",
     currentDateContext: "Estamos en {month} de {year}, día {day}.",
     generateSeasonalProducts: "Genera {limit} productos alimentarios ideales para esta temporada que consideren:",
     seasonalFruits: "1) Frutas y verduras de temporada de {month}",
@@ -196,8 +196,8 @@ const recommendationsTranslations = {
     festivalsAndTraditions: "3) Festividades y tradiciones de {month}",
     culinaryPreparations: "4) Preparaciones culinarias típicas de esta época",
     excludeAlreadyShown: "IMPORTANTE: NO incluyas estos productos que ya están mostrados: {excludeItems}.",
-    seasonalResponseFormat: "Responde SOLO con una lista de productos separados por comas, sin numeración ni explicaciones",
-    seasonalExample: "Ejemplo: Castañas, Calabaza, Setas, Uvas, Manzanas, Granadas y siempre con un emoticono.",
+    seasonalResponseFormat: "Responde con un producto por línea en formato: Nombre del Producto - descripción específica de temporada",
+    seasonalExampleWithDescription: "Ejemplo:\nNaranjas 🍊 - ricas en vitamina C ideales para el invierno\nCalabaza 🎃 - rica en fibra y betacarotenos de otoño\nSetas 🍄 - frescas de temporada con proteína vegetal",
     // Diet prompts
     dietExpertIntro: "Eres un experto en nutrición y alimentación saludable. RESPONDE SOLO EN ESPAÑOL. IMPORTANTE: Cada producto DEBE incluir SIEMPRE un emoji apropiado sin excepción.",
     generateDietProducts: "Genera {limit} productos DIFERENTES de dieta bajos en calorías y saludables para una lista de compras.",
@@ -335,7 +335,7 @@ const recommendationsTranslations = {
     exampleFormat: "Beispiel: Milch 🥛, Brot 🍞, Äpfel 🍎",
     recommendedFor: "Empfohlen für",
     // Seasonal prompts
-    seasonalExpertIntro: "Sie sind ein Experte für saisonale Produkte und saisonale Ernährung.",
+    seasonalExpertIntro: "Sie sind ein Experte für saisonale Produkte und saisonale Ernährung. ANTWORTEN SIE NUR AUF DEUTSCH. WICHTIG: Jedes Produkt MUSS IMMER ein entsprechendes Emoji enthalten, ohne Ausnahme.",
     currentDateContext: "Wir sind im {month} {year}, Tag {day}.",
     generateSeasonalProducts: "Generieren Sie {limit} Lebensmittel, die ideal für diese Saison sind und berücksichtigen:",
     seasonalFruits: "1) Saisonale Früchte und Gemüse vom {month}",
@@ -343,8 +343,8 @@ const recommendationsTranslations = {
     festivalsAndTraditions: "3) Feste und Traditionen vom {month}",
     culinaryPreparations: "4) Typische kulinarische Zubereitungen dieser Zeit",
     excludeAlreadyShown: "WICHTIG: Schließen Sie diese bereits gezeigten Produkte NICHT ein: {excludeItems}.",
-    seasonalResponseFormat: "Antworten Sie NUR mit einer Liste von Produkten getrennt durch Kommas, ohne Nummerierung oder Erklärungen",
-    seasonalExample: "Beispiel: Kastanien, Kürbis, Pilze, Trauben, Äpfel, Granatäpfel und immer mit einem Emoji.",
+    seasonalResponseFormat: "Antworten Sie mit einem Produkt pro Zeile im Format: Produktname - spezifische saisonale Beschreibung",
+    seasonalExampleWithDescription: "Beispiel:\nOrangen 🍊 - reich an Vitamin C ideal für den Winter\nKürbis 🎃 - reich an Ballaststoffen und Beta-Carotin aus dem Herbst\nPilze 🍄 - frisch saisonal mit pflanzlichem Protein",
     monthNames: ['', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
     // Diet prompts
     dietExpertIntro: "Sie sind ein Experte für Ernährung und gesunde Ernährung. ANTWORTEN SIE NUR AUF DEUTSCH. WICHTIG: Jedes Produkt MUSS IMMER ein entsprechendes Emoji enthalten, ohne Ausnahme.",
@@ -448,7 +448,7 @@ const recommendationsTranslations = {
     responseFormat: "Rispondi SOLO con un elenco separato da virgole, senza numerazione o spiegazioni.",
     exampleFormat: "Esempio: Latte 🥛, Pane 🍞, Mele 🍎",
     // Seasonal prompts
-    seasonalExpertIntro: "Sei un esperto di prodotti stagionali e alimentazione stagionale.",
+    seasonalExpertIntro: "Sei un esperto di prodotti stagionali e alimentazione stagionale. RISPONDI SOLO IN ITALIANO. IMPORTANTE: Ogni prodotto DEVE SEMPRE includere un'emoji appropriata senza eccezione.",
     currentDateContext: "Siamo in {month} {year}, giorno {day}.",
     generateSeasonalProducts: "Genera {limit} prodotti alimentari ideali per questa stagione che considerano:",
     seasonalFruits: "1) Frutta e verdura di stagione di {month}",
@@ -456,8 +456,8 @@ const recommendationsTranslations = {
     festivalsAndTraditions: "3) Festival e tradizioni di {month}",
     culinaryPreparations: "4) Preparazioni culinarie tipiche di questo periodo",
     excludeAlreadyShown: "IMPORTANTE: NON includere questi prodotti già mostrati: {excludeItems}.",
-    seasonalResponseFormat: "Rispondi SOLO con un elenco di prodotti separati da virgole, senza numerazione o spiegazioni",
-    seasonalExample: "Esempio: Castagne, Zucca, Funghi, Uva, Mele, Melograni e sempre con un'emoji.",
+    seasonalResponseFormat: "Rispondi con un prodotto per riga nel formato: Nome Prodotto - descrizione stagionale specifica",
+    seasonalExampleWithDescription: "Esempio:\nArance 🍊 - ricche di vitamina C ideali per l'inverno\nZucca 🎃 - ricca di fibre e beta-caroteni autunnali\nFunghi 🍄 - freschi di stagione con proteine vegetali",
     monthNames: ['', 'gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'],
     // Diet prompts
     dietExpertIntro: "Sei un esperto di nutrizione e alimentazione sana. RISPONDI SOLO IN ITALIANO. IMPORTANTE: Ogni prodotto DEVE SEMPRE includere un'emoji appropriata senza eccezione.",
@@ -561,7 +561,7 @@ const recommendationsTranslations = {
     responseFormat: "Répondez UNIQUEMENT avec une liste séparée par des virgules, sans numérotation ni explications.",
     exampleFormat: "Exemple: Lait 🥛, Pain 🍞, Pommes 🍎",
     // Seasonal prompts
-    seasonalExpertIntro: "Vous êtes un expert en produits saisonniers et alimentation saisonnière.",
+    seasonalExpertIntro: "Vous êtes un expert en produits saisonniers et alimentation saisonnière. RÉPONDEZ UNIQUEMENT EN FRANÇAIS. IMPORTANT: Chaque produit DOIT TOUJOURS inclure un emoji approprié sans exception.",
     currentDateContext: "Nous sommes en {month} {year}, jour {day}.",
     generateSeasonalProducts: "Générez {limit} produits alimentaires idéaux pour cette saison qui considèrent:",
     seasonalFruits: "1) Fruits et légumes de saison de {month}",
@@ -569,8 +569,8 @@ const recommendationsTranslations = {
     festivalsAndTraditions: "3) Festivals et traditions de {month}",
     culinaryPreparations: "4) Préparations culinaires typiques de cette période",
     excludeAlreadyShown: "IMPORTANT: N'incluez PAS ces produits déjà montrés: {excludeItems}.",
-    seasonalResponseFormat: "Répondez UNIQUEMENT avec une liste de produits séparés par des virgules, sans numérotation ni explications",
-    seasonalExample: "Exemple: Châtaignes, Citrouille, Champignons, Raisins, Pommes, Grenades et toujours avec un emoji.",
+    seasonalResponseFormat: "Répondez avec un produit par ligne au format: Nom du Produit - description saisonnière spécifique",
+    seasonalExampleWithDescription: "Exemple:\nOranges 🍊 - riches en vitamine C idéales pour l'hiver\nCitrouille 🎃 - riche en fibres et bêta-carotènes d'automne\nChampignons 🍄 - frais de saison avec protéine végétale",
     monthNames: ['', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
     // Diet prompts
     dietExpertIntro: "Vous êtes un expert en nutrition et alimentation saine. RÉPONDEZ UNIQUEMENT EN FRANÇAIS. IMPORTANT: Chaque produit DOIT TOUJOURS inclure un emoji approprié sans exception.",
@@ -673,7 +673,7 @@ const recommendationsTranslations = {
     responseFormat: "Responda APENAS com uma lista separada por vírgulas, sem numeração ou explicações.",
     exampleFormat: "Exemplo: Leite 🥛, Pão 🍞, Maçãs 🍎",
     // Seasonal prompts
-    seasonalExpertIntro: "Você é um especialista em produtos sazonais e alimentação sazonal.",
+    seasonalExpertIntro: "Você é um especialista em produtos sazonais e alimentação sazonal. RESPONDA APENAS EM PORTUGUÊS. IMPORTANTE: Cada produto DEVE incluir SEMPRE um emoji apropriado sem exceção.",
     currentDateContext: "Estamos em {month} de {year}, dia {day}.",
     generateSeasonalProducts: "Gere {limit} produtos alimentares ideais para esta estação que considerem:",
     seasonalFruits: "1) Frutas e vegetais da estação de {month}",
@@ -681,8 +681,8 @@ const recommendationsTranslations = {
     festivalsAndTraditions: "3) Festivais e tradições de {month}",
     culinaryPreparations: "4) Preparações culinárias típicas desta época",
     excludeAlreadyShown: "IMPORTANTE: NÃO inclua estes produtos já mostrados: {excludeItems}.",
-    seasonalResponseFormat: "Responda APENAS com uma lista de produtos separados por vírgulas, sem numeração ou explicações",
-    seasonalExample: "Exemplo: Castanhas, Abóbora, Cogumelos, Uvas, Maçãs, Romãs e sempre com um emoji.",
+    seasonalResponseFormat: "Responda com um produto por linha no formato: Nome do Produto - descrição sazonal específica",
+    seasonalExampleWithDescription: "Exemplo:\nLaranjas 🍊 - ricas em vitamina C ideais para o inverno\nAbóbora 🎃 - rica em fibras e beta-carotenos do outono\nCogumelos 🍄 - frescos da estação com proteína vegetal",
     monthNames: ['', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
     // Diet prompts
     dietExpertIntro: "Você é um especialista em nutrição e alimentação saudável. RESPONDA APENAS EM PORTUGUÊS. IMPORTANTE: Cada produto DEVE incluir SEMPRE um emoji apropriado sem exceção.",
