@@ -37,6 +37,7 @@ import CalendarPlannerScreen from "../../screens/CalendarPlannerScreen"
 import PriceCalculatorScreen from "../../screens/PriceCalculatorScreen"
 import ContactScreen from "../../screens/ContactScreen"
 import HandwrittenListScreen from "../../screens/HandwrittenListScreen"
+import RecommendationsScreen from "../../screens/RecommendationsScreen"
 
 const Stack = createNativeStackNavigator()
 
@@ -861,8 +862,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               initialParams={{
                 onNavigateToSubscribe: () => setActiveTab("Subscribe"),
                 onNavigateToHistory: () => setActiveTab("History"),
-                onNavigateToHandwrittenList: () => setActiveTab("HandwrittenList")
+                onNavigateToHandwrittenList: () => setActiveTab("HandwrittenList"),
+                onNavigateToRecommendations: () => setActiveTab("Recommendations")
               }}
+            />
+            <Stack.Screen
+              name="Recommendations"
+              component={RecommendationsScreen}
             />
           </Stack.Navigator>
         )
@@ -921,6 +927,15 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       onPress: () => {
         setMenuModalVisible(false)
         setActiveTab("HandwrittenList")
+      }
+    },
+    {
+      label: "Recomendaciones",
+      icon: "bulb",
+      color: "#8B5CF6",
+      onPress: () => {
+        setMenuModalVisible(false)
+        setActiveTab("Recommendations")
       }
     },
     ...(isSubscribed
@@ -1046,12 +1061,18 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             />
           </Stack.Navigator>
         )
+      case "Recommendations":
+        return (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="RecommendationsScreen" component={RecommendationsScreen} />
+          </Stack.Navigator>
+        )
       default:
         return null
     }
   }
 
-  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact", "HandwrittenList"].includes(activeTab)
+  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact", "HandwrittenList", "Recommendations"].includes(activeTab)
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -1086,7 +1107,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                               activeTab === "Subscription" ? "#29863220" :
                               activeTab === "Information" ? "#5856d620" :
                               activeTab === "Contact" ? "#ff950020" :
-                              activeTab === "PriceCalculator" ? "#dc262620" : "#4a6bff20",
+                              activeTab === "PriceCalculator" ? "#dc262620" :
+                              "#4a6bff20",
               justifyContent: "center",
               alignItems: "center",
               marginRight: isSmallIPhone ? 8 : 12,
@@ -1189,12 +1211,14 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                       activeTab === "Subscription" ? "star" :
                       activeTab === "Information" ? "information-circle-outline" :
                       activeTab === "Contact" ? "mail-outline" :
-                      activeTab === "HandwrittenList" ? "pencil" : "storefront"}
+                      activeTab === "HandwrittenList" ? "pencil" :
+                      activeTab === "Recommendations" ? "bulb" : "storefront"}
                 size={isSmallIPhone ? 20 : 24}
                 color={activeTab === "Subscribe" ? "#33b850ff" :
                        activeTab === "Subscription" ? "#33b850ff" :
                        activeTab === "Information" ? "#5856d6" :
-                       activeTab === "Contact" ? "#ff9500" : "#4a6bff"}
+                       activeTab === "Contact" ? "#ff9500" :
+                       activeTab === "Recommendations" ? "#8B5CF6" : "#4a6bff"}
               />
             )}
           </View>
@@ -1218,6 +1242,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
              activeTab === "Contact" ? currentTranslations.contactUs :
              activeTab === "PriceCalculator" ? (currentTranslations.priceCalculator || "Price Calculator") :
              activeTab === "HandwrittenList" ? (currentTranslations.manualList || "Manual List") :
+             activeTab === "Recommendations" ? "Recomendaciones" :
              "BuyVoice"}
           </Text>
         </View>

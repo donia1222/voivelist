@@ -45,6 +45,7 @@ import {
   voiceInfoTexts
 } from "./translations/homeScreenTranslations"
 import homeAlerts from "./translations/homeAlerts"
+import recommendationsTranslations from "./translations/recommendationsTranslations"
 import Sound from "react-native-sound"
 import DeviceService from "../services/DeviceService"
 import WidgetService from "../services/WidgetService"
@@ -373,6 +374,7 @@ const HomeScreen = ({ navigation }) => {
   const currentLabels = texts[deviceLanguage] || texts["en"]
   const voiceTexts = voiceInfoTexts[deviceLanguage] || voiceInfoTexts["en"]
   const alertTexts = homeAlerts[deviceLanguage] || homeAlerts["en"]
+  const recT = recommendationsTranslations[deviceLanguage] || recommendationsTranslations["en"]
   const [isSubscribed, setIsSubscribed] = useState(null)
   const [pressCount, setPressCount] = useState(0)
   const [voiceLimitModalVisible, setVoiceLimitModalVisible] = useState(false)
@@ -417,6 +419,7 @@ const HomeScreen = ({ navigation }) => {
   const [settingsModalVisible, setSettingsModalVisible] = useState(false)
   const [showRateButton, setShowRateButton] = useState(false)
   const rateTexts = rateAppTexts[deviceLanguage] || rateAppTexts["en"]
+
 // screenWidth y screenHeight ya declarados arriba
 
 // Determinar si es tablet o teléfono ya movido a estilos
@@ -1340,6 +1343,22 @@ const HomeScreen = ({ navigation }) => {
     }
   }
 
+  // Función para agregar items recomendados
+  const handleAddRecommendedItem = async (item) => {
+    try {
+      const newList = [...shoppingList, item]
+      setShoppingList(newList)
+      await saveShoppingList(newList)
+
+      // Vibración háptica
+      triggerHaptic()
+
+      console.log(`✅ Item recomendado agregado: ${item}`)
+    } catch (error) {
+      console.error("Error adding recommended item:", error)
+    }
+  }
+
   const generateGenericListName = () => {
     const existingNumbers = history
       .map((item) => {
@@ -1714,9 +1733,10 @@ const HomeScreen = ({ navigation }) => {
 
      
 
+
             {/* Clean Hero Section - Sin círculo superior */}
             <View style={modernStyles.heroSection}>
-  
+
               {/* Hero Subtitle */}
              <Text style={modernStyles.heroTitle}>
                 {currentLabels.heroSubtitle}
@@ -1738,6 +1758,11 @@ const HomeScreen = ({ navigation }) => {
                   <Ionicons name="heart" size={isSmallIPhone ? 18 : 20} color="#ff00909c" style={modernStyles.featureIcon} />
                   <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>{currentLabels.superEasy}</Text>
                 </View>
+              </View>
+
+              {/* Botón de Recomendaciones - NUEVO */}
+           
+              <View style={modernStyles.featuresContainer}>
               </View>
                                     {isContentVisible && (
                                
