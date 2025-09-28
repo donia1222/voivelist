@@ -534,8 +534,6 @@ const RecommendationsScreen = ({ navigation }) => {
           return filteredRecs
         })
       }
-
-      Alert.alert('✅', `${selectedRecommendation.item} agregado a tu lista`)
     } catch (error) {
       console.error('Error adding to list:', error)
       Alert.alert(t.error || fallback.error, t.couldNotAddProduct || fallback.couldNotAddProduct)
