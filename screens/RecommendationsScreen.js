@@ -12,7 +12,8 @@ import {
   Easing,
   ActivityIndicator,
   Platform,
-  Dimensions
+  Dimensions,
+  AppState
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -21,6 +22,11 @@ import { useHaptic } from '../HapticContext'
 import RecommendationService from '../services/RecommendationService'
 import * as RNLocalize from 'react-native-localize'
 import recommendationsTranslations from './translations/recommendationsTranslations'
+import seasonalRecommendationsTranslations from './translations/seasonalRecommendationsTranslations'
+import { useFocusEffect } from '@react-navigation/native'
+import axios from 'axios'
+
+const API_KEY_ANALIZE = process.env.API_KEY_ANALIZE
 
 const { width: screenWidth } = Dimensions.get('window')
 const isSmallIPhone = Platform.OS === 'ios' && screenWidth <= 375
@@ -43,53 +49,88 @@ const RecommendationsScreen = ({ navigation }) => {
   const [stats, setStats] = useState(null)
   const [hasHistory, setHasHistory] = useState(false)
   const [hasCurrentList, setHasCurrentList] = useState(false)
-  // Tipo eliminado - solo historial
+
+  // Estados para pestañas
+  const [activeTab, setActiveTab] = useState('history') // 'history' o 'seasonal'
+  const [seasonalRecommendations, setSeasonalRecommendations] = useState([])
+  const [seasonalLoading, setSeasonalLoading] = useState(false)
 
   // Estados para auto-carga
-  const [displayedCount, setDisplayedCount] = useState(0) // Trackea cuántos de los 60 se han mostrado
+  const [displayedCount, setDisplayedCount] = useState(0) // Trackea cuántos se han mostrado
   const [isLoadingMore, setIsLoadingMore] = useState(false) // Loader para cargar más productos
-  const [canLoadMore, setCanLoadMore] = useState(true) // Si puede cargar más de los 60
+  const [canLoadMore, setCanLoadMore] = useState(true) // Si puede cargar más
 
   // Animaciones y referencias
   const fadeAnim = useRef(new Animated.Value(0)).current
   const slideAnim = useRef(new Animated.Value(30)).current
   const scrollViewRef = useRef(null)
+  const hasLoadedRef = useRef(false) // Flag para cargar solo una vez por sesión
 
   // Traducciones
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const t = recommendationsTranslations[deviceLanguage] || recommendationsTranslations.en
+  const tSeasonal = seasonalRecommendationsTranslations[deviceLanguage] || seasonalRecommendationsTranslations.en
   const fallback = recommendationsTranslations.en
 
   // Efectos
   useEffect(() => {
-    checkAndClearCacheOnNewSession()
-    loadRecommendations()
     loadStats()
     startAnimations()
   }, [])
 
-  // Detectar nueva sesión y limpiar cache
-  const checkAndClearCacheOnNewSession = async () => {
-    try {
-      const lastSession = await AsyncStorage.getItem('@last_recommendations_session')
-      const now = new Date().getTime()
-
-      // Si es la primera vez o pasaron más de 5 minutos desde la última sesión
-      if (!lastSession || (now - parseInt(lastSession)) > 5 * 60 * 1000) {
-        console.log('🆕 Nueva sesión detectada, limpiando cache de historial')
-        await AsyncStorage.removeItem('@all_recommendations_60')
+  // Recargar SOLO la primera vez que la pantalla recibe focus
+  useFocusEffect(
+    React.useCallback(() => {
+      if (hasLoadedRef.current) {
+        console.log('✅ Ya cargado en esta sesión - NO recargar')
+        return
       }
 
-      // Actualizar timestamp de esta sesión
-      await AsyncStorage.setItem('@last_recommendations_session', now.toString())
-    } catch (error) {
-      console.error('Error checking session:', error)
-    }
-  }
+      console.log('🔄 Primera vez en esta sesión - cargando ambas pestañas')
+      hasLoadedRef.current = true
+
+      const reloadData = async () => {
+        try {
+          // Cargar recomendaciones de historial
+          setLoading(true)
+          setDisplayedCount(12)
+          setCanLoadMore(false)
+          setIsLoadingMore(false)
+
+          const historyData = await AsyncStorage.getItem("@shopping_history")
+          const hasHistoryData = historyData && JSON.parse(historyData).length > 0
+          setHasHistory(hasHistoryData)
+
+          console.log("🤖 Generando 12 recomendaciones de historial con IA")
+          const all12 = await RecommendationService.getRecommendations(12, false)
+          console.log(`📥 Recibidas ${all12.length} recomendaciones de historial`)
+
+          setRecommendations(all12)
+          setDisplayedCount(all12.length)
+          setCanLoadMore(false)
+          setLoading(false)
+
+          // Cargar recomendaciones de temporada en paralelo
+          loadSeasonalRecommendations()
+        } catch (error) {
+          console.error('❌ Error generando recomendaciones:', error)
+          setRecommendations([])
+          setLoading(false)
+        }
+      }
+      reloadData()
+
+      // Cleanup: resetear el flag cuando el componente se desmonte completamente
+      return () => {
+        console.log('🧹 Componente desmontado - reseteando flag')
+        hasLoadedRef.current = false
+      }
+    }, [])
+  )
 
   // Funciones principales
   const loadMoreRecommendations = async () => {
-    if (isLoadingMore || !canLoadMore || displayedCount >= 60) return
+    if (isLoadingMore || !canLoadMore || displayedCount >= 24) return
 
     try {
       setIsLoadingMore(true)
@@ -109,8 +150,8 @@ const RecommendationsScreen = ({ navigation }) => {
         setRecommendations(prev => [...prev, ...nextBatch])
         setDisplayedCount(prev => prev + nextBatch.length)
 
-        // Si ya llegamos a 60, no se puede cargar más
-        if (displayedCount + nextBatch.length >= 60) {
+        // Si ya llegamos a 24, no se puede cargar más
+        if (displayedCount + nextBatch.length >= 24) {
           setCanLoadMore(false)
         }
       } else {
@@ -129,9 +170,9 @@ const RecommendationsScreen = ({ navigation }) => {
     try {
       setLoading(true)
 
-      // Reset estados de auto-carga al iniciar nueva carga
-      setDisplayedCount(6) // Los primeros 6
-      setCanLoadMore(true)
+      // Reset estados
+      setDisplayedCount(12)
+      setCanLoadMore(false)
       setIsLoadingMore(false)
 
       // Verificar si hay historial de compras
@@ -139,30 +180,113 @@ const RecommendationsScreen = ({ navigation }) => {
       const hasHistoryData = historyData && JSON.parse(historyData).length > 0
       setHasHistory(hasHistoryData)
 
-      // Verificar si ya hay 60 recomendaciones en cache
-      const cachedAll = await AsyncStorage.getItem("@all_recommendations_60")
-
-      let all60 = []
-
-      if (cachedAll) {
-        console.log("📦 Usando 60 recomendaciones del cache (misma sesión)")
-        all60 = JSON.parse(cachedAll)
-      } else {
-        console.log("🤖 Generando 60 recomendaciones nuevas con IA")
-        // Generar 60 recomendaciones con IA
-        all60 = await RecommendationService.getRecommendations(60, false)
-        // Guardar en cache
-        await AsyncStorage.setItem("@all_recommendations_60", JSON.stringify(all60))
-      }
-
-      // Mostrar solo las primeras 6
-      const first6 = all60.slice(0, 6)
-      setRecommendations(first6)
+      // SIEMPRE generar nuevas recomendaciones al entrar
+      console.log("🤖 Generando 12 recomendaciones nuevas con IA")
+      await generateRecommendationsProgressive()
+      setLoading(false)
 
     } catch (error) {
       console.error('Error loading recommendations:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Nueva función: Generar recomendaciones progresivamente
+  const generateRecommendationsProgressive = async () => {
+    try {
+      console.log("📤 Petición única: 12 recomendaciones")
+      const all12 = await RecommendationService.getRecommendations(12, false)
+
+      console.log(`📥 Recibidas ${all12.length} recomendaciones, mostrando INMEDIATAMENTE`)
+
+      // Mostrar TODOS los 12 de golpe
+      setRecommendations(all12)
+      setDisplayedCount(all12.length)
+      setLoading(false)
+
+      setCanLoadMore(false)
+
+    } catch (error) {
+      console.error("❌ Error generando recomendaciones:", error)
+      setRecommendations([])
+    }
+  }
+
+  const loadSeasonalRecommendations = async () => {
+    try {
+      setSeasonalLoading(true)
+
+      // Cargar país desde AsyncStorage
+      let savedCountry = await AsyncStorage.getItem("@country")
+      if (!savedCountry || savedCountry.trim() === '') {
+        const countryCode = RNLocalize.getCountry()
+        const countryNames = {
+          'ES': 'España', 'MX': 'México', 'US': 'Estados Unidos',
+          'AR': 'Argentina', 'CO': 'Colombia', 'CL': 'Chile',
+          'PE': 'Perú', 'VE': 'Venezuela', 'EC': 'Ecuador',
+          'BO': 'Bolivia', 'PY': 'Paraguay', 'UY': 'Uruguay',
+          'CR': 'Costa Rica', 'PA': 'Panamá', 'GT': 'Guatemala',
+          'HN': 'Honduras', 'SV': 'El Salvador', 'NI': 'Nicaragua',
+          'DO': 'República Dominicana', 'PR': 'Puerto Rico', 'CU': 'Cuba',
+          'FR': 'Francia', 'IT': 'Italia', 'DE': 'Alemania',
+          'GB': 'Reino Unido', 'PT': 'Portugal', 'BR': 'Brasil',
+          'CA': 'Canadá', 'JP': 'Japón', 'CN': 'China',
+          'IN': 'India', 'RU': 'Rusia', 'AU': 'Australia'
+        }
+        savedCountry = countryNames[countryCode] || countryCode || "tu zona"
+      }
+
+      console.log("🤖 Generando 12 recomendaciones de temporada con IA")
+      const date = new Date()
+      const month = date.getMonth() + 1
+      const monthName = tSeasonal.monthNames[month]
+      const year = date.getFullYear()
+      const day = date.getDate()
+
+      let prompt = tSeasonal.seasonalExpertIntro + " "
+      prompt += tSeasonal.generateSeasonalProducts.replace('{limit}', 12).replace('{location}', savedCountry).replace('{month}', monthName).replace('{year}', year).replace('{day}', day) + " "
+      prompt += tSeasonal.considerFactors + " "
+      prompt += tSeasonal.seasonalFruits.replace('{location}', savedCountry).replace('{month}', monthName) + " "
+      prompt += tSeasonal.localClimate.replace('{location}', savedCountry).replace('{month}', monthName) + " "
+      prompt += tSeasonal.festivalsAndTraditions.replace('{location}', savedCountry).replace('{month}', monthName) + " "
+      prompt += tSeasonal.culinaryPreparations + " "
+      prompt += tSeasonal.responseFormat.replace('{location}', savedCountry) + " "
+      prompt += tSeasonal.exampleFormat.replace(/{location}/g, savedCountry)
+
+      const response = await axios.post(API_KEY_ANALIZE, {
+        model: "gpt-4.1",
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 1000,
+        temperature: 0.7
+      })
+
+      const aiResponse = response.data.choices[0].message.content.trim()
+      const lines = aiResponse.split('\n').filter(line => line.trim().length > 0)
+
+      const seasonal = lines.slice(0, 12).map(line => {
+        const cleanLine = line.replace(/^\d+\.\s*/, '').replace(/^[-*]\s*/, '').trim()
+        let item, reason
+        if (cleanLine.includes(' - ')) {
+          [item, reason] = cleanLine.split(' - ', 2)
+        } else {
+          item = cleanLine
+          reason = tSeasonal.subtitle
+        }
+        return {
+          item: item.trim(),
+          reason: reason.trim(),
+          type: 'seasonal'
+        }
+      })
+
+      console.log(`📥 Recibidas ${seasonal.length} recomendaciones de temporada`)
+      setSeasonalRecommendations(seasonal)
+      setSeasonalLoading(false)
+    } catch (error) {
+      console.error('❌ Error generando recomendaciones de temporada:', error)
+      setSeasonalRecommendations([])
+      setSeasonalLoading(false)
     }
   }
 
@@ -338,8 +462,8 @@ const RecommendationsScreen = ({ navigation }) => {
     const isCloseToBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 50
 
     // Si está cerca del final y puede cargar más, cargar automáticamente
-    if (isCloseToBottom && canLoadMore && !isLoadingMore && displayedCount < 60) {
-      console.log(`🔄 Auto-cargando más productos... Mostrados: ${displayedCount}/60`)
+    if (isCloseToBottom && canLoadMore && !isLoadingMore && displayedCount < 24) {
+      console.log(`🔄 Auto-cargando más productos... Mostrados: ${displayedCount}/24`)
       loadMoreRecommendations()
     }
   }
@@ -885,22 +1009,25 @@ const RecommendationsScreen = ({ navigation }) => {
         {/* Filtros de navegación */}
         <View style={styles.filtersContainer}>
           <TouchableOpacity
-            style={styles.filterButtonActive}
-            disabled
+            style={activeTab === 'history' ? styles.filterButtonActive : styles.filterButton}
+            onPress={() => {
+              triggerHaptic()
+              setActiveTab('history')
+            }}
           >
-            <Ionicons name="time-outline" size={16} color="#4a6bff" style={{ marginRight: 6 }} />
-            <Text style={styles.filterTextActive}>{t.historySubtitle || 'Basado en tu historial de compras'}</Text>
+            <Ionicons name="time-outline" size={16} color={activeTab === 'history' ? "#4a6bff" : theme.textSecondary} style={{ marginRight: 6 }} />
+            <Text style={activeTab === 'history' ? styles.filterTextActive : styles.filterTextInactive}>{t.historySubtitle || 'Basado en tu historial de compras'}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.filterButton}
+            style={activeTab === 'seasonal' ? styles.filterButtonActive : styles.filterButton}
             onPress={() => {
               triggerHaptic()
-              navigation.navigate('SeasonalRecommendationsScreen')
+              setActiveTab('seasonal')
             }}
           >
-            <Ionicons name="leaf-outline" size={16} color={theme.textSecondary} style={{ marginRight: 6 }} />
-            <Text style={styles.filterTextInactive}>{t.seasonalSubtitle || 'Productos de temporada'}</Text>
+            <Ionicons name="leaf-outline" size={16} color={activeTab === 'seasonal' ? "#4a6bff" : theme.textSecondary} style={{ marginRight: 6 }} />
+            <Text style={activeTab === 'seasonal' ? styles.filterTextActive : styles.filterTextInactive}>{t.seasonalSubtitle || 'Productos de temporada'}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -928,12 +1055,12 @@ const RecommendationsScreen = ({ navigation }) => {
           </View>
         )}
 
-        {loading ? (
+        {(activeTab === 'history' && loading) || (activeTab === 'seasonal' && seasonalLoading) ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#4a6bff" />
-            <Text style={styles.loadingText}>{t.loading}</Text>
+            <Text style={styles.loadingText}>{activeTab === 'history' ? t.loading : tSeasonal.loading}</Text>
           </View>
-        ) : recommendations.length === 0 || !hasHistory ? (
+        ) : activeTab === 'history' && (recommendations.length === 0 || !hasHistory) ? (
           <View style={styles.noHistoryContainer}>
             {!hasHistory ? (
               // No hay historial - mostrar mensaje específico
@@ -968,7 +1095,7 @@ const RecommendationsScreen = ({ navigation }) => {
               },
             ]}
           >
-            {recommendations.map((rec, index) => {
+            {(activeTab === 'history' ? recommendations : seasonalRecommendations).map((rec, index) => {
               const isAdded = addedItems.has(rec.item)
 
               // Caso especial: Sin historial disponible

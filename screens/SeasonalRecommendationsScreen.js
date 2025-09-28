@@ -10,7 +10,8 @@ import {
   Animated,
   ActivityIndicator,
   Platform,
-  Dimensions
+  Dimensions,
+  AppState
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -19,6 +20,7 @@ import { useHaptic } from '../HapticContext'
 import * as RNLocalize from 'react-native-localize'
 import axios from 'axios'
 import seasonalRecommendationsTranslations from './translations/seasonalRecommendationsTranslations'
+import { useFocusEffect } from '@react-navigation/native'
 
 const { width: screenWidth } = Dimensions.get('window')
 const isSmallIPhone = Platform.OS === 'ios' && screenWidth <= 375
@@ -59,29 +61,16 @@ const SeasonalRecommendationsScreen = ({ navigation }) => {
 
   // Efectos
   useEffect(() => {
-    checkAndClearCacheOnNewSession()
-    initializeScreen()
     startAnimations()
   }, [])
 
-  // Detectar nueva sesión y limpiar cache
-  const checkAndClearCacheOnNewSession = async () => {
-    try {
-      const lastSession = await AsyncStorage.getItem('@last_seasonal_session')
-      const now = new Date().getTime()
-
-      // Si es la primera vez o pasaron más de 5 minutos desde la última sesión
-      if (!lastSession || (now - parseInt(lastSession)) > 5 * 60 * 1000) {
-        console.log('🆕 Nueva sesión detectada, limpiando cache estacional')
-        await AsyncStorage.removeItem('@seasonal_recommendations_60')
-      }
-
-      // Actualizar timestamp de esta sesión
-      await AsyncStorage.setItem('@last_seasonal_session', now.toString())
-    } catch (error) {
-      console.error('Error checking seasonal session:', error)
-    }
-  }
+  // Recargar cada vez que la pantalla recibe focus
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('🔄 Pantalla de temporada recibió focus - recargando')
+      initializeScreen()
+    }, [])
+  )
 
   const initializeScreen = async () => {
     await loadCountryAndGenerateRecommendations()
@@ -141,26 +130,10 @@ const SeasonalRecommendationsScreen = ({ navigation }) => {
       const now = new Date()
       setCurrentDate(now)
 
-      // Verificar si ya tenemos recomendaciones en cache para esta ubicación
-      const cachedData = await AsyncStorage.getItem('@seasonal_recommendations_60')
-
-      if (cachedData) {
-        const cached = JSON.parse(cachedData)
-        console.log("📦 Usando 60 recomendaciones del cache (misma sesión)")
-        setRecommendations(cached.slice(0, 6))
-        setDisplayedCount(6)
-      } else {
-        // Generar 60 recomendaciones con IA
-        console.log("🤖 Generando 60 recomendaciones estacionales con IA")
-        const all60 = await generateSeasonalRecommendations(savedCountry, now, 60)
-
-        // Guardar en cache
-        await AsyncStorage.setItem('@seasonal_recommendations_60', JSON.stringify(all60))
-
-        // Mostrar solo las primeras 6
-        setRecommendations(all60.slice(0, 6))
-        setDisplayedCount(6)
-      }
+      // SIEMPRE generar nuevas recomendaciones al entrar
+      console.log("🤖 Generando 12 recomendaciones estacionales con IA")
+      await generateSeasonalRecommendationsIn2Calls(savedCountry, now)
+      setLoading(false)
 
     } catch (error) {
       console.error("Error cargando recomendaciones:", error)
@@ -270,6 +243,157 @@ const SeasonalRecommendationsScreen = ({ navigation }) => {
         { item: 'Zanahorias 🥕', reason: 'Verdura de temporada', type: 'seasonal' },
         { item: 'Calabaza 🎃', reason: 'Verdura de temporada', type: 'seasonal' }
       ]
+    }
+  }
+
+  // Nueva función: Generar 12 recomendaciones en una sola petición
+  const generateSeasonalRecommendationsIn2Calls = async (locationStr, date) => {
+    try {
+      console.log("📤 Petición única: 12 productos")
+      const all12 = await generateSeasonalRecommendations(locationStr, date, 12)
+
+      console.log(`📥 Recibidos ${all12.length} productos, mostrando INMEDIATAMENTE`)
+
+      // Mostrar TODOS los 12 de golpe
+      setRecommendations(all12)
+      setDisplayedCount(all12.length)
+      setLoading(false)
+
+      setCanLoadMore(false)
+
+    } catch (error) {
+      console.error("❌ Error generando recomendaciones:", error)
+      const fallbackProducts = [
+        { item: 'Naranjas 🍊', reason: 'Fruta de temporada', type: 'seasonal' },
+        { item: 'Manzanas 🍎', reason: 'Fruta de temporada', type: 'seasonal' },
+        { item: 'Peras 🍐', reason: 'Fruta de temporada', type: 'seasonal' },
+        { item: 'Brócoli 🥦', reason: 'Verdura de temporada', type: 'seasonal' },
+        { item: 'Zanahorias 🥕', reason: 'Verdura de temporada', type: 'seasonal' },
+        { item: 'Calabaza 🎃', reason: 'Verdura de temporada', type: 'seasonal' }
+      ]
+      setRecommendations(fallbackProducts)
+      setDisplayedCount(fallbackProducts.length)
+    }
+  }
+
+  // Nueva función: Generar recomendaciones progresivamente
+  const generateSeasonalRecommendationsProgressive = async (locationStr, date, limit) => {
+    try {
+      const month = date.getMonth() + 1
+      const monthName = t.monthNames[month] || fallback.monthNames[month]
+      const year = date.getFullYear()
+      const day = date.getDate()
+
+      // Crear prompt para IA
+      let prompt = t.seasonalExpertIntro || fallback.seasonalExpertIntro
+      prompt += " "
+
+      const genProducts = (t.generateSeasonalProducts || fallback.generateSeasonalProducts)
+        .replace('{limit}', limit)
+        .replace('{location}', locationStr)
+        .replace('{month}', monthName)
+        .replace('{year}', year)
+        .replace('{day}', day)
+
+      prompt += genProducts + " "
+      prompt += (t.considerFactors || fallback.considerFactors) + " "
+
+      const fruits = (t.seasonalFruits || fallback.seasonalFruits)
+        .replace('{location}', locationStr)
+        .replace('{month}', monthName)
+      prompt += fruits + " "
+
+      const climate = (t.localClimate || fallback.localClimate)
+        .replace('{location}', locationStr)
+        .replace('{month}', monthName)
+      prompt += climate + " "
+
+      const festivals = (t.festivalsAndTraditions || fallback.festivalsAndTraditions)
+        .replace('{location}', locationStr)
+        .replace('{month}', monthName)
+      prompt += festivals + " "
+
+      prompt += (t.culinaryPreparations || fallback.culinaryPreparations) + " "
+
+      const responseFormat = (t.responseFormat || fallback.responseFormat)
+        .replace('{location}', locationStr)
+      prompt += responseFormat + " "
+
+      const exampleFormat = (t.exampleFormat || fallback.exampleFormat)
+        .replace(/{location}/g, locationStr)
+      prompt += exampleFormat
+
+      console.log("📤 Enviando prompt estacional a GPT-4.1 (stream)")
+
+      // Llamada a GPT-4.1 con streaming
+      const response = await axios.post(API_KEY_ANALIZE, {
+        model: "gpt-4.1",
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 1000,
+        temperature: 0.7,
+        stream: false // Mantenemos false pero procesamos por lotes
+      })
+
+      const aiResponse = response.data.choices[0].message.content.trim()
+      console.log("📥 Respuesta IA estacional recibida, procesando progresivamente...")
+
+      // Procesar respuesta línea por línea
+      const lines = aiResponse.split('\n').filter(line => line.trim().length > 0)
+      const allRecommendations = []
+
+      for (let i = 0; i < Math.min(lines.length, limit); i++) {
+        const line = lines[i]
+        const cleanLine = line.replace(/^\d+\.\s*/, '').replace(/^[-*]\s*/, '').trim()
+
+        let item, reason
+        if (cleanLine.includes(' - ')) {
+          [item, reason] = cleanLine.split(' - ', 2)
+        } else {
+          item = cleanLine
+          reason = `${t.subtitle || fallback.subtitle}`
+        }
+
+        const newRec = {
+          item: item.trim(),
+          reason: reason.trim(),
+          confidence: 0.9,
+          type: 'seasonal',
+          priority: 'high'
+        }
+
+        allRecommendations.push(newRec)
+
+        // Mostrar progresivamente cada 3 productos para que se vea más rápido
+        if ((i + 1) % 3 === 0 || i === Math.min(lines.length, limit) - 1) {
+          setRecommendations([...allRecommendations])
+          setDisplayedCount(allRecommendations.length)
+          console.log(`✨ Mostrando ${allRecommendations.length} productos...`)
+          await new Promise(resolve => setTimeout(resolve, 50)) // Pausa más corta
+        }
+      }
+
+      // Guardar en cache cuando termine
+      await AsyncStorage.setItem('@seasonal_recommendations_60', JSON.stringify(allRecommendations))
+      console.log(`💾 Cache guardado con ${allRecommendations.length} productos`)
+
+      // Ajustar contador y flags finales
+      if (allRecommendations.length >= 60) {
+        setCanLoadMore(false)
+      }
+
+    } catch (error) {
+      console.error("❌ Error generando recomendaciones progresivas:", error)
+      // Mostrar fallback
+      const fallbackProducts = [
+        { item: 'Naranjas 🍊', reason: 'Fruta de temporada', type: 'seasonal' },
+        { item: 'Manzanas 🍎', reason: 'Fruta de temporada', type: 'seasonal' },
+        { item: 'Peras 🍐', reason: 'Fruta de temporada', type: 'seasonal' },
+        { item: 'Brócoli 🥦', reason: 'Verdura de temporada', type: 'seasonal' },
+        { item: 'Zanahorias 🥕', reason: 'Verdura de temporada', type: 'seasonal' },
+        { item: 'Calabaza 🎃', reason: 'Verdura de temporada', type: 'seasonal' }
+      ]
+      setRecommendations(fallbackProducts)
+      setDisplayedCount(fallbackProducts.length)
     }
   }
 
