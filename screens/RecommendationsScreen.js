@@ -23,6 +23,7 @@ import RecommendationService from '../services/RecommendationService'
 import * as RNLocalize from 'react-native-localize'
 import recommendationsTranslations from './translations/recommendationsTranslations'
 import seasonalRecommendationsTranslations from './translations/seasonalRecommendationsTranslations'
+import dietRecommendationsTranslations from './translations/dietRecommendationsTranslations'
 import { useFocusEffect } from '@react-navigation/native'
 import axios from 'axios'
 
@@ -51,9 +52,14 @@ const RecommendationsScreen = ({ navigation }) => {
   const [hasCurrentList, setHasCurrentList] = useState(false)
 
   // Estados para pestañas
-  const [activeTab, setActiveTab] = useState('history') // 'history' o 'seasonal'
+  const [activeTab, setActiveTab] = useState('history') // 'history', 'seasonal' o 'diet'
   const [seasonalRecommendations, setSeasonalRecommendations] = useState([])
   const [seasonalLoading, setSeasonalLoading] = useState(false)
+  const [seasonalCountry, setSeasonalCountry] = useState('')
+  const [dietRecommendations, setDietRecommendations] = useState([])
+  const [dietLoading, setDietLoading] = useState(false)
+  const [dietRefreshing, setDietRefreshing] = useState(false)
+  const [dietRefreshKey, setDietRefreshKey] = useState(0)
 
   // Estados para auto-carga
   const [displayedCount, setDisplayedCount] = useState(0) // Trackea cuántos se han mostrado
@@ -70,6 +76,7 @@ const RecommendationsScreen = ({ navigation }) => {
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const t = recommendationsTranslations[deviceLanguage] || recommendationsTranslations.en
   const tSeasonal = seasonalRecommendationsTranslations[deviceLanguage] || seasonalRecommendationsTranslations.en
+  const tDiet = dietRecommendationsTranslations[deviceLanguage] || dietRecommendationsTranslations.en
   const fallback = recommendationsTranslations.en
 
   // Efectos
@@ -110,8 +117,9 @@ const RecommendationsScreen = ({ navigation }) => {
           setCanLoadMore(false)
           setLoading(false)
 
-          // Cargar recomendaciones de temporada en paralelo
+          // Cargar recomendaciones de temporada y dieta en paralelo
           loadSeasonalRecommendations()
+          loadDietRecommendations()
         } catch (error) {
           console.error('❌ Error generando recomendaciones:', error)
           setRecommendations([])
@@ -238,6 +246,10 @@ const RecommendationsScreen = ({ navigation }) => {
       }
 
       console.log("🤖 Generando 12 recomendaciones de temporada con IA")
+
+      // Guardar el país en el estado para mostrarlo en el banner
+      setSeasonalCountry(savedCountry)
+
       const date = new Date()
       const month = date.getMonth() + 1
       const monthName = tSeasonal.monthNames[month]
@@ -287,6 +299,93 @@ const RecommendationsScreen = ({ navigation }) => {
       console.error('❌ Error generando recomendaciones de temporada:', error)
       setSeasonalRecommendations([])
       setSeasonalLoading(false)
+    }
+  }
+
+  const loadDietRecommendations = async (showLoading = true) => {
+    try {
+      if (showLoading) {
+        setDietLoading(true)
+      } else {
+        setDietRefreshing(true)
+      }
+
+      console.log("🤖 Generando 12 recomendaciones de dieta con IA")
+      const date = new Date()
+      const randomSeed = Math.random()
+      const timestamp = Date.now()
+      const dateStr = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+
+      let prompt = tDiet.dietExpertIntro + " "
+      prompt += tDiet.generateDietProducts.replace('{limit}', 12).replace('{date}', dateStr) + " "
+      prompt += tDiet.considerFactors + " "
+      prompt += tDiet.nutritionalBalance + " "
+      prompt += tDiet.healthyOptions + " "
+      prompt += tDiet.varietyOfProducts + " "
+      prompt += tDiet.portionSizes + " "
+      prompt += tDiet.responseFormat + " "
+      prompt += tDiet.exampleFormat
+
+      console.log("📤 Enviando petición a GPT-4.1...")
+      const response = await axios.post(API_KEY_ANALIZE, {
+        model: "gpt-4.1",
+        messages: [
+          {
+            role: "system",
+            content: "You are a creative nutritionist. Always generate COMPLETELY DIFFERENT food products in each request. Never repeat the same products. Use variety from all cuisines, preparations, and food categories."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        max_tokens: 1000,
+        temperature: 1.2
+      })
+      console.log("📥 Respuesta recibida de GPT-4.1")
+
+      const aiResponse = response.data.choices[0].message.content.trim()
+      const lines = aiResponse.split('\n').filter(line => line.trim().length > 0)
+
+      const diet = lines.slice(0, 12).map(line => {
+        const cleanLine = line.replace(/^\d+\.\s*/, '').replace(/^[-*]\s*/, '').trim()
+        let item, reason
+        if (cleanLine.includes(' - ')) {
+          [item, reason] = cleanLine.split(' - ', 2)
+        } else {
+          item = cleanLine
+          reason = tDiet.subtitle
+        }
+        return {
+          item: item.trim(),
+          reason: reason.trim(),
+          type: 'diet'
+        }
+      })
+
+      console.log(`📥 Recibidas ${diet.length} recomendaciones de dieta`)
+      console.log("🍎 Productos de dieta generados:", diet.map(d => d.item).join(', '))
+
+      // Limpiar primero y luego establecer nuevos productos
+      setDietRecommendations([])
+      setTimeout(() => {
+        setDietRecommendations(diet)
+        setDietRefreshKey(prev => prev + 1)
+        console.log("✅ Estado dietRecommendations actualizado con", diet.length, "productos")
+      }, 10)
+      if (showLoading) {
+        setDietLoading(false)
+      } else {
+        setDietRefreshing(false)
+      }
+    } catch (error) {
+      console.error('❌ Error generando recomendaciones de dieta:', error)
+      setDietRecommendations([])
+      if (showLoading) {
+        setDietLoading(false)
+      } else {
+        setDietRefreshing(false)
+      }
     }
   }
 
@@ -371,19 +470,42 @@ const RecommendationsScreen = ({ navigation }) => {
 
       if (!selectedRecommendation) return
 
-      // Agregar directamente a la lista actual (en progreso)
-      const currentListData = await AsyncStorage.getItem("@shopping_list")
-      const currentList = currentListData ? JSON.parse(currentListData) : []
+      // Cargar el historial
+      const historyData = await AsyncStorage.getItem("@shopping_history")
+      if (!historyData) {
+        console.log("⚠️ No hay historial disponible")
+        return
+      }
 
-      console.log("Current list before adding:", currentList)
+      const history = JSON.parse(historyData)
+      console.log("📚 Historial completo:", history.length, "listas")
 
-      // Verificar si el item ya existe
-      if (!currentList.includes(selectedRecommendation.item)) {
-        currentList.push(selectedRecommendation.item)
-        await AsyncStorage.setItem("@shopping_list", JSON.stringify(currentList))
-        console.log("Item added to current list:", currentList)
+      // La lista está en orden reverso en historyLists, así que necesitamos el índice correcto
+      const actualIndex = history.length - 1 - listIndex
+
+      if (!history[actualIndex]) {
+        console.log("⚠️ Lista no encontrada en índice:", actualIndex)
+        return
+      }
+
+      const selectedList = history[actualIndex]
+      console.log("📋 Lista seleccionada:", selectedList.name, "con", selectedList.list.length, "productos")
+
+      // Verificar si el item ya existe en esta lista
+      if (!selectedList.list.includes(selectedRecommendation.item)) {
+        selectedList.list.push(selectedRecommendation.item)
+
+        // Guardar el historial actualizado
+        await AsyncStorage.setItem("@shopping_history", JSON.stringify(history))
+        console.log("✅ Item agregado a la lista del historial:", selectedList.name)
+        console.log("✅ Lista actualizada con", selectedList.list.length, "productos")
+
+        // Verificar que se guardó correctamente
+        const verify = await AsyncStorage.getItem("@shopping_history")
+        const verifyHistory = JSON.parse(verify)
+        console.log("🔍 Verificación - Lista en historial:", verifyHistory[actualIndex].list.length, "productos")
       } else {
-        console.log("Item already exists in current list")
+        console.log("⚠️ Item ya existe en esta lista del historial")
       }
 
       // Marcar como agregado
@@ -395,11 +517,23 @@ const RecommendationsScreen = ({ navigation }) => {
 
       console.log("STAYING IN RECOMMENDATIONS SCREEN - NO NAVIGATION")
 
-      // INMEDIATAMENTE remover el producto agregado
-      setRecommendations(prevRecs => {
-        const filteredRecs = prevRecs.filter(rec => rec.item !== selectedRecommendation.item)
-        return filteredRecs
-      })
+      // INMEDIATAMENTE remover el producto agregado del tab activo
+      if (activeTab === 'history') {
+        setRecommendations(prevRecs => {
+          const filteredRecs = prevRecs.filter(rec => rec.item !== selectedRecommendation.item)
+          return filteredRecs
+        })
+      } else if (activeTab === 'seasonal') {
+        setSeasonalRecommendations(prevRecs => {
+          const filteredRecs = prevRecs.filter(rec => rec.item !== selectedRecommendation.item)
+          return filteredRecs
+        })
+      } else if (activeTab === 'diet') {
+        setDietRecommendations(prevRecs => {
+          const filteredRecs = prevRecs.filter(rec => rec.item !== selectedRecommendation.item)
+          return filteredRecs
+        })
+      }
 
       Alert.alert('✅', `${selectedRecommendation.item} agregado a tu lista`)
     } catch (error) {
@@ -986,6 +1120,20 @@ const RecommendationsScreen = ({ navigation }) => {
       fontWeight: '600',
       color: theme.textSecondary,
     },
+    refreshButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+      borderRadius: 10,
+    },
+    refreshButtonText: {
+      color: '#4a6bff',
+      fontSize: isSmallIPhone ? 12 : 13,
+      fontWeight: '700',
+    },
   }
 
   // Render
@@ -1029,6 +1177,17 @@ const RecommendationsScreen = ({ navigation }) => {
             <Ionicons name="leaf-outline" size={16} color={activeTab === 'seasonal' ? "#4a6bff" : theme.textSecondary} style={{ marginRight: 6 }} />
             <Text style={activeTab === 'seasonal' ? styles.filterTextActive : styles.filterTextInactive}>{t.seasonalSubtitle || 'Productos de temporada'}</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={activeTab === 'diet' ? styles.filterButtonActive : styles.filterButton}
+            onPress={() => {
+              triggerHaptic()
+              setActiveTab('diet')
+            }}
+          >
+            <Ionicons name="nutrition-outline" size={16} color={activeTab === 'diet' ? "#4a6bff" : theme.textSecondary} style={{ marginRight: 6 }} />
+            <Text style={activeTab === 'diet' ? styles.filterTextActive : styles.filterTextInactive}>{tDiet.tabLabel || 'Nutrición'}</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -1041,8 +1200,8 @@ const RecommendationsScreen = ({ navigation }) => {
         scrollEventThrottle={16}
       >
 
-        {/* Estadísticas */}
-        {stats && (
+        {/* Estadísticas - solo mostrar en historial */}
+        {stats && activeTab === 'history' && (
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
               <Text style={styles.statNumber}>{stats.totalAnalyzedLists || 0}</Text>
@@ -1055,10 +1214,56 @@ const RecommendationsScreen = ({ navigation }) => {
           </View>
         )}
 
-        {(activeTab === 'history' && loading) || (activeTab === 'seasonal' && seasonalLoading) ? (
+        {/* Banner de temporada - ubicación y fecha */}
+        {activeTab === 'seasonal' && (
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <Ionicons name="location-outline" size={24} color="#4a6bff" style={styles.statIcon} />
+              <Text style={styles.statLabel}>{seasonalCountry || tSeasonal.currentLocation || 'Ubicación'}</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Ionicons name="calendar-outline" size={24} color="#4a6bff" style={styles.statIcon} />
+              <Text style={styles.statLabel}>
+                {tSeasonal.monthNames[new Date().getMonth() + 1]} {new Date().getFullYear()}
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {/* Banner de nutrición */}
+        {activeTab === 'diet' && (
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <Ionicons name="nutrition-outline" size={24} color="#4a6bff" style={styles.statIcon} />
+              <Text style={styles.statLabel}>{tDiet.title || 'Nutrición'}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.refreshButton}
+              onPress={() => {
+                console.log("🔄 BOTÓN REFRESCAR PRESIONADO - Cargando nuevos productos de dieta")
+                triggerHaptic()
+                loadDietRecommendations(false)
+              }}
+              disabled={dietRefreshing}
+            >
+              {dietRefreshing ? (
+                <ActivityIndicator size="small" color="#4a6bff" style={{ marginRight: 6 }} />
+              ) : (
+                <Ionicons name="refresh-outline" size={20} color="#4a6bff" style={{ marginRight: 6 }} />
+              )}
+              <Text style={styles.refreshButtonText}>
+                {tDiet.refreshList || 'Refrescar lista'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {(activeTab === 'history' && loading) || (activeTab === 'seasonal' && seasonalLoading) || (activeTab === 'diet' && dietLoading) ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#4a6bff" />
-            <Text style={styles.loadingText}>{activeTab === 'history' ? t.loading : tSeasonal.loading}</Text>
+            <Text style={styles.loadingText}>
+              {activeTab === 'history' ? t.loading : activeTab === 'seasonal' ? tSeasonal.loading : tDiet.loading}
+            </Text>
           </View>
         ) : activeTab === 'history' && (recommendations.length === 0 || !hasHistory) ? (
           <View style={styles.noHistoryContainer}>
@@ -1095,7 +1300,13 @@ const RecommendationsScreen = ({ navigation }) => {
               },
             ]}
           >
-            {(activeTab === 'history' ? recommendations : seasonalRecommendations).map((rec, index) => {
+            {(() => {
+              const productsToShow = activeTab === 'history' ? recommendations : activeTab === 'seasonal' ? seasonalRecommendations : dietRecommendations
+              if (activeTab === 'diet') {
+                console.log("🖼️ RENDERIZANDO productos de dieta en pantalla:", productsToShow.map(p => p.item).join(', '))
+              }
+              return productsToShow
+            })().map((rec, index) => {
               const isAdded = addedItems.has(rec.item)
 
               // Caso especial: Sin historial disponible
@@ -1122,7 +1333,7 @@ const RecommendationsScreen = ({ navigation }) => {
 
               return (
                 <TouchableOpacity
-                  key={`${rec.item}-${index}`}
+                  key={activeTab === 'diet' ? `${rec.item}-${index}-${dietRefreshKey}` : `${rec.item}-${index}`}
                   style={[
                     styles.recommendationCard,
                     isAdded && styles.recommendationCardAdded
