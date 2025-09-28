@@ -22,7 +22,7 @@ import {
 import { Ionicons } from "@expo/vector-icons"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import * as RNLocalize from "react-native-localize"
-import { BarCodeScanner } from 'expo-barcode-scanner'
+import { CameraView, useCameraPermissions } from 'expo-camera'
 import { useNavigation } from "@react-navigation/native"
 import { useHaptic } from "../HapticContext"
 
@@ -791,7 +791,7 @@ const HandwrittenListScreen = ({ route }) => {
   // Barcode scanner states
   const [showCamera, setShowCamera] = useState(false)
   const [scanned, setScanned] = useState(false)
-  const [hasPermission, setHasPermission] = useState(null)
+  const [permission, requestPermission] = useCameraPermissions()
   const [productInfo, setProductInfo] = useState(null)
   const [productImage, setProductImage] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -806,14 +806,13 @@ const HandwrittenListScreen = ({ route }) => {
   ).current
   const shakeAnimation = useRef(new Animated.Value(0)).current
 
-  // Request camera permissions
-  useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync()
-      setHasPermission(status === 'granted')
-    }
-    getBarCodeScannerPermissions()
-  }, [])
+  // Handle barcode scanned
+  const handleBarCodeScanned = ({ type, data }) => {
+    if (scanned) return
+    setScanned(true)
+    setShowCamera(false)
+    fetchProductData(data)
+  }
 
   useEffect(() => {
     // Load custom categories on mount
@@ -964,11 +963,10 @@ const HandwrittenListScreen = ({ route }) => {
     setBarcodeResultVisible(true)
   }
 
-  // Handle barcode scanned
-  const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true)
-    setShowCamera(false)
-    fetchProductData(data)
+  // Request permission when needed
+  const requestCameraPermission = async () => {
+    const result = await requestPermission()
+    return result.granted
   }
 
   const handleCategoryPress = (category) => {
@@ -980,7 +978,7 @@ const HandwrittenListScreen = ({ route }) => {
 
     // Handle barcode category differently
     if (category.isBarcode) {
-      if (hasPermission) {
+      if (permission?.granted) {
         // Reset all barcode scanner states first
         setProductInfo(null)
         setProductImage(null)
@@ -992,7 +990,19 @@ const HandwrittenListScreen = ({ route }) => {
         // Then open camera
         setShowCamera(true)
       } else {
-        Alert.alert('Permiso requerido', 'Necesitamos acceso a la cámara para escanear códigos de barras')
+        requestCameraPermission().then((granted) => {
+          if (granted) {
+            setProductInfo(null)
+            setProductImage(null)
+            setBarcodeResultVisible(false)
+            setScanned(false)
+            setIsLoading(false)
+            setBarcodeQuantity("1")
+            setShowCamera(true)
+          } else {
+            Alert.alert('Permiso requerido', 'Necesitamos acceso a la cámara para escanear códigos de barras')
+          }
+        })
       }
       return
     }
@@ -1725,12 +1735,12 @@ const HandwrittenListScreen = ({ route }) => {
         onRequestClose={() => setShowCamera(false)}
       >
         <View style={styles.cameraContainer}>
-          {hasPermission === null && (
+          {!permission && (
             <View style={styles.permissionContainer}>
               <Text style={styles.permissionText}>{t.requestingCameraPermission}</Text>
             </View>
           )}
-          {hasPermission === false && (
+          {permission && !permission.granted && (
             <View style={styles.permissionContainer}>
               <Text style={styles.permissionText}>{t.noCameraAccess}</Text>
               <TouchableOpacity style={styles.cancelButton} onPress={() => setShowCamera(false)}>
@@ -1738,11 +1748,23 @@ const HandwrittenListScreen = ({ route }) => {
               </TouchableOpacity>
             </View>
           )}
-          {hasPermission === true && (
+          {permission?.granted && (
             <View style={styles.cameraView}>
-              <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              <CameraView
                 style={styles.camera}
+                facing="back"
+                onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+                barcodeScannerSettings={{
+                  barcodeTypes: [
+                    'ean13',
+                    'ean8',
+                    'upc_a',
+                    'upc_e',
+                    'code128',
+                    'code39',
+                    'qr'
+                  ],
+                }}
               />
               <View style={styles.cameraOverlay}>
                 <View style={styles.scanFrame}>
@@ -1754,7 +1776,10 @@ const HandwrittenListScreen = ({ route }) => {
                 <Text style={styles.scanInstructions}>{t.pointCameraAtBarcode}</Text>
                 <TouchableOpacity
                   style={styles.cancelCameraButton}
-                  onPress={() => setShowCamera(false)}
+                  onPress={() => {
+                    setShowCamera(false)
+                    setScanned(false)
+                  }}
                 >
                   <Ionicons name="close" size={20} color="#fff" />
                   <Text style={styles.cancelCameraText}>{t.cancel}</Text>

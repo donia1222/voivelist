@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 
 const { width: screenWidth } = Dimensions.get("window")
 
@@ -738,7 +738,7 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
   // Barcode scanner states
   const [showCamera, setShowCamera] = useState(false)
   const [scanned, setScanned] = useState(false)
-  const [hasPermission, setHasPermission] = useState(null)
+  const [permission, requestPermission] = useCameraPermissions()
   const [productInfo, setProductInfo] = useState(null)
   const [productImage, setProductImage] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -752,14 +752,11 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
     categories.map(() => new Animated.Value(0))
   ).current
 
-  // Request camera permissions
-  useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync()
-      setHasPermission(status === 'granted')
-    }
-    getBarCodeScannerPermissions()
-  }, [])
+  // Request permission when needed
+  const requestCameraPermission = async () => {
+    const result = await requestPermission()
+    return result.granted
+  }
 
   useEffect(() => {
     console.log('=== AddItemModal useEffect ===')
@@ -926,6 +923,7 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
 
   // Handle barcode scanned
   const handleBarCodeScanned = ({ type, data }) => {
+    if (scanned) return
     setScanned(true)
     setShowCamera(false)
     fetchProductData(data)
@@ -940,11 +938,18 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
 
     // Handle barcode category differently
     if (category.isBarcode) {
-      if (hasPermission) {
-        setShowCamera(true)
+      if (permission?.granted) {
         setScanned(false)
+        setShowCamera(true)
       } else {
-        Alert.alert(t.permissionRequired, t.cameraPermissionMessage)
+        requestCameraPermission().then((granted) => {
+          if (granted) {
+            setScanned(false)
+            setShowCamera(true)
+          } else {
+            Alert.alert(t.permissionRequired, t.cameraPermissionMessage)
+          }
+        })
       }
       return
     }
@@ -1435,12 +1440,12 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
         onRequestClose={() => setShowCamera(false)}
       >
         <View style={styles.cameraContainer}>
-          {hasPermission === null && (
+          {!permission && (
             <View style={styles.permissionContainer}>
               <Text style={styles.permissionText}>{t.requestingPermissions}</Text>
             </View>
           )}
-          {hasPermission === false && (
+          {permission && !permission.granted && (
             <View style={styles.permissionContainer}>
               <Text style={styles.permissionText}>{t.cameraNoAccess}</Text>
               <TouchableOpacity style={styles.cancelButton} onPress={() => setShowCamera(false)}>
@@ -1448,11 +1453,23 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
               </TouchableOpacity>
             </View>
           )}
-          {hasPermission === true && (
+          {permission?.granted && (
             <View style={styles.cameraView}>
-              <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              <CameraView
                 style={styles.camera}
+                facing="back"
+                onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+                barcodeScannerSettings={{
+                  barcodeTypes: [
+                    'ean13',
+                    'ean8',
+                    'upc_a',
+                    'upc_e',
+                    'code128',
+                    'code39',
+                    'qr'
+                  ],
+                }}
               />
               <View style={styles.cameraOverlay}>
                 <View style={styles.scanFrame}>
@@ -1464,7 +1481,10 @@ const AddItemModal = ({ visible, onClose, onAddItem, language = 'es' }) => {
                 <Text style={styles.scanInstructions}>{t.pointCamera}</Text>
                 <TouchableOpacity
                   style={styles.cancelCameraButton}
-                  onPress={() => setShowCamera(false)}
+                  onPress={() => {
+                    setShowCamera(false)
+                    setScanned(false)
+                  }}
                 >
                   <Ionicons name="close" size={20} color="#fff" />
                   <Text style={styles.cancelCameraText}>{t.cancel}</Text>

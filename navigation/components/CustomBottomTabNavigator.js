@@ -38,6 +38,7 @@ import PriceCalculatorScreen from "../../screens/PriceCalculatorScreen"
 import ContactScreen from "../../screens/ContactScreen"
 import HandwrittenListScreen from "../../screens/HandwrittenListScreen"
 import RecommendationsScreen from "../../screens/RecommendationsScreen"
+import SeasonalRecommendationsScreen from "../../screens/SeasonalRecommendationsScreen"
 
 const Stack = createNativeStackNavigator()
 
@@ -1078,6 +1079,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="RecommendationsScreen" component={RecommendationsScreen} />
+            <Stack.Screen name="SeasonalRecommendationsScreen" component={SeasonalRecommendationsScreen} />
           </Stack.Navigator>
         )
       default:

@@ -359,62 +359,10 @@ class RecommendationService {
   }
 
   /**
-   * 🗓️ Recomendaciones estacionales con IA REAL (como el historial)
+   * ELIMINADO - Recomendaciones estacionales
    */
   static async getSeasonalRecommendations(currentDate = null, shuffle = false, excludeItems = []) {
-    try {
-      console.log("🤖 === USANDO IA REAL PARA RECOMENDACIONES ESTACIONALES ===")
-
-      const date = currentDate || this.getLocalDate()
-      const month = date.getMonth() + 1 // 1-12
-
-      // Detectar idioma del usuario
-      const userLanguage = this.getUserLanguage()
-      console.log("🌍 Idioma del usuario para estacionales:", userLanguage)
-
-      // Verificar si tenemos cache disponible
-      const cachedSeasonalItems = await this.getCachedSeasonalRecommendations(month)
-
-      if (cachedSeasonalItems && cachedSeasonalItems.length >= 6) {
-        // Verificar si el cache fue generado en el idioma actual
-        const cacheLanguageMatch = await this.verifyCacheLanguage(cachedSeasonalItems, userLanguage, 'seasonal')
-
-        if (cacheLanguageMatch) {
-          console.log("📦 Usando recomendaciones estacionales del cache:", cachedSeasonalItems.length, "disponibles")
-          return this.getRandomFromSeasonalCache(cachedSeasonalItems, 6, excludeItems)
-        } else {
-          console.log("🔄 Cache estacional en idioma incorrecto, regenerando con IA...")
-          await this.clearSeasonalCache(month)
-        }
-      }
-
-      console.log("🔄 Cache insuficiente, generando nuevas recomendaciones estacionales con IA...")
-
-      // Generar 60 recomendaciones estacionales con IA real para el cache (10 recargas aprox)
-      const aiRecommendations = await this.getSmartSeasonalRecommendations(date, month, 60, shuffle, excludeItems)
-
-      // Guardar en cache
-      await this.saveCachedSeasonalRecommendations(aiRecommendations, month)
-
-      // Retornar solo las primeras 6 recomendaciones
-      const result = aiRecommendations.slice(0, 6)
-
-      return result
-
-    } catch (error) {
-      console.error("❌ Error generando recomendaciones estacionales con IA:", error)
-
-      // Fallback a productos estacionales básicos
-      const fallbackProducts = [
-        { item: 'Naranjas 🍊', reason: 'Fruta de temporada', type: 'fallback' },
-        { item: 'Mandarinas 🍊', reason: 'Cítricos de temporada', type: 'fallback' },
-        { item: 'Manzanas 🍎', reason: 'Fruta de temporada', type: 'fallback' },
-        { item: 'Peras 🍐', reason: 'Fruta de temporada', type: 'fallback' },
-        { item: 'Brócoli 🥦', reason: 'Verdura de temporada', type: 'fallback' },
-        { item: 'Zanahorias 🥕', reason: 'Verdura de temporada', type: 'fallback' }
-      ]
-      return fallbackProducts.slice(0, 6)
-    }
+    return []
   }
 
   /**
@@ -459,6 +407,7 @@ class RecommendationService {
       }
 
       prompt += (t.seasonalResponseFormat || fallback.seasonalResponseFormat) + " "
+      prompt += "IMPORTANTE: Responde SOLO con la lista de productos, sin introducción ni explicaciones. Cada línea debe ser un producto. "
       prompt += (t.seasonalExampleWithDescription || fallback.seasonalExampleWithDescription)
 
       console.log("📤 Enviando prompt estacional a GPT-4.1:", prompt)
@@ -472,10 +421,18 @@ class RecommendationService {
       })
 
       const aiResponse = response.data.choices[0].message.content.trim()
-      console.log("📥 Respuesta IA estacional:", aiResponse)
+      console.log("📥 Respuesta IA estacional recibida")
 
       // Procesar respuesta de IA - formato: "Producto - descripción específica"
-      const lines = aiResponse.split('\n').filter(line => line.trim().length > 0)
+      const lines = aiResponse.split('\n').filter(line => {
+        const trimmed = line.trim()
+        // Filtrar líneas vacías, explicaciones y texto introductorio
+        if (trimmed.length === 0) return false
+        if (trimmed.length > 150) return false // Líneas muy largas no son productos
+        if (trimmed.match(/^(¡|Suponiendo|Por supuesto|Aquí|Estos son|A continuación)/i)) return false
+        if (!trimmed.match(/[a-zA-ZñáéíóúÁÉÍÓÚ]/)) return false // Debe contener letras
+        return true
+      })
 
       const recommendations = lines.slice(0, limit).map(line => {
         // Limpiar formato de lista numerada o viñetas
@@ -496,7 +453,7 @@ class RecommendationService {
           type: 'ai_seasonal',
           priority: 'high'
         }
-      })
+      }).filter(rec => rec.item.length > 0 && rec.item.length < 80)
 
       console.log("🤖 Recomendaciones estacionales IA:", recommendations.length, "productos generados")
       return recommendations
@@ -1332,59 +1289,10 @@ class RecommendationService {
   }
 
   /**
-   * 🥗 Recomendaciones de productos de dieta con IA REAL (como el historial)
+   * ELIMINADO - Recomendaciones de dieta
    */
   static async getDietRecommendations(limit = 6, shuffle = false, excludeItems = []) {
-    try {
-      console.log("🤖 === USANDO IA REAL PARA RECOMENDACIONES DE DIETA ===")
-
-      // Detectar idioma del usuario
-      const userLanguage = this.getUserLanguage()
-      console.log("🌍 Idioma del usuario para dieta:", userLanguage)
-
-      // Verificar si tenemos cache disponible
-      const cachedDietItems = await this.getCachedDietRecommendations()
-
-      if (cachedDietItems && cachedDietItems.length >= 6) {
-        // Verificar si el cache fue generado en el idioma actual
-        const cacheLanguageMatch = await this.verifyCacheLanguage(cachedDietItems, userLanguage, 'diet')
-
-        if (cacheLanguageMatch) {
-          console.log("📦 Usando recomendaciones de dieta del cache:", cachedDietItems.length, "disponibles")
-          return this.getRandomFromDietCache(cachedDietItems, limit, excludeItems)
-        } else {
-          console.log("🔄 Cache de dieta en idioma incorrecto, regenerando con IA...")
-          await this.clearDietCache()
-        }
-      }
-
-      console.log("🔄 Cache insuficiente, generando nuevas recomendaciones de dieta con IA...")
-
-      // Generar 60 recomendaciones de dieta con IA real para el cache (10 recargas aprox)
-      const aiRecommendations = await this.getSmartDietRecommendations(60, shuffle, excludeItems)
-
-      // Guardar en cache
-      await this.saveCachedDietRecommendations(aiRecommendations)
-
-      // Retornar solo las primeras 6 recomendaciones
-      const result = aiRecommendations.slice(0, limit)
-
-      return result
-
-    } catch (error) {
-      console.error("❌ Error generando recomendaciones de dieta con IA:", error)
-
-      // Fallback a productos de dieta básicos
-      const fallbackProducts = [
-        { item: 'Pepino 🥒', reason: 'Bajo en calorías (16 cal/100g)', type: 'fallback' },
-        { item: 'Lechuga 🥬', reason: 'Muy baja en calorías (15 cal/100g)', type: 'fallback' },
-        { item: 'Tomate 🍅', reason: 'Bajo en calorías (18 cal/100g)', type: 'fallback' },
-        { item: 'Brócoli 🥦', reason: 'Rico en fibra (34 cal/100g)', type: 'fallback' },
-        { item: 'Espinacas 🥬', reason: 'Ricas en hierro (23 cal/100g)', type: 'fallback' },
-        { item: 'Calabacín 🥒', reason: 'Bajo en calorías (17 cal/100g)', type: 'fallback' }
-      ]
-      return fallbackProducts.slice(0, limit)
-    }
+    return []
   }
 
   /**

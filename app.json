@@ -6,6 +6,14 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "This app needs camera access to scan barcodes for your shopping list"
+        }
+      ]
+    ],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -13,14 +21,21 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.lwebch.VoiceList"
+      "bundleIdentifier": "com.lwebch.VoiceList",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs camera access to scan barcodes for your shopping list",
+        "NSMicrophoneUsageDescription": "This app needs microphone access for camera functionality"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.lwebch.VoiceList"
+      "package": "com.lwebch.VoiceList",
+      "permissions": [
+        "CAMERA"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
