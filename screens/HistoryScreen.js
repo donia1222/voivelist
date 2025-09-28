@@ -145,6 +145,8 @@ const HistoryScreen = ({ navigation }) => {
   const [favoritesModalVisible4, setFavoritesModalVisible4] = useState(false)
   const [favoritesModalVisible5, setFavoritesModalVisible5] = useState(false)
   const [showUploadIcon, setShowUploadIcon] = useState(false)
+  const [favoritesFilterVisible, setFavoritesFilterVisible] = useState(false) // Default cerrado
+  const favoritesFilterAnim = useRef(new Animated.Value(0)).current // Empezar cerrado
   const [favoriteTitles, setFavoriteTitles] = useState({
     food: currentLabels.food,
     stationery: currentLabels.stationery,
@@ -544,6 +546,40 @@ const HistoryScreen = ({ navigation }) => {
         useNativeDriver: true,
       }),
     ]).start()
+  }
+
+  // Función para mostrar/ocultar filtro de favoritos
+  const toggleFavoritesFilter = async () => {
+    const newState = !favoritesFilterVisible
+    const toValue = newState ? 1 : 0
+    setFavoritesFilterVisible(newState)
+
+    // Guardar estado en AsyncStorage
+    try {
+      await AsyncStorage.setItem('@favorites_filter_visible', JSON.stringify(newState))
+    } catch (error) {
+      console.error('Error saving favorites filter state:', error)
+    }
+
+    Animated.timing(favoritesFilterAnim, {
+      toValue,
+      duration: 300,
+      useNativeDriver: false,
+    }).start()
+  }
+
+  // Función para cargar el estado del filtro de favoritos
+  const loadFavoritesFilterState = async () => {
+    try {
+      const savedState = await AsyncStorage.getItem('@favorites_filter_visible')
+      if (savedState !== null) {
+        const isVisible = JSON.parse(savedState)
+        setFavoritesFilterVisible(isVisible)
+        favoritesFilterAnim.setValue(isVisible ? 1 : 0)
+      }
+    } catch (error) {
+      console.error('Error loading favorites filter state:', error)
+    }
   }
 
   const renderEmptyComponent = () => (
@@ -1411,6 +1447,7 @@ const HistoryScreen = ({ navigation }) => {
     loadFavorites("@favorites3", setFavorites3)
     loadFavorites("@favorites4", setFavorites4)
     loadFavorites("@favorites5", setFavorites5)
+    loadFavoritesFilterState() // Cargar estado del filtro
   }, [])
 
   useEffect(() => {
@@ -1811,43 +1848,84 @@ const HistoryScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={modernStyles.container}>
       
-      {/* Header de favoritos modernizado */}
+      {/* Header de favoritos colapsable */}
       <View style={modernStyles.favoritesHeader}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={modernStyles.categoriesScrollContainer}
+        {/* Botón para expandir/colapsar */}
+        <TouchableOpacity
+          onPress={toggleFavoritesFilter}
+          style={modernStyles.favoritesToggleButton}
         >
-          {[
-            { key: "food", favorites: favorites1, count: favorites1.length },
-            { key: "stationery", favorites: favorites2, count: favorites2.length },
-            { key: "pharmacy", favorites: favorites3, count: favorites3.length },
-            { key: "hardware", favorites: favorites4, count: favorites4.length },
-            { key: "gifts", favorites: favorites5, count: favorites5.length },
-          ].map((category, index) => (
-            <TouchableOpacity
-              key={category.key}
-              onPress={() => showFavoritesModal(category.key)}
-              style={modernStyles.categoryChip}
-            >
-              <Animated.View
-                style={[
-                  modernStyles.categoryChipContent,
-                  { transform: [{ scale: categoryAnimations[category.key] }] },
-                  category.count > 0 && modernStyles.categoryChipActive,
-                ]}
+          <View style={modernStyles.favoritesToggleContent}>
+            <View style={modernStyles.heartIconContainer}>
+              <Ionicons name="heart-outline" size={18} color="#ef4444" />
+            </View>
+            <Text style={modernStyles.favoritesToggleText}>
+              {currentLabels.favorites || 'Favoritos'}
+            </Text>
+          </View>
+          <Animated.View
+            style={{
+              transform: [{
+                rotate: favoritesFilterAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ['0deg', '180deg'],
+                })
+              }]
+            }}
+          >
+            <Ionicons name="chevron-down" size={20} color="#6b7280" />
+          </Animated.View>
+        </TouchableOpacity>
+
+        {/* Filtros colapsables */}
+        <Animated.View
+          style={[
+            modernStyles.favoritesFilterContainer,
+            {
+              height: favoritesFilterAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 80], // Altura cuando está expandido
+              }),
+              opacity: favoritesFilterAnim,
+            }
+          ]}
+        >
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={modernStyles.categoriesScrollContainer}
+          >
+            {[
+              { key: "food", favorites: favorites1, count: favorites1.length },
+              { key: "stationery", favorites: favorites2, count: favorites2.length },
+              { key: "pharmacy", favorites: favorites3, count: favorites3.length },
+              { key: "hardware", favorites: favorites4, count: favorites4.length },
+              { key: "gifts", favorites: favorites5, count: favorites5.length },
+            ].map((category, index) => (
+              <TouchableOpacity
+                key={category.key}
+                onPress={() => showFavoritesModal(category.key)}
+                style={modernStyles.categoryChip}
               >
-                <Image source={favoriteImages[category.key]} style={modernStyles.categoryChipImage} />
-                <Text
-                  style={[modernStyles.categoryChipText, category.count > 0 && modernStyles.categoryChipTextActive]}
+                <Animated.View
+                  style={[
+                    modernStyles.categoryChipContent,
+                    { transform: [{ scale: categoryAnimations[category.key] }] },
+                    category.count > 0 && modernStyles.categoryChipActive,
+                  ]}
                 >
-                  {truncateText(favoriteTitles[category.key], 8)}
-                </Text>
-                <FavoriteCountBadge count={category.count} />
-              </Animated.View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+                  <Image source={favoriteImages[category.key]} style={modernStyles.categoryChipImage} />
+                  <Text
+                    style={[modernStyles.categoryChipText, category.count > 0 && modernStyles.categoryChipTextActive]}
+                  >
+                    {truncateText(favoriteTitles[category.key], 8)}
+                  </Text>
+                  <FavoriteCountBadge count={category.count} />
+                </Animated.View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </Animated.View>
       </View>
 
       {history.length === 0 ? (

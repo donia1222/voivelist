@@ -79,6 +79,7 @@ const translationsHistorial = {
     shareErrorMessage: "Could not share the shopping list.",
     printErrorMessage: "Could not print the shopping list.",
     switchList: "Switch List",
+    favorites: "Favorites",
   },
   es: {
     noHistory: "No hay listas en el historial",
@@ -160,6 +161,7 @@ const translationsHistorial = {
     shareErrorMessage: "No se pudo compartir la lista de compras.",
     printErrorMessage: "No se pudo imprimir la lista de compras.",
     switchList: "Cambiar lista",
+    favorites: "Favoritos",
   },
   de: {
     noHistory: "Keine Listen im Verlauf",
@@ -240,6 +242,7 @@ const translationsHistorial = {
     shareErrorMessage: "Die Einkaufsliste konnte nicht geteilt werden.",
     printErrorMessage: "Die Einkaufsliste konnte nicht gedruckt werden.",
     switchList: "Liste wechseln",
+    favorites: "Favoriten",
   },
   it: {
     noHistory: "Non ci sono liste nella cronologia",
@@ -320,6 +323,7 @@ const translationsHistorial = {
     shareErrorMessage: "Impossibile condividere la lista della spesa.",
     printErrorMessage: "Impossibile stampare la lista della spesa.",
     switchList: "Cambia lista",
+    favorites: "Preferiti",
   },
   fr: {
     noHistory: "Il n'y a pas de listes dans l'historique",
@@ -400,6 +404,7 @@ const translationsHistorial = {
     shareErrorMessage: "Impossible de partager la liste de courses.",
     printErrorMessage: "Impossible d'imprimer la liste de courses.",
     switchList: "Changer de liste",
+    favorites: "Favoris",
   },
   tr: {
     noHistory: "Geçmişte liste bulunmamaktadır",
@@ -480,6 +485,7 @@ const translationsHistorial = {
     shareErrorMessage: "Alışveriş listesi paylaşılamadı.",
     printErrorMessage: "Alışveriş listesi yazdırılamadı.",
     switchList: "Liste değiştir",
+    favorites: "Favoriler",
   },
   pt: {
     noHistory: "Não há listas no histórico",
@@ -560,6 +566,7 @@ const translationsHistorial = {
     shareErrorMessage: "Não foi possível compartilhar a lista de compras.",
     printErrorMessage: "Não foi possível imprimir a lista de compras.",
     switchList: "Trocar lista",
+    favorites: "Favoritos",
   },
   ru: {
     noHistory: "История пуста",
@@ -640,6 +647,7 @@ const translationsHistorial = {
     shareErrorMessage: "Не удалось поделиться списком покупок.",
     printErrorMessage: "Не удалось распечатать список покупок.",
     switchList: "Переключить список",
+    favorites: "Избранное",
   },
   ar: {
     noHistory: "لا توجد قوائم في التاريخ",
@@ -720,6 +728,7 @@ const translationsHistorial = {
     shareErrorMessage: "لم يتمكن من مشاركة قائمة التسوق.",
     printErrorMessage: "لم يتمكن من طباعة قائمة التسوق.",
     switchList: "تبديل القائمة",
+    favorites: "المفضلة",
   },
   hu: {
     noHistory: "Nincsenek listák a történetben",
@@ -800,6 +809,7 @@ const translationsHistorial = {
     shareErrorMessage: "Nem sikerült megosztani a bevásárlólistát.",
     printErrorMessage: "Nem sikerült kinyomtatni a bevásárlólistát.",
     switchList: "Lista váltása",
+    favorites: "Kedvencek",
   },
   ja: {
     noHistory: "履歴にリストがありません",
@@ -880,6 +890,7 @@ const translationsHistorial = {
     shareErrorMessage: "ショッピングリストを共有できませんでした。",
     printErrorMessage: "ショッピングリストを印刷できませんでした。",
     switchList: "リストを切り替え",
+    favorites: "お気に入り",
   },
   hi: {
     noHistory: "इतिहास में कोई सूची नहीं है",
@@ -960,6 +971,7 @@ const translationsHistorial = {
     shareErrorMessage: "शॉपिंग लिस्ट साझा नहीं कर सके।",
     printErrorMessage: "शॉपिंग लिस्ट प्रिंट नहीं कर सके।",
     switchList: "सूची बदलें",
+    favorites: "पसंदीदा",
   },
   nl: {
     noHistory: "Er zijn geen lijsten in de geschiedenis",
@@ -1040,6 +1052,7 @@ const translationsHistorial = {
     shareErrorMessage: "Kon de boodschappenlijst niet delen.",
     printErrorMessage: "Kon de boodschappenlijst niet afdrukken.",
     switchList: "Lijst omschakelen",
+    favorites: "Favorieten",
   },
 };
 

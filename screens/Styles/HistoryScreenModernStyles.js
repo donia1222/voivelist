@@ -11,7 +11,6 @@ const getModernStyles = (theme) => StyleSheet.create({
   // Header de favoritos modernizado
   favoritesHeader: {
     backgroundColor: theme.background || "#fefefe",
-
     elevation: 2,
     borderBottomWidth: 1,
     borderBottomColor: "rgba(200, 216, 228, 0.1)",
@@ -19,6 +18,43 @@ const getModernStyles = (theme) => StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
+  },
+
+  // Botón para expandir/colapsar favoritos
+  favoritesToggleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: theme.background || "#fefefe",
+  },
+
+  favoritesToggleContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  heartIconContainer: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 4,
+    backgroundColor: 'rgba(239, 68, 68, 0.05)',
+  },
+
+  favoritesToggleText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: theme.text || '#374151',
+  },
+
+  // Contenedor de filtros colapsables
+  favoritesFilterContainer: {
+    overflow: 'hidden',
+    backgroundColor: theme.background || "#fefefe",
   },
   
 
@@ -105,7 +141,7 @@ marginBottom:-0,
     backgroundColor: "#ffffff67",
     borderRadius: 24,
     marginHorizontal: 16,
-    marginVertical: 12,
+    marginVertical: 2,
     padding: 16,
     shadowColor: "#a8d5a8",
     shadowOffset: { width: 0, height: 2 },
