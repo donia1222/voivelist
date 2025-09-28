@@ -36,9 +36,10 @@ const isSmallIPhone = Platform.OS === 'ios' && screenWidth <= 375
  * Pantalla dedicada para Recomendaciones Personalizadas
  * Permite ver sugerencias y agregarlas a listas existentes
  */
-const RecommendationsScreen = ({ navigation }) => {
+const RecommendationsScreen = ({ navigation, route }) => {
   const { theme } = useTheme()
   const { triggerHaptic } = useHaptic()
+  const { onNavigateToHome } = route.params || {}
 
   // Estados principales
   const [recommendations, setRecommendations] = useState([])
@@ -66,6 +67,10 @@ const RecommendationsScreen = ({ navigation }) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false) // Loader para cargar más productos
   const [canLoadMore, setCanLoadMore] = useState(true) // Si puede cargar más
 
+  // Estados para modo 7 - modal informativo
+  const [showInfoModal, setShowInfoModal] = useState(false)
+  const [hasShownInfoModal, setHasShownInfoModal] = useState(false)
+
   // Animaciones y referencias
   const fadeAnim = useRef(new Animated.Value(0)).current
   const slideAnim = useRef(new Animated.Value(30)).current
@@ -83,7 +88,26 @@ const RecommendationsScreen = ({ navigation }) => {
   useEffect(() => {
     loadStats()
     startAnimations()
+    checkFirstTimeModal()
   }, [])
+
+  // Verificar si es la primera vez y mostrar modal
+  const checkFirstTimeModal = async () => {
+    try {
+      const hasSeenModal = await AsyncStorage.getItem("@recommendations_modal_shown")
+      if (!hasSeenModal) {
+        // Es la primera vez, mostrar modal después de un pequeño delay
+        setTimeout(() => {
+          setShowInfoModal(true)
+          setHasShownInfoModal(true)
+        }, 1500) // Delay de 1.5 segundos para que cargue la pantalla
+      } else {
+        setHasShownInfoModal(true)
+      }
+    } catch (error) {
+      console.error('Error checking first time modal:', error)
+    }
+  }
 
   // Recargar SOLO la primera vez que la pantalla recibe focus
   useFocusEffect(
@@ -323,6 +347,7 @@ const RecommendationsScreen = ({ navigation }) => {
       prompt += tDiet.healthyOptions + " "
       prompt += tDiet.varietyOfProducts + " "
       prompt += tDiet.portionSizes + " "
+      prompt += "IMPORTANT: Always include nutritional information per 100 grams. This is mandatory for every product. "
       prompt += tDiet.responseFormat + " "
       prompt += tDiet.exampleFormat
 
@@ -615,13 +640,23 @@ const RecommendationsScreen = ({ navigation }) => {
       alignItems: 'center',
       marginBottom: 20,
     },
+    titleRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 8,
+    },
     title: {
       fontSize: isSmallIPhone ? 24 : 28,
       fontWeight: 'bold',
       color: theme.text,
       textAlign: 'center',
-      marginBottom: 8,
-  
+      marginRight: 12,
+    },
+    infoButton: {
+      padding: 4,
+      borderRadius: 20,
+      backgroundColor: theme.backgroundtres + '10',
     },
     subtitle: {
       fontSize: isSmallIPhone ? 12 : 14,
@@ -689,6 +724,7 @@ const RecommendationsScreen = ({ navigation }) => {
       color: theme.text,
       textAlign: 'center',
       marginBottom: 16,
+      marginTop: -26,
     },
     noHistoryMessage: {
       fontSize: isSmallIPhone ? 14 : 16,
@@ -1076,47 +1112,88 @@ const RecommendationsScreen = ({ navigation }) => {
       fontSize: 15,
       fontWeight: '600',
     },
-    filtersContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginHorizontal: 10,
-      marginTop: -35,
-      marginBottom: 2,
-      gap: 8,
+    // Estilos mejorados para pestañas de navegación
+    tabsNavigationContainer: {
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      marginTop: -45,
     },
-    filterButtonActive: {
-      flex: 1,
+    tabsWrapper: {
       flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: theme.backgroundtres + '10',
-      borderRadius: 10,
-      paddingVertical: 8,
-      paddingHorizontal: 12,
-      borderWidth: 1,
-      borderColor: theme.backgroundtres + '20',
-    },
-    filterButton: {
-      flex: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
       backgroundColor: theme.background,
-      borderRadius: 10,
-      paddingVertical: 8,
-      paddingHorizontal: 12,
+      borderRadius: 20,
+      padding: 6,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 12,
+      elevation: 8,
       borderWidth: 1,
-      borderColor: theme.backgroundtres + '10',
+      borderColor: theme.backgroundtres + '15',
     },
-    filterTextActive: {
+    tabButton: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 10,
+      paddingHorizontal: 8,
+      borderRadius: 16,
+      backgroundColor: 'transparent',
+      marginHorizontal: 2,
+    },
+    tabButtonActive: {
+      backgroundColor: '#4a6bff',
+      shadowColor: '#4a6bff',
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 6,
+    },
+    tabIcon: {
+      marginRight: 6,
+    },
+    tabLabel: {
       fontSize: isSmallIPhone ? 11 : 12,
       fontWeight: '600',
-      color: '#4a6bff',
+      color: theme.text,
+      textAlign: 'center',
     },
-    filterTextInactive: {
-      fontSize: isSmallIPhone ? 11 : 12,
-      fontWeight: '600',
+    tabLabelActive: {
+      color: 'white',
+    },
+    // Estilos para banner dinámico
+    dynamicBannerContainer: {
+      backgroundColor: theme.backgroundtres + '08',
+      marginHorizontal: 16,
+      marginTop: 8,
+      marginBottom: 16,
+      borderRadius: 16,
+      paddingVertical: 16,
+      paddingHorizontal: 20,
+      borderWidth: 1,
+      borderColor: theme.backgroundtres + '15',
+    },
+    dynamicBannerTitle: {
+      fontSize: isSmallIPhone ? 16 : 18,
+      fontWeight: '700',
+      color: theme.text,
+      textAlign: 'center',
+      marginBottom: 6,
+    },
+    dynamicBannerSubtitle: {
+      fontSize: isSmallIPhone ? 13 : 14,
+      fontWeight: '500',
       color: theme.textSecondary,
+      textAlign: 'center',
+      lineHeight: 20,
+      opacity: 0.9,
     },
     refreshButton: {
       flexDirection: 'row',
@@ -1131,6 +1208,71 @@ const RecommendationsScreen = ({ navigation }) => {
       color: '#4a6bff',
       fontSize: isSmallIPhone ? 12 : 13,
       fontWeight: '700',
+    },
+    // Estilos para modal informativo modo 7
+    infoModalContent: {
+      backgroundColor: theme.background,
+      borderRadius: 20,
+      paddingVertical: 30,
+      paddingHorizontal: 25,
+      width: '100%',
+      maxWidth: 400,
+      maxHeight: '80%',
+    },
+    infoModalHeader: {
+      alignItems: 'center',
+      marginBottom: 25,
+    },
+    infoModalIcon: {
+      marginBottom: 15,
+    },
+    infoModalTitle: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      color: theme.text,
+      textAlign: 'center',
+      marginBottom: 8,
+    },
+    infoModalSubtitle: {
+      fontSize: 14,
+      color: theme.textSecondary,
+      textAlign: 'center',
+    },
+    infoFeatureItem: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      marginBottom: 20,
+      paddingHorizontal: 10,
+    },
+    infoFeatureIcon: {
+      marginRight: 15,
+      marginTop: 2,
+    },
+    infoFeatureContent: {
+      flex: 1,
+    },
+    infoFeatureTitle: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: theme.text,
+      marginBottom: 4,
+    },
+    infoFeatureDescription: {
+      fontSize: 14,
+      color: theme.textSecondary,
+      lineHeight: 20,
+    },
+    infoModalCloseButton: {
+      backgroundColor: '#4a6bff',
+      borderRadius: 12,
+      paddingVertical: 15,
+      alignItems: 'center',
+      marginTop: 20,
+    },
+    infoModalCloseButtonText: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: '600',
     },
   }
 
@@ -1149,43 +1291,67 @@ const RecommendationsScreen = ({ navigation }) => {
           ]}
         >
 
+        
         </Animated.View>
 
 
-        {/* Filtros de navegación */}
-        <View style={styles.filtersContainer}>
-          <TouchableOpacity
-            style={activeTab === 'history' ? styles.filterButtonActive : styles.filterButton}
-            onPress={() => {
-              triggerHaptic()
-              setActiveTab('history')
-            }}
-          >
-            <Ionicons name="time-outline" size={16} color={activeTab === 'history' ? "#4a6bff" : theme.textSecondary} style={{ marginRight: 6 }} />
-            <Text style={activeTab === 'history' ? styles.filterTextActive : styles.filterTextInactive}>{t.historySubtitle || 'Basado en tu historial de compras'}</Text>
-          </TouchableOpacity>
+        {/* Navegación de pestañas mejorada */}
+        <View style={styles.tabsNavigationContainer}>
+          <View style={styles.tabsWrapper}>
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'history' && styles.tabButtonActive]}
+              onPress={() => {
+                triggerHaptic()
+                setActiveTab('history')
+              }}
+            >
+              <Ionicons
+                name="time-outline"
+                size={16}
+                color={activeTab === 'history' ? "white" : "#4a6bff"}
+                style={styles.tabIcon}
+              />
+              <Text style={[styles.tabLabel, activeTab === 'history' && styles.tabLabelActive]}>
+                {t.historyTab || 'Historial'}
+              </Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={activeTab === 'seasonal' ? styles.filterButtonActive : styles.filterButton}
-            onPress={() => {
-              triggerHaptic()
-              setActiveTab('seasonal')
-            }}
-          >
-            <Ionicons name="leaf-outline" size={16} color={activeTab === 'seasonal' ? "#4a6bff" : theme.textSecondary} style={{ marginRight: 6 }} />
-            <Text style={activeTab === 'seasonal' ? styles.filterTextActive : styles.filterTextInactive}>{t.seasonalSubtitle || 'Productos de temporada'}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'seasonal' && styles.tabButtonActive]}
+              onPress={() => {
+                triggerHaptic()
+                setActiveTab('seasonal')
+              }}
+            >
+              <Ionicons
+                name="leaf-outline"
+                size={16}
+                color={activeTab === 'seasonal' ? "white" : "#10b981"}
+                style={styles.tabIcon}
+              />
+              <Text style={[styles.tabLabel, activeTab === 'seasonal' && styles.tabLabelActive]}>
+                {t.seasonalTab || 'Temporada'}
+              </Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={activeTab === 'diet' ? styles.filterButtonActive : styles.filterButton}
-            onPress={() => {
-              triggerHaptic()
-              setActiveTab('diet')
-            }}
-          >
-            <Ionicons name="nutrition-outline" size={16} color={activeTab === 'diet' ? "#4a6bff" : theme.textSecondary} style={{ marginRight: 6 }} />
-            <Text style={activeTab === 'diet' ? styles.filterTextActive : styles.filterTextInactive}>{tDiet.tabLabel || 'Nutrición'}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'diet' && styles.tabButtonActive]}
+              onPress={() => {
+                triggerHaptic()
+                setActiveTab('diet')
+              }}
+            >
+              <Ionicons
+                name="nutrition-outline"
+                size={16}
+                color={activeTab === 'diet' ? "white" : "#f59e0b"}
+                style={styles.tabIcon}
+              />
+              <Text style={[styles.tabLabel, activeTab === 'diet' && styles.tabLabelActive]}>
+                {tDiet.tabLabel || 'Nutrición'}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
@@ -1197,6 +1363,20 @@ const RecommendationsScreen = ({ navigation }) => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
+
+        {/* Banner dinámico con descripción de la pestaña activa */}
+        <View style={styles.dynamicBannerContainer}>
+          <Text style={styles.dynamicBannerTitle}>
+            {activeTab === 'history' && (t.historyBannerTitle || '🕒 Recomendaciones Personalizadas')}
+            {activeTab === 'seasonal' && (t.seasonalBannerTitle || '🍃 Productos de Temporada')}
+            {activeTab === 'diet' && (tDiet.dietBannerTitle || '🥗 Nutrición Balanceada')}
+          </Text>
+          <Text style={styles.dynamicBannerSubtitle}>
+            {activeTab === 'history' && (t.historyBannerDesc || 'Basado en tu patrón de compras anterior')}
+            {activeTab === 'seasonal' && (t.seasonalBannerDesc || 'Productos frescos ideales para esta época')}
+            {activeTab === 'diet' && (tDiet.dietBannerDesc || 'Alimentos saludables con información nutricional')}
+          </Text>
+        </View>
 
         {/* Estadísticas - solo mostrar en historial */}
         {stats && activeTab === 'history' && (
@@ -1268,12 +1448,17 @@ const RecommendationsScreen = ({ navigation }) => {
             {!hasHistory ? (
               // No hay historial - mostrar mensaje específico
               <>
-                <Ionicons name="list-outline" size={64} color="#4a6bff" style={styles.noHistoryIcon} />
                 <Text style={styles.noHistoryTitle}>{t.noHistoryTitle}</Text>
                 <Text style={styles.noHistoryMessage}>{t.noHistoryMessage}</Text>
                 <TouchableOpacity
                   style={styles.createListButton}
-                  onPress={() => navigation.navigate('HomeScreen')}
+                  onPress={() => {
+                    if (onNavigateToHome) {
+                      onNavigateToHome()
+                    } else {
+                      console.warn("No navigation function provided")
+                    }
+                  }}
                 >
                   <Ionicons name="add-circle" size={20} color="white" style={styles.createListButtonIcon} />
                   <Text style={styles.createListButtonText}>{t.createFirstList}</Text>
@@ -1320,10 +1505,17 @@ const RecommendationsScreen = ({ navigation }) => {
                     </Text>
                     <TouchableOpacity
                       style={styles.createFirstListButton}
-                      onPress={() => navigation.navigate('HomeScreen')}
+                      onPress={() => {
+                        if (onNavigateToHome) {
+                          onNavigateToHome()
+                        } else {
+                          // Fallback si no hay función de navegación
+                          console.warn("No navigation function provided")
+                        }
+                      }}
                     >
                       <Ionicons name="add-circle" size={20} color="white" style={styles.createFirstListButtonIcon} />
-                      <Text style={styles.createFirstListButtonText}>Crear mi primera lista</Text>
+                      <Text style={styles.createFirstListButtonText}>{t.createFirstList}</Text>
                     </TouchableOpacity>
                   </View>
                 )
@@ -1394,15 +1586,7 @@ const RecommendationsScreen = ({ navigation }) => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{t.selectList}</Text>
 
-            {/* Opción: Agregar a lista actual */}
-            <TouchableOpacity
-              style={styles.currentListButton}
-              onPress={handleAddToCurrentList}
-            >
-              <Text style={styles.currentListButtonText}>
-                {t.addToCurrentList}
-              </Text>
-            </TouchableOpacity>
+
 
             {/* Lista de listas guardadas */}
             <ScrollView style={{ maxHeight: '60%' }}>
@@ -1415,17 +1599,7 @@ const RecommendationsScreen = ({ navigation }) => {
                   <Text style={styles.noListsModalMessage}>
                     {t.noListsModalMessage}
                   </Text>
-                  <TouchableOpacity
-                    style={styles.goCreateListButton}
-                    onPress={() => {
-                      console.log("USER CLICKED 'Create List' button - navigating to HomeScreen")
-                      setShowListModal(false)
-                      navigation.navigate('HomeScreen')
-                    }}
-                  >
-                    <Ionicons name="add-circle" size={20} color="white" style={styles.goCreateListButtonIcon} />
-                    <Text style={styles.goCreateListButtonText}>{t.goCreateList}</Text>
-                  </TouchableOpacity>
+       
                 </View>
               ) : (
                 historyLists.map((list, index) => (
@@ -1443,7 +1617,7 @@ const RecommendationsScreen = ({ navigation }) => {
                     <View style={styles.listInfo}>
                       <Text style={styles.listName}>{list.name}</Text>
                       <Text style={styles.listItemCount}>
-                        {list.list.length} productos
+                        {list.list.length} {t.products}
                       </Text>
                     </View>
                     <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
@@ -1458,6 +1632,120 @@ const RecommendationsScreen = ({ navigation }) => {
               onPress={() => setShowListModal(false)}
             >
               <Text style={styles.closeModalButtonText}>{t.cancel}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal informativo modo 7 */}
+      <Modal
+        visible={showInfoModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowInfoModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.infoModalContent}>
+            <View style={styles.infoModalHeader}>
+              <Ionicons
+                name="bulb"
+                size={48}
+                color="#4a6bff"
+                style={styles.infoModalIcon}
+              />
+              <Text style={styles.infoModalTitle}>
+                {t.infoModalTitle || '¡Recomendaciones Inteligentes!'}
+              </Text>
+              <Text style={styles.infoModalSubtitle}>
+                {t.infoModalSubtitle || 'Descubre las nuevas funciones de esta pantalla'}
+              </Text>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={styles.infoFeatureItem}>
+                <Ionicons
+                  name="time-outline"
+                  size={24}
+                  color="#4a6bff"
+                  style={styles.infoFeatureIcon}
+                />
+                <View style={styles.infoFeatureContent}>
+                  <Text style={styles.infoFeatureTitle}>
+                    {t.historyFeatureTitle || 'Basado en tu historial'}
+                  </Text>
+                  <Text style={styles.infoFeatureDescription}>
+                    {t.historyFeatureDescription || 'Analizamos tus compras anteriores para sugerir productos que realmente necesitas.'}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.infoFeatureItem}>
+                <Ionicons
+                  name="leaf-outline"
+                  size={24}
+                  color="#10b981"
+                  style={styles.infoFeatureIcon}
+                />
+                <View style={styles.infoFeatureContent}>
+                  <Text style={styles.infoFeatureTitle}>
+                    {tSeasonal.featureTitle || 'Productos de temporada'}
+                  </Text>
+                  <Text style={styles.infoFeatureDescription}>
+                    {tSeasonal.featureDescription || 'Productos frescos y de temporada según tu ubicación y la época del año.'}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.infoFeatureItem}>
+                <Ionicons
+                  name="nutrition-outline"
+                  size={24}
+                  color="#f59e0b"
+                  style={styles.infoFeatureIcon}
+                />
+                <View style={styles.infoFeatureContent}>
+                  <Text style={styles.infoFeatureTitle}>
+                    {tDiet.featureTitle || 'Nutrición balanceada'}
+                  </Text>
+                  <Text style={styles.infoFeatureDescription}>
+                    {tDiet.featureDescription || 'Sugerencias saludables y nutritivas para una dieta equilibrada.'}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.infoFeatureItem}>
+                <Ionicons
+                  name="sync-outline"
+                  size={24}
+                  color="#8b5cf6"
+                  style={styles.infoFeatureIcon}
+                />
+                <View style={styles.infoFeatureContent}>
+                  <Text style={styles.infoFeatureTitle}>
+                    {t.syncFeatureTitle || 'Sincronización automática'}
+                  </Text>
+                  <Text style={styles.infoFeatureDescription}>
+                    {t.syncFeatureDescription || 'Agrega productos directamente a tus listas existentes o crea nuevas listas.'}
+                  </Text>
+                </View>
+              </View>
+            </ScrollView>
+
+            <TouchableOpacity
+              style={styles.infoModalCloseButton}
+              onPress={async () => {
+                setShowInfoModal(false)
+                // Marcar que ya se mostró el modal
+                try {
+                  await AsyncStorage.setItem("@recommendations_modal_shown", "true")
+                } catch (error) {
+                  console.error('Error saving modal shown flag:', error)
+                }
+              }}
+            >
+              <Text style={styles.infoModalCloseButtonText}>
+                {t.gotIt || '¡Entendido!'}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -1,6 +1,6 @@
 const recommendationsTranslations = {
   en: {
-    title: "Recommendations",
+    title: "AI Smart Recommendations",
     subtitle: "Based on your shopping history",
     addToList: "Add to list",
     selectList: "Select list",
@@ -120,10 +120,30 @@ const recommendationsTranslations = {
       hotSeason: "Hot season",
       backToSchool: "Back to school",
       weekend: "Weekend"
-    }
+    },
+    // Modal informativo modo 7
+    infoModalTitle: "Smart AI Recommendations!",
+    infoModalSubtitle: "Discover the new features of this screen",
+    historyFeatureTitle: "Based on your history",
+    historyFeatureDescription: "We analyze your previous purchases to suggest products you really need.",
+    syncFeatureTitle: "Automatic sync",
+    syncFeatureDescription: "Add products directly to your existing lists or create new ones.",
+    gotIt: "Got it!",
+    createFirstList: "Create my first list",
+    products: "products",
+    // Nuevos labels para pestañas mejoradas
+    historyTab: "History",
+    historyDesc: "Your pattern",
+    seasonalTab: "Seasonal",
+    seasonalDesc: "Fresh products",
+    // Banner dinámico
+    historyBannerTitle: "🕒 Personal Recommendations",
+    historyBannerDesc: "Based on your previous shopping patterns",
+    seasonalBannerTitle: "🍃 Seasonal Products",
+    seasonalBannerDesc: "Fresh products ideal for this season"
   },
   es: {
-    title: "Recomendaciones",
+    title: "Recomendaciones Inteligentes con IA",
     subtitle: "Basadas en tu historial de compras",
     addToList: "Agregar a lista",
     selectList: "Seleccionar lista",
@@ -243,10 +263,30 @@ const recommendationsTranslations = {
       hotSeason: "Temporada de calor",
       backToSchool: "Regreso a clases",
       weekend: "Fin de semana"
-    }
+    },
+    // Modal informativo modo 7
+    infoModalTitle: "¡Recomendaciones Inteligentes con IA!",
+    infoModalSubtitle: "Descubre las nuevas funciones de esta pantalla",
+    historyFeatureTitle: "Basado en tu historial",
+    historyFeatureDescription: "Analizamos tus compras anteriores para sugerir productos que realmente necesitas.",
+    syncFeatureTitle: "Sincronización automática",
+    syncFeatureDescription: "Agrega productos directamente a tus listas existentes o crea nuevas listas.",
+    gotIt: "¡Entendido!",
+    createFirstList: "Crear mi primera lista",
+    products: "productos",
+    // Nuevos labels para pestañas mejoradas
+    historyTab: "Historial",
+    historyDesc: "Tu patrón",
+    seasonalTab: "Temporada",
+    seasonalDesc: "Productos frescos",
+    // Banner dinámico
+    historyBannerTitle: "🕒 Recomendaciones Personalizadas",
+    historyBannerDesc: "Basado en tu patrón de compras anterior",
+    seasonalBannerTitle: "🍃 Productos de Temporada",
+    seasonalBannerDesc: "Productos frescos ideales para esta época"
   },
   de: {
-    title: "Empfehlungen",
+    title: "KI-Smart Empfehlungen",
     subtitle: "Basierend auf Ihrer Einkaufshistorie",
     addToList: "Zur Liste hinzufügen",
     selectList: "Liste auswählen",
@@ -361,7 +401,7 @@ const recommendationsTranslations = {
     dietExample: "Beispiel:\nGurke 🥒 - Nur 16 Kalorien pro 100g, hoher Wassergehalt\nSpinat 🥬 - 23 Kalorien pro 100g, reich an Eisen und Ballaststoffen"
   },
   it: {
-    title: "Raccomandazioni",
+    title: "Raccomandazioni Intelligenti AI",
     subtitle: "Basate sui tuoi modelli di acquisto",
     addToList: "Aggiungi alla lista",
     selectList: "Seleziona lista",
@@ -475,7 +515,7 @@ const recommendationsTranslations = {
     dietExample: "Esempio:\nCetriolo 🥒 - Solo 16 calorie per 100g, alto contenuto d'acqua\nSpinaci 🥬 - 23 calorie per 100g, ricchi di ferro e fibre"
   },
   fr: {
-    title: "Recommandations",
+    title: "Recommandations Intelligentes IA",
     subtitle: "Basées sur vos habitudes d'achat",
     addToList: "Ajouter à la liste",
     selectList: "Sélectionner une liste",
@@ -589,7 +629,7 @@ const recommendationsTranslations = {
     dietExample: "Exemple:\nConcombre 🥒 - Seulement 16 calories pour 100g, forte teneur en eau\nÉpinards 🥬 - 23 calories pour 100g, riches en fer et fibres"
   },
   pt: {
-    title: "Recomendações",
+    title: "Recomendações Inteligentes com IA",
     subtitle: "Baseadas nos seus padrões de compra",
     addToList: "Adicionar à lista",
     selectList: "Selecionar lista",
@@ -702,7 +742,7 @@ const recommendationsTranslations = {
     dietExample: "Exemplo:\nPepino 🥒 - Apenas 16 calorias por 100g, alto teor de água\nEspinafre 🥬 - 23 calorias por 100g, rico em ferro e fibras"
   },
   ru: {
-    title: "Рекомендации",
+    title: "Умные Рекомендации ИИ",
     subtitle: "На основе ваших покупательских привычек",
     addToList: "Добавить в список",
     selectList: "Выбрать список",
@@ -815,7 +855,7 @@ const recommendationsTranslations = {
     dietExample: "Пример:\nОгурец 🥒 - Только 16 калорий на 100г, высокое содержание воды\nШпинат 🥬 - 23 калории на 100г, богат железом и клетчаткой"
   },
   ar: {
-    title: "توصيات شخصية",
+    title: "توصيات ذكية بالذكاء الاصطناعي",
     subtitle: "بناءً على أنماط التسوق الخاصة بك",
     addToList: "إضافة إلى القائمة",
     selectList: "اختيار قائمة",
@@ -925,7 +965,7 @@ const recommendationsTranslations = {
     dietExample: "مثال:\nخيار 🥒 - فقط 16 سعرة حرارية لكل 100غ، محتوى عالي من الماء\nسبانخ 🥬 - 23 سعرة حرارية لكل 100غ، غني بالحديد والألياف"
   },
   hu: {
-    title: "Személyre Szabott Ajánlások",
+    title: "Intelligens AI Ajánlások",
     subtitle: "A vásárlási szokásai alapján",
     addToList: "Hozzáadás a listához",
     selectList: "Lista kiválasztása",
@@ -1035,7 +1075,7 @@ const recommendationsTranslations = {
     dietExample: "Példa:\nUborka 🥒 - Csak 16 kalória 100g-onként, magas víztartalom\nSpenót 🥬 - 23 kalória 100g-onként, gazdag vasban és rostban"
   },
   ja: {
-    title: "パーソナライズされた推奨事項",
+    title: "AIスマート推奨事項",
     subtitle: "お客様の購買パターンに基づいて",
     addToList: "リストに追加",
     selectList: "リストを選択",
@@ -1145,7 +1185,7 @@ const recommendationsTranslations = {
     dietExample: "例：\nきゅうり 🥒 - 100gあたりわずか16カロリー、水分含有量が高い\nほうれん草 🥬 - 100gあたり23カロリー、鉄分と繊維が豊富"
   },
   tr: {
-    title: "Kişiselleştirilmiş Öneriler",
+    title: "Akıllı AI Önerileri",
     subtitle: "Alışveriş alışkanlıklarınıza dayalı",
     addToList: "Listeye ekle",
     selectList: "Liste seç",
@@ -1255,7 +1295,7 @@ const recommendationsTranslations = {
     dietExample: "Örnek:\nSalatalık 🥒 - 100g başına sadece 16 kalori, yüksek su içeriği\nIspanak 🥬 - 100g başına 23 kalori, demir ve lifçe zengin"
   },
   hi: {
-    title: "व्यक्तिगत सिफारिशें",
+    title: "स्मार्ट एआई सिफारिशें",
     subtitle: "आपके खरीदारी पैटर्न के आधार पर",
     addToList: "सूची में जोड़ें",
     selectList: "सूची चुनें",
@@ -1365,7 +1405,7 @@ const recommendationsTranslations = {
     dietExample: "उदाहरण:\nखीरा 🥒 - प्रति 100 ग्राम केवल 16 कैलोरी, उच्च पानी की मात्रा\nपालक 🥬 - प्रति 100 ग्राम 23 कैलोरी, आयरन और फाइबर से भरपूर"
   },
   nl: {
-    title: "Gepersonaliseerde Aanbevelingen",
+    title: "Slimme AI Aanbevelingen",
     subtitle: "Gebaseerd op uw winkelpatronen",
     addToList: "Toevoegen aan lijst",
     selectList: "Lijst selecteren",

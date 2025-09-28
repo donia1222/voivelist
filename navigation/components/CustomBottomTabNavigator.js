@@ -366,6 +366,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const modernStyles = getModernStyles()
   const [activeTab, setActiveTab] = useState(initialTab)
   const [isMenuModalVisible, setMenuModalVisible] = useState(false)
+  const [showNewBadge, setShowNewBadge] = useState(false)
   const iconScaleAnim = useRef(new Animated.Value(1)).current
 
   // Detectar iPhone SE (pantalla pequeña)
@@ -375,7 +376,20 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   // Get current language labels for success modal
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const currentLabels = texts[deviceLanguage] || texts["en"]
-  
+
+  // Check if should show NEW badge on recommendations
+  useEffect(() => {
+    const checkNewBadge = async () => {
+      try {
+        const hasSeenRecommendations = await AsyncStorage.getItem("@has_seen_recommendations_badge")
+        setShowNewBadge(hasSeenRecommendations !== "true")
+      } catch (error) {
+        console.error("Error checking badge status:", error)
+      }
+    }
+    checkNewBadge()
+  }, [])
+
   // Debug modal state
   useEffect(() => {
     console.log("Menu modal visible:", isMenuModalVisible)
@@ -947,7 +961,11 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       label: menuTexts.recommendations || "Recomendaciones",
       icon: "bulb",
       color: "#8B5CF6",
-      onPress: () => {
+      onPress: async () => {
+        if (showNewBadge) {
+          await AsyncStorage.setItem("@has_seen_recommendations_badge", "true")
+          setShowNewBadge(false)
+        }
         setMenuModalVisible(false)
         setActiveTab("Recommendations")
       }
@@ -1078,7 +1096,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       case "Recommendations":
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="RecommendationsScreen" component={RecommendationsScreen} />
+            <Stack.Screen
+              name="RecommendationsScreen"
+              component={RecommendationsScreen}
+              initialParams={{
+                onNavigateToHome: () => setActiveTab("Home")
+              }}
+            />
             <Stack.Screen name="SeasonalRecommendationsScreen" component={SeasonalRecommendationsScreen} />
           </Stack.Navigator>
         )
@@ -1544,8 +1568,39 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                     borderRadius: 18,
                     borderLeftWidth: 4,
                     borderLeftColor: item.color,
+                    position: 'relative',
                   }}
                 >
+                  {showNewBadge && item.icon === "bulb" && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 10,
+                        backgroundColor: '#ff375f',
+                        borderRadius: 10,
+                        paddingHorizontal: 6,
+                        paddingVertical: 2,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.25,
+                        shadowRadius: 3.84,
+                        elevation: 5,
+                        zIndex: 10,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 9,
+                          fontWeight: 'bold',
+                          letterSpacing: 0.5,
+                        }}
+                      >
+                        {deviceLanguage === 'es' ? 'NUEVO' : deviceLanguage === 'de' ? 'NEU' : deviceLanguage === 'fr' ? 'NOUVEAU' : deviceLanguage === 'it' ? 'NUOVO' : deviceLanguage === 'pt' ? 'NOVO' : 'NEW'}
+                      </Text>
+                    </View>
+                  )}
                   <View
                     style={{
                       backgroundColor: item.color + "20",
