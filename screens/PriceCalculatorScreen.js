@@ -1174,18 +1174,6 @@ marginTop:-10,
               >
                 <Text style={[styles.buttonText, { color: '#dc2626' }]}>{t.cancel}</Text>
               </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.confirmButton, { backgroundColor: '#dc2626', borderColor: '#dc2626', flex: 1 }]}
-                onPress={() => {
-                  setSubscriptionModalVisible(false)
-                  if (onNavigateToSubscribe) {
-                    onNavigateToSubscribe()
-                  }
-                }}
-              >
-                <Text style={[styles.buttonText, { color: '#fff' }]}>{t.subscribe}</Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>

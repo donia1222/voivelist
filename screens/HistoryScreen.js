@@ -21,6 +21,7 @@ import {
   KeyboardAvoidingView,
   AppState,
 } from "react-native"
+import DraggableFlatList from 'react-native-draggable-flatlist'
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { useIsFocused } from "@react-navigation/native"
@@ -796,12 +797,24 @@ const HistoryScreen = ({ navigation }) => {
       const reversedForStorage = [...newHistory].reverse()
       await AsyncStorage.setItem("@shopping_history", JSON.stringify(reversedForStorage))
       setHistory(newHistory)
-      
+
       // Update widget with shopping lists (original order - most recent first)
       await WidgetService.updateWidgetShoppingLists(newHistory, completedItems)
     } catch (e) {
       console.error("Error saving history: ", e)
     }
+  }
+
+  const handleDragEnd = ({ data }) => {
+    setHistory(data)
+    // Guardar el nuevo orden en AsyncStorage
+    const reversedForStorage = [...data].reverse()
+    AsyncStorage.setItem("@shopping_history", JSON.stringify(reversedForStorage))
+      .then(() => {
+        // Update widget with shopping lists (original order - most recent first)
+        WidgetService.updateWidgetShoppingLists(data, completedItems)
+      })
+      .catch((e) => console.error("Error saving reordered history: ", e))
   }
 
   const loadCompletedItems = async () => {
@@ -1442,8 +1455,15 @@ const HistoryScreen = ({ navigation }) => {
           </View>
         ) : (
           <View style={modernStyles.titleContainer}>
-            
-            <Text style={[modernStyles.cardTitle, isSmallIPhone && {fontSize: 18}]}>{item.name}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+              <Ionicons
+                name="reorder-three-outline"
+                size={20}
+                color="#888"
+                style={{ marginRight: 8 }}
+              />
+              <Text style={[modernStyles.cardTitle, isSmallIPhone && {fontSize: 18}, { flex: 1 }]}>{item.name}</Text>
+            </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TouchableOpacity
                 onPress={() => openExpandedListModal(index)}
@@ -1493,11 +1513,44 @@ const HistoryScreen = ({ navigation }) => {
         </View>
       )}
 
-      <ScrollView
-        style={modernStyles.listContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {(() => {
+      {(() => {
+        // Verificar si la lista tiene metadatos de categorías o si es una lista reordenada manualmente
+        const isManuallyReordered = item.metadata?.type === 'manual' || !item.metadata || item.metadata?.manuallyReordered
+
+        let allItems = []
+
+        if (isManuallyReordered) {
+          // Para listas manuales o reordenadas, mantener el orden exacto de item.list
+          // pero intentar detectar categorías para mostrar títulos
+          allItems = item.list.map((listItem, idx) => {
+            // Intentar detectar la categoría del item
+            let detectedCategory = null
+            if (listItem.includes('Hogar y Limpieza') || listItem.includes('Home')) {
+              detectedCategory = currentLabels.homeAndCleaning || 'Hogar y Limpieza'
+            } else if (listItem.includes('Mascotas') || listItem.includes('Pets')) {
+              detectedCategory = currentLabels.pets || 'Mascotas'
+            } else if (listItem.includes('Supermercado') || listItem.includes('Supermarket')) {
+              detectedCategory = currentLabels.supermarket || 'Supermercado'
+            } else if (listItem.includes('Farmacia') || listItem.includes('Pharmacy')) {
+              detectedCategory = currentLabels.pharmacy || 'Farmacia'
+            } else if (listItem.includes('Electrónica') || listItem.includes('Electronics')) {
+              detectedCategory = currentLabels.electronics || 'Electrónica'
+            } else if (listItem.includes('Bebidas') || listItem.includes('Beverages')) {
+              detectedCategory = currentLabels.beverages || 'Bebidas'
+            } else if (listItem.includes('Carnicería') || listItem.includes('Butcher')) {
+              detectedCategory = currentLabels.butcher || 'Carnicería'
+            }
+
+            return {
+              key: `item-${idx}`,
+              listItem,
+              listItemIndex: idx,
+              category: detectedCategory,
+              displayIndex: idx
+            }
+          })
+        } else {
+          // Para listas con categorías automáticas, usar el agrupamiento
           const { categorized, uncategorized } = groupItemsByCategory(item.list)
 
           // Definir orden de categorías usando las traducciones
@@ -1520,131 +1573,199 @@ const HistoryScreen = ({ navigation }) => {
             return indexA - indexB
           })
 
-          const allItems = []
+          let globalIndex = 0
 
           // Primero agregar items sin categoría
           uncategorized.forEach(({ item: listItem, index: listItemIndex }) => {
-            allItems.push({ listItem, listItemIndex, category: null })
+            allItems.push({
+              key: `item-${globalIndex}`,
+              listItem,
+              listItemIndex,
+              category: null,
+              displayIndex: globalIndex
+            })
+            globalIndex++
           })
 
           // Luego agregar items por categoría en orden
           sortedCategories.forEach(category => {
             categorized[category].forEach(({ item: listItem, index: listItemIndex }) => {
-              allItems.push({ listItem, listItemIndex, category })
+              allItems.push({
+                key: `item-${globalIndex}`,
+                listItem,
+                listItemIndex,
+                category,
+                displayIndex: globalIndex
+              })
+              globalIndex++
             })
           })
+        }
 
-          return allItems.map(({ listItem, listItemIndex, category }, idx) => {
-            // Mostrar título de categoría si es el primer item de esa categoría
-            const showCategoryTitle = category && (
-              idx === 0 ||
-              allItems[idx - 1].category !== category
-            )
 
-            return (
-              <View key={listItemIndex}>
-                {showCategoryTitle && (
-                  <View style={{
-                    paddingHorizontal: 12,
-                    paddingVertical: 4,
-                    marginTop: idx === 0 ? 0 : 8,
-                    marginBottom: 4
+        const renderItem = ({ item: dragItem, drag, isActive }) => {
+          const { listItem, listItemIndex, category } = dragItem
+          const idx = allItems.findIndex(i => i.key === dragItem.key)
+
+          // Mostrar título de categoría si es el primer item de esa categoría
+          const showCategoryTitle = category && (
+            idx === 0 ||
+            allItems[idx - 1].category !== category
+          )
+
+          return (
+            <View style={[isActive && { opacity: 0.8 }]}>
+              {showCategoryTitle && (
+                <View style={{
+                  paddingHorizontal: 12,
+                  paddingVertical: 4,
+                  marginTop: idx === 0 ? 0 : 8,
+                  marginBottom: 4
+                }}>
+                  <Text style={{
+                    fontSize: 11,
+                    fontWeight: '500',
+                    color: '#9ca3af',
+                    textTransform: 'uppercase',
+                    letterSpacing: 0.5
                   }}>
-                    <Text style={{
-                      fontSize: 11,
-                      fontWeight: '500',
-                      color: '#9ca3af',
-                      textTransform: 'uppercase',
-                      letterSpacing: 0.5
-                    }}>
-                      {category}
-                    </Text>
-                  </View>
-                )}
+                    {category}
+                  </Text>
+                </View>
+              )}
 
-                {editingListIndex === index && editingItemIndex === listItemIndex ? (
-              // Modo edición
-              <View style={modernStyles.listItemEditContainer}>
-                <TouchableOpacity
-                  onPress={() => toggleItemCompletion(index, listItemIndex)}
-                  style={[
-                    modernStyles.listItemCheckbox,
-                    completedItems[index]?.includes(listItemIndex) && modernStyles.listItemCheckboxCompleted
-                  ]}
-                >
-                  {completedItems[index]?.includes(listItemIndex) && (
-                    <Ionicons name="checkmark" size={16} color="white" />
-                  )}
-                </TouchableOpacity>
-                <TextInput
-                  style={[modernStyles.listItemEditInput, isSmallIPhone && {fontSize: 14}]}
-                  value={editingItemText}
-                  onChangeText={setEditingItemText}
-                  onSubmitEditing={saveItemEdit}
-                  autoFocus
-                  selectTextOnFocus
-                />
-                <TouchableOpacity
-                  onPress={saveItemEdit}
-                  style={modernStyles.saveItemButton}
-                >
-                  <Ionicons name="checkmark" size={20} color="#10b981" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    deleteListItem(index, listItemIndex)
-                    cancelItemEdit()
-                  }}
-                  style={modernStyles.cancelItemButton}
-                >
-                  <Ionicons name="trash-outline" size={18} color="#ef4444" />
-                </TouchableOpacity>
-              </View>
-            ) : (
-              // Modo normal
-              <View style={modernStyles.listItemContainer}>
-                <TouchableOpacity
-                  onPress={() => toggleItemCompletion(index, listItemIndex)}
-                  style={modernStyles.listItemMainArea}
-                >
-                  <View style={[
-                    modernStyles.listItemCheckbox,
-                    completedItems[index]?.includes(listItemIndex) && modernStyles.listItemCheckboxCompleted
-                  ]}>
+              {editingListIndex === index && editingItemIndex === listItemIndex ? (
+                // Modo edición
+                <View style={modernStyles.listItemEditContainer}>
+                  <TouchableOpacity
+                    onPress={() => toggleItemCompletion(index, listItemIndex)}
+                    style={[
+                      modernStyles.listItemCheckbox,
+                      completedItems[index]?.includes(listItemIndex) && modernStyles.listItemCheckboxCompleted
+                    ]}
+                  >
                     {completedItems[index]?.includes(listItemIndex) && (
                       <Ionicons name="checkmark" size={16} color="white" />
                     )}
-                  </View>
-                  <View style={modernStyles.listItemTextContainer}>
-                    <Text
-                      style={[
-                        modernStyles.listItemText,
-                        isSmallIPhone && {fontSize: 14},
-                        completedItems[index]?.includes(listItemIndex) && modernStyles.completedItemText,
-                      ]}
-                    >
-                      {extractItemName(listItem)}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  onPress={() => {
-                    setEditingListIndex(index)
-                    setEditingItemIndex(listItemIndex)
-                    setEditingItemText(extractItemName(listItem))
-                  }}
-                  style={modernStyles.editIconButton}
+                  </TouchableOpacity>
+                  <TextInput
+                    style={[modernStyles.listItemEditInput, isSmallIPhone && {fontSize: 14}]}
+                    value={editingItemText}
+                    onChangeText={setEditingItemText}
+                    onSubmitEditing={saveItemEdit}
+                    autoFocus
+                    selectTextOnFocus
+                  />
+                  <TouchableOpacity
+                    onPress={saveItemEdit}
+                    style={modernStyles.saveItemButton}
+                  >
+                    <Ionicons name="checkmark" size={20} color="#10b981" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      deleteListItem(index, listItemIndex)
+                      cancelItemEdit()
+                    }}
+                    style={modernStyles.cancelItemButton}
+                  >
+                    <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                // Modo normal
+                <TouchableOpacity
+                  style={modernStyles.listItemContainer}
+                  onLongPress={drag}
+                  onPress={() => toggleItemCompletion(index, listItemIndex)}
+                  delayLongPress={500}
                 >
-                  <Ionicons name="pencil" size={14} color="#6b7280" />
-                </TouchableOpacity>
-              </View>
-            )}
-              </View>
-            )
-          })
-        })()}
+                  <View style={modernStyles.listItemMainArea}>
+                    <View style={[
+                      modernStyles.listItemCheckbox,
+                      completedItems[index]?.includes(listItemIndex) && modernStyles.listItemCheckboxCompleted
+                    ]}>
+                      {completedItems[index]?.includes(listItemIndex) && (
+                        <Ionicons name="checkmark" size={16} color="white" />
+                      )}
+                    </View>
+                    <View style={modernStyles.listItemTextContainer}>
+                      <Text
+                        style={[
+                          modernStyles.listItemText,
+                          isSmallIPhone && {fontSize: 14},
+                          completedItems[index]?.includes(listItemIndex) && modernStyles.completedItemText,
+                        ]}
+                      >
+                        {extractItemName(listItem)}
+                      </Text>
+                    </View>
+                  </View>
 
-      </ScrollView>
+                  <TouchableOpacity
+                    onPress={(e) => {
+                      e.stopPropagation()
+                      setEditingListIndex(index)
+                      setEditingItemIndex(listItemIndex)
+                      setEditingItemText(extractItemName(listItem))
+                    }}
+                    style={modernStyles.editIconButton}
+                  >
+                    <Ionicons name="pencil" size={14} color="#6b7280" />
+                  </TouchableOpacity>
+                </TouchableOpacity>
+              )}
+            </View>
+          )
+        }
+
+        const onDragEnd = async ({ data }) => {
+          try {
+            // Crear nueva lista reordenada
+            const reorderedList = data.map(dragItem => dragItem.listItem)
+
+            // Verificar si realmente cambió
+            const hasChanged = JSON.stringify(item.list) !== JSON.stringify(reorderedList)
+
+            if (!hasChanged) {
+              return
+            }
+
+            // Actualizar el estado local manteniendo el nuevo orden
+            const updatedHistory = [...history]
+            updatedHistory[index] = {
+              ...updatedHistory[index],
+              list: reorderedList,
+              metadata: updatedHistory[index].metadata ? {
+                ...updatedHistory[index].metadata,
+                manuallyReordered: true, // Marcar como reordenada manualmente
+              } : { manuallyReordered: true }
+            }
+
+            setHistory(updatedHistory)
+
+            // Guardar el nuevo orden en AsyncStorage (reversado como el resto del código)
+            const reversedForStorage = [...updatedHistory].reverse()
+            await AsyncStorage.setItem("@shopping_history", JSON.stringify(reversedForStorage))
+
+            // Actualizar el widget con el orden correcto
+            await WidgetService.updateWidgetShoppingLists(updatedHistory, completedItems)
+          } catch (error) {
+            console.error('Error saving reordered list:', error)
+          }
+        }
+
+        return (
+          <DraggableFlatList
+            data={allItems}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.key}
+            onDragEnd={onDragEnd}
+            style={modernStyles.listContent}
+            showsVerticalScrollIndicator={false}
+          />
+        )
+      })()}
 
       {/* Completion counter */}
       <View style={modernStyles.completionCounter}>
@@ -1683,7 +1804,7 @@ const HistoryScreen = ({ navigation }) => {
           );
         })()}
       </View>
-   
+
     </View>
   )
 

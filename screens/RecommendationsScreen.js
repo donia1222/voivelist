@@ -26,6 +26,7 @@ import seasonalRecommendationsTranslations from './translations/seasonalRecommen
 import dietRecommendationsTranslations from './translations/dietRecommendationsTranslations'
 import { useFocusEffect } from '@react-navigation/native'
 import axios from 'axios'
+import Purchases from 'react-native-purchases'
 
 const API_KEY_ANALIZE = process.env.API_KEY_ANALIZE
 
@@ -39,7 +40,7 @@ const isSmallIPhone = Platform.OS === 'ios' && screenWidth <= 375
 const RecommendationsScreen = ({ navigation, route }) => {
   const { theme } = useTheme()
   const { triggerHaptic } = useHaptic()
-  const { onNavigateToHome } = route.params || {}
+  const { onNavigateToHome, onNavigateToSubscribe } = route.params || {}
 
   // Estados principales
   const [recommendations, setRecommendations] = useState([])
@@ -71,6 +72,9 @@ const RecommendationsScreen = ({ navigation, route }) => {
   const [showInfoModal, setShowInfoModal] = useState(false)
   const [hasShownInfoModal, setHasShownInfoModal] = useState(false)
 
+  // Estado de suscripción
+  const [isSubscribed, setIsSubscribed] = useState(null)
+
   // Animaciones y referencias
   const fadeAnim = useRef(new Animated.Value(0)).current
   const slideAnim = useRef(new Animated.Value(30)).current
@@ -89,6 +93,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
     loadStats()
     startAnimations()
     checkFirstTimeModal()
+    checkSubscriptionStatus()
   }, [])
 
   // Verificar si es la primera vez y mostrar modal
@@ -109,6 +114,29 @@ const RecommendationsScreen = ({ navigation, route }) => {
     }
   }
 
+  // Verificar estado de suscripción
+  const checkSubscriptionStatus = async () => {
+    try {
+      const customerInfo = await Purchases.getCustomerInfo()
+      const hasActiveSubscription = customerInfo.entitlements.active.premium !== undefined
+      setIsSubscribed(hasActiveSubscription)
+      console.log('🔄 Estado de suscripción:', hasActiveSubscription ? 'Activa' : 'Inactiva')
+    } catch (error) {
+      console.error('Error verificando suscripción:', error)
+      setIsSubscribed(false) // Por defecto no suscrito si hay error
+    }
+  }
+
+  // Función para navegar a suscripción
+  const handleSubscribePress = () => {
+    triggerHaptic()
+    if (onNavigateToSubscribe) {
+      onNavigateToSubscribe()
+    } else {
+      console.warn("No subscription navigation function provided")
+    }
+  }
+
   // Recargar SOLO la primera vez que la pantalla recibe focus
   useFocusEffect(
     React.useCallback(() => {
@@ -122,15 +150,27 @@ const RecommendationsScreen = ({ navigation, route }) => {
 
       const reloadData = async () => {
         try {
-          // Cargar recomendaciones de historial
+          const historyData = await AsyncStorage.getItem("@shopping_history")
+          const hasHistoryData = historyData && JSON.parse(historyData).length > 0
+          setHasHistory(hasHistoryData)
+
+          // Verificar suscripción ANTES de hacer cualquier carga para historial
+          if (isSubscribed === false) {
+            console.log('🚫 No suscrito - no cargando recomendaciones de historial')
+            setRecommendations([])
+            setLoading(false)
+            setSeasonalRecommendations([])
+            setSeasonalLoading(false)
+            setDietRecommendations([])
+            setDietLoading(false)
+            return
+          }
+
+          // Cargar recomendaciones de historial SOLO si está suscrito
           setLoading(true)
           setDisplayedCount(12)
           setCanLoadMore(false)
           setIsLoadingMore(false)
-
-          const historyData = await AsyncStorage.getItem("@shopping_history")
-          const hasHistoryData = historyData && JSON.parse(historyData).length > 0
-          setHasHistory(hasHistoryData)
 
           console.log("🤖 Generando 12 recomendaciones de historial con IA")
           const all12 = await RecommendationService.getRecommendations(12, false)
@@ -212,6 +252,14 @@ const RecommendationsScreen = ({ navigation, route }) => {
       const hasHistoryData = historyData && JSON.parse(historyData).length > 0
       setHasHistory(hasHistoryData)
 
+      // Verificar suscripción antes de hacer peticiones para historial
+      if (isSubscribed === false) {
+        console.log('🚫 No suscrito - no cargando recomendaciones de historial')
+        setRecommendations([])
+        setLoading(false)
+        return
+      }
+
       // SIEMPRE generar nuevas recomendaciones al entrar
       console.log("🤖 Generando 12 recomendaciones nuevas con IA")
       await generateRecommendationsProgressive()
@@ -227,6 +275,14 @@ const RecommendationsScreen = ({ navigation, route }) => {
   // Nueva función: Generar recomendaciones progresivamente
   const generateRecommendationsProgressive = async () => {
     try {
+      // Verificar suscripción antes de hacer peticiones
+      if (isSubscribed === false) {
+        console.log('🚫 No suscrito - no generando recomendaciones de historial')
+        setRecommendations([])
+        setLoading(false)
+        return
+      }
+
       console.log("📤 Petición única: 12 recomendaciones")
       const all12 = await RecommendationService.getRecommendations(12, false)
 
@@ -247,6 +303,14 @@ const RecommendationsScreen = ({ navigation, route }) => {
 
   const loadSeasonalRecommendations = async () => {
     try {
+      // Verificar suscripción ANTES de mostrar cualquier loader
+      if (isSubscribed === false) {
+        console.log('🚫 No suscrito - no cargando recomendaciones de temporada')
+        setSeasonalRecommendations([])
+        setSeasonalLoading(false)
+        return
+      }
+
       setSeasonalLoading(true)
 
       // Cargar país desde AsyncStorage
@@ -328,6 +392,15 @@ const RecommendationsScreen = ({ navigation, route }) => {
 
   const loadDietRecommendations = async (showLoading = true) => {
     try {
+      // Verificar suscripción ANTES de mostrar cualquier loader
+      if (isSubscribed === false) {
+        console.log('🚫 No suscrito - no cargando recomendaciones de dieta')
+        setDietRecommendations([])
+        setDietLoading(false)
+        setDietRefreshing(false)
+        return
+      }
+
       if (showLoading) {
         setDietLoading(true)
       } else {
@@ -1274,6 +1347,80 @@ const RecommendationsScreen = ({ navigation, route }) => {
       fontSize: 16,
       fontWeight: '600',
     },
+    // Estilos para componente de suscripción requerida
+    subscriptionRequiredContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 40,
+      paddingVertical: 60,
+      backgroundColor: theme.background,
+      borderRadius: 20,
+      marginHorizontal: 16,
+      marginTop: 20,
+      borderWidth: 1,
+      borderColor: theme.backgroundtres + '20',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 5,
+    },
+    subscriptionIcon: {
+      marginBottom: 24,
+      opacity: 0.8,
+    },
+    subscriptionTitle: {
+      fontSize: isSmallIPhone ? 20 : 24,
+      fontWeight: 'bold',
+      color: theme.text,
+      textAlign: 'center',
+      marginBottom: 16,
+    },
+    subscriptionMessage: {
+      fontSize: isSmallIPhone ? 15 : 16,
+      color: theme.textSecondary,
+      textAlign: 'center',
+      lineHeight: 22,
+      marginBottom: 24,
+    },
+    subscriptionBenefits: {
+      fontSize: isSmallIPhone ? 14 : 15,
+      color: theme.text,
+      textAlign: 'center',
+      lineHeight: 22,
+      marginBottom: 32,
+      backgroundColor: theme.backgroundtres + '10',
+      padding: 16,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: theme.backgroundtres + '20',
+    },
+    subscriptionButton: {
+      backgroundColor: '#4a6bff',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+      borderRadius: 12,
+      shadowColor: '#4a6bff',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 4,
+    },
+    subscriptionButtonIcon: {
+      marginRight: 8,
+    },
+    subscriptionButtonText: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: '600',
+    },
   }
 
   // Render
@@ -1291,7 +1438,8 @@ const RecommendationsScreen = ({ navigation, route }) => {
           ]}
         >
 
-        
+
+
         </Animated.View>
 
 
@@ -1443,6 +1591,21 @@ const RecommendationsScreen = ({ navigation, route }) => {
               {activeTab === 'history' ? t.loading : activeTab === 'seasonal' ? tSeasonal.loading : tDiet.loading}
             </Text>
           </View>
+        ) : activeTab === 'history' && isSubscribed === false ? (
+          // Mostrar componente de suscripción para historial si no está suscrito
+          <View style={styles.subscriptionRequiredContainer}>
+            <Ionicons name="lock-closed" size={64} color="#4a6bff" style={styles.subscriptionIcon} />
+            <Text style={styles.subscriptionTitle}>{t.subscriptionRequiredTitle}</Text>
+            <Text style={styles.subscriptionMessage}>{t.subscriptionRequiredMessage}</Text>
+            <Text style={styles.subscriptionBenefits}>{t.subscriptionBenefits}</Text>
+            <TouchableOpacity
+              style={styles.subscriptionButton}
+              onPress={handleSubscribePress}
+            >
+              <Ionicons name="star" size={20} color="white" style={styles.subscriptionButtonIcon} />
+              <Text style={styles.subscriptionButtonText}>{t.subscribeButton}</Text>
+            </TouchableOpacity>
+          </View>
         ) : activeTab === 'history' && (recommendations.length === 0 || !hasHistory) ? (
           <View style={styles.noHistoryContainer}>
             {!hasHistory ? (
@@ -1472,6 +1635,21 @@ const RecommendationsScreen = ({ navigation, route }) => {
                 <Text style={styles.noHistoryMessage}>{t.noRecommendationsWithHistory}</Text>
               </>
             )}
+          </View>
+        ) : (activeTab === 'seasonal' || activeTab === 'diet') && isSubscribed === false ? (
+          // Mostrar componente de suscripción para pestañas premium si no está suscrito
+          <View style={styles.subscriptionRequiredContainer}>
+            <Ionicons name="lock-closed" size={64} color="#4a6bff" style={styles.subscriptionIcon} />
+            <Text style={styles.subscriptionTitle}>{t.subscriptionRequiredTitle}</Text>
+            <Text style={styles.subscriptionMessage}>{t.subscriptionRequiredMessage}</Text>
+            <Text style={styles.subscriptionBenefits}>{t.subscriptionBenefits}</Text>
+            <TouchableOpacity
+              style={styles.subscriptionButton}
+              onPress={handleSubscribePress}
+            >
+              <Ionicons name="star" size={20} color="white" style={styles.subscriptionButtonIcon} />
+              <Text style={styles.subscriptionButtonText}>{t.subscribeButton}</Text>
+            </TouchableOpacity>
           </View>
         ) : (
           <Animated.View

@@ -140,7 +140,12 @@ const recommendationsTranslations = {
     historyBannerTitle: "🕒 Personal Recommendations",
     historyBannerDesc: "Based on your previous shopping patterns",
     seasonalBannerTitle: "🍃 Seasonal Products",
-    seasonalBannerDesc: "Fresh products ideal for this season"
+    seasonalBannerDesc: "Fresh products ideal for this season",
+    // Mensaje de suscripción requerida
+    subscriptionRequiredTitle: "🔒 Premium Feature",
+    subscriptionRequiredMessage: "Subscribe to access seasonal and nutrition recommendations with AI",
+    subscribeButton: "Subscribe Now",
+    subscriptionBenefits: "✨ Unlimited AI recommendations\n📅 Seasonal products\n🥗 Nutrition analysis"
   },
   es: {
     title: "Recomendaciones Inteligentes con IA",
@@ -283,7 +288,12 @@ const recommendationsTranslations = {
     historyBannerTitle: "🕒 Recomendaciones Personalizadas",
     historyBannerDesc: "Basado en tu patrón de compras anterior",
     seasonalBannerTitle: "🍃 Productos de Temporada",
-    seasonalBannerDesc: "Productos frescos ideales para esta época"
+    seasonalBannerDesc: "Productos frescos ideales para esta época",
+    // Mensaje de suscripción requerida
+    subscriptionRequiredTitle: "🔒 Función Premium",
+    subscriptionRequiredMessage: "Suscríbete para acceder a recomendaciones de temporada y nutrición con IA",
+    subscribeButton: "Suscribirse Ahora",
+    subscriptionBenefits: "✨ Recomendaciones IA ilimitadas\n📅 Productos de temporada\n🥗 Análisis nutricional"
   },
   de: {
     title: "KI-Smart Empfehlungen",
@@ -398,7 +408,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "Fügen Sie ballaststoffreiche Lebensmittel hinzu, die die Verdauung und Sättigung fördern.",
     lowFatOptions: "Fügen Sie fettarme und fettfreie Optionen hinzu, wenn verfügbar.",
     dietResponseFormat: "Antworten Sie mit einem Produkt pro Zeile im Format: Produktname - Nährstoffbeschreibung",
-    dietExample: "Beispiel:\nGurke 🥒 - Nur 16 Kalorien pro 100g, hoher Wassergehalt\nSpinat 🥬 - 23 Kalorien pro 100g, reich an Eisen und Ballaststoffen"
+    dietExample: "Beispiel:\nGurke 🥒 - Nur 16 Kalorien pro 100g, hoher Wassergehalt\nSpinat 🥬 - 23 Kalorien pro 100g, reich an Eisen und Ballaststoffen",
+    // Mensaje de suscripción requerida
+    subscriptionRequiredTitle: "🔒 Premium-Funktion",
+    subscriptionRequiredMessage: "Abonnieren Sie für Zugang zu saisonalen und Ernährungsempfehlungen mit KI",
+    subscribeButton: "Jetzt abonnieren",
+    subscriptionBenefits: "✨ Unbegrenzte KI-Empfehlungen\n📅 Saisonale Produkte\n🥗 Ernährungsanalyse"
   },
   it: {
     title: "Raccomandazioni Intelligenti AI",
@@ -512,7 +527,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "Includi cibi ricchi di fibre che aiutano la digestione e la sazietà.",
     lowFatOptions: "Includi opzioni a basso contenuto di grassi e senza grassi quando disponibili.",
     dietResponseFormat: "Rispondi con un prodotto per riga nel formato: Nome Prodotto - descrizione nutrizionale",
-    dietExample: "Esempio:\nCetriolo 🥒 - Solo 16 calorie per 100g, alto contenuto d'acqua\nSpinaci 🥬 - 23 calorie per 100g, ricchi di ferro e fibre"
+    dietExample: "Esempio:\nCetriolo 🥒 - Solo 16 calorie per 100g, alto contenuto d'acqua\nSpinaci 🥬 - 23 calorie per 100g, ricchi di ferro e fibre",
+    // Mensaje de suscripción requerida
+    subscriptionRequiredTitle: "🔒 Funzione Premium",
+    subscriptionRequiredMessage: "Abbonati per accedere a raccomandazioni stagionali e nutrizionali con IA",
+    subscribeButton: "Abbonati ora",
+    subscriptionBenefits: "✨ Raccomandazioni IA illimitate\n📅 Prodotti di stagione\n🥗 Analisi nutrizionale"
   },
   fr: {
     title: "Recommandations Intelligentes IA",
@@ -626,7 +646,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "Incluez des aliments riches en fibres qui aident la digestion et la satiété.",
     lowFatOptions: "Incluez des options faibles en gras et sans gras lorsque disponibles.",
     dietResponseFormat: "Répondez avec un produit par ligne au format: Nom du Produit - description nutritionnelle",
-    dietExample: "Exemple:\nConcombre 🥒 - Seulement 16 calories pour 100g, forte teneur en eau\nÉpinards 🥬 - 23 calories pour 100g, riches en fer et fibres"
+    dietExample: "Exemple:\nConcombre 🥒 - Seulement 16 calories pour 100g, forte teneur en eau\nÉpinards 🥬 - 23 calories pour 100g, riches en fer et fibres",
+    // Mensaje de suscripción requerida
+    subscriptionRequiredTitle: "🔒 Fonctionnalité Premium",
+    subscriptionRequiredMessage: "Abonnez-vous pour accéder aux recommandations saisonnières et nutritionnelles avec IA",
+    subscribeButton: "S'abonner maintenant",
+    subscriptionBenefits: "✨ Recommandations IA illimitées\n📅 Produits de saison\n🥗 Analyse nutritionnelle"
   },
   pt: {
     title: "Recomendações Inteligentes com IA",
@@ -739,7 +764,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "Inclua alimentos ricos em fibras que ajudem na digestão e saciedade.",
     lowFatOptions: "Inclua opções com baixo teor de gordura e sem gordura quando disponíveis.",
     dietResponseFormat: "Responda com um produto por linha no formato: Nome do Produto - descrição nutricional",
-    dietExample: "Exemplo:\nPepino 🥒 - Apenas 16 calorias por 100g, alto teor de água\nEspinafre 🥬 - 23 calorias por 100g, rico em ferro e fibras"
+    dietExample: "Exemplo:\nPepino 🥒 - Apenas 16 calorias por 100g, alto teor de água\nEspinafre 🥬 - 23 calorias por 100g, rico em ferro e fibras",
+    // Subscription translations
+    subscriptionRequiredTitle: "🔒 Recurso Premium",
+    subscriptionRequiredMessage: "Assine para acessar recomendações sazonais e nutricionais com IA",
+    subscriptionBenefits: "✨ Recomendações IA ilimitadas\n📅 Produtos da estação\n🥗 Análise nutricional",
+    subscribeButton: "Assinar Agora",
   },
   ru: {
     title: "Умные Рекомендации ИИ",
@@ -852,7 +882,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "Включите продукты, богатые клетчаткой, которые помогают пищеварению и насыщению.",
     lowFatOptions: "Включите обезжиренные и с низким содержанием жира варианты, когда доступны.",
     dietResponseFormat: "Отвечайте одним продуктом на строку в формате: Название Продукта - питательное описание",
-    dietExample: "Пример:\nОгурец 🥒 - Только 16 калорий на 100г, высокое содержание воды\nШпинат 🥬 - 23 калории на 100г, богат железом и клетчаткой"
+    dietExample: "Пример:\nОгурец 🥒 - Только 16 калорий на 100г, высокое содержание воды\nШпинат 🥬 - 23 калории на 100г, богат железом и клетчаткой",
+    // Subscription translations
+    subscriptionRequiredTitle: "🔒 Премиум функция",
+    subscriptionRequiredMessage: "Подпишитесь для доступа к сезонным и питательным рекомендациям с ИИ",
+    subscriptionBenefits: "✨ Неограниченные рекомендации ИИ\n📅 Сезонные продукты\n🥗 Питательный анализ",
+    subscribeButton: "Подписаться сейчас",
   },
   ar: {
     title: "توصيات ذكية بالذكاء الاصطناعي",
@@ -962,7 +997,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "اشمل الأطعمة الغنية بالألياف التي تساعد في الهضم والشبع.",
     lowFatOptions: "اشمل خيارات قليلة الدهون وخالية من الدهون عند التوفر.",
     dietResponseFormat: "أجب بمنتج واحد لكل سطر بالتنسيق: اسم المنتج - وصف غذائي",
-    dietExample: "مثال:\nخيار 🥒 - فقط 16 سعرة حرارية لكل 100غ، محتوى عالي من الماء\nسبانخ 🥬 - 23 سعرة حرارية لكل 100غ، غني بالحديد والألياف"
+    dietExample: "مثال:\nخيار 🥒 - فقط 16 سعرة حرارية لكل 100غ، محتوى عالي من الماء\nسبانخ 🥬 - 23 سعرة حرارية لكل 100غ، غني بالحديد والألياف",
+    // Subscription translations
+    subscriptionRequiredTitle: "🔒 ميزة مميزة",
+    subscriptionRequiredMessage: "اشترك للوصول إلى التوصيات الموسمية والغذائية بالذكاء الاصطناعي",
+    subscriptionBenefits: "✨ توصيات ذكاء اصطناعي غير محدودة\n📅 منتجات موسمية\n🥗 تحليل غذائي",
+    subscribeButton: "اشترك الآن",
   },
   hu: {
     title: "Intelligens AI Ajánlások",
@@ -1072,7 +1112,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "Tartalmazzon rostban gazdag ételeket, amelyek segítik az emésztést és a jóllakottságot.",
     lowFatOptions: "Tartalmazzon alacsony zsírtartalmú és zsírmentes opciókat, amikor elérhetők.",
     dietResponseFormat: "Válaszoljon egy termékkel soronként a következő formátumban: Termék Neve - táplálkozási leírás",
-    dietExample: "Példa:\nUborka 🥒 - Csak 16 kalória 100g-onként, magas víztartalom\nSpenót 🥬 - 23 kalória 100g-onként, gazdag vasban és rostban"
+    dietExample: "Példa:\nUborka 🥒 - Csak 16 kalória 100g-onként, magas víztartalom\nSpenót 🥬 - 23 kalória 100g-onként, gazdag vasban és rostban",
+    // Subscription translations
+    subscriptionRequiredTitle: "🔒 Prémium funkció",
+    subscriptionRequiredMessage: "Fizessen elő a szezonális és táplálkozási ajánlásokhoz AI-val",
+    subscriptionBenefits: "✨ Korlátlan AI ajánlások\n📅 Szezonális termékek\n🥗 Táplálkozási elemzés",
+    subscribeButton: "Előfizetés most",
   },
   ja: {
     title: "AIスマート推奨事項",
@@ -1182,7 +1227,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "消化と満腹感を助ける繊維豊富な食品を含めてください。",
     lowFatOptions: "利用可能な場合は低脂肪および無脂肪オプションを含めてください。",
     dietResponseFormat: "1行に1つの商品を次の形式で回答してください：商品名 - 栄養説明",
-    dietExample: "例：\nきゅうり 🥒 - 100gあたりわずか16カロリー、水分含有量が高い\nほうれん草 🥬 - 100gあたり23カロリー、鉄分と繊維が豊富"
+    dietExample: "例：\nきゅうり 🥒 - 100gあたりわずか16カロリー、水分含有量が高い\nほうれん草 🥬 - 100gあたり23カロリー、鉄分と繊維が豊富",
+    // Subscription translations
+    subscriptionRequiredTitle: "🔒 プレミアム機能",
+    subscriptionRequiredMessage: "AIによる季節および栄養の推奨事項にアクセスするために購読してください",
+    subscriptionBenefits: "✨ 無制限のAI推奨事項\n📅 季節の商品\n🥗 栄養分析",
+    subscribeButton: "今すぐ購読",
   },
   tr: {
     title: "Akıllı AI Önerileri",
@@ -1292,7 +1342,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "Sindirime ve tokluk hissine yardımcı olan lifli gıdaları dahil edin.",
     lowFatOptions: "Mevcut olduğunda düşük yağlı ve yağsız seçenekleri dahil edin.",
     dietResponseFormat: "Şu formatta satır başına bir ürün ile yanıt verin: Ürün Adı - beslenme açıklaması",
-    dietExample: "Örnek:\nSalatalık 🥒 - 100g başına sadece 16 kalori, yüksek su içeriği\nIspanak 🥬 - 100g başına 23 kalori, demir ve lifçe zengin"
+    dietExample: "Örnek:\nSalatalık 🥒 - 100g başına sadece 16 kalori, yüksek su içeriği\nIspanak 🥬 - 100g başına 23 kalori, demir ve lifçe zengin",
+    // Subscription translations
+    subscriptionRequiredTitle: "🔒 Premium Özellik",
+    subscriptionRequiredMessage: "AI ile mevsimsel ve beslenme önerilerine erişmek için abone olun",
+    subscriptionBenefits: "✨ Sınırsız AI önerileri\n📅 Mevsimsel ürünler\n🥗 Beslenme analizi",
+    subscribeButton: "Şimdi Abone Ol",
   },
   hi: {
     title: "स्मार्ट एआई सिफारिशें",
@@ -1402,7 +1457,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "फाइबर से भरपूर खाद्य पदार्थ शामिल करें जो पाचन और तृप्ति में सहायता करते हैं।",
     lowFatOptions: "उपलब्ध होने पर कम वसा और वसा रहित विकल्प शामिल करें।",
     dietResponseFormat: "निम्नलिखित प्रारूप में प्रति पंक्ति एक उत्पाद के साथ उत्तर दें: उत्पाद का नाम - पोषण विवरण",
-    dietExample: "उदाहरण:\nखीरा 🥒 - प्रति 100 ग्राम केवल 16 कैलोरी, उच्च पानी की मात्रा\nपालक 🥬 - प्रति 100 ग्राम 23 कैलोरी, आयरन और फाइबर से भरपूर"
+    dietExample: "उदाहरण:\nखीरा 🥒 - प्रति 100 ग्राम केवल 16 कैलोरी, उच्च पानी की मात्रा\nपालक 🥬 - प्रति 100 ग्राम 23 कैलोरी, आयरन और फाइबर से भरपूर",
+    // Subscription translations
+    subscriptionRequiredTitle: "🔒 प्रीमियम सुविधा",
+    subscriptionRequiredMessage: "AI के साथ मौसमी और पोषण संबंधी सिफारिशों तक पहुंचने के लिए सदस्यता लें",
+    subscriptionBenefits: "✨ असीमित AI सिफारिशें\n📅 मौसमी उत्पाद\n🥗 पोषण विश्लेषण",
+    subscribeButton: "अभी सदस्यता लें",
   },
   nl: {
     title: "Slimme AI Aanbevelingen",
@@ -1512,7 +1572,12 @@ const recommendationsTranslations = {
     fiberRichFoods: "Voeg vezelrijke voedingsmiddelen toe die helpen bij vertering en verzadiging.",
     lowFatOptions: "Voeg vetarme en vetvrije opties toe wanneer beschikbaar.",
     dietResponseFormat: "Antwoord met één product per regel in het formaat: Productnaam - voedingsbeschrijving",
-    dietExample: "Voorbeeld:\nKomkommer 🥒 - Slechts 16 calorieën per 100g, hoog watergehalte\nSpinaze 🥬 - 23 calorieën per 100g, rijk aan ijzer en vezels"
+    dietExample: "Voorbeeld:\nKomkommer 🥒 - Slechts 16 calorieën per 100g, hoog watergehalte\nSpinaze 🥬 - 23 calorieën per 100g, rijk aan ijzer en vezels",
+    // Subscription translations
+    subscriptionRequiredTitle: "🔒 Premium Functie",
+    subscriptionRequiredMessage: "Abonneer u voor toegang tot seizoensgebonden en voedingsaanbevelingen met AI",
+    subscriptionBenefits: "✨ Onbeperkte AI aanbevelingen\n📅 Seizoensproducten\n🥗 Voedingsanalyse",
+    subscribeButton: "Nu abonneren",
   }
 }
 

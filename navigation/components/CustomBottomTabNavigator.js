@@ -1100,7 +1100,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               name="RecommendationsScreen"
               component={RecommendationsScreen}
               initialParams={{
-                onNavigateToHome: () => setActiveTab("Home")
+                onNavigateToHome: () => setActiveTab("Home"),
+                onNavigateToSubscribe: () => setActiveTab("Subscribe")
               }}
             />
             <Stack.Screen name="SeasonalRecommendationsScreen" component={SeasonalRecommendationsScreen} />
@@ -1127,6 +1128,23 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           backgroundColor: theme.background,
         }}
       >
+        {/* Back button for menu screens */}
+        {isMenuScreen && (
+          <TouchableOpacity
+            style={{
+              padding: 8,
+              borderRadius: 20,
+              backgroundColor: theme.backgroundtres + '10',
+              borderWidth: 1,
+              borderColor: theme.backgroundtres + '20',
+              marginRight: 10,
+            }}
+            onPress={() => setActiveTab("Home")}
+          >
+            <Ionicons name="chevron-back" size={24} color={theme.text} />
+          </TouchableOpacity>
+        )}
+
         <View style={{
           flexDirection: "row",
           alignItems: "center",
@@ -1134,25 +1152,22 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           marginRight: isSmallIPhone ? 8 : 10
         }}>
 
-          <View
-            style={{
-              width: isSmallIPhone ? 32 : 40,
-              height: isSmallIPhone ? 32 : 40,
-              borderRadius: isSmallIPhone ? 8 : 10,
-              backgroundColor: activeTab === "Images" ? "#ff950020" :
-                              activeTab === "History" ? "#34c75920" :
-                              activeTab === "Calendar" ? "#6B728020" :
-                              activeTab === "Subscribe" ? "#34c75920" :
-                              activeTab === "Subscription" ? "#29863220" :
-                              activeTab === "Information" ? "#5856d620" :
-                              activeTab === "Contact" ? "#ff950020" :
-                              activeTab === "PriceCalculator" ? "#dc262620" :
-                              "#4a6bff20",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: isSmallIPhone ? 8 : 12,
-            }}
-          >
+          {!isMenuScreen && (
+            <View
+              style={{
+                width: isSmallIPhone ? 32 : 40,
+                height: isSmallIPhone ? 32 : 40,
+                borderRadius: isSmallIPhone ? 8 : 10,
+                backgroundColor: activeTab === "Images" ? "#ff950020" :
+                                activeTab === "History" ? "#34c75920" :
+                                activeTab === "Calendar" ? "#6B728020" :
+                                activeTab === "PriceCalculator" ? "#dc262620" :
+                                "#4a6bff20",
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: isSmallIPhone ? 8 : 12,
+              }}
+            >
             {activeTab === "Home" ? (
               <Animated.View style={{ transform: [{ scale: iconScaleAnim }] }}>
                 <Image
@@ -1246,21 +1261,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               </View>
             ) : (
               <Ionicons
-                name={activeTab === "Subscribe" ? "star-outline" :
-                      activeTab === "Subscription" ? "star" :
-                      activeTab === "Information" ? "information-circle-outline" :
-                      activeTab === "Contact" ? "mail-outline" :
-                      activeTab === "HandwrittenList" ? "pencil" :
-                      activeTab === "Recommendations" ? "bulb" : "storefront"}
-                size={isSmallIPhone ? 20 : 24}
-                color={activeTab === "Subscribe" ? "#33b850ff" :
-                       activeTab === "Subscription" ? "#33b850ff" :
-                       activeTab === "Information" ? "#5856d6" :
-                       activeTab === "Contact" ? "#ff9500" :
-                       activeTab === "Recommendations" ? "#8B5CF6" : "#4a6bff"}
+                name="storefront"
+                size={isSmallIPhone ? 16 : 18}
+                color="#4a6bff"
               />
             )}
-          </View>
+            </View>
+          )}
           <Text
             style={{
               fontSize: isSmallIPhone ? 16 : 21,
