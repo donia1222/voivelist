@@ -1857,39 +1857,6 @@ const RecommendationsScreen = ({ navigation, route }) => {
                 </View>
               </View>
 
-              <View style={styles.infoFeatureItem}>
-                <Ionicons
-                  name="leaf-outline"
-                  size={24}
-                  color="#10b981"
-                  style={styles.infoFeatureIcon}
-                />
-                <View style={styles.infoFeatureContent}>
-                  <Text style={styles.infoFeatureTitle}>
-                    {tSeasonal.featureTitle || 'Productos de temporada'}
-                  </Text>
-                  <Text style={styles.infoFeatureDescription}>
-                    {tSeasonal.featureDescription || 'Productos frescos y de temporada según tu ubicación y la época del año.'}
-                  </Text>
-                </View>
-              </View>
-
-              <View style={styles.infoFeatureItem}>
-                <Ionicons
-                  name="nutrition-outline"
-                  size={24}
-                  color="#f59e0b"
-                  style={styles.infoFeatureIcon}
-                />
-                <View style={styles.infoFeatureContent}>
-                  <Text style={styles.infoFeatureTitle}>
-                    {tDiet.featureTitle || 'Nutrición balanceada'}
-                  </Text>
-                  <Text style={styles.infoFeatureDescription}>
-                    {tDiet.featureDescription || 'Sugerencias saludables y nutritivas para una dieta equilibrada.'}
-                  </Text>
-                </View>
-              </View>
 
               <View style={styles.infoFeatureItem}>
                 <Ionicons

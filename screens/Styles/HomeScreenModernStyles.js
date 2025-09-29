@@ -1682,7 +1682,7 @@ export const getModernStyles = () => {
       borderRadius: 24,
       padding: 32,
       width: "99%",
-     height: "90%",
+      height: isTablet ? "50%" : "95%",
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 12 },
       shadowOpacity: 0.3,
@@ -1703,7 +1703,7 @@ export const getModernStyles = () => {
       marginBottom: 16,
     },
     welcomeModalTitle: {
-      fontSize: 24,
+      fontSize: isSmallIPhone ? 16 : 18,
       fontWeight: "800",
       color: "#1f2937",
       textAlign: "center",
@@ -1729,7 +1729,8 @@ export const getModernStyles = () => {
     stepNumberText: {
       color: "white",
       fontWeight: "800",
-      fontSize: 16,
+   
+      fontSize: isSmallIPhone ? 12 : 16,
     },
     stepContent: {
       flex: 1,
@@ -1738,20 +1739,26 @@ export const getModernStyles = () => {
       gap: 12,
     },
     stepText: {
-      fontSize: 16,
+
+      fontSize: isSmallIPhone ? 12 : 16,
       color: "#374151",
       lineHeight: 24,
       fontWeight: "500",
       flex: 1,
     },
     stepExample: {
-      fontSize: 14,
+   
+      fontSize: isSmallIPhone ? 12 : 14,
       color: "#6b7280",
       fontStyle: "italic",
       marginTop: 4,
+      paddingRight: 8,
       paddingLeft: 8,
       borderLeftWidth: 2,
       borderLeftColor: "#e5e7eb",
+      marginBottom: 10,
+
+
     },
     welcomeModalButtons: {
       gap: 12,
@@ -1773,7 +1780,8 @@ export const getModernStyles = () => {
     welcomeStartButtonText: {
       color: "white",
       fontWeight: "700",
-      fontSize: 16,
+           fontSize: isSmallIPhone ? 12 : 16,
+  
       marginLeft: 8,
     },
     welcomeSkipButton: {
@@ -1786,7 +1794,7 @@ export const getModernStyles = () => {
     welcomeSkipButtonText: {
       color: "#6b7280",
       fontWeight: "600",
-      fontSize: 16,
+     fontSize: isSmallIPhone ? 12 : 16,
     },
 
     // Estilos para Modal Informativo de Chips

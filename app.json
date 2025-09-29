@@ -4,6 +4,11 @@
     "slug": "VoiceList",
     "version": "1.0.0",
     "orientation": "portrait",
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "enabled": true,
+      "url": "https://u.expo.dev/984ecb66-4ba2-4e09-8ebf-6756e9002e81"
+    },
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "plugins": [
@@ -34,12 +39,23 @@
       },
       "package": "com.lwebch.VoiceList",
       "permissions": [
-        "CAMERA"
+        "CAMERA",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "CAMERA",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "984ecb66-4ba2-4e09-8ebf-6756e9002e81"
+      }
+    },
+    "owner": "lwebch"
   },
   "react-native-google-mobile-ads": {
     "android_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx",
