@@ -428,6 +428,9 @@ const HomeScreen = ({ navigation }) => {
   const [chipInfoModalVisible, setChipInfoModalVisible] = useState(false)
   const [selectedChipInfo, setSelectedChipInfo] = useState(null)
 
+  // Estado para modal de voz sin esfuerzo
+  const [voiceEffortlessModalVisible, setVoiceEffortlessModalVisible] = useState(false)
+
 // screenWidth y screenHeight ya declarados arriba
 
 // Determinar si es tablet o teléfono ya movido a estilos
@@ -477,7 +480,18 @@ const HomeScreen = ({ navigation }) => {
 
       if (data.success && data.chips && data.chips.length > 0) {
         console.log(`✅ Chips loaded for language: ${deviceLanguage}`, data.chips)
-        setDynamicChips(data.chips)
+        // Agregar siempre el chip de voz sin esfuerzo al final
+        const chipsWithVoice = [
+          ...data.chips,
+          {
+            chip_position: data.chips.length + 1,
+            chip_key: `voice_effortless_info_${deviceLanguage}`,
+            icon_name: 'mic-outline',
+            icon_color: '#f59e0b',
+            text_content: currentLabels.voiceEffortless || 'Crea listas con tu voz'
+          }
+        ]
+        setDynamicChips(chipsWithVoice)
       } else {
         throw new Error('No chips found for this language')
       }
@@ -501,10 +515,24 @@ const HomeScreen = ({ navigation }) => {
         },
         {
           chip_position: 3,
+          chip_key: `voice_effortless_${deviceLanguage}`,
+          icon_name: 'mic-outline',
+          icon_color: '#f59e0b',
+          text_content: currentLabels.voiceEffortless || 'Crea listas con tu voz'
+        },
+        {
+          chip_position: 4,
           chip_key: `super_easy_${deviceLanguage}`,
           icon_name: 'heart',
-          icon_color: '#ff00909c',
+          icon_color: '#ec4899',
           text_content: currentLabels.superEasy || 'Super Easy'
+        },
+        {
+          chip_position: 5,
+          chip_key: `voice_effortless_info_${deviceLanguage}`,
+          icon_name: 'mic-outline',
+          icon_color: '#f59e0b',
+          text_content: currentLabels.voiceEffortless || 'Crea listas con tu voz'
         }
       ])
     } finally {
@@ -514,8 +542,14 @@ const HomeScreen = ({ navigation }) => {
 
   // Función para abrir modal informativo del chip
   const openChipInfoModal = (chip) => {
-    setSelectedChipInfo(chip)
-    setChipInfoModalVisible(true)
+    // Si es el chip especial de voz sin esfuerzo, abrir su modal específico
+    if (chip.chip_key && (chip.chip_key.includes('voice_effortless') || chip.chip_key.includes('voice_effortless_info'))) {
+      setVoiceEffortlessModalVisible(true)
+    } else {
+      // Para otros chips, usar el modal genérico
+      setSelectedChipInfo(chip)
+      setChipInfoModalVisible(true)
+    }
   }
 
   // Función para cerrar modal informativo
@@ -1773,54 +1807,119 @@ const HomeScreen = ({ navigation }) => {
     }
   }
 
+  // Función para convertir hex a rgba
+  const hexToRgba = (hex, alpha) => {
+    const r = parseInt(hex.slice(1, 3), 16)
+    const g = parseInt(hex.slice(3, 5), 16)
+    const b = parseInt(hex.slice(5, 7), 16)
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
+
   // Función para renderizar chips dinámicos desde la API
   const renderDynamicChips = () => {
     if (chipsLoading) {
       return (
-        <View style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}>
+        <View style={[
+          modernStyles.featureItem,
+          {
+            backgroundColor: 'rgba(99, 102, 241, 0.15)',
+            borderWidth: 1,
+            borderColor: 'rgba(99, 102, 241, 0.3)',
+            borderRadius: 20,
+            paddingHorizontal: isSmallIPhone ? 18 : 24,
+            paddingVertical: isSmallIPhone ? 10 : 12,
+            marginBottom: isSmallIPhone ? 7 : 8,
+            shadowColor: '#6366f1',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 2,
+          }
+        ]}>
           <ActivityIndicator size="small" color="#6366f1" />
-          <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>Cargando...</Text>
+          <Text style={[
+            modernStyles.featureText,
+            {
+              fontSize: isSmallIPhone ? 12 : 13,
+              color: '#6366f1',
+              fontWeight: '600'
+            }
+          ]}>Cargando...</Text>
         </View>
       )
     }
 
     return [
       // Primero renderizar los 3 chips dinámicos
-      ...dynamicChips.map((chip, index) => (
-        <TouchableOpacity
-          key={chip.chip_key || `chip_${index}`}
-          style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}
-          onPress={() => openChipInfoModal(chip)}
-          activeOpacity={0.7}
-        >
-          <Ionicons
-            name={chip.icon_name}
-            size={isSmallIPhone ? 18 : 20}
-            color={chip.icon_color}
-            style={modernStyles.featureIcon}
-          />
-          <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>
-            {chip.text_content}
-          </Text>
-        </TouchableOpacity>
-      )),
+      ...dynamicChips.map((chip, index) => {
+        const backgroundColor = hexToRgba(chip.icon_color, 0.15)
+        const borderColor = hexToRgba(chip.icon_color, 0.3)
+
+        return (
+          <Animated.View
+            key={chip.chip_key || `chip_${index}`}
+            style={{
+              transform: [{
+                scale: pulseAnim.interpolate({
+                  inputRange: [1, 1.2],
+                  outputRange: [1, 1.02]
+                })
+              }]
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                borderWidth: 2,
+                borderColor: backgroundColor,
+                borderRadius: 25,
+                paddingHorizontal: isSmallIPhone ? 16 : 18,
+                paddingVertical: isSmallIPhone ? 8 : 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                shadowColor: chip.icon_color,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 8,
+                elevation: 4,
+                backdropFilter: 'blur(10px)',
+                width: '100%',
+                justifyContent: 'flex-start',
+              }}
+              onPress={() => openChipInfoModal(chip)}
+              activeOpacity={0.8}
+            >
+              {/* Icon with glow effect */}
+              <View style={{
+                backgroundColor: backgroundColor,
+                borderRadius: 12,
+                padding: 4,
+                marginRight: 6,
+                shadowColor: chip.icon_color,
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.2,
+                shadowRadius: 2,
+              }}>
+                <Ionicons
+                  name={chip.icon_name}
+                  size={isSmallIPhone ? 14 : 16}
+                  color={chip.icon_color}
+                />
+              </View>
+              <Text style={{
+                fontSize: isSmallIPhone ? 12 : 13,
+                color: chip.icon_color,
+                fontWeight: '700',
+                letterSpacing: 0.3,
+              }}>
+                {chip.text_content}
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )
+      }),
       // Luego agregar el chip de idioma como 4to chip
-      <TouchableOpacity
-        key="language_chip"
-        style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}
-        onPress={handlePress}
-        activeOpacity={0.7}
-      >
-        <Ionicons
-          name="globe-outline"
-          size={isSmallIPhone ? 18 : 20}
-          color="#4a6bff"
-          style={modernStyles.featureIcon}
-        />
-        <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>
-          {languageName}
-        </Text>
-      </TouchableOpacity>
+    
     ]
   }
 
@@ -1854,26 +1953,68 @@ const HomeScreen = ({ navigation }) => {
      
 
 
-            {/* Clean Hero Section - Sin círculo superior */}
-            <View style={modernStyles.heroSection}>
+            {/* Revolutionary Integrated Hero Section */}
+            <View style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: 28,
+              marginHorizontal: 16,
+              marginVertical: 20,
+              padding: 24,
+              borderWidth: 1,
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.15,
+              shadowRadius: 20,
+              elevation: 8,
+              backdropFilter: 'blur(20px)',
+            }}>
 
-              {/* Hero Subtitle */}
-             <Text style={modernStyles.heroTitle}>
-                {currentLabels.heroSubtitle}
-              </Text>
-              
-              {/* Feature Highlights - Chips Dinámicos */}
-              <View style={[modernStyles.featuresContainer, isSmallIPhone && {marginBottom: 10}]}>
+              {/* Animated Gradient Background */}
+              <Animated.View style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderRadius: 28,
+                opacity: shimmerAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.3, 0.6]
+                }),
+                transform: [{
+                  rotate: shimmerAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '360deg']
+                  })
+                }]
+              }}>
+                <View style={{
+                  flex: 1,
+                  borderRadius: 28,
+                  background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.1) 50%, rgba(236, 72, 153, 0.1) 100%)'
+                }} />
+              </Animated.View>
+
+
+              {/* Revolutionary Chips Grid */}
+              <View style={{
+                flexDirection: 'column',
+                alignItems: 'stretch',
+                gap: 16,
+              }}>
                 {renderDynamicChips()}
               </View>
 
-              {/* Botón de Recomendaciones - NUEVO */}
-           
-              <View style={modernStyles.featuresContainer}>
-              </View>
-
-        
-    
+              {/* Subtle Bottom Accent */}
+              <View style={{
+                height: 3,
+                backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                borderRadius: 2,
+                marginTop: 20,
+                alignSelf: 'center',
+                width: '30%',
+              }} />
             </View>
 
             {/* Language Selection */}
@@ -2267,20 +2408,111 @@ const HomeScreen = ({ navigation }) => {
         </KeyboardAvoidingView>
       </Modal>
 
-      <Modal visible={isIdiomasModalVisible} transparent={true} animationType="slide" onRequestClose={handleCloseModal}>
-        <View style={modernStyles.modalContaineridiomas}>
-          <View style={modernStyles.modalContentidiomas}>
-            <Text style={modernStyles.modalButtonTexteidi}>{languageName}</Text>
-            <Image
-              source={require("../assets/images/microfono.png")}
-              style={modernStyles.modalImage}
-            />
-            <Text style={modernStyles.modalButtonTexte}>{currentLabels.changeLanguage}</Text>
-            {currentLabels.appLanguageInfo && (
-              <Text style={[modernStyles.modalButtonTexte, {marginTop: 15, fontSize: 14, lineHeight: 20, paddingHorizontal: 20}]}>{currentLabels.appLanguageInfo}</Text>
-            )}
-            <TouchableOpacity onPress={handleCloseModal} style={modernStyles.closeButton}>
-              <Ionicons name="close" size={32} color="#374151" />
+      <Modal visible={isIdiomasModalVisible} transparent={true} animationType="fade" onRequestClose={handleCloseModal}>
+        <View style={modernStyles.modalOverlay}>
+          <View style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            borderRadius: 24,
+            padding: 32,
+            marginHorizontal: 20,
+            maxWidth: 400,
+            alignSelf: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.25,
+            shadowRadius: 20,
+            elevation: 10,
+            backdropFilter: 'blur(20px)',
+          }}>
+            {/* Close Button - Modern Style */}
+            <TouchableOpacity
+              onPress={handleCloseModal}
+              style={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                borderRadius: 20,
+                padding: 8,
+                zIndex: 10,
+              }}
+            >
+              <Ionicons name="close" size={20} color="#6b7280" />
+            </TouchableOpacity>
+
+            {/* Header with Icon */}
+            <View style={{
+              alignItems: 'center',
+              marginBottom: 24,
+            }}>
+              <View style={{
+                backgroundColor: 'rgba(74, 107, 255, 0.15)',
+                borderRadius: 20,
+                padding: 16,
+                marginBottom: 16,
+                shadowColor: '#4a6bff',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 8,
+              }}>
+                <Ionicons name="globe-outline" size={32} color="#4a6bff" />
+              </View>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: '700',
+                color: '#1f2937',
+                textAlign: 'center',
+                marginBottom: 8,
+              }}>{languageName}</Text>
+            </View>
+
+            {/* Content */}
+            <View style={{
+              alignItems: 'center',
+              marginBottom: 24,
+            }}>
+              <Text style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: '#374151',
+                textAlign: 'center',
+                marginBottom: 16,
+                lineHeight: 24,
+              }}>{currentLabels.changeLanguage}</Text>
+
+              {currentLabels.appLanguageInfo && (
+                <Text style={{
+                  fontSize: 14,
+                  color: '#6b7280',
+                  textAlign: 'center',
+                  lineHeight: 20,
+                  paddingHorizontal: 16,
+                }}>{currentLabels.appLanguageInfo}</Text>
+              )}
+            </View>
+
+            {/* Bottom Action Button */}
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'rgba(74, 107, 255, 0.1)',
+                borderWidth: 2,
+                borderColor: 'rgba(74, 107, 255, 0.3)',
+                borderRadius: 16,
+                paddingVertical: 14,
+                paddingHorizontal: 24,
+                alignItems: 'center',
+                flexDirection: 'row',
+                justifyContent: 'center',
+              }}
+              onPress={handleCloseModal}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="checkmark-circle" size={20} color="#4a6bff" style={{ marginRight: 8 }} />
+              <Text style={{
+                color: '#4a6bff',
+                fontWeight: '600',
+                fontSize: 16,
+              }}>Entendido</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -2352,6 +2584,74 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </Modal>
 
+      {/* Modal de Voice Effortless */}
+      <Modal
+        visible={voiceEffortlessModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setVoiceEffortlessModalVisible(false)}
+      >
+        <View style={modernStyles.chipInfoModalOverlay}>
+          <View style={modernStyles.chipInfoModalContent}>
+            {/* Botón de cierre */}
+            <TouchableOpacity
+              style={modernStyles.chipInfoCloseButton}
+              onPress={() => setVoiceEffortlessModalVisible(false)}
+            >
+              <Ionicons name="close" size={24} color="#666" />
+            </TouchableOpacity>
+
+            {/* Header del chip */}
+            <View style={modernStyles.chipInfoHeader}>
+              <View style={[modernStyles.chipInfoIcon, { backgroundColor: '#f59e0b' + '20' }]}>
+                <Ionicons
+                  name="mic-outline"
+                  size={32}
+                  color="#f59e0b"
+                />
+              </View>
+              <Text style={modernStyles.chipInfoTitle}>
+                {texts[deviceLanguage]?.voiceModalTitle || texts["en"].voiceModalTitle}
+              </Text>
+            </View>
+
+            {/* Descripción */}
+            <Text style={modernStyles.chipInfoDescription}>
+              {texts[deviceLanguage]?.voiceModalDescription || texts["en"].voiceModalDescription}
+            </Text>
+
+            {/* Beneficios */}
+            <View style={modernStyles.chipInfoBenefits}>
+              <Text style={modernStyles.chipInfoBenefitsTitle}>{texts[deviceLanguage]?.benefitsPrincipal || texts["en"].benefitsPrincipal}</Text>
+              <View style={modernStyles.chipInfoBenefitsList}>
+                {[
+                  texts[deviceLanguage]?.voiceModalBenefit1 || texts["en"].voiceModalBenefit1,
+                  texts[deviceLanguage]?.voiceModalBenefit2 || texts["en"].voiceModalBenefit2,
+                  texts[deviceLanguage]?.voiceModalBenefit3 || texts["en"].voiceModalBenefit3,
+                  texts[deviceLanguage]?.voiceModalBenefit4 || texts["en"].voiceModalBenefit4
+                ].map((benefit, index) => (
+                  <View key={index} style={modernStyles.chipInfoBenefitItem}>
+                    <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
+                    <Text style={modernStyles.chipInfoBenefitText}>
+                      {benefit.replace(/^[🎤🤖⚡🌍]\s*/, '')}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            {/* Botón de acción */}
+            <TouchableOpacity
+              style={modernStyles.chipInfoActionButton}
+              onPress={() => setVoiceEffortlessModalVisible(false)}
+            >
+              <Ionicons name="thumbs-up" size={20} color="white" />
+              <Text style={modernStyles.chipInfoActionText}>{texts[deviceLanguage]?.understood || texts["en"].understood}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       {/* Modal Informativo de Chips */}
       <Modal
         visible={chipInfoModalVisible}
@@ -2394,7 +2694,7 @@ const HomeScreen = ({ navigation }) => {
                 {/* Beneficios */}
                 {selectedChipInfo.info_benefits && (
                   <View style={modernStyles.chipInfoBenefits}>
-                    <Text style={modernStyles.chipInfoBenefitsTitle}>🎯 Beneficios Principales:</Text>
+                    <Text style={modernStyles.chipInfoBenefitsTitle}>{texts[deviceLanguage]?.benefitsPrincipal || texts["en"].benefitsPrincipal}</Text>
                     <View style={modernStyles.chipInfoBenefitsList}>
                       {selectedChipInfo.info_benefits.split('\n').filter(benefit => benefit.trim()).map((benefit, index) => (
                         <View key={index} style={modernStyles.chipInfoBenefitItem}>
@@ -2414,7 +2714,7 @@ const HomeScreen = ({ navigation }) => {
                   onPress={closeChipInfoModal}
                 >
                   <Ionicons name="thumbs-up" size={20} color="white" />
-                  <Text style={modernStyles.chipInfoActionText}>¡Entendido!</Text>
+                  <Text style={modernStyles.chipInfoActionText}>{texts[deviceLanguage]?.understood || texts["en"].understood}</Text>
                 </TouchableOpacity>
               </>
             )}

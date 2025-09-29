@@ -43,8 +43,19 @@ const texts = {
     heroSubtitle: "Create shopping lists effortlessly with your voice",
     lightningFast: "Lightning Fast",
     aiPowered: "AI Powered",
+    voiceEffortless: "Create lists with your voice",
     superEasy: "Super Easy",
-    tapButtonStart: "Tap the button below to start"
+    tapButtonStart: "Tap the button below to start",
+
+    // Voice Effortless Modal
+    voiceModalTitle: "Effortless Voice Lists",
+    voiceModalDescription: "Create shopping lists instantly by just speaking. Our advanced AI understands your voice and automatically organizes your items into a perfect shopping list.",
+    voiceModalBenefit1: "🎤 Natural voice recognition",
+    voiceModalBenefit2: "🤖 AI-powered organization",
+    voiceModalBenefit3: "⚡ Instant list creation",
+    voiceModalBenefit4: "🌍 Works in 13 languages",
+    benefitsPrincipal: "🎯 Main Benefits:",
+    understood: "Got it!"
   },
   es: {
     voice: "Voz",
@@ -90,8 +101,19 @@ const texts = {
     heroSubtitle: "Crea listas de compras sin esfuerzo con tu voz",
     lightningFast: "Súper Rápido",
     aiPowered: "Con IA",
+    voiceEffortless: "Crea listas con tu voz",
     superEasy: "Muy Fácil",
-    tapButtonStart: "Presiona el botón de abajo para empezar"
+    tapButtonStart: "Presiona el botón de abajo para empezar",
+
+    // Voice Effortless Modal
+    voiceModalTitle: "Listas por Voz sin Esfuerzo",
+    voiceModalDescription: "Crea listas de compras al instante simplemente hablando. Nuestra IA avanzada entiende tu voz y organiza automáticamente tus artículos en una lista de compras perfecta.",
+    voiceModalBenefit1: "🎤 Reconocimiento de voz natural",
+    voiceModalBenefit2: "🤖 Organización con IA",
+    voiceModalBenefit3: "⚡ Creación instantánea de listas",
+    voiceModalBenefit4: "🌍 Funciona en 13 idiomas",
+    benefitsPrincipal: "🎯 Beneficios Principales:",
+    understood: "¡Entendido!"
   },
   de: {
     voice: "Stimme",
@@ -137,8 +159,19 @@ const texts = {
     heroSubtitle: "Erstelle mühelos Einkaufslisten mit deiner Stimme",
     lightningFast: "Blitzschnell",
     aiPowered: "KI-Gestützt",
+    voiceEffortless: "Erstelle Listen mit deiner Stimme",
     superEasy: "Super Einfach",
-    tapButtonStart: "Tippe unten auf den Button zum Starten"
+    tapButtonStart: "Tippe unten auf den Button zum Starten",
+
+    // Voice Effortless Modal
+    voiceModalTitle: "Mühelose Sprach-Listen",
+    voiceModalDescription: "Erstelle Einkaufslisten sofort, indem du einfach sprichst. Unsere fortgeschrittene KI versteht deine Stimme und organisiert automatisch deine Artikel in eine perfekte Einkaufsliste.",
+    voiceModalBenefit1: "🎤 Natürliche Spracherkennung",
+    voiceModalBenefit2: "🤖 KI-gestützte Organisation",
+    voiceModalBenefit3: "⚡ Sofortige Listenerstellung",
+    voiceModalBenefit4: "🌍 Funktioniert in 13 Sprachen",
+    benefitsPrincipal: "🎯 Hauptvorteile:",
+    understood: "Verstanden!"
   },
   it: {
     voice: "Voce",
@@ -183,8 +216,19 @@ const texts = {
     heroSubtitle: "Crea liste della spesa facilmente con la tua voce",
     lightningFast: "Veloce come un Lampo",
     aiPowered: "Potenziato da IA",
+    voiceEffortless: "Crea liste con la tua voce",
     superEasy: "Super Facile",
-    tapButtonStart: "Tocca il pulsante qui sotto per iniziare"
+    tapButtonStart: "Tocca il pulsante qui sotto per iniziare",
+
+    // Voice Effortless Modal
+    voiceModalTitle: "Liste Vocali Senza Sforzo",
+    voiceModalDescription: "Crea liste della spesa istantaneamente semplicemente parlando. La nostra IA avanzata comprende la tua voce e organizza automaticamente i tuoi articoli in una lista della spesa perfetta.",
+    voiceModalBenefit1: "🎤 Riconoscimento vocale naturale",
+    voiceModalBenefit2: "🤖 Organizzazione potenziata da IA",
+    voiceModalBenefit3: "⚡ Creazione istantanea di liste",
+    voiceModalBenefit4: "🌍 Funziona in 13 lingue",
+    benefitsPrincipal: "🎯 Vantaggi Principali:",
+    understood: "Capito!"
   },
   fr: {
     voice: "Voix",
@@ -229,8 +273,19 @@ const texts = {
     heroSubtitle: "Créez des listes de courses sans effort avec votre voix",
     lightningFast: "Ultra Rapide",
     aiPowered: "Alimenté par IA",
+    voiceEffortless: "Créez des listes avec votre voix",
     superEasy: "Super Facile",
-    tapButtonStart: "Appuyez sur le bouton ci-dessous pour commencer"
+    tapButtonStart: "Appuyez sur le bouton ci-dessous pour commencer",
+
+    // Voice Effortless Modal
+    voiceModalTitle: "Listes Vocales Sans Effort",
+    voiceModalDescription: "Créez des listes de courses instantanément en parlant simplement. Notre IA avancée comprend votre voix et organise automatiquement vos articles en une liste de courses parfaite.",
+    voiceModalBenefit1: "🎤 Reconnaissance vocale naturelle",
+    voiceModalBenefit2: "🤖 Organisation alimentée par IA",
+    voiceModalBenefit3: "⚡ Création instantanée de listes",
+    voiceModalBenefit4: "🌍 Fonctionne en 13 langues",
+    benefitsPrincipal: "🎯 Avantages Principaux:",
+    understood: "Compris!"
   },
   pt: {
     voice: "Voz",
@@ -275,8 +330,19 @@ const texts = {
     heroSubtitle: "Crie listas de compras facilmente com sua voz",
     lightningFast: "Super Rápido",
     aiPowered: "Com IA",
+    voiceEffortless: "Crie listas com sua voz",
     superEasy: "Super Fácil",
-    tapButtonStart: "Toque no botão abaixo para começar"
+    tapButtonStart: "Toque no botão abaixo para começar",
+
+    // Voice Effortless Modal
+    voiceModalTitle: "Listas por Voz Sem Esforço",
+    voiceModalDescription: "Crie listas de compras instantaneamente apenas falando. Nossa IA avançada entende sua voz e organiza automaticamente seus itens em uma lista de compras perfeita.",
+    voiceModalBenefit1: "🎤 Reconhecimento de voz natural",
+    voiceModalBenefit2: "🤖 Organização com IA",
+    voiceModalBenefit3: "⚡ Criação instantânea de listas",
+    voiceModalBenefit4: "🌍 Funciona em 13 idiomas",
+    benefitsPrincipal: "🎯 Benefícios Principais:",
+    understood: "Entendi!"
   },
   ru: {
     voice: "Голос",
@@ -506,8 +572,19 @@ const texts = {
     heroSubtitle: "Sesinizle zahmetsizce alışveriş listeleri oluşturun",
     lightningFast: "Çok Hızlı",
     aiPowered: "Yapay Zeka Destekli",
+    voiceEffortless: "Sesinizle listeler oluşturun",
     superEasy: "Çok Kolay",
-    tapButtonStart: "Başlamak için aşağıdaki düğmeye basın"
+    tapButtonStart: "Başlamak için aşağıdaki düğmeye basın",
+
+    // Voice Effortless Modal
+    voiceModalTitle: "Zahmetsiz Sesli Listeler",
+    voiceModalDescription: "Sadece konuşarak anlık alışveriş listeleri oluşturun. Gelişmiş AI’mız sesinizi anlar ve öğelerinizi otomatik olarak mükemmel bir alışveriş listesinde düzenler.",
+    voiceModalBenefit1: "🎤 Doğal ses tanıma",
+    voiceModalBenefit2: "🤖 AI destekli organizasyon",
+    voiceModalBenefit3: "⚡ Anlık liste oluşturma",
+    voiceModalBenefit4: "🌍 13 dilde çalışır",
+    benefitsPrincipal: "🎯 Ana Faydalar:",
+    understood: "Anladım!"
   },
   hi: {
     voice: "आवाज़",
@@ -553,8 +630,19 @@ const texts = {
     heroSubtitle: "अपनी आवाज़ से आसानी से खरीदारी सूचियां बनाएं",
     lightningFast: "बहुत तेज़",
     aiPowered: "AI संचालित",
+    voiceEffortless: "अपनी आवाज़ से सूचियां बनाएं",
     superEasy: "बहुत आसान",
-    tapButtonStart: "शुरू करने के लिए नीचे का बटन दबाएं"
+    tapButtonStart: "शुरू करने के लिए नीचे का बटन दबाएं",
+
+    // Voice Effortless Modal
+    voiceModalTitle: "आसान वॉयस सूचियां",
+    voiceModalDescription: "केवल बोलकर तुरंत खरीदारी सूचियां बनाएं। हमारा उन्नत AI आपकी आवाज़ को समझता है और आपके आइटम्स को आपके एक परफेक्ट खरीदारी की सूची में सवयं व्यवस्थित करता है।",
+    voiceModalBenefit1: "🎤 प्राकृतिक आवाज़ पहचान",
+    voiceModalBenefit2: "🤖 AI-संचालित व्यवस्था",
+    voiceModalBenefit3: "⚡ तुरंत सूची निर्माण",
+    voiceModalBenefit4: "🌍 13 भाषाओं में काम करता है",
+    benefitsPrincipal: "🎯 मुख्य लाभ:",
+    understood: "समझ गया!"
   },
   nl: {
     voice: "Stem",
@@ -593,14 +681,24 @@ const texts = {
     changeLanguage: "Als je boodschappenlijsten in een andere taal wilt maken, wijzig dan de taal in de instellingen van je apparaat.",
     appLanguageInfo: "De app-interface is beschikbaar in de door jou geselecteerde taal. Spraakherkenning begrijpt producten in: Engels, Spaans, Duits, Italiaans, Frans, Turks, Portugees, Russisch, Arabisch, Hongaars, Japans, Hindi en Nederlands.",
     voiceLists: "Voice Lists",
-    
+
     // New Hero Section Translations
     smartVoiceLists: "Voice Lists",
     heroSubtitle: "Create shopping lists with voice",
     lightningFast: "Fast",
-    aiPowered: "AI Powered", 
+    aiPowered: "AI Powered",
     superEasy: "Easy",
-    tapButtonStart: "Tap button to start"
+    tapButtonStart: "Tap button to start",
+
+    // Voice Effortless Modal
+    voiceModalTitle: "Moeiteloze Stem Lijsten",
+    voiceModalDescription: "Creëer boodschappenlijsten direct door gewoon te spreken. Onze geavanceerde AI begrijpt je stem en organiseert automatisch je items in een perfecte boodschappenlijst.",
+    voiceModalBenefit1: "🎤 Natuurlijke spraakherkenning",
+    voiceModalBenefit2: "🤖 AI-aangedreven organisatie",
+    voiceModalBenefit3: "⚡ Directe lijstcreatie",
+    voiceModalBenefit4: "🌍 Werkt in 13 talen",
+    benefitsPrincipal: "🎯 Hoofdvoordelen:",
+    understood: "Begrepen!"
   },
 
   

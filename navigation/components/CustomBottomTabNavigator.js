@@ -58,6 +58,11 @@ const getMenuTexts = () => {
       error: "Error",
       errorSavingList: "No se pudo guardar la lista",
       recommendations: "Recomendaciones",
+      languageModalTitle: "Idioma",
+      languageModalDescription: "Para cambiar el idioma de la aplicación, ve a la configuración de tu dispositivo.",
+      languageModalInfo: "La interfaz de la aplicación está disponible en tu idioma seleccionado. El reconocimiento de voz entiende productos en 13 idiomas.",
+      understood: "¡Entendido!",
+      goToSettings: "Ir a Ajustes",
       descriptions: {
         "star": "Gestiona tu suscripción",
         "star-outline": "Desbloquea todas las funciones",
@@ -81,6 +86,11 @@ const getMenuTexts = () => {
       error: "Error",
       errorSavingList: "Could not save the list",
       recommendations: "Recommendations",
+      languageModalTitle: "Language",
+      languageModalDescription: "To change the app language, go to your device settings.",
+      languageModalInfo: "The app interface is available in your selected language. Voice recognition understands products in 13 languages.",
+      understood: "Got it!",
+      goToSettings: "Go to Settings",
       descriptions: {
         "star": "Manage your subscription",
         "star-outline": "Unlock all features",
@@ -104,6 +114,11 @@ const getMenuTexts = () => {
       error: "Fehler",
       errorSavingList: "Liste konnte nicht gespeichert werden",
       recommendations: "Empfehlungen",
+      languageModalTitle: "Sprache",
+      languageModalDescription: "Um die App-Sprache zu ändern, gehen Sie zu Ihren Geräteeinstellungen.",
+      languageModalInfo: "Die App-Oberfläche ist in Ihrer gewählten Sprache verfügbar. Die Spracherkennung versteht Produkte in 13 Sprachen.",
+      understood: "Verstanden!",
+      goToSettings: "Zu Einstellungen gehen",
       descriptions: {
         "star": "Verwalte dein Abonnement",
         "star-outline": "Alle Funktionen freischalten",
@@ -127,6 +142,11 @@ const getMenuTexts = () => {
       error: "Erreur",
       errorSavingList: "Impossible d'enregistrer la liste",
       recommendations: "Recommandations",
+      languageModalTitle: "Langue",
+      languageModalDescription: "Pour changer la langue de l'application, allez dans les paramètres de votre appareil.",
+      languageModalInfo: "L'interface de l'application est disponible dans votre langue sélectionnée. La reconnaissance vocale comprend les produits en 13 langues.",
+      understood: "Compris!",
+      goToSettings: "Aller aux Paramètres",
       descriptions: {
         "star": "Gérez votre abonnement",
         "star-outline": "Débloquez toutes les fonctionnalités",
@@ -150,6 +170,11 @@ const getMenuTexts = () => {
       error: "Errore",
       errorSavingList: "Impossibile salvare la lista",
       recommendations: "Raccomandazioni",
+      languageModalTitle: "Lingua",
+      languageModalDescription: "Per cambiare la lingua dell'app, vai alle impostazioni del tuo dispositivo.",
+      languageModalInfo: "L'interfaccia dell'app è disponibile nella tua lingua selezionata. Il riconoscimento vocale comprende prodotti in 13 lingue.",
+      understood: "Capito!",
+      goToSettings: "Vai alle Impostazioni",
       descriptions: {
         "star": "Gestisci il tuo abbonamento",
         "star-outline": "Sblocca tutte le funzionalità",
@@ -173,6 +198,11 @@ const getMenuTexts = () => {
       error: "Hata",
       errorSavingList: "Liste kaydedilemedi",
       recommendations: "Öneriler",
+      languageModalTitle: "Dil",
+      languageModalDescription: "Uygulama dilini değiştirmek için cihaz ayarlarınıza gidin.",
+      languageModalInfo: "Uygulama arayüzü seçtiğiniz dilde kullanılabilir. Ses tanıma 13 dilde ürünleri anlar.",
+      understood: "Anladım!",
+      goToSettings: "Ayarlara Git",
       descriptions: {
         "star": "Aboneliğinizi yönetin",
         "star-outline": "Tüm özellikleri kilidini açın",
@@ -196,6 +226,11 @@ const getMenuTexts = () => {
       error: "Erro",
       errorSavingList: "Não foi possível salvar a lista",
       recommendations: "Recomendações",
+      languageModalTitle: "Idioma",
+      languageModalDescription: "Para alterar o idioma do aplicativo, vá para as configurações do seu dispositivo.",
+      languageModalInfo: "A interface do aplicativo está disponível no seu idioma selecionado. O reconhecimento de voz entende produtos em 13 idiomas.",
+      understood: "Entendi!",
+      goToSettings: "Ir para Configurações",
       descriptions: {
         "star": "Gerencie sua assinatura",
         "star-outline": "Desbloqueie todos os recursos",
@@ -219,6 +254,11 @@ const getMenuTexts = () => {
       error: "Ошибка",
       errorSavingList: "Не удалось сохранить список",
       recommendations: "Рекомендации",
+      languageModalTitle: "Язык",
+      languageModalDescription: "Чтобы изменить язык приложения, перейдите в настройки вашего устройства.",
+      languageModalInfo: "Интерфейс приложения доступен на выбранном вами языке. Распознавание голоса понимает продукты на 13 языках.",
+      understood: "Понятно!",
+      goToSettings: "Перейти в Настройки",
       descriptions: {
         "star": "Управляйте подпиской",
         "star-outline": "Разблокируйте все функции",
@@ -242,6 +282,11 @@ const getMenuTexts = () => {
       error: "خطأ",
       errorSavingList: "تعذر حفظ القائمة",
       recommendations: "التوصيات",
+      languageModalTitle: "اللغة",
+      languageModalDescription: "لتغيير لغة التطبيق، انتقل إلى إعدادات جهازك.",
+      languageModalInfo: "واجهة التطبيق متاحة باللغة التي اخترتها. يفهم التعرف على الصوت المنتجات بـ 13 لغة.",
+      understood: "فهمت!",
+      goToSettings: "انتقل إلى الإعدادات",
       descriptions: {
         "star": "إدارة اشتراكك",
         "star-outline": "فتح جميع الميزات",
@@ -265,6 +310,11 @@ const getMenuTexts = () => {
       error: "Hiba",
       errorSavingList: "Nem sikerült menteni a listát",
       recommendations: "Ajánlások",
+      languageModalTitle: "Nyelv",
+      languageModalDescription: "Az alkalmazás nyelvének megváltoztatásához lépjen az eszköz beállításaiba.",
+      languageModalInfo: "Az alkalmazás kezelőfelülete a kiválasztott nyelven érhető el. A hangfelismerés 13 nyelven érti a termékeket.",
+      understood: "Értem!",
+      goToSettings: "Ugrás a Beállításokhoz",
       descriptions: {
         "star": "Előfizetés kezelése",
         "star-outline": "Összes funkció feloldása",
@@ -288,6 +338,11 @@ const getMenuTexts = () => {
       error: "エラー",
       errorSavingList: "リストを保存できませんでした",
       recommendations: "推奨事項",
+      languageModalTitle: "言語",
+      languageModalDescription: "アプリの言語を変更するには、デバイスの設定に移動してください。",
+      languageModalInfo: "アプリのインターフェースは選択した言語で利用できます。音声認識は13言語の製品を理解します。",
+      understood: "わかりました！",
+      goToSettings: "設定に移動",
       descriptions: {
         "star": "サブスクリプションを管理",
         "star-outline": "すべての機能をロック解除",
@@ -311,6 +366,11 @@ const getMenuTexts = () => {
       error: "त्रुटि",
       errorSavingList: "सूची सहेजी नहीं जा सकी",
       recommendations: "सिफारिशें",
+      languageModalTitle: "भाषा",
+      languageModalDescription: "ऐप की भाषा बदलने के लिए, अपने डिवाइस की सेटिंग्स पर जाएं।",
+      languageModalInfo: "ऐप का इंटरफेस आपकी चुनी गई भाषा में उपलब्ध है। आवाज़ पहचान 13 भाषाओं में उत्पादों को समझती है।",
+      understood: "समझ गया!",
+      goToSettings: "सेटिंग्स पर जाएं",
       descriptions: {
         "star": "अपनी सदस्यता प्रबंधित करें",
         "star-outline": "सभी सुविधाएं अनलॉक करें",
@@ -334,6 +394,11 @@ const getMenuTexts = () => {
       error: "Fout",
       errorSavingList: "Kon lijst niet opslaan",
       recommendations: "Aanbevelingen",
+      languageModalTitle: "Taal",
+      languageModalDescription: "Om de app-taal te wijzigen, ga naar de instellingen van uw apparaat.",
+      languageModalInfo: "De app-interface is beschikbaar in uw geselecteerde taal. Spraakherkenning begrijpt producten in 13 talen.",
+      understood: "Begrepen!",
+      goToSettings: "Ga naar Instellingen",
       descriptions: {
         "star": "Beheer uw abonnement",
         "star-outline": "Ontgrendel alle functies",
@@ -456,6 +521,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const [isPrivacyModalVisible, setPrivacyModalVisible] = useState(false)
   const [isEulaModalVisible, setEulaModalVisible] = useState(false)
   const [isSettingsModalVisible, setSettingsModalVisible] = useState(false)
+  const [isLanguageModalVisible, setLanguageModalVisible] = useState(false)
   const [hasActiveList, setHasActiveList] = useState(false) // Estado para lista activa
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [nameModalVisible, setNameModalVisible] = useState(false)
@@ -703,6 +769,11 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const openAppSettings = () => {
     Linking.openSettings()
     setSettingsModalVisible(false)
+  }
+
+  const openDeviceSettings = () => {
+    Linking.openSettings()
+    setLanguageModalVisible(false)
   }
 
   // Ensure activeTab is set to initialTab
@@ -1509,8 +1580,30 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                 borderBottomWidth: 1,
                 borderBottomColor: theme.backgroundtres + "15",
                 marginBottom: 15,
+                position: "relative",
               }}
             >
+              {/* Language/World Icon - Top Right */}
+              <TouchableOpacity
+                onPress={() => {
+                  setMenuModalVisible(false)
+                  setLanguageModalVisible(true)
+                }}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  backgroundColor: "rgba(74, 107, 255, 0.1)",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  zIndex: 10,
+                }}
+              >
+                <Ionicons name="globe-outline" size={20} color="#4a6bff" />
+              </TouchableOpacity>
               <Animated.View
                 style={{
                   width: 50,
@@ -1686,6 +1779,147 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
         visible={isEulaModalVisible}
         onClose={() => setEulaModalVisible(false)}
       />
+
+      {/* Language Modal */}
+      <Modal
+        visible={isLanguageModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setLanguageModalVisible(false)}
+      >
+        <View style={modernStyles.modalOverlay}>
+          <View style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            borderRadius: 24,
+            padding: 32,
+            marginHorizontal: 20,
+            maxWidth: 400,
+            alignSelf: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.25,
+            shadowRadius: 20,
+            elevation: 10,
+            backdropFilter: 'blur(20px)',
+          }}>
+            {/* Close Button */}
+            <TouchableOpacity
+              onPress={() => setLanguageModalVisible(false)}
+              style={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                borderRadius: 20,
+                padding: 8,
+                zIndex: 10,
+              }}
+            >
+              <Ionicons name="close" size={20} color="#6b7280" />
+            </TouchableOpacity>
+
+            {/* Header with Icon */}
+            <View style={{
+              alignItems: 'center',
+              marginBottom: 24,
+            }}>
+              <View style={{
+                backgroundColor: 'rgba(74, 107, 255, 0.15)',
+                borderRadius: 20,
+                padding: 16,
+                marginBottom: 16,
+                shadowColor: '#4a6bff',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 8,
+              }}>
+                <Ionicons name="globe-outline" size={32} color="#4a6bff" />
+              </View>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: '700',
+                color: '#1f2937',
+                textAlign: 'center',
+                marginBottom: 8,
+              }}>{menuTexts.languageModalTitle}</Text>
+            </View>
+
+            {/* Content */}
+            <View style={{
+              alignItems: 'center',
+              marginBottom: 24,
+            }}>
+              <Text style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: '#374151',
+                textAlign: 'center',
+                marginBottom: 16,
+                lineHeight: 24,
+              }}>{menuTexts.languageModalDescription}</Text>
+
+              <Text style={{
+                fontSize: 14,
+                color: '#6b7280',
+                textAlign: 'center',
+                lineHeight: 20,
+                paddingHorizontal: 16,
+              }}>{menuTexts.languageModalInfo}</Text>
+            </View>
+
+            {/* Bottom Action Buttons */}
+            <View style={{
+              gap: 12,
+            }}>
+              {/* Go to Settings Button */}
+              <TouchableOpacity
+                style={{
+                  backgroundColor: 'rgba(74, 107, 255, 0.1)',
+                  borderWidth: 2,
+                  borderColor: 'rgba(74, 107, 255, 0.3)',
+                  borderRadius: 16,
+                  paddingVertical: 14,
+                  paddingHorizontal: 24,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+                onPress={openDeviceSettings}
+                activeOpacity={0.8}
+              >
+                <Ionicons name="settings-outline" size={20} color="#4a6bff" style={{ marginRight: 8 }} />
+                <Text style={{
+                  color: '#4a6bff',
+                  fontWeight: '600',
+                  fontSize: 16,
+                }}>{menuTexts.goToSettings}</Text>
+              </TouchableOpacity>
+
+              {/* Understood Button */}
+              <TouchableOpacity
+                style={{
+                  backgroundColor: 'rgba(74, 107, 255, 0.9)',
+                  borderRadius: 16,
+                  paddingVertical: 14,
+                  paddingHorizontal: 24,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+                onPress={() => setLanguageModalVisible(false)}
+                activeOpacity={0.8}
+              >
+                <Ionicons name="checkmark-circle" size={20} color="white" style={{ marginRight: 8 }} />
+                <Text style={{
+                  color: 'white',
+                  fontWeight: '600',
+                  fontSize: 16,
+                }}>{menuTexts.understood}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* Success Modal */}
       <Modal

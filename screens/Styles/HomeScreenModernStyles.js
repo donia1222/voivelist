@@ -523,6 +523,7 @@ export const getModernStyles = () => {
       elevation: 8,
       position: 'relative',
       overflow: 'hidden',
+ 
     },
     
     // Gradient overlay for modern look
@@ -563,6 +564,7 @@ export const getModernStyles = () => {
       marginBottom: isSmallIPhone ? 4 : 6,
       fontWeight: "500",
       maxWidth: isSmallIPhone ? 260 : 280,
+      
     },
     
     // Feature highlights - MÁS COMPACTO
@@ -589,6 +591,7 @@ export const getModernStyles = () => {
       elevation: isSmallIPhone ? 3 : 4,
       minWidth: isSmallIPhone ? 130 : 160,
       justifyContent: "center",
+     
     },
     
     featureIcon: {
