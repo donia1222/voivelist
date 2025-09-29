@@ -1837,14 +1837,7 @@ const HomeScreen = ({ navigation }) => {
           }
         ]}>
           <ActivityIndicator size="small" color="#6366f1" />
-          <Text style={[
-            modernStyles.featureText,
-            {
-              fontSize: isSmallIPhone ? 12 : 13,
-              color: '#6366f1',
-              fontWeight: '600'
-            }
-          ]}>Cargando...</Text>
+
         </View>
       )
     }
@@ -2512,7 +2505,7 @@ const HomeScreen = ({ navigation }) => {
                 color: '#4a6bff',
                 fontWeight: '600',
                 fontSize: 16,
-              }}>Entendido</Text>
+              }}>OK</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -2620,34 +2613,9 @@ const HomeScreen = ({ navigation }) => {
               {texts[deviceLanguage]?.voiceModalDescription || texts["en"].voiceModalDescription}
             </Text>
 
-            {/* Beneficios */}
-            <View style={modernStyles.chipInfoBenefits}>
-              <Text style={modernStyles.chipInfoBenefitsTitle}>{texts[deviceLanguage]?.benefitsPrincipal || texts["en"].benefitsPrincipal}</Text>
-              <View style={modernStyles.chipInfoBenefitsList}>
-                {[
-                  texts[deviceLanguage]?.voiceModalBenefit1 || texts["en"].voiceModalBenefit1,
-                  texts[deviceLanguage]?.voiceModalBenefit2 || texts["en"].voiceModalBenefit2,
-                  texts[deviceLanguage]?.voiceModalBenefit3 || texts["en"].voiceModalBenefit3,
-                  texts[deviceLanguage]?.voiceModalBenefit4 || texts["en"].voiceModalBenefit4
-                ].map((benefit, index) => (
-                  <View key={index} style={modernStyles.chipInfoBenefitItem}>
-                    <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
-                    <Text style={modernStyles.chipInfoBenefitText}>
-                      {benefit.replace(/^[🎤🤖⚡🌍]\s*/, '')}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </View>
+     
 
-            {/* Botón de acción */}
-            <TouchableOpacity
-              style={modernStyles.chipInfoActionButton}
-              onPress={() => setVoiceEffortlessModalVisible(false)}
-            >
-              <Ionicons name="thumbs-up" size={20} color="white" />
-              <Text style={modernStyles.chipInfoActionText}>{texts[deviceLanguage]?.understood || texts["en"].understood}</Text>
-            </TouchableOpacity>
+    
           </View>
         </View>
       </Modal>
@@ -2708,14 +2676,7 @@ const HomeScreen = ({ navigation }) => {
                   </View>
                 )}
 
-                {/* Botón de acción */}
-                <TouchableOpacity
-                  style={modernStyles.chipInfoActionButton}
-                  onPress={closeChipInfoModal}
-                >
-                  <Ionicons name="thumbs-up" size={20} color="white" />
-                  <Text style={modernStyles.chipInfoActionText}>{texts[deviceLanguage]?.understood || texts["en"].understood}</Text>
-                </TouchableOpacity>
+       
               </>
             )}
           </View>

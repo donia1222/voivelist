@@ -1347,7 +1347,7 @@ const ImageListScreen = ({ route }) => {
             route.params.onNavigateToSubscribe();
           }
         }}>
-          <Ionicons name="lock-closed" size={isSmallIPhone ? 16 : 20} color="#ef4444" />
+          <Ionicons name="lock-closed" size={isSmallIPhone ? 16 : 20} color="#f79730ff" />
           <Text style={[modernStyles.subscriptionBannerText, isSmallIPhone && {fontSize: 12}]}>
             {suscribeButtonTranslations[deviceLanguage] || suscribeButtonTranslations.en}
           </Text>
@@ -1898,19 +1898,18 @@ const modernStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fef2f2",
+    backgroundColor: "#feedcaff",
     paddingVertical: 16,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#fecaca",
+    borderColor: "#feedcaff",
   },
 
   subscriptionBannerText: {
-    marginLeft: 8,
+    marginLeft: 2,
     fontSize: 12,
     fontWeight: "600",
-    color: "#ef4444",
-    textAlign: "center",
+    color: "#f79730ff",
     padding:4,
 
   },

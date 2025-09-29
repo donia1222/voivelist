@@ -137,12 +137,13 @@ const getModernStyles = (theme) => StyleSheet.create({
   // Tarjetas de historial
   historyCard: {
     width: width - 32,
-marginBottom:-0,
+    marginBottom: -0,
     backgroundColor: "#ffffff67",
     borderRadius: 24,
     marginHorizontal: 16,
     marginVertical: 2,
-    padding: 16,
+    padding: 12,
+    paddingBottom: 40, // Menos espacio para el footer más compacto
     shadowColor: "#a8d5a8",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -152,6 +153,7 @@ marginBottom:-0,
     borderColor: "transparent",
     borderLeftWidth: 3,
     borderLeftColor: "#a8d5a8",
+    position: 'relative', // Para que el footer absoluto funcione
   },
 
   cardHeader: {
@@ -356,8 +358,7 @@ marginBottom:-0,
 
   // Contenido de la lista con scroll
   listContent: {
-
-    marginBottom: 10,
+    marginBottom: 50, // Margen extra para no tocar el footer fijo
     marginTop: 4,
   },
   
@@ -535,12 +536,12 @@ marginBottom:-0,
   // New progress bar styles
   progressBarContainer: {
     paddingHorizontal: 4,
-    paddingVertical: 8,
+    paddingVertical: 2,
     alignSelf: 'center',
   },
 
   progressBarBackground: {
-    width: 120,
+    width: 120, // Más corta, era 120
     height: 6,
     backgroundColor: theme.text === '#ffffff' ? '#374151' : '#e5e7eb',
     borderRadius: 3,
@@ -554,15 +555,30 @@ marginBottom:-0,
     minWidth: 2,
   },
 
+  progressBarFooter: {
+    position: 'absolute',
+    bottom: 12, // Menos espacio del borde
+    left: 12,
+    right: 12,
+    paddingHorizontal: 6, // Menos padding horizontal
+    paddingVertical: 4, // Menos padding vertical
+    borderRadius: 8, // Bordes más pequeños
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+
   deleteListButton: {
     flexDirection: 'row',
     alignItems: 'center',
 
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 8,
+
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ef4444',
+
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -1613,7 +1629,7 @@ width: "95%",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
     paddingHorizontal: 20,
   },
 
@@ -1631,7 +1647,7 @@ width: "95%",
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "rgba(168, 213, 168, 0.3)",
+    backgroundColor: "rgba(168, 213, 168, 0.81)",
     marginHorizontal: 6,
     borderWidth: 1,
     borderColor: "rgba(168, 213, 168, 0.5)",
@@ -1657,10 +1673,10 @@ width: "95%",
 
   // Arrow buttons for navigation
   arrowButton: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     borderRadius: 20,
-    backgroundColor: "rgba(168, 213, 168, 0.1)",
+    backgroundColor: "rgba(168, 213, 168, 0.39)",
     borderWidth: 1,
     borderColor: "rgba(168, 213, 168, 0.2)",
     justifyContent: "center",
@@ -1688,7 +1704,7 @@ width: "95%",
     width: 34,
     height: 34,
     borderRadius: 52,
-    backgroundColor: "rgba(168, 213, 168, 0.35)",
+    backgroundColor: "rgba(168, 213, 168, 0.56)",
     borderWidth: 1,
     borderColor: "rgba(168, 213, 168, 0.2)",
     justifyContent: "center",

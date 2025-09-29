@@ -309,21 +309,23 @@ export const getModernStyles = () => {
       justifyContent: 'center',
     },
 
-    // Voice Info Styles
+    // Modern Voice Info Styles
     voiceInfoContainer: {
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-      paddingHorizontal: isSmallIPhone ? 14 : 20,
-      paddingVertical: isSmallIPhone ? 10 : 16,
-      borderRadius: isSmallIPhone ? 16 : 20,
+      backgroundColor: 'rgba(255, 149, 0, 0.08)',
+      paddingHorizontal: isSmallIPhone ? 16 : 22,
+      paddingVertical: isSmallIPhone ? 14 : 18,
+      borderRadius: isSmallIPhone ? 18 : 22,
       marginBottom: isSmallIPhone ? 16 : 24,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: isSmallIPhone ? 4 : 6 },
-      shadowOpacity: 0.15,
-      shadowRadius: isSmallIPhone ? 12 : 16,
-      elevation: 8,
-      borderWidth: 1,
-      borderColor: 'rgba(255, 149, 0, 0.2)',
+      shadowColor: '#ff9500',
+      shadowOffset: { width: 0, height: isSmallIPhone ? 6 : 8 },
+      shadowOpacity: 0.25,
+      shadowRadius: isSmallIPhone ? 16 : 20,
+      elevation: 12,
+      borderWidth: 1.5,
+      borderColor: 'rgba(255, 149, 0, 0.3)',
       maxWidth: isSmallIPhone ? screenWidth * 0.9 : screenWidth * 0.85,
+      position: 'relative',
+      overflow: 'hidden',
     },
     voiceInfoText: {
       fontSize: isSmallIPhone ? 14 : 16,
@@ -1096,21 +1098,29 @@ export const getModernStyles = () => {
       textAlign: "center",
     },
 
-    // Subscription Banner
+    // Modern Subscription Banner
     subscriptionBanner: {
       flexDirection: "row",
       alignItems: "center",
-      backgroundColor: "#fef2f2",
-      padding: 12,
-      borderRadius: 12,
+      backgroundColor: "rgba(233, 30, 99, 0.08)",
+      paddingVertical: 16,
+      paddingHorizontal: 18,
+      borderRadius: 16,
       marginBottom: 20,
-      borderWidth: 1,
-      borderColor: "#fecaca",
+      borderWidth: 1.5,
+      borderColor: "rgba(233, 30, 99, 0.2)",
+      shadowColor: "#e91e63",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      elevation: 4,
     },
     subscriptionBannerText: {
       color: "#e91e63",
-      fontWeight: "600",
-      fontSize: 14,
+      fontWeight: "700",
+      fontSize: 15,
+      flex: 1,
+      letterSpacing: 0.3,
     },
 
     // Country Modal - NUEVO ESTILO MÁS COMPACTO

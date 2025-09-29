@@ -1540,7 +1540,7 @@ const HistoryScreen = ({ navigation }) => {
                 onPress={() => openExpandedListModal(index)}
                 style={[modernStyles.menuButton, { marginRight: 8 }]}
               >
-                <Ionicons name="expand-outline" size={24} color="#4b5563" />
+                <Ionicons name="expand-outline" size={20} color="#4b5563" />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -1549,7 +1549,7 @@ const HistoryScreen = ({ navigation }) => {
                 }}
                 style={modernStyles.menuButton}
               >
-                <Ionicons name="settings-outline" size={24} color="#4b5563" />
+                <Ionicons name="settings-outline" size={20} color="#4b5563" />
               </TouchableOpacity>
             </View>
           </View>
@@ -1838,28 +1838,28 @@ const HistoryScreen = ({ navigation }) => {
         )
       })()}
 
-      {/* Completion counter */}
-      <View style={modernStyles.completionCounter}>
-        {(() => {
-          // Contar solo los elementos que realmente existen en la lista actual
-          const currentCompletedItems = completedItems[index] || [];
-          const validCompletedItems = currentCompletedItems.filter(itemIndex =>
-            itemIndex >= 0 && itemIndex < item.list.length
-          );
-          const completedCount = validCompletedItems.length;
-          const totalCount = item.list.length;
-          const allCompleted = totalCount > 0 && completedCount === totalCount;
-          const progress = totalCount > 0 ? completedCount / totalCount : 0;
 
-          return allCompleted ? (
-            <TouchableOpacity
-              style={modernStyles.deleteListButton}
-              onPress={() => confirmRemoveListFromHistory(index)}
-            >
-              <Ionicons name="trash-outline" size={16} color="#ef4444" />
-            </TouchableOpacity>
-          ) : (
-            <View style={modernStyles.progressBarContainer}>
+      {/* Footer fijo con barra de progreso o botón de eliminar */}
+      {(() => {
+        const currentCompletedItems = completedItems[index] || [];
+        const validCompletedItems = currentCompletedItems.filter(itemIndex =>
+          itemIndex >= 0 && itemIndex < item.list.length
+        );
+        const completedCount = validCompletedItems.length;
+        const totalCount = item.list.length;
+        const allCompleted = totalCount > 0 && completedCount === totalCount;
+        const progress = totalCount > 0 ? completedCount / totalCount : 0;
+
+        return (
+          <View style={modernStyles.progressBarFooter}>
+            {allCompleted ? (
+              <TouchableOpacity
+                style={modernStyles.deleteListButton}
+                onPress={() => confirmRemoveListFromHistory(index)}
+              >
+                <Ionicons name="trash-outline" size={18} color="#ef4444" />
+              </TouchableOpacity>
+            ) : (
               <View style={modernStyles.progressBarBackground}>
                 <Animated.View
                   style={[
@@ -1871,10 +1871,10 @@ const HistoryScreen = ({ navigation }) => {
                   ]}
                 />
               </View>
-            </View>
-          );
-        })()}
-      </View>
+            )}
+          </View>
+        );
+      })()}
 
     </View>
   )

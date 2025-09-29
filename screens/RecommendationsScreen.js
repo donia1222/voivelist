@@ -118,7 +118,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
   const checkSubscriptionStatus = async () => {
     try {
       const customerInfo = await Purchases.getCustomerInfo()
-      const hasActiveSubscription = customerInfo.entitlements.active.premium !== undefined
+      const hasActiveSubscription = customerInfo.entitlements.active["12981"] !== undefined
       setIsSubscribed(hasActiveSubscription)
       console.log('🔄 Estado de suscripción:', hasActiveSubscription ? 'Activa' : 'Inactiva')
     } catch (error) {
@@ -1515,14 +1515,14 @@ const RecommendationsScreen = ({ navigation, route }) => {
         {/* Banner dinámico con descripción de la pestaña activa */}
         <View style={styles.dynamicBannerContainer}>
           <Text style={styles.dynamicBannerTitle}>
-            {activeTab === 'history' && (t.historyBannerTitle || '🕒 Recomendaciones Personalizadas')}
-            {activeTab === 'seasonal' && (t.seasonalBannerTitle || '🍃 Productos de Temporada')}
-            {activeTab === 'diet' && (tDiet.dietBannerTitle || '🥗 Nutrición Balanceada')}
+            {activeTab === 'history' && (t.historyBannerTitle || '🕒 Personal Recommendations')}
+            {activeTab === 'seasonal' && (tSeasonal.seasonalBannerTitle || '🍃 Seasonal Products')}
+            {activeTab === 'diet' && (tDiet.dietBannerTitle || '🥗 Balanced Nutrition')}
           </Text>
           <Text style={styles.dynamicBannerSubtitle}>
-            {activeTab === 'history' && (t.historyBannerDesc || 'Basado en tu patrón de compras anterior')}
-            {activeTab === 'seasonal' && (t.seasonalBannerDesc || 'Productos frescos ideales para esta época')}
-            {activeTab === 'diet' && (tDiet.dietBannerDesc || 'Alimentos saludables con información nutricional')}
+            {activeTab === 'history' && (t.historyBannerDesc || 'Based on your previous shopping patterns')}
+            {activeTab === 'seasonal' && (tSeasonal.seasonalBannerDesc || 'Fresh products ideal for this season')}
+            {activeTab === 'diet' && (tDiet.dietBannerDesc || 'Healthy foods with nutritional information')}
           </Text>
         </View>
 
