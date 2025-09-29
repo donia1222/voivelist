@@ -430,6 +430,7 @@ const HomeScreen = ({ navigation }) => {
 
   // Estado para modal de voz sin esfuerzo
   const [voiceEffortlessModalVisible, setVoiceEffortlessModalVisible] = useState(false)
+  const [manualListsModalVisible, setManualListsModalVisible] = useState(false)
 
 // screenWidth y screenHeight ya declarados arriba
 
@@ -486,9 +487,9 @@ const HomeScreen = ({ navigation }) => {
           {
             chip_position: data.chips.length + 1,
             chip_key: `voice_effortless_info_${deviceLanguage}`,
-            icon_name: 'mic-outline',
+            icon_name: showPencilMode ? 'pencil-outline' : 'mic-outline',
             icon_color: '#f59e0b',
-            text_content: currentLabels.voiceEffortless || 'Crea listas con tu voz'
+            text_content: showPencilMode ? (texts[deviceLanguage]?.manualLists || texts["en"].manualLists || 'Crear listas manuales') : (currentLabels.voiceEffortless || 'Crea listas con tu voz')
           }
         ]
         setDynamicChips(chipsWithVoice)
@@ -516,9 +517,9 @@ const HomeScreen = ({ navigation }) => {
         {
           chip_position: 3,
           chip_key: `voice_effortless_${deviceLanguage}`,
-          icon_name: 'mic-outline',
+          icon_name: showPencilMode ? 'pencil-outline' : 'mic-outline',
           icon_color: '#f59e0b',
-          text_content: currentLabels.voiceEffortless || 'Crea listas con tu voz'
+          text_content: showPencilMode ? (texts[deviceLanguage]?.manualLists || texts["en"].manualLists || 'Crear listas manuales') : (currentLabels.voiceEffortless || 'Crea listas con tu voz')
         },
         {
           chip_position: 4,
@@ -542,9 +543,15 @@ const HomeScreen = ({ navigation }) => {
 
   // Función para abrir modal informativo del chip
   const openChipInfoModal = (chip) => {
-    // Si es el chip especial de voz sin esfuerzo, abrir su modal específico
+    // Si es el chip especial de voz sin esfuerzo, abrir el modal correcto según el modo
     if (chip.chip_key && (chip.chip_key.includes('voice_effortless') || chip.chip_key.includes('voice_effortless_info'))) {
-      setVoiceEffortlessModalVisible(true)
+      if (showPencilMode) {
+        // En modo lápiz, el chip muestra lápiz, así que abrir modal de listas manuales
+        setManualListsModalVisible(true)
+      } else {
+        // En modo micrófono, el chip muestra micrófono, así que abrir modal de voz
+        setVoiceEffortlessModalVisible(true)
+      }
     } else {
       // Para otros chips, usar el modal genérico
       setSelectedChipInfo(chip)
@@ -578,7 +585,7 @@ const HomeScreen = ({ navigation }) => {
   // Cargar chips dinámicos al montar el componente
   useEffect(() => {
     loadDynamicChips()
-  }, [deviceLanguage])
+  }, [deviceLanguage, showPencilMode])
 
   // Handle deep links from widget
   useEffect(() => {
@@ -1817,30 +1824,6 @@ const HomeScreen = ({ navigation }) => {
 
   // Función para renderizar chips dinámicos desde la API
   const renderDynamicChips = () => {
-    if (chipsLoading) {
-      return (
-        <View style={[
-          modernStyles.featureItem,
-          {
-            backgroundColor: 'rgba(99, 102, 241, 0.15)',
-            borderWidth: 1,
-            borderColor: 'rgba(99, 102, 241, 0.3)',
-            borderRadius: 20,
-            paddingHorizontal: isSmallIPhone ? 18 : 24,
-            paddingVertical: isSmallIPhone ? 10 : 12,
-            marginBottom: isSmallIPhone ? 7 : 8,
-            shadowColor: '#6366f1',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-            elevation: 2,
-          }
-        ]}>
-          <ActivityIndicator size="small" color="#6366f1" />
-
-        </View>
-      )
-    }
 
     return [
       // Primero renderizar los 3 chips dinámicos
@@ -2604,6 +2587,49 @@ const HomeScreen = ({ navigation }) => {
                 />
               </View>
               <Text style={modernStyles.chipInfoTitle}>
+                {texts[deviceLanguage]?.voiceListsModalTitle || texts["en"].voiceListsModalTitle}
+              </Text>
+            </View>
+
+            {/* Descripción */}
+            <Text style={modernStyles.chipInfoDescription}>
+              {texts[deviceLanguage]?.voiceListsModalDescription || texts["en"].voiceListsModalDescription}
+            </Text>
+
+     
+
+    
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal de Manual Lists */}
+      <Modal
+        visible={manualListsModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setManualListsModalVisible(false)}
+      >
+        <View style={modernStyles.chipInfoModalOverlay}>
+          <View style={modernStyles.chipInfoModalContent}>
+            {/* Botón de cierre */}
+            <TouchableOpacity
+              style={modernStyles.chipInfoCloseButton}
+              onPress={() => setManualListsModalVisible(false)}
+            >
+              <Ionicons name="close" size={24} color="#666" />
+            </TouchableOpacity>
+
+            {/* Header del chip */}
+            <View style={modernStyles.chipInfoHeader}>
+              <View style={[modernStyles.chipInfoIcon, { backgroundColor: '#f59e0b' + '20' }]}>
+                <Ionicons
+                  name="pencil-outline"
+                  size={32}
+                  color="#f59e0b"
+                />
+              </View>
+              <Text style={modernStyles.chipInfoTitle}>
                 {texts[deviceLanguage]?.voiceModalTitle || texts["en"].voiceModalTitle}
               </Text>
             </View>
@@ -2613,9 +2639,40 @@ const HomeScreen = ({ navigation }) => {
               {texts[deviceLanguage]?.voiceModalDescription || texts["en"].voiceModalDescription}
             </Text>
 
-     
+            {/* Beneficios */}
+            <View style={modernStyles.chipInfoBenefits}>
+              <Text style={modernStyles.chipInfoBenefitsTitle}>
+                {texts[deviceLanguage]?.benefitsPrincipal || texts["en"].benefitsPrincipal}
+              </Text>
+              <View style={modernStyles.chipInfoBenefitsList}>
+                <View style={modernStyles.chipInfoBenefitItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
+                  <Text style={modernStyles.chipInfoBenefitText}>
+                    {texts[deviceLanguage]?.voiceModalBenefit1 || texts["en"].voiceModalBenefit1}
+                  </Text>
+                </View>
+                <View style={modernStyles.chipInfoBenefitItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
+                  <Text style={modernStyles.chipInfoBenefitText}>
+                    {texts[deviceLanguage]?.voiceModalBenefit2 || texts["en"].voiceModalBenefit2}
+                  </Text>
+                </View>
+                <View style={modernStyles.chipInfoBenefitItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
+                  <Text style={modernStyles.chipInfoBenefitText}>
+                    {texts[deviceLanguage]?.voiceModalBenefit3 || texts["en"].voiceModalBenefit3}
+                  </Text>
+                </View>
+                <View style={modernStyles.chipInfoBenefitItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
+                  <Text style={modernStyles.chipInfoBenefitText}>
+                    {texts[deviceLanguage]?.voiceModalBenefit4 || texts["en"].voiceModalBenefit4}
+                  </Text>
+                </View>
+              </View>
+            </View>
 
-    
+         
           </View>
         </View>
       </Modal>

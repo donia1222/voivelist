@@ -47,15 +47,26 @@ const texts = {
     superEasy: "Super Easy",
     tapButtonStart: "Tap the button below to start",
 
-    // Voice Effortless Modal
-    voiceModalTitle: "Effortless Voice Lists",
-    voiceModalDescription: "Create shopping lists instantly by just speaking. Our advanced AI understands your voice and automatically organizes your items into a perfect shopping list.",
-    voiceModalBenefit1: "🎤 Natural voice recognition",
-    voiceModalBenefit2: "🤖 AI-powered organization",
-    voiceModalBenefit3: "⚡ Instant list creation",
-    voiceModalBenefit4: "🌍 Works in 13 languages",
+    // Manual Lists Modal
+    manualLists: "Create manual lists",
+    voiceModalTitle: "Manual Lists Creation",
+    voiceModalDescription: "Create shopping lists manually by writing each item step by step. Super easy, super fast.",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "Effortless Voice Lists",
+    voiceListsModalDescription: "Create shopping lists instantly by just speaking. Our advanced AI understands your voice and automatically organizes your items into a perfect shopping list.",
+    voiceModalBenefit1: "✏️ Write your own items",
+    voiceModalBenefit2: "📝 Full control over your list",
+    voiceModalBenefit3: "⚡ Quick and easy editing",
+    voiceModalBenefit4: "🎯 Perfect precision",
+
+    voiceListsBenefit1: "🎤 Natural voice recognition",
+    voiceListsBenefit2: "🤖 AI-powered organization",
+    voiceListsBenefit3: "⚡ Instant list creation",
+    voiceListsBenefit4: "🌍 Works in 13 languages",
     benefitsPrincipal: "🎯 Main Benefits:",
-    understood: "Got it!"
+    understood: "Got it!",
+    loadingTagline: "🎙️ Shop with your voice"
   },
   es: {
     voice: "Voz",
@@ -105,15 +116,26 @@ const texts = {
     superEasy: "Muy Fácil",
     tapButtonStart: "Presiona el botón de abajo para empezar",
 
-    // Voice Effortless Modal
-    voiceModalTitle: "Listas por Voz sin Esfuerzo",
-    voiceModalDescription: "Crea listas de compras al instante simplemente hablando. Nuestra IA avanzada entiende tu voz y organiza automáticamente tus artículos en una lista de compras perfecta.",
-    voiceModalBenefit1: "🎤 Reconocimiento de voz natural",
-    voiceModalBenefit2: "🤖 Organización con IA",
-    voiceModalBenefit3: "⚡ Creación instantánea de listas",
-    voiceModalBenefit4: "🌍 Funciona en 13 idiomas",
+    // Manual Lists Modal
+    manualLists: "Crear listas manuales",
+    voiceModalTitle: "Creación de Listas Manuales",
+    voiceModalDescription: "Crea listas de compras manualmente escribiendo cada artículo paso a paso. Súper fácil, súper rápido.",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "Listas por Voz sin Esfuerzo",
+    voiceListsModalDescription: "Crea listas de compras al instante simplemente hablando. Nuestra IA avanzada entiende tu voz y organiza automáticamente tus artículos en una lista de compras perfecta.",
+    voiceModalBenefit1: "✏️ Escribe tus propios artículos",
+    voiceModalBenefit2: "📝 Control total sobre tu lista",
+    voiceModalBenefit3: "⚡ Edición rápida y fácil",
+    voiceModalBenefit4: "🎯 Precisión perfecta",
+
+    voiceListsBenefit1: "🎤 Reconocimiento de voz natural",
+    voiceListsBenefit2: "🤖 Organización con IA",
+    voiceListsBenefit3: "⚡ Creación instantánea de listas",
+    voiceListsBenefit4: "🌍 Funciona en 13 idiomas",
     benefitsPrincipal: "🎯 Beneficios Principales:",
-    understood: "¡Entendido!"
+    understood: "¡Entendido!",
+    loadingTagline: "🎙️ Compra con tu voz"
   },
   de: {
     voice: "Stimme",
@@ -163,15 +185,26 @@ const texts = {
     superEasy: "Super Einfach",
     tapButtonStart: "Tippe unten auf den Button zum Starten",
 
-    // Voice Effortless Modal
-    voiceModalTitle: "Mühelose Sprach-Listen",
-    voiceModalDescription: "Erstelle Einkaufslisten sofort, indem du einfach sprichst. Unsere fortgeschrittene KI versteht deine Stimme und organisiert automatisch deine Artikel in eine perfekte Einkaufsliste.",
-    voiceModalBenefit1: "🎤 Natürliche Spracherkennung",
-    voiceModalBenefit2: "🤖 KI-gestützte Organisation",
-    voiceModalBenefit3: "⚡ Sofortige Listenerstellung",
-    voiceModalBenefit4: "🌍 Funktioniert in 13 Sprachen",
+    // Manual Lists Modal
+    manualLists: "Manuelle Listen erstellen",
+    voiceModalTitle: "Manuelle Listen Erstellung",
+    voiceModalDescription: "Erstelle Einkaufslisten manuell, indem du jeden Artikel Schritt für Schritt schreibst. Super einfach, super schnell.",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "Mühelose Sprach-Listen",
+    voiceListsModalDescription: "Erstelle Einkaufslisten sofort, indem du einfach sprichst. Unsere fortgeschrittene KI versteht deine Stimme und organisiert automatisch deine Artikel in eine perfekte Einkaufsliste.",
+    voiceModalBenefit1: "✏️ Schreibe deine eigenen Artikel",
+    voiceModalBenefit2: "📝 Vollständige Kontrolle über deine Liste",
+    voiceModalBenefit3: "⚡ Schnelle und einfache Bearbeitung",
+    voiceModalBenefit4: "🎯 Perfekte Präzision",
+
+    voiceListsBenefit1: "🎤 Natürliche Spracherkennung",
+    voiceListsBenefit2: "🤖 KI-gestützte Organisation",
+    voiceListsBenefit3: "⚡ Sofortige Listenerstellung",
+    voiceListsBenefit4: "🌍 Funktioniert in 13 Sprachen",
     benefitsPrincipal: "🎯 Hauptvorteile:",
-    understood: "Verstanden!"
+    understood: "Verstanden!",
+    loadingTagline: "🎙️ Einkaufen mit deiner Stimme"
   },
   it: {
     voice: "Voce",
@@ -220,15 +253,26 @@ const texts = {
     superEasy: "Super Facile",
     tapButtonStart: "Tocca il pulsante qui sotto per iniziare",
 
-    // Voice Effortless Modal
-    voiceModalTitle: "Liste Vocali Senza Sforzo",
-    voiceModalDescription: "Crea liste della spesa istantaneamente semplicemente parlando. La nostra IA avanzata comprende la tua voce e organizza automaticamente i tuoi articoli in una lista della spesa perfetta.",
-    voiceModalBenefit1: "🎤 Riconoscimento vocale naturale",
-    voiceModalBenefit2: "🤖 Organizzazione potenziata da IA",
-    voiceModalBenefit3: "⚡ Creazione istantanea di liste",
-    voiceModalBenefit4: "🌍 Funziona in 13 lingue",
+    // Manual Lists Modal
+    manualLists: "Crea liste manuali",
+    voiceModalTitle: "Creazione Liste Manuali",
+    voiceModalDescription: "Crea liste della spesa manualmente scrivendo ogni articolo passo dopo passo. Super facile, super veloce.",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "Liste Vocali Senza Sforzo",
+    voiceListsModalDescription: "Crea liste della spesa istantaneamente semplicemente parlando. La nostra IA avanzata comprende la tua voce e organizza automaticamente i tuoi articoli in una lista della spesa perfetta.",
+    voiceModalBenefit1: "✏️ Scrivi i tuoi articoli",
+    voiceModalBenefit2: "📝 Controllo completo sulla tua lista",
+    voiceModalBenefit3: "⚡ Modifica rapida e facile",
+    voiceModalBenefit4: "🎯 Precisione perfetta",
+
+    voiceListsBenefit1: "🎤 Riconoscimento vocale naturale",
+    voiceListsBenefit2: "🤖 Organizzazione potenziata da IA",
+    voiceListsBenefit3: "⚡ Creazione istantanea di liste",
+    voiceListsBenefit4: "🌍 Funziona in 13 lingue",
     benefitsPrincipal: "🎯 Vantaggi Principali:",
-    understood: "Capito!"
+    understood: "Capito!",
+    loadingTagline: "🎙️ Fai shopping con la tua voce"
   },
   fr: {
     voice: "Voix",
@@ -277,15 +321,26 @@ const texts = {
     superEasy: "Super Facile",
     tapButtonStart: "Appuyez sur le bouton ci-dessous pour commencer",
 
-    // Voice Effortless Modal
-    voiceModalTitle: "Listes Vocales Sans Effort",
-    voiceModalDescription: "Créez des listes de courses instantanément en parlant simplement. Notre IA avancée comprend votre voix et organise automatiquement vos articles en une liste de courses parfaite.",
-    voiceModalBenefit1: "🎤 Reconnaissance vocale naturelle",
-    voiceModalBenefit2: "🤖 Organisation alimentée par IA",
-    voiceModalBenefit3: "⚡ Création instantanée de listes",
-    voiceModalBenefit4: "🌍 Fonctionne en 13 langues",
+    // Manual Lists Modal
+    manualLists: "Créer des listes manuelles",
+    voiceModalTitle: "Création de Listes Manuelles",
+    voiceModalDescription: "Créez des listes de courses manuellement en écrivant chaque article étape par étape. Super facile, super rapide.",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "Listes Vocales Sans Effort",
+    voiceListsModalDescription: "Créez des listes de courses instantanément en parlant simplement. Notre IA avancée comprend votre voix et organise automatiquement vos articles en une liste de courses parfaite.",
+    voiceModalBenefit1: "✏️ Écrivez vos propres articles",
+    voiceModalBenefit2: "📝 Contrôle total sur votre liste",
+    voiceModalBenefit3: "⚡ Édition rapide et facile",
+    voiceModalBenefit4: "🎯 Précision parfaite",
+
+    voiceListsBenefit1: "🎤 Reconnaissance vocale naturelle",
+    voiceListsBenefit2: "🤖 Organisation alimentée par IA",
+    voiceListsBenefit3: "⚡ Création instantanée de listes",
+    voiceListsBenefit4: "🌍 Fonctionne en 13 langues",
     benefitsPrincipal: "🎯 Avantages Principaux:",
-    understood: "Compris!"
+    understood: "Compris!",
+    loadingTagline: "🎙️ Achetez avec votre voix"
   },
   pt: {
     voice: "Voz",
@@ -334,15 +389,26 @@ const texts = {
     superEasy: "Super Fácil",
     tapButtonStart: "Toque no botão abaixo para começar",
 
-    // Voice Effortless Modal
-    voiceModalTitle: "Listas por Voz Sem Esforço",
-    voiceModalDescription: "Crie listas de compras instantaneamente apenas falando. Nossa IA avançada entende sua voz e organiza automaticamente seus itens em uma lista de compras perfeita.",
-    voiceModalBenefit1: "🎤 Reconhecimento de voz natural",
-    voiceModalBenefit2: "🤖 Organização com IA",
-    voiceModalBenefit3: "⚡ Criação instantânea de listas",
-    voiceModalBenefit4: "🌍 Funciona em 13 idiomas",
+    // Manual Lists Modal
+    manualLists: "Criar listas manuais",
+    voiceModalTitle: "Criação de Listas Manuais",
+    voiceModalDescription: "Crie listas de compras manualmente escrevendo cada item passo a passo. Super fácil, super rápido.",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "Listas por Voz Sem Esforço",
+    voiceListsModalDescription: "Crie listas de compras instantaneamente apenas falando. Nossa IA avançada entende sua voz e organiza automaticamente seus itens em uma lista de compras perfeita.",
+    voiceModalBenefit1: "✏️ Escreva seus próprios itens",
+    voiceModalBenefit2: "📝 Controle total sobre sua lista",
+    voiceModalBenefit3: "⚡ Edição rápida e fácil",
+    voiceModalBenefit4: "🎯 Precisão perfeita",
+
+    voiceListsBenefit1: "🎤 Reconhecimento de voz natural",
+    voiceListsBenefit2: "🤖 Organização com IA",
+    voiceListsBenefit3: "⚡ Criação instantânea de listas",
+    voiceListsBenefit4: "🌍 Funciona em 13 idiomas",
     benefitsPrincipal: "🎯 Benefícios Principais:",
-    understood: "Entendi!"
+    understood: "Entendi!",
+    loadingTagline: "🎙️ Compre com sua voz"
   },
   ru: {
     voice: "Голос",
@@ -575,6 +641,7 @@ const texts = {
     voiceEffortless: "Sesinizle listeler oluşturun",
     superEasy: "Çok Kolay",
     tapButtonStart: "Başlamak için aşağıdaki düğmeye basın",
+    manualLists: "Manuel listeler oluştur",
 
     // Voice Effortless Modal
     voiceModalTitle: "Zahmetsiz Sesli Listeler",
@@ -584,7 +651,8 @@ const texts = {
     voiceModalBenefit3: "⚡ Anlık liste oluşturma",
     voiceModalBenefit4: "🌍 13 dilde çalışır",
     benefitsPrincipal: "🎯 Ana Faydalar:",
-    understood: "Anladım!"
+    understood: "Anladım!",
+    loadingTagline: "🎙️ Sesinle alışveriş yap"
   },
   hi: {
     voice: "आवाज़",
@@ -642,7 +710,8 @@ const texts = {
     voiceModalBenefit3: "⚡ तुरंत सूची निर्माण",
     voiceModalBenefit4: "🌍 13 भाषाओं में काम करता है",
     benefitsPrincipal: "🎯 मुख्य लाभ:",
-    understood: "समझ गया!"
+    understood: "समझ गया!",
+    loadingTagline: "🎙️ अपनी आवाज़ से खरीदारी करें"
   },
   nl: {
     voice: "Stem",
@@ -698,7 +767,8 @@ const texts = {
     voiceModalBenefit3: "⚡ Directe lijstcreatie",
     voiceModalBenefit4: "🌍 Werkt in 13 talen",
     benefitsPrincipal: "🎯 Hoofdvoordelen:",
-    understood: "Begrepen!"
+    understood: "Begrepen!",
+    loadingTagline: "🎙️ Winkelen met je stem"
   },
 
   

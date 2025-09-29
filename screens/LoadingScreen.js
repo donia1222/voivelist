@@ -1,9 +1,14 @@
 import { useEffect, useRef } from 'react'
-import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, Animated, Dimensions, Image } from 'react-native'
+import * as RNLocalize from "react-native-localize"
+import texts from "./translations/texts"
 
 const { width, height } = Dimensions.get('window')
 
 const LoadingScreen = () => {
+  const deviceLanguage = RNLocalize.getLocales()[0].languageCode
+  const currentLabels = texts[deviceLanguage] || texts["en"]
+
   const fadeAnim = useRef(new Animated.Value(0)).current
   const scaleAnim = useRef(new Animated.Value(0.8)).current
   const rotateAnim = useRef(new Animated.Value(0)).current
@@ -124,36 +129,17 @@ const LoadingScreen = () => {
       >
         <Animated.View
           style={[
-            styles.cartContainer,
+            styles.logoImageContainer,
             {
-              transform: [{ rotate }, { scale: pulseAnim }],
+              transform: [{ scale: pulseAnim }],
             },
           ]}
         >
-          <View style={styles.cart}>
-            <View style={styles.cartBody}>
-              <View style={styles.cartStripe1} />
-              <View style={styles.cartStripe2} />
-              <View style={styles.cartStripe3} />
-            </View>
-            <View style={styles.cartWheels}>
-              <View style={[styles.wheel, styles.wheelLeft]} />
-              <View style={[styles.wheel, styles.wheelRight]} />
-            </View>
-            <View style={styles.cartHandle} />
-          </View>
-          
-          <Animated.View
-            style={[
-              styles.microphoneIcon,
-              {
-                transform: [{ scale: pulseAnim }],
-              },
-            ]}
-          >
-            <View style={styles.micTop} />
-            <View style={styles.micBottom} />
-          </Animated.View>
+          <Image
+            source={require('../assets/images/icono34.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
         </Animated.View>
 
         <Animated.View
@@ -165,7 +151,7 @@ const LoadingScreen = () => {
           ]}
         >
           <Text style={styles.title}>BuyVoice</Text>
-          <Text style={styles.tagline}>🎙️ Shop with your voice</Text>
+          <Text style={styles.tagline}>{currentLabels.loadingTagline}</Text>
         </Animated.View>
 
         <View style={styles.loadingDotsContainer}>
@@ -365,6 +351,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#7F8C8D',
     fontStyle: 'italic',
+  },
+  logoImageContainer: {
+    width: 120,
+    height: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  logoImage: {
+    width: 120,
+    height: 120,
   },
   loadingDotsContainer: {
     flexDirection: 'row',
