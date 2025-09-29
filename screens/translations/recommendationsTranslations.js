@@ -413,7 +413,15 @@ const recommendationsTranslations = {
     subscriptionRequiredTitle: "🔒 Premium-Funktion",
     subscriptionRequiredMessage: "Abonnieren Sie für Zugang zu saisonalen und Ernährungsempfehlungen mit KI",
     subscribeButton: "Jetzt abonnieren",
-    subscriptionBenefits: "✨ Unbegrenzte KI-Empfehlungen\n📅 Saisonale Produkte\n🥗 Ernährungsanalyse"
+    subscriptionBenefits: "✨ Unbegrenzte KI-Empfehlungen\n📅 Saisonale Produkte\n🥗 Ernährungsanalyse",
+    // Modal informativo
+    infoModalTitle: "Intelligente Empfehlungen!",
+    infoModalSubtitle: "Entdecke die neuen Funktionen dieses Bildschirms",
+    historyFeatureTitle: "Basierend auf deiner Historie",
+    historyFeatureDescription: "Wir analysieren deine früheren Einkäufe, um Produkte vorzuschlagen, die du wirklich brauchst.",
+    syncFeatureTitle: "Automatische Synchronisation",
+    syncFeatureDescription: "Füge Produkte direkt zu deinen bestehenden Listen hinzu oder erstelle neue Listen.",
+    gotIt: "Verstanden!"
   },
   it: {
     title: "Raccomandazioni Intelligenti AI",
@@ -532,7 +540,15 @@ const recommendationsTranslations = {
     subscriptionRequiredTitle: "🔒 Funzione Premium",
     subscriptionRequiredMessage: "Abbonati per accedere a raccomandazioni stagionali e nutrizionali con IA",
     subscribeButton: "Abbonati ora",
-    subscriptionBenefits: "✨ Raccomandazioni IA illimitate\n📅 Prodotti di stagione\n🥗 Analisi nutrizionale"
+    subscriptionBenefits: "✨ Raccomandazioni IA illimitate\n📅 Prodotti di stagione\n🥗 Analisi nutrizionale",
+    // Modal informativo
+    infoModalTitle: "Raccomandazioni Intelligenti!",
+    infoModalSubtitle: "Scopri le nuove funzionalità di questa schermata",
+    historyFeatureTitle: "Basato sulla tua cronologia",
+    historyFeatureDescription: "Analizziamo i tuoi acquisti precedenti per suggerire prodotti di cui hai davvero bisogno.",
+    syncFeatureTitle: "Sincronizzazione automatica",
+    syncFeatureDescription: "Aggiungi prodotti direttamente alle tue liste esistenti o crea nuove liste.",
+    gotIt: "Capito!"
   },
   fr: {
     title: "Recommandations Intelligentes IA",
@@ -651,7 +667,15 @@ const recommendationsTranslations = {
     subscriptionRequiredTitle: "🔒 Fonctionnalité Premium",
     subscriptionRequiredMessage: "Abonnez-vous pour accéder aux recommandations saisonnières et nutritionnelles avec IA",
     subscribeButton: "S'abonner maintenant",
-    subscriptionBenefits: "✨ Recommandations IA illimitées\n📅 Produits de saison\n🥗 Analyse nutritionnelle"
+    subscriptionBenefits: "✨ Recommandations IA illimitées\n📅 Produits de saison\n🥗 Analyse nutritionnelle",
+    // Modal informativo
+    infoModalTitle: "Recommandations Intelligentes !",
+    infoModalSubtitle: "Découvrez les nouvelles fonctionnalités de cet écran",
+    historyFeatureTitle: "Basé sur votre historique",
+    historyFeatureDescription: "Nous analysons vos achats précédents pour suggérer des produits dont vous avez vraiment besoin.",
+    syncFeatureTitle: "Synchronisation automatique",
+    syncFeatureDescription: "Ajoutez des produits directement à vos listes existantes ou créez de nouvelles listes.",
+    gotIt: "Compris !"
   },
   pt: {
     title: "Recomendações Inteligentes com IA",

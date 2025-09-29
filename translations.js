@@ -21,7 +21,14 @@ export const translations = {
     privacyPolicy: "Privacy",
     termsAndConditions: "Terms",
     shareMessage: "Check out BuyVoice - Create shopping lists with your voice! Download it here: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "To keep prices affordable, we limit to 10 analyses every 10 hours. Please wait!"
+    imageLimitReached: "To keep prices affordable, we limit to 10 analyses every 10 hours. Please wait!",
+    infoModalTitle: "Smart Recommendations!",
+    infoModalSubtitle: "Discover the new features of this screen",
+    historyFeatureTitle: "Based on your history",
+    historyFeatureDescription: "We analyze your previous purchases to suggest products you really need.",
+    syncFeatureTitle: "Automatic synchronization",
+    syncFeatureDescription: "Add products directly to your existing lists or create new lists.",
+    gotIt: "Got it!"
   },
   es: {
     delete: "Borrar",
@@ -45,7 +52,14 @@ export const translations = {
     privacyPolicy: "Privacidad",
     termsAndConditions: "Términos",
     shareMessage: "¡Mira BuyVoice - Crea listas de compras con tu voz! Descárgala aquí: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "Para mantener precios accesibles, limitamos a 10 análisis cada 10 horas. ¡Espera un poco!"
+    imageLimitReached: "Para mantener precios accesibles, limitamos a 10 análisis cada 10 horas. ¡Espera un poco!",
+    infoModalTitle: "¡Recomendaciones Inteligentes!",
+    infoModalSubtitle: "Descubre las nuevas funciones de esta pantalla",
+    historyFeatureTitle: "Basado en tu historial",
+    historyFeatureDescription: "Analizamos tus compras anteriores para sugerir productos que realmente necesitas.",
+    syncFeatureTitle: "Sincronización automática",
+    syncFeatureDescription: "Agrega productos directamente a tus listas existentes o crea nuevas listas.",
+    gotIt: "¡Entendido!"
   },
   de: {
     delete: "Löschen",
@@ -69,7 +83,14 @@ export const translations = {
     privacyPolicy: "Datenschutz",
     termsAndConditions: "Bedingungen",
     shareMessage: "Schau dir BuyVoice an - Erstelle Einkaufslisten mit deiner Stimme! Hier herunterladen: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "Um die Preise erschwinglich zu halten, begrenzen wir auf 10 Analysen alle 10 Stunden. Bitte warten!"
+    imageLimitReached: "Um die Preise erschwinglich zu halten, begrenzen wir auf 10 Analysen alle 10 Stunden. Bitte warten!",
+    infoModalTitle: "Intelligente Empfehlungen!",
+    infoModalSubtitle: "Entdecke die neuen Funktionen dieses Bildschirms",
+    historyFeatureTitle: "Basierend auf deiner Historie",
+    historyFeatureDescription: "Wir analysieren deine früheren Einkäufe, um Produkte vorzuschlagen, die du wirklich brauchst.",
+    syncFeatureTitle: "Automatische Synchronisation",
+    syncFeatureDescription: "Füge Produkte direkt zu deinen bestehenden Listen hinzu oder erstelle neue Listen.",
+    gotIt: "Verstanden!"
   },
   fr: {
     delete: "Supprimer",
@@ -93,7 +114,14 @@ export const translations = {
     privacyPolicy: "Confidentialité",
     termsAndConditions: "Conditions",
     shareMessage: "Découvrez BuyVoice - Créez des listes de courses avec votre voix ! Téléchargez ici : https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "Pour maintenir des prix abordables, nous limitons à 10 analyses toutes les 10 heures. Veuillez patienter !"
+    imageLimitReached: "Pour maintenir des prix abordables, nous limitons à 10 analyses toutes les 10 heures. Veuillez patienter !",
+    infoModalTitle: "Recommandations Intelligentes !",
+    infoModalSubtitle: "Découvrez les nouvelles fonctionnalités de cet écran",
+    historyFeatureTitle: "Basé sur votre historique",
+    historyFeatureDescription: "Nous analysons vos achats précédents pour suggérer des produits dont vous avez vraiment besoin.",
+    syncFeatureTitle: "Synchronisation automatique",
+    syncFeatureDescription: "Ajoutez des produits directement à vos listes existantes ou créez de nouvelles listes.",
+    gotIt: "Compris !"
   },
   it: {
     delete: "Elimina",
@@ -117,7 +145,14 @@ export const translations = {
     privacyPolicy: "Privacy",
     termsAndConditions: "Termini",
     shareMessage: "Scopri BuyVoice - Crea liste della spesa con la tua voce! Scarica qui: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "Per mantenere prezzi accessibili, limitiamo a 10 analisi ogni 10 ore. Attendere prego!"
+    imageLimitReached: "Per mantenere prezzi accessibili, limitiamo a 10 analisi ogni 10 ore. Attendere prego!",
+    infoModalTitle: "Raccomandazioni Intelligenti!",
+    infoModalSubtitle: "Scopri le nuove funzionalità di questa schermata",
+    historyFeatureTitle: "Basato sulla tua cronologia",
+    historyFeatureDescription: "Analizziamo i tuoi acquisti precedenti per suggerire prodotti di cui hai davvero bisogno.",
+    syncFeatureTitle: "Sincronizzazione automatica",
+    syncFeatureDescription: "Aggiungi prodotti direttamente alle tue liste esistenti o crea nuove liste.",
+    gotIt: "Capito!"
   },
   tr: {
     delete: "Sil",
@@ -141,7 +176,14 @@ export const translations = {
     privacyPolicy: "Gizlilik",
     termsAndConditions: "Şartlar",
     shareMessage: "BuyVoice'u keşfet - Sesinle alışveriş listeleri oluştur! Buradan indir: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "Fiyatları uygun tutmak için her 10 saatte 10 analizle sınırlıyoruz. Lütfen bekleyin!"
+    imageLimitReached: "Fiyatları uygun tutmak için her 10 saatte 10 analizle sınırlıyoruz. Lütfen bekleyin!",
+    infoModalTitle: "Akıllı Öneriler!",
+    infoModalSubtitle: "Bu ekranın yeni özelliklerini keşfedin",
+    historyFeatureTitle: "Geçmişinize dayalı",
+    historyFeatureDescription: "Gerçekten ihtiyacınız olan ürünleri önermek için önceki alışverişlerinizi analiz ediyoruz.",
+    syncFeatureTitle: "Otomatik senkronizasyon",
+    syncFeatureDescription: "Ürünleri doğrudan mevcut listelerinize ekleyin veya yeni listeler oluşturun.",
+    gotIt: "Anladım!"
   },
   pt: {
     delete: "Excluir",
@@ -165,7 +207,14 @@ export const translations = {
     privacyPolicy: "Privacidade",
     termsAndConditions: "Termos",
     shareMessage: "Confira BuyVoice - Crie listas de compras com sua voz! Baixe aqui: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "Para manter preços acessíveis, limitamos a 10 análises a cada 10 horas. Por favor, aguarde!"
+    imageLimitReached: "Para manter preços acessíveis, limitamos a 10 análises a cada 10 horas. Por favor, aguarde!",
+    infoModalTitle: "Recomendações Inteligentes!",
+    infoModalSubtitle: "Descubra as novas funcionalidades desta tela",
+    historyFeatureTitle: "Baseado no seu histórico",
+    historyFeatureDescription: "Analisamos suas compras anteriores para sugerir produtos que você realmente precisa.",
+    syncFeatureTitle: "Sincronização automática",
+    syncFeatureDescription: "Adicione produtos diretamente às suas listas existentes ou crie novas listas.",
+    gotIt: "Entendi!"
   },
   ru: {
     delete: "Удалить",
@@ -189,7 +238,14 @@ export const translations = {
     privacyPolicy: "Конфиденциальность",
     termsAndConditions: "Условия",
     shareMessage: "Посмотрите BuyVoice - Создавайте списки покупок голосом! Скачать здесь: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "Чтобы цены оставались доступными, мы ограничиваем до 10 анализов каждые 10 часов. Пожалуйста, подождите!"
+    imageLimitReached: "Чтобы цены оставались доступными, мы ограничиваем до 10 анализов каждые 10 часов. Пожалуйста, подождите!",
+    infoModalTitle: "Умные Рекомендации!",
+    infoModalSubtitle: "Откройте новые функции этого экрана",
+    historyFeatureTitle: "На основе вашей истории",
+    historyFeatureDescription: "Мы анализируем ваши предыдущие покупки, чтобы предложить товары, которые вам действительно нужны.",
+    syncFeatureTitle: "Автоматическая синхронизация",
+    syncFeatureDescription: "Добавляйте товары прямо в существующие списки или создавайте новые списки.",
+    gotIt: "Понятно!"
   },
   ar: {
     delete: "حذف",
@@ -213,7 +269,14 @@ export const translations = {
     privacyPolicy: "الخصوصية",
     termsAndConditions: "الشروط",
     shareMessage: "تحقق من BuyVoice - أنشئ قوائم التسوق بصوتك! حمل من هنا: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "للحفاظ على أسعار معقولة، نحد من 10 تحليلات كل 10 ساعات. يرجى الانتظار!"
+    imageLimitReached: "للحفاظ على أسعار معقولة، نحد من 10 تحليلات كل 10 ساعات. يرجى الانتظار!",
+    infoModalTitle: "توصيات ذكية!",
+    infoModalSubtitle: "اكتشف الميزات الجديدة لهذه الشاشة",
+    historyFeatureTitle: "بناءً على تاريخك",
+    historyFeatureDescription: "نحلل مشترياتك السابقة لاقتراح منتجات تحتاجها حقاً.",
+    syncFeatureTitle: "المزامنة التلقائية",
+    syncFeatureDescription: "أضف المنتجات مباشرة إلى قوائمك الموجودة أو أنشئ قوائم جديدة.",
+    gotIt: "فهمت!"
   },
   hu: {
     delete: "Törlés",
@@ -237,7 +300,14 @@ export const translations = {
     privacyPolicy: "Adatvédelem",
     termsAndConditions: "Feltételek",
     shareMessage: "Nézd meg a BuyVoice-t - Készíts bevásárlólistákat a hangoddal! Töltsd le itt: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "Az árak megfizhetősége érdekében 10 óránként 10 elemzésre korlátozzuk. Kérjük, várjon!"
+    imageLimitReached: "Az árak megfizhetősége érdekében 10 óránként 10 elemzésre korlátozzuk. Kérjük, várjon!",
+    infoModalTitle: "Intelligens Ajánlások!",
+    infoModalSubtitle: "Fedezd fel ennek a képernyőnek az új funkcióit",
+    historyFeatureTitle: "A történeted alapján",
+    historyFeatureDescription: "Elemezzük a korábbi vásárlásaidat, hogy olyan termékeket ajánljunk, amelyekre valóban szükséged van.",
+    syncFeatureTitle: "Automatikus szinkronizálás",
+    syncFeatureDescription: "Add hozzá a termékeket közvetlenül a meglévő listáidhoz, vagy hozz létre új listákat.",
+    gotIt: "Értem!"
   },
   ja: {
     delete: "削除",
@@ -261,7 +331,14 @@ export const translations = {
     privacyPolicy: "プライバシー",
     termsAndConditions: "利用規約",
     shareMessage: "BuyVoiceをチェック - 音声で買い物リストを作成！ここからダウンロード: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "価格を手頃に保つため、10時間ごとに10回の分析に制限しています。お待ちください！"
+    imageLimitReached: "価格を手頃に保つため、10時間ごとに10回の分析に制限しています。お待ちください！",
+    infoModalTitle: "スマートレコメンデーション！",
+    infoModalSubtitle: "この画面の新機能を発見してください",
+    historyFeatureTitle: "履歴に基づいて",
+    historyFeatureDescription: "過去の購入履歴を分析して、本当に必要な商品をお勧めします。",
+    syncFeatureTitle: "自動同期",
+    syncFeatureDescription: "既存のリストに直接商品を追加するか、新しいリストを作成します。",
+    gotIt: "分かりました！"
   },
   hi: {
     delete: "हटाएं",
@@ -285,7 +362,14 @@ export const translations = {
     privacyPolicy: "गोपनीयता",
     termsAndConditions: "शर्तें",
     shareMessage: "BuyVoice देखें - अपनी आवाज़ से खरीदारी सूची बनाएं! यहाँ डाउनलोड करें: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "कीमतों को किफायती रखने के लिए, हम हर 10 घंटे में 10 विश्लेषण तक सीमित करते हैं। कृपया प्रतीक्षा करें!"
+    imageLimitReached: "कीमतों को किफायती रखने के लिए, हम हर 10 घंटे में 10 विश्लेषण तक सीमित करते हैं। कृपया प्रतीक्षा करें!",
+    infoModalTitle: "स्मार्ट सिफारिशें!",
+    infoModalSubtitle: "इस स्क्रीन की नई सुविधाओं को खोजें",
+    historyFeatureTitle: "आपके इतिहास के आधार पर",
+    historyFeatureDescription: "हम आपकी पिछली खरीदारी का विश्लेषण करते हैं ताकि उन उत्पादों का सुझाव दे सकें जिनकी आपको वास्तव में आवश्यकता है।",
+    syncFeatureTitle: "स्वचालित समकालीकरण",
+    syncFeatureDescription: "उत्पादों को सीधे अपनी मौजूदा सूचियों में जोड़ें या नई सूचियाँ बनाएं।",
+    gotIt: "समझ गया!"
   },
   nl: {
     delete: "Verwijderen",
@@ -309,6 +393,13 @@ export const translations = {
     privacyPolicy: "Privacy",
     termsAndConditions: "Voorwaarden",
     shareMessage: "Bekijk BuyVoice - Maak boodschappenlijsten met je stem! Download hier: https://apps.apple.com/app/buyvoice",
-    imageLimitReached: "Om prijzen betaalbaar te houden, beperken we tot 10 analyses elke 10 uur. Even geduld alstublieft!"
+    imageLimitReached: "Om prijzen betaalbaar te houden, beperken we tot 10 analyses elke 10 uur. Even geduld alstublieft!",
+    infoModalTitle: "Slimme Aanbevelingen!",
+    infoModalSubtitle: "Ontdek de nieuwe functies van dit scherm",
+    historyFeatureTitle: "Gebaseerd op je geschiedenis",
+    historyFeatureDescription: "We analyseren je eerdere aankopen om producten voor te stellen die je echt nodig hebt.",
+    syncFeatureTitle: "Automatische synchronisatie",
+    syncFeatureDescription: "Voeg producten rechtstreeks toe aan je bestaande lijsten of maak nieuwe lijsten aan.",
+    gotIt: "Begrepen!"
   }
 }
