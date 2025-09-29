@@ -1514,6 +1514,32 @@ width: "95%",
     textAlign: "center",
   },
 
+  // Botón para agregar desde historial cuando está vacío
+  addFavoriteFromEmptyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#e0f2fe',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderRadius: 16,
+    marginTop: 24,
+    borderWidth: 1.5,
+    borderColor: '#3b82f6',
+    shadowColor: '#3b82f6',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+
+  addFavoriteFromEmptyText: {
+    fontSize: 16,
+    color: '#3b82f6',
+    fontWeight: '600',
+    marginLeft: 10,
+  },
+
   // Estilos para el selector de listas del historial
   historyListSelector: {
     maxHeight: 400,

@@ -420,6 +420,14 @@ const HomeScreen = ({ navigation }) => {
   const [showRateButton, setShowRateButton] = useState(false)
   const rateTexts = rateAppTexts[deviceLanguage] || rateAppTexts["en"]
 
+  // Estado para chips dinámicos desde la API
+  const [dynamicChips, setDynamicChips] = useState([])
+  const [chipsLoading, setChipsLoading] = useState(true)
+
+  // Estado para modal informativo de chips
+  const [chipInfoModalVisible, setChipInfoModalVisible] = useState(false)
+  const [selectedChipInfo, setSelectedChipInfo] = useState(null)
+
 // screenWidth y screenHeight ya declarados arriba
 
 // Determinar si es tablet o teléfono ya movido a estilos
@@ -460,6 +468,62 @@ const HomeScreen = ({ navigation }) => {
     )
   }
 
+  // Función para cargar chips dinámicos según el idioma del usuario
+  const loadDynamicChips = async () => {
+    try {
+      setChipsLoading(true)
+      const response = await fetch(`https://web.lweb.ch/voice/chips_por_idioma.php?lang=${deviceLanguage}`)
+      const data = await response.json()
+
+      if (data.success && data.chips && data.chips.length > 0) {
+        console.log(`✅ Chips loaded for language: ${deviceLanguage}`, data.chips)
+        setDynamicChips(data.chips)
+      } else {
+        throw new Error('No chips found for this language')
+      }
+    } catch (error) {
+      console.error('❌ Error loading dynamic chips:', error)
+      // Usar chips por defecto si falla la API
+      setDynamicChips([
+        {
+          chip_position: 1,
+          chip_key: `lightning_fast_${deviceLanguage}`,
+          icon_name: 'flash',
+          icon_color: '#10b981',
+          text_content: currentLabels.lightningFast || 'Lightning Fast'
+        },
+        {
+          chip_position: 2,
+          chip_key: `ai_powered_${deviceLanguage}`,
+          icon_name: 'shield-checkmark',
+          icon_color: '#4a6bff',
+          text_content: currentLabels.aiPowered || 'AI Powered'
+        },
+        {
+          chip_position: 3,
+          chip_key: `super_easy_${deviceLanguage}`,
+          icon_name: 'heart',
+          icon_color: '#ff00909c',
+          text_content: currentLabels.superEasy || 'Super Easy'
+        }
+      ])
+    } finally {
+      setChipsLoading(false)
+    }
+  }
+
+  // Función para abrir modal informativo del chip
+  const openChipInfoModal = (chip) => {
+    setSelectedChipInfo(chip)
+    setChipInfoModalVisible(true)
+  }
+
+  // Función para cerrar modal informativo
+  const closeChipInfoModal = () => {
+    setChipInfoModalVisible(false)
+    setSelectedChipInfo(null)
+  }
+
   useEffect(() => {
     const updateAppOpenCount = async () => {
       const currentCountString = await AsyncStorage.getItem("appOpenCount")
@@ -476,6 +540,11 @@ const HomeScreen = ({ navigation }) => {
 
     updateAppOpenCount()
   }, [])
+
+  // Cargar chips dinámicos al montar el componente
+  useEffect(() => {
+    loadDynamicChips()
+  }, [deviceLanguage])
 
   // Handle deep links from widget
   useEffect(() => {
@@ -1704,6 +1773,57 @@ const HomeScreen = ({ navigation }) => {
     }
   }
 
+  // Función para renderizar chips dinámicos desde la API
+  const renderDynamicChips = () => {
+    if (chipsLoading) {
+      return (
+        <View style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}>
+          <ActivityIndicator size="small" color="#6366f1" />
+          <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>Cargando...</Text>
+        </View>
+      )
+    }
+
+    return [
+      // Primero renderizar los 3 chips dinámicos
+      ...dynamicChips.map((chip, index) => (
+        <TouchableOpacity
+          key={chip.chip_key || `chip_${index}`}
+          style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}
+          onPress={() => openChipInfoModal(chip)}
+          activeOpacity={0.7}
+        >
+          <Ionicons
+            name={chip.icon_name}
+            size={isSmallIPhone ? 18 : 20}
+            color={chip.icon_color}
+            style={modernStyles.featureIcon}
+          />
+          <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>
+            {chip.text_content}
+          </Text>
+        </TouchableOpacity>
+      )),
+      // Luego agregar el chip de idioma como 4to chip
+      <TouchableOpacity
+        key="language_chip"
+        style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}
+        onPress={handlePress}
+        activeOpacity={0.7}
+      >
+        <Ionicons
+          name="globe-outline"
+          size={isSmallIPhone ? 18 : 20}
+          color="#4a6bff"
+          style={modernStyles.featureIcon}
+        />
+        <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>
+          {languageName}
+        </Text>
+      </TouchableOpacity>
+    ]
+  }
+
   return (
     <SafeAreaView style={modernStyles.mainContainer}>
       <View style={modernStyles.publicidad}>
@@ -1742,38 +1862,15 @@ const HomeScreen = ({ navigation }) => {
                 {currentLabels.heroSubtitle}
               </Text>
               
-              {/* Feature Highlights */}
+              {/* Feature Highlights - Chips Dinámicos */}
               <View style={[modernStyles.featuresContainer, isSmallIPhone && {marginBottom: 10}]}>
-                <View style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}>
-                  <Ionicons name="flash" size={isSmallIPhone ? 18 : 20} color="#10b981" style={modernStyles.featureIcon} />
-                  <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>{currentLabels.lightningFast}</Text>
-                </View>
-
-                <View style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}>
-                  <Ionicons name="shield-checkmark" size={isSmallIPhone ? 18 : 20} color="#4a6bff" style={modernStyles.featureIcon} />
-                  <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>{currentLabels.aiPowered}</Text>
-                </View>
-
-                <View style={[modernStyles.featureItem, isSmallIPhone && {paddingHorizontal: 14, paddingVertical: 8, marginBottom: 7}]}>
-                  <Ionicons name="heart" size={isSmallIPhone ? 18 : 20} color="#ff00909c" style={modernStyles.featureIcon} />
-                  <Text style={[modernStyles.featureText, isSmallIPhone && {fontSize: 12}]}>{currentLabels.superEasy}</Text>
-                </View>
+                {renderDynamicChips()}
               </View>
 
               {/* Botón de Recomendaciones - NUEVO */}
            
               <View style={modernStyles.featuresContainer}>
               </View>
-                                    {isContentVisible && (
-                               
-              <TouchableOpacity onPress={handlePress} style={[modernStyles.languageButton, isSmallIPhone && {paddingHorizontal: 12, paddingVertical: 8}]}>
-                <Ionicons name="globe-outline" size={isSmallIPhone ? 18 : 22} color="#4a6bff" />
-                <Text style={[modernStyles.superEasy, isSmallIPhone && {fontSize: 13}]}>
-                  {currentLabels.welcomeMessage} {languageName}
-                </Text>
-              </TouchableOpacity>
-
-            )}
 
         
     
@@ -2251,6 +2348,76 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={modernStyles.welcomeSkipButtonText}>{currentLabelse.nowNot}</Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal Informativo de Chips */}
+      <Modal
+        visible={chipInfoModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={closeChipInfoModal}
+      >
+        <View style={modernStyles.chipInfoModalOverlay}>
+          <View style={modernStyles.chipInfoModalContent}>
+            {/* Botón de cierre */}
+            <TouchableOpacity
+              style={modernStyles.chipInfoCloseButton}
+              onPress={closeChipInfoModal}
+            >
+              <Ionicons name="close" size={24} color="#666" />
+            </TouchableOpacity>
+
+            {/* Header del chip */}
+            {selectedChipInfo && (
+              <>
+                <View style={modernStyles.chipInfoHeader}>
+                  <View style={[modernStyles.chipInfoIcon, { backgroundColor: selectedChipInfo.icon_color + '20' }]}>
+                    <Ionicons
+                      name={selectedChipInfo.icon_name}
+                      size={32}
+                      color={selectedChipInfo.icon_color}
+                    />
+                  </View>
+                  <Text style={modernStyles.chipInfoTitle}>
+                    {selectedChipInfo.info_title || selectedChipInfo.text_content}
+                  </Text>
+                </View>
+
+                {/* Descripción */}
+                <Text style={modernStyles.chipInfoDescription}>
+                  {selectedChipInfo.info_description ||
+                    `${selectedChipInfo.text_content} es una característica clave que mejora significativamente tu experiencia con VoiceList.`}
+                </Text>
+
+                {/* Beneficios */}
+                {selectedChipInfo.info_benefits && (
+                  <View style={modernStyles.chipInfoBenefits}>
+                    <Text style={modernStyles.chipInfoBenefitsTitle}>🎯 Beneficios Principales:</Text>
+                    <View style={modernStyles.chipInfoBenefitsList}>
+                      {selectedChipInfo.info_benefits.split('\n').filter(benefit => benefit.trim()).map((benefit, index) => (
+                        <View key={index} style={modernStyles.chipInfoBenefitItem}>
+                          <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
+                          <Text style={modernStyles.chipInfoBenefitText}>
+                            {benefit.replace(/^[•\-\*]\s*/, '')}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )}
+
+                {/* Botón de acción */}
+                <TouchableOpacity
+                  style={modernStyles.chipInfoActionButton}
+                  onPress={closeChipInfoModal}
+                >
+                  <Ionicons name="thumbs-up" size={20} color="white" />
+                  <Text style={modernStyles.chipInfoActionText}>¡Entendido!</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
       </Modal>

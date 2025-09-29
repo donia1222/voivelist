@@ -147,6 +147,9 @@ const HistoryScreen = ({ navigation }) => {
   const [showUploadIcon, setShowUploadIcon] = useState(false)
   const [favoritesFilterVisible, setFavoritesFilterVisible] = useState(false) // Default cerrado
   const favoritesFilterAnim = useRef(new Animated.Value(0)).current // Empezar cerrado
+  const [historyListSelectorVisible, setHistoryListSelectorVisible] = useState(false)
+  const [selectedFavoriteCategory, setSelectedFavoriteCategory] = useState('')
+  const [selectedFavoriteCategoryKey, setSelectedFavoriteCategoryKey] = useState('')
   const [favoriteTitles, setFavoriteTitles] = useState({
     food: currentLabels.food,
     stationery: currentLabels.stationery,
@@ -582,12 +585,43 @@ const HistoryScreen = ({ navigation }) => {
     }
   }
 
-  const renderEmptyComponent = () => (
+  const renderEmptyComponent = (category, categoryKey) => (
     <View style={modernStyles.emptyContainer}>
       <View style={modernStyles.emptyIconContainer}>
         <Ionicons name="heart-outline" size={80} color="#9ca3af" />
       </View>
       <Text style={modernStyles.emptyText}>{currentLabels.noFavorites}</Text>
+
+      {history.length > 0 && (
+        <TouchableOpacity
+          style={modernStyles.addFavoriteFromEmptyButton}
+          onPress={() => {
+            console.log('🔍 DEBUG: Button pressed, category:', category, 'key:', categoryKey)
+
+            // Cerrar todos los modales de favoritos primero
+            setFavoritesModalVisible1(false)
+            setFavoritesModalVisible2(false)
+            setFavoritesModalVisible3(false)
+            setFavoritesModalVisible4(false)
+            setFavoritesModalVisible5(false)
+
+            // Guardar la categoría seleccionada
+            setSelectedFavoriteCategory(category)
+            setSelectedFavoriteCategoryKey(categoryKey)
+
+            // Abrir el selector con un pequeño delay para que se cierre el modal anterior
+            setTimeout(() => {
+              setHistoryListSelectorVisible(true)
+              console.log('🔍 DEBUG: Set historyListSelectorVisible to true')
+            }, 100)
+          }}
+        >
+          <Ionicons name="add-circle-outline" size={24} color="#3b82f6" />
+          <Text style={modernStyles.addFavoriteFromEmptyText}>
+            {currentLabels.addFromHistory || 'Agregar desde historial'}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   )
 
@@ -2173,7 +2207,7 @@ const HistoryScreen = ({ navigation }) => {
               </View>
 
               {modal.favorites.length === 0 ? (
-                renderEmptyComponent()
+                renderEmptyComponent(modal.category, modal.key)
               ) : (
                 <FlatList
                   data={modal.favorites}
@@ -2188,6 +2222,89 @@ const HistoryScreen = ({ navigation }) => {
           </View>
         </Modal>
       ))}
+
+      {/* Modal selector de historial para agregar a favoritos */}
+      <Modal
+        visible={historyListSelectorVisible}
+        animationType="slide"
+        onRequestClose={() => {
+          console.log('🔍 DEBUG: Modal close requested')
+          setHistoryListSelectorVisible(false)
+        }}
+        transparent={true}
+      >
+        <View style={modernStyles.modalOverlay}>
+          <View style={modernStyles.favoritesModalContainer}>
+            {console.log('🔍 DEBUG: Modal is rendering, visible:', historyListSelectorVisible)}
+            <View style={modernStyles.favoritesModalHeader}>
+              <View style={modernStyles.modalCategoryIcon}>
+                <Ionicons name="list-outline" size={40} color="#3b82f6" />
+              </View>
+              <Text style={modernStyles.favoritesModalTitle}>
+                {currentLabels.selectFromHistory || 'Seleccionar del historial'}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setHistoryListSelectorVisible(false)}
+                style={modernStyles.modalCloseButton}
+              >
+                <Ionicons name="close" size={28} color="#6b7280" />
+              </TouchableOpacity>
+            </View>
+
+            <FlatList
+              data={history}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  style={modernStyles.historyListItem}
+                  onPress={() => {
+                    // Agregar a favoritos según la categoría seleccionada
+                    switch (selectedFavoriteCategoryKey) {
+                      case "@favorites1":
+                        handleAddFavorite(index, favorites1, setFavorites1, "@favorites1")
+                        break
+                      case "@favorites2":
+                        handleAddFavorite(index, favorites2, setFavorites2, "@favorites2")
+                        break
+                      case "@favorites3":
+                        handleAddFavorite(index, favorites3, setFavorites3, "@favorites3")
+                        break
+                      case "@favorites4":
+                        handleAddFavorite(index, favorites4, setFavorites4, "@favorites4")
+                        break
+                      case "@favorites5":
+                        handleAddFavorite(index, favorites5, setFavorites5, "@favorites5")
+                        break
+                    }
+                    setHistoryListSelectorVisible(false)
+                  }}
+                >
+                  <View style={modernStyles.historyListItemContent}>
+                    <Text style={modernStyles.historyListItemTitle}>{item.name}</Text>
+                    <Text style={modernStyles.historyListItemCount}>
+                      {item.list.length} {currentLabels.items || 'artículos'}
+                    </Text>
+                    <View style={modernStyles.historyListPreview}>
+                      <Text style={modernStyles.previewText}>
+                        {item.list.slice(0, 3).join(', ')}
+                        {item.list.length > 3 && (
+                          <Text style={modernStyles.previewMore}>
+                            {' '}+{item.list.length - 3} más...
+                          </Text>
+                        )}
+                      </Text>
+                    </View>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              style={modernStyles.favoritesList}
+              contentContainerStyle={modernStyles.favoritesListContent}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        </View>
+      </Modal>
 
       {/* Todos los modales existentes con estilos mejorados */}
       <Modal

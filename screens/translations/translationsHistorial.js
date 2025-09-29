@@ -80,6 +80,9 @@ const translationsHistorial = {
     printErrorMessage: "Could not print the shopping list.",
     switchList: "Switch List",
     favorites: "Favorites",
+    addFromHistory: "Add from history",
+    selectFromHistory: "Select from history",
+    items: "items",
   },
   es: {
     noHistory: "No hay listas en el historial",
@@ -162,6 +165,9 @@ const translationsHistorial = {
     printErrorMessage: "No se pudo imprimir la lista de compras.",
     switchList: "Cambiar lista",
     favorites: "Favoritos",
+    addFromHistory: "Agregar desde historial",
+    selectFromHistory: "Seleccionar del historial",
+    items: "artículos",
   },
   de: {
     noHistory: "Keine Listen im Verlauf",
@@ -243,6 +249,9 @@ const translationsHistorial = {
     printErrorMessage: "Die Einkaufsliste konnte nicht gedruckt werden.",
     switchList: "Liste wechseln",
     favorites: "Favoriten",
+    addFromHistory: "Aus Verlauf hinzufügen",
+    selectFromHistory: "Aus Verlauf auswählen",
+    items: "Artikel",
   },
   it: {
     noHistory: "Non ci sono liste nella cronologia",
@@ -324,6 +333,9 @@ const translationsHistorial = {
     printErrorMessage: "Impossibile stampare la lista della spesa.",
     switchList: "Cambia lista",
     favorites: "Preferiti",
+    addFromHistory: "Aggiungi dalla cronologia",
+    selectFromHistory: "Seleziona dalla cronologia",
+    items: "articoli",
   },
   fr: {
     noHistory: "Il n'y a pas de listes dans l'historique",
@@ -405,6 +417,9 @@ const translationsHistorial = {
     printErrorMessage: "Impossible d'imprimer la liste de courses.",
     switchList: "Changer de liste",
     favorites: "Favoris",
+    addFromHistory: "Ajouter depuis l'historique",
+    selectFromHistory: "Sélectionner depuis l'historique",
+    items: "articles",
   },
   tr: {
     noHistory: "Geçmişte liste bulunmamaktadır",
@@ -486,6 +501,9 @@ const translationsHistorial = {
     printErrorMessage: "Alışveriş listesi yazdırılamadı.",
     switchList: "Liste değiştir",
     favorites: "Favoriler",
+    addFromHistory: "Geçmişten ekle",
+    selectFromHistory: "Geçmişten seç",
+    items: "ürün",
   },
   pt: {
     noHistory: "Não há listas no histórico",
@@ -567,6 +585,9 @@ const translationsHistorial = {
     printErrorMessage: "Não foi possível imprimir a lista de compras.",
     switchList: "Trocar lista",
     favorites: "Favoritos",
+    addFromHistory: "Adicionar do histórico",
+    selectFromHistory: "Selecionar do histórico",
+    items: "itens",
   },
   ru: {
     noHistory: "История пуста",
@@ -648,6 +669,9 @@ const translationsHistorial = {
     printErrorMessage: "Не удалось распечатать список покупок.",
     switchList: "Переключить список",
     favorites: "Избранное",
+    addFromHistory: "Добавить из истории",
+    selectFromHistory: "Выбрать из истории",
+    items: "элементов",
   },
   ar: {
     noHistory: "لا توجد قوائم في التاريخ",
@@ -729,6 +753,9 @@ const translationsHistorial = {
     printErrorMessage: "لم يتمكن من طباعة قائمة التسوق.",
     switchList: "تبديل القائمة",
     favorites: "المفضلة",
+    addFromHistory: "أضف من التاريخ",
+    selectFromHistory: "اختر من التاريخ",
+    items: "عناصر",
   },
   hu: {
     noHistory: "Nincsenek listák a történetben",
@@ -810,6 +837,9 @@ const translationsHistorial = {
     printErrorMessage: "Nem sikerült kinyomtatni a bevásárlólistát.",
     switchList: "Lista váltása",
     favorites: "Kedvencek",
+    addFromHistory: "Hozzáadás az előzményekből",
+    selectFromHistory: "Válassz az előzményekből",
+    items: "tétel",
   },
   ja: {
     noHistory: "履歴にリストがありません",
@@ -891,6 +921,9 @@ const translationsHistorial = {
     printErrorMessage: "ショッピングリストを印刷できませんでした。",
     switchList: "リストを切り替え",
     favorites: "お気に入り",
+    addFromHistory: "履歴から追加",
+    selectFromHistory: "履歴から選択",
+    items: "項目",
   },
   hi: {
     noHistory: "इतिहास में कोई सूची नहीं है",
@@ -972,6 +1005,9 @@ const translationsHistorial = {
     printErrorMessage: "शॉपिंग लिस्ट प्रिंट नहीं कर सके।",
     switchList: "सूची बदलें",
     favorites: "पसंदीदा",
+    addFromHistory: "इतिहास से जोड़ें",
+    selectFromHistory: "इतिहास से चुनें",
+    items: "वस्तुएं",
   },
   nl: {
     noHistory: "Er zijn geen lijsten in de geschiedenis",
@@ -1053,6 +1089,9 @@ const translationsHistorial = {
     printErrorMessage: "Kon de boodschappenlijst niet afdrukken.",
     switchList: "Lijst omschakelen",
     favorites: "Favorieten",
+    addFromHistory: "Toevoegen uit geschiedenis",
+    selectFromHistory: "Selecteren uit geschiedenis",
+    items: "items",
   },
 };
 
