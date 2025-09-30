@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
+import * as Updates from "expo-updates"
 import { ThemeProvider } from "./ThemeContext"
 import { NotificationProvider } from "./NotificationContext"
 import { RecordingProvider } from "./RecordingContext"
@@ -13,6 +14,20 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    async function checkForUpdates() {
+      try {
+        const update = await Updates.checkForUpdateAsync()
+        if (update.isAvailable) {
+          await Updates.fetchUpdateAsync()
+          await Updates.reloadAsync()
+        }
+      } catch (e) {
+        console.log("Error checking for updates:", e)
+      }
+    }
+
+    checkForUpdates()
+
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 2000)

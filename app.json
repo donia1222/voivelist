@@ -27,7 +27,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.lwebch.VoiceList",
-       "buildNumber": "9",
+       "buildNumber": "16",
       "infoPlist": {
         "NSCameraUsageDescription": "This app needs camera access to scan barcodes for your shopping list",
         "NSMicrophoneUsageDescription": "This app needs microphone access for camera functionality"
@@ -54,12 +54,12 @@
     "extra": {
       "eas": {
         "projectId": "984ecb66-4ba2-4e09-8ebf-6756e9002e81"
+      },
+      "react-native-google-mobile-ads": {
+        "android_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx",
+        "ios_app_id": "ca-app-pub-9855080864816987~1288791977"
       }
     },
     "owner": "lwebch"
-  },
-  "react-native-google-mobile-ads": {
-    "android_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx",
-    "ios_app_id": "ca-app-pub-9855080864816987~1288791977"
   }
 }

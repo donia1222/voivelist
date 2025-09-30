@@ -1775,7 +1775,7 @@ const HomeScreen = ({ navigation }) => {
               </Animated.View>
             </TouchableOpacity>
             
- <Text style={modernStyles.addItemText}>+add</Text>
+
             {/* Toggle button - shows opposite of main button */}
             <TouchableOpacity
               style={{
