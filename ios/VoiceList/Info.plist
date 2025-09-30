@@ -16,6 +16,15 @@
 	<string>1.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
+<key>EXUpdatesEnabled</key>
+<true/>
+<key>EXUpdatesURL</key>
+<string>https://u.expo.dev/984ecb66-4ba2-4e09-8ebf-6756e9002e81</string>
+<key>EXUpdatesRuntimeVersion</key>
+<string>1.0.0</string>
+<key>EXUpdatesCheckOnLaunch</key>
+<string>ALWAYS</string>
+
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
@@ -44,7 +53,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>9</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

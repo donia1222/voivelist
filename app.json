@@ -2,7 +2,7 @@
   "expo": {
     "name": "VoiceList",
     "slug": "VoiceList",
-    "version": "1.0.0",
+    "version": "2.0.1",
     "orientation": "portrait",
     "runtimeVersion": "1.0.0",
     "updates": {
@@ -27,6 +27,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.lwebch.VoiceList",
+       "buildNumber": "9",
       "infoPlist": {
         "NSCameraUsageDescription": "This app needs camera access to scan barcodes for your shopping list",
         "NSMicrophoneUsageDescription": "This app needs microphone access for camera functionality"

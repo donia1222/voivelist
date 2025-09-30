@@ -759,9 +759,10 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
   },
 
   packageCardHorizontal: {
-    width: screenWidth * 0.72,
-    marginRight: 16,
-    borderRadius: 28,
+    width: isTablet ? 320 : screenWidth * 0.72,
+    maxWidth: isTablet ? 340 : undefined,
+    marginRight: isTablet ? 24 : 16,
+    borderRadius: isTablet ? 24 : 28,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
@@ -771,11 +772,12 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
   },
 
   packageCardBest: {
-    width: screenWidth * 0.78,
-    marginRight: 16,
-    borderRadius: 32,
+    width: isTablet ? 340 : screenWidth * 0.78,
+    maxWidth: isTablet ? 360 : undefined,
+    marginRight: isTablet ? 24 : 16,
+    borderRadius: isTablet ? 26 : 32,
     overflow: 'hidden',
-    transform: [{ scale: 1.05 }],
+    transform: [{ scale: 1 }],
     shadowColor: '#f59e0b',
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.25,
@@ -793,9 +795,10 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
 
   packageCardInnerHorizontal: {
     flex: 1,
-    padding: 24,
+    padding: isTablet ? 28 : 24,
     alignItems: 'center',
-    borderRadius: 28,
+    borderRadius: isTablet ? 24 : 28,
+    minHeight: isTablet ? 280 : undefined,
   },
 
   packageGradientHorizontal: {
@@ -826,28 +829,28 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
   },
 
   packageTitleHorizontal: {
-    fontSize: 22,
+    fontSize: isTablet ? 28 : 22,
     fontWeight: '600',
     textAlign: 'center',
-    marginBottom: 6,
+    marginBottom: isTablet ? 10 : 6,
     letterSpacing: -0.5,
   },
 
   packagePriceContainerHorizontal: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: isTablet ? 30 : 24,
   },
 
   packagePriceHorizontal: {
-    fontSize: 32,
+    fontSize: isTablet ? 40 : 32,
     fontWeight: '900',
     textAlign: 'center',
     letterSpacing: -1,
   },
 
   packagePricePerMonth: {
-    fontSize: 13,
-    marginTop: 2,
+    fontSize: isTablet ? 16 : 13,
+    marginTop: isTablet ? 4 : 2,
     opacity: 0.7,
   },
 
@@ -863,16 +866,16 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
   },
 
   subscribeButtonGradientHorizontal: {
-    paddingVertical: 16,
-    paddingHorizontal: 24,
+    paddingVertical: isTablet ? 20 : 16,
+    paddingHorizontal: isTablet ? 32 : 24,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 52,
+    minHeight: isTablet ? 60 : 52,
   },
 
   subscribeButtonTextHorizontal: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: isTablet ? 18 : 16,
     fontWeight: '700',
     letterSpacing: 0.3,
     textTransform: 'uppercase',
@@ -888,6 +891,7 @@ export default function Suscribe() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [loadingPackageId, setLoadingPackageId] = useState(null);
+  const [isRestoring, setIsRestoring] = useState(false);
   const systemLanguage = RNLocalize.getLocales()[0]?.languageCode || 'en';
   const alertTexts = suscribeAlerts[systemLanguage] || suscribeAlerts['en'];
   const [isPrivacyModalVisible, setIsPrivacyModalVisible] = useState(false);
@@ -1079,7 +1083,7 @@ export default function Suscribe() {
     if (isSubscribed) {
       RNRestart.Restart();
     } else {
-      setIsSubscribing(true);
+      setIsRestoring(true);
 
       try {
         const restoredPurchases = await Purchases.restorePurchases();
@@ -1111,7 +1115,7 @@ export default function Suscribe() {
         Alert.alert(alertTexts.errorRestoring, alertTexts.errorOccurred);
         console.log('Error restoring purchase:', error);
       } finally {
-        setIsSubscribing(false);
+        setIsRestoring(false);
       }
     }
   };
@@ -1288,24 +1292,22 @@ export default function Suscribe() {
 
                         // Asignar propiedades basándose en el índice global (0, 1, 2)
                         if (globalIndex === 0) {
-                          // Primera carta - 3 meses (rojo)
-                            iconColor = "#10b981";
-                              iconColor = "#10b981";
+                          // Primera carta - 1 Mes
+                          iconColor = "#10b981";
                           gradientColors = ['rgba(16, 185, 129, 0.06)', 'rgba(16, 185, 129, 0.03)'];
                           buttonGradient = ['rgba(16, 185, 129, 0.9)', 'rgba(5, 150, 105, 0.9)'];
-                          duration = systemLanguage === 'es' ? '3 Meses' : '3 Months';
+                          duration = systemLanguage === 'es' ? '1 Mes' : '1 Month';
                           badgeText = systemLanguage === 'es' ? 'Básico' : 'Basic';
                         } else if (globalIndex === 1) {
-                          // Segunda carta - 6 meses (rojo)
-                           iconColor = "#10b981";
-                              iconColor = "#10b981";
+                          // Segunda carta - 6 Meses
+                          iconColor = "#10b981";
                           gradientColors = ['rgba(16, 185, 129, 0.06)', 'rgba(16, 185, 129, 0.03)'];
                           buttonGradient = ['rgba(16, 185, 129, 0.9)', 'rgba(5, 150, 105, 0.9)'];
                           duration = systemLanguage === 'es' ? '6 Meses' : '6 Months';
                           badgeText = systemLanguage === 'es' ? 'Básico' : 'Basic';
                         } else if (globalIndex === 2) {
-                          // Tercera carta - 1 año (verde - mejor opción)
-                         iconColor = "#ef7744ff";
+                          // Tercera carta - 1 Año (Best Value)
+                          iconColor = "#ef7744ff";
                           gradientColors = ['rgba(239, 68, 68, 0.12)', 'rgba(239, 68, 68, 0.06)'];
                           buttonGradient = ['rgba(220, 123, 38, 0.95)', 'rgba(220, 123, 38, 0.95)'];
                           duration = systemLanguage === 'es' ? '1 Año' : '1 Year';
@@ -1347,7 +1349,7 @@ export default function Suscribe() {
                               <View style={styles.packagePriceContainerHorizontal}>
                                 <Text style={[styles.packagePriceHorizontal, { color: theme?.isDark ? '#FFFFFF' : '#2c3e50' }]}>{pkg.product.priceString}</Text>
                                 <Text style={[styles.packagePricePerMonth, { color: theme?.isDark ? '#CCCCCC' : '#666666' }]}>
-                                  {globalIndex === 0 && (systemLanguage === 'es' ? '/3 meses' : '/3 months')}
+                                  {globalIndex === 0 && (systemLanguage === 'es' ? '/mes' : '/month')}
                                   {globalIndex === 1 && (systemLanguage === 'es' ? '/6 meses' : '/6 months')}
                                   {globalIndex === 2 && (systemLanguage === 'es' ? '/año' : '/year')}
                                   {globalIndex > 2 && (systemLanguage === 'es' ? '/mes' : '/month')}
@@ -1404,17 +1406,22 @@ export default function Suscribe() {
             </View>
           )}
 
-          <TouchableOpacity 
-            onPress={restorePurchases} 
+          <TouchableOpacity
+            onPress={restorePurchases}
             style={styles.restoreButton}
             activeOpacity={0.7}
+            disabled={isRestoring}
           >
-            <Text style={styles.restoreButtonText}>
-              {isSubscribed 
-                ? (accessButtonTextTranslations[systemLanguage] || accessButtonTextTranslations['en'])
-                : (restoreButtonTextTranslations[systemLanguage] || restoreButtonTextTranslations['en'])
-              }
-            </Text>
+            {isRestoring ? (
+              <ActivityIndicator size="small" color="#8659b6ff" />
+            ) : (
+              <Text style={styles.restoreButtonText}>
+                {isSubscribed
+                  ? (accessButtonTextTranslations[systemLanguage] || accessButtonTextTranslations['en'])
+                  : (restoreButtonTextTranslations[systemLanguage] || restoreButtonTextTranslations['en'])
+                }
+              </Text>
+            )}
           </TouchableOpacity>
         </Animated.View>
 
