@@ -64,7 +64,15 @@ const dietRecommendationsTranslations = {
     varietyOfProducts: "3) Vielfalt der Produkttypen (Proteine, Gemüse, Obst, Getreide)",
     portionSizes: "4) Standard-Portionsgrößen",
     responseFormat: "Antworten Sie mit einem Produkt pro Zeile im Format: Produktname - Proteine: Xg, Fette: Yg, Kohlenhydrate: Zg (pro 100g)",
-    exampleFormat: "Beispiel:\nHähnchenbrust 🍗 - Proteine: 25g, Fette: 3g, Kohlenhydrate: 0g (pro 100g)\nBrokkoli 🥦 - Proteine: 3g, Fette: 0.5g, Kohlenhydrate: 7g (pro 100g)\nVollkornreis 🍚 - Proteine: 3g, Fette: 1g, Kohlenhydrate: 23g (pro 100g)"
+    exampleFormat: "Beispiel:\nHähnchenbrust 🍗 - Proteine: 25g, Fette: 3g, Kohlenhydrate: 0g (pro 100g)\nBrokkoli 🥦 - Proteine: 3g, Fette: 0.5g, Kohlenhydrate: 7g (pro 100g)\nVollkornreis 🍚 - Proteine: 3g, Fette: 1g, Kohlenhydrate: 23g (pro 100g)",
+    // Modal informativo
+    featureTitle: "Ausgewogene Ernährung",
+    featureDescription: "Gesunde und nahrhafte Vorschläge für eine ausgewogene Ernährung.",
+    // Nuevos labels para pestañas
+    tabDesc: "Gesund",
+    // Banner dinámico
+    dietBannerTitle: "🥗 Ausgewogene Ernährung",
+    dietBannerDesc: "Gesunde Lebensmittel mit detaillierten Nährwertangaben"
   },
   fr: {
     title: "Recommandations Nutritionnelles",
@@ -81,7 +89,15 @@ const dietRecommendationsTranslations = {
     varietyOfProducts: "3) Variété de types de produits (protéines, légumes, fruits, céréales)",
     portionSizes: "4) Tailles de portions standard",
     responseFormat: "Répondez avec un produit par ligne au format : Nom du Produit - Protéines : Xg, Graisses : Yg, Glucides : Zg (pour 100g)",
-    exampleFormat: "Exemple :\nPoitrine de poulet 🍗 - Protéines : 25g, Graisses : 3g, Glucides : 0g (pour 100g)\nBrocoli 🥦 - Protéines : 3g, Graisses : 0.5g, Glucides : 7g (pour 100g)\nRiz complet 🍚 - Protéines : 3g, Graisses : 1g, Glucides : 23g (pour 100g)"
+    exampleFormat: "Exemple :\nPoitrine de poulet 🍗 - Protéines : 25g, Graisses : 3g, Glucides : 0g (pour 100g)\nBrocoli 🥦 - Protéines : 3g, Graisses : 0.5g, Glucides : 7g (pour 100g)\nRiz complet 🍚 - Protéines : 3g, Graisses : 1g, Glucides : 23g (pour 100g)",
+    // Modal informativo
+    featureTitle: "Nutrition équilibrée",
+    featureDescription: "Suggestions saines et nutritives pour un régime équilibré.",
+    // Nuevos labels para pestañas
+    tabDesc: "Sain",
+    // Banner dinámico
+    dietBannerTitle: "🥗 Nutrition Équilibrée",
+    dietBannerDesc: "Aliments sains avec informations nutritionnelles détaillées"
   },
   it: {
     title: "Raccomandazioni Nutrizionali",
@@ -98,7 +114,15 @@ const dietRecommendationsTranslations = {
     varietyOfProducts: "3) Varietà di tipi di prodotti (proteine, verdure, frutta, cereali)",
     portionSizes: "4) Dimensioni delle porzioni standard",
     responseFormat: "Rispondi con un prodotto per riga nel formato: Nome Prodotto - Proteine: Xg, Grassi: Yg, Carboidrati: Zg (per 100g)",
-    exampleFormat: "Esempio:\nPetto di pollo 🍗 - Proteine: 25g, Grassi: 3g, Carboidrati: 0g (per 100g)\nBroccoli 🥦 - Proteine: 3g, Grassi: 0.5g, Carboidrati: 7g (per 100g)\nRiso integrale 🍚 - Proteine: 3g, Grassi: 1g, Carboidrati: 23g (per 100g)"
+    exampleFormat: "Esempio:\nPetto di pollo 🍗 - Proteine: 25g, Grassi: 3g, Carboidrati: 0g (per 100g)\nBroccoli 🥦 - Proteine: 3g, Grassi: 0.5g, Carboidrati: 7g (per 100g)\nRiso integrale 🍚 - Proteine: 3g, Grassi: 1g, Carboidrati: 23g (per 100g)",
+    // Modal informativo
+    featureTitle: "Nutrizione equilibrata",
+    featureDescription: "Suggerimenti sani e nutrienti per una dieta equilibrata.",
+    // Nuevos labels para pestañas
+    tabDesc: "Salutare",
+    // Banner dinámico
+    dietBannerTitle: "🥗 Nutrizione Equilibrata",
+    dietBannerDesc: "Alimenti salutari con informazioni nutrizionali dettagliate"
   },
   pt: {
     title: "Recomendações Nutricionais",
@@ -116,8 +140,14 @@ const dietRecommendationsTranslations = {
     portionSizes: "4) Tamanhos de porções padrão",
     responseFormat: "Responda com um produto por linha no formato: Nome do Produto - Proteínas: Xg, Gorduras: Yg, Carboidratos: Zg (por 100g)",
     exampleFormat: "Exemplo:\nPeito de frango 🍗 - Proteínas: 25g, Gorduras: 3g, Carboidratos: 0g (por 100g)\nBrócolis 🥦 - Proteínas: 3g, Gorduras: 0.5g, Carboidratos: 7g (por 100g)\nArroz integral 🍚 - Proteínas: 3g, Gorduras: 1g, Carboidratos: 23g (por 100g)",
+    // Modal informativo
     featureTitle: "Nutrição balanceada",
-    featureDescription: "Sugestões saudáveis e nutritivas para uma dieta equilibrada."
+    featureDescription: "Sugestões saudáveis e nutritivas para uma dieta equilibrada.",
+    // Nuevos labels para pestañas
+    tabDesc: "Saudável",
+    // Banner dinámico
+    dietBannerTitle: "🥗 Nutrição Balanceada",
+    dietBannerDesc: "Alimentos saudáveis com informações nutricionais detalhadas"
   },
   ru: {
     title: "Рекомендации по питанию",
@@ -134,8 +164,14 @@ const dietRecommendationsTranslations = {
     portionSizes: "4) Стандартные размеры порций",
     responseFormat: "Отвечайте одним продуктом на строку в формате: Название продукта - Белки: Xг, Жиры: Yг, Углеводы: Zг (на 100г)",
     exampleFormat: "Пример:\nКуриная грудка 🍗 - Белки: 25г, Жиры: 3г, Углеводы: 0г (на 100г)\nБрокколи 🥦 - Белки: 3г, Жиры: 0.5г, Углеводы: 7г (на 100г)\nКоричневый рис 🍚 - Белки: 3г, Жиры: 1г, Углеводы: 23г (на 100г)",
+    // Modal informativo
     featureTitle: "Сбалансированное питание",
-    featureDescription: "Здоровые и питательные предложения для сбалансированной диеты."
+    featureDescription: "Здоровые и питательные предложения для сбалансированной диеты.",
+    // Nuevos labels para pestañas
+    tabDesc: "Здоровое",
+    // Banner dinámico
+    dietBannerTitle: "🥗 Сбалансированное Питание",
+    dietBannerDesc: "Здоровые продукты с подробной питательной информацией"
   },
   ar: {
     title: "توصيات غذائية",
@@ -152,8 +188,14 @@ const dietRecommendationsTranslations = {
     portionSizes: "4) أحجام الحصص القياسية",
     responseFormat: "أجب بمنتج واحد لكل سطر بالتنسيق: اسم المنتج - البروتينات: Xغ، الدهون: Yغ، الكربوهيدرات: Zغ (لكل 100غ)",
     exampleFormat: "مثال:\nصدر الدجاج 🍗 - البروتينات: 25غ، الدهون: 3غ، الكربوهيدرات: 0غ (لكل 100غ)\nالبروكلي 🥦 - البروتينات: 3غ، الدهون: 0.5غ، الكربوهيدرات: 7غ (لكل 100غ)\nالأرز البني 🍚 - البروتينات: 3غ، الدهون: 1غ، الكربوهيدرات: 23غ (لكل 100غ)",
+    // Modal informativo
     featureTitle: "تغذية متوازنة",
-    featureDescription: "اقتراحات صحية ومغذية لنظام غذائي متوازن."
+    featureDescription: "اقتراحات صحية ومغذية لنظام غذائي متوازن.",
+    // Nuevos labels para pestañas
+    tabDesc: "صحي",
+    // Banner dinámico
+    dietBannerTitle: "🥗 تغذية متوازنة",
+    dietBannerDesc: "أطعمة صحية مع معلومات غذائية مفصلة"
   },
   hu: {
     title: "Táplálkozási ajánlások",
@@ -170,8 +212,14 @@ const dietRecommendationsTranslations = {
     portionSizes: "4) Standard adagméretek",
     responseFormat: "Válaszoljon soronként egy termékkel a következő formátumban: Termék neve - Fehérjék: Xg, Zsírok: Yg, Szénhidrátok: Zg (100g-onként)",
     exampleFormat: "Példa:\nCsirkemell 🍗 - Fehérjék: 25g, Zsírok: 3g, Szénhidrátok: 0g (100g-onként)\nBrokkoli 🥦 - Fehérjék: 3g, Zsírok: 0.5g, Szénhidrátok: 7g (100g-onként)\nBarna rizs 🍚 - Fehérjék: 3g, Zsírok: 1g, Szénhidrátok: 23g (100g-onként)",
+    // Modal informativo
     featureTitle: "Kiegyensúlyozott táplálkozás",
-    featureDescription: "Egészséges és tápláló javaslatok egy kiegyensúlyozott étrendhez."
+    featureDescription: "Egészséges és tápláló javaslatok egy kiegyensúlyozott étrendhez.",
+    // Nuevos labels para pestañas
+    tabDesc: "Egészséges",
+    // Banner dinámico
+    dietBannerTitle: "🥗 Kiegyensúlyozott Táplálkozás",
+    dietBannerDesc: "Egészséges élelmiszerek részletes táplálkozási információkkal"
   },
   ja: {
     title: "栄養推奨事項",
@@ -188,8 +236,14 @@ const dietRecommendationsTranslations = {
     portionSizes: "4) 標準的なポーションサイズ",
     responseFormat: "1行に1つの商品を次の形式で回答してください：商品名 - タンパク質：Xg、脂質：Yg、炭水化物：Zg（100gあたり）",
     exampleFormat: "例：\n鶏胸肉 🍗 - タンパク質：25g、脂質：3g、炭水化物：0g（100gあたり）\nブロッコリー 🥦 - タンパク質：3g、脂質：0.5g、炭水化物：7g（100gあたり）\n玄米 🍚 - タンパク質：3g、脂質：1g、炭水化物：23g（100gあたり）",
+    // Modal informativo
     featureTitle: "バランスの取れた栄養",
-    featureDescription: "バランスの取れた食事のための健康的で栄養価の高い提案。"
+    featureDescription: "バランスの取れた食事のための健康的で栄養価の高い提案。",
+    // Nuevos labels para pestañas
+    tabDesc: "健康的",
+    // Banner dinámico
+    dietBannerTitle: "🥗 バランスの取れた栄養",
+    dietBannerDesc: "詳細な栄養情報付きの健康的な食品"
   },
   tr: {
     title: "Beslenme önerileri",
@@ -206,8 +260,14 @@ const dietRecommendationsTranslations = {
     portionSizes: "4) Standart porsiyon büyüklükleri",
     responseFormat: "Her satırda bir ürün olacak şekilde şu formatta yanıt verin: Ürün Adı - Protein: Xg, Yağ: Yg, Karbonhidrat: Zg (100g başına)",
     exampleFormat: "Örnek:\nTavuk göğsü 🍗 - Protein: 25g, Yağ: 3g, Karbonhidrat: 0g (100g başına)\nBrokoli 🥦 - Protein: 3g, Yağ: 0.5g, Karbonhidrat: 7g (100g başına)\nEsmer pirinç 🍚 - Protein: 3g, Yağ: 1g, Karbonhidrat: 23g (100g başına)",
+    // Modal informativo
     featureTitle: "Dengeli beslenme",
-    featureDescription: "Dengeli bir diyet için sağlıklı ve besleyici öneriler."
+    featureDescription: "Dengeli bir diyet için sağlıklı ve besleyici öneriler.",
+    // Nuevos labels para pestañas
+    tabDesc: "Sağlıklı",
+    // Banner dinámico
+    dietBannerTitle: "🥗 Dengeli Beslenme",
+    dietBannerDesc: "Detaylı beslenme bilgileri içeren sağlıklı gıdalar"
   },
   hi: {
     title: "पोषण संबंधी सिफारिशें",
@@ -224,8 +284,14 @@ const dietRecommendationsTranslations = {
     portionSizes: "4) मानक भाग आकार",
     responseFormat: "प्रति पंक्ति एक उत्पाद के साथ इस प्रारूप में उत्तर दें: उत्पाद का नाम - प्रोटीन: Xग्राम, वसा: Yग्राम, कार्बोहाइड्रेट: Zग्राम (100ग्राम प्रति)",
     exampleFormat: "उदाहरण:\nचिकन ब्रेस्ट 🍗 - प्रोटीन: 25ग्राम, वसा: 3ग्राम, कार्बोहाइड्रेट: 0ग्राम (100ग्राम प्रति)\nब्रोकली 🥦 - प्रोटीन: 3ग्राम, वसा: 0.5ग्राम, कार्बोहाइड्रेट: 7ग्राम (100ग्राम प्रति)\nब्राउन राइस 🍚 - प्रोटीन: 3ग्राम, वसा: 1ग्राम, कार्बोहाइड्रेट: 23ग्राम (100ग्राम प्रति)",
+    // Modal informativo
     featureTitle: "संतुलित पोषण",
-    featureDescription: "संतुलित आहार के लिए स्वस्थ और पौष्टिक सुझाव।"
+    featureDescription: "संतुलित आहार के लिए स्वस्थ और पौष्टिक सुझाव।",
+    // Nuevos labels para pestañas
+    tabDesc: "स्वस्थ",
+    // Banner dinámico
+    dietBannerTitle: "🥗 संतुलित पोषण",
+    dietBannerDesc: "विस्तृत पोषण जानकारी के साथ स्वस्थ खाद्य पदार्थ"
   },
   nl: {
     title: "Voedingsaanbevelingen",
@@ -242,8 +308,14 @@ const dietRecommendationsTranslations = {
     portionSizes: "4) Standaard portiegroottes",
     responseFormat: "Antwoord met één product per regel in het formaat: Productnaam - Eiwitten: Xg, Vetten: Yg, Koolhydraten: Zg (per 100g)",
     exampleFormat: "Voorbeeld:\nKipfilet 🍗 - Eiwitten: 25g, Vetten: 3g, Koolhydraten: 0g (per 100g)\nBroccoli 🥦 - Eiwitten: 3g, Vetten: 0.5g, Koolhydraten: 7g (per 100g)\nVolkoren rijst 🍚 - Eiwitten: 3g, Vetten: 1g, Koolhydraten: 23g (per 100g)",
+    // Modal informativo
     featureTitle: "Gebalanceerde voeding",
-    featureDescription: "Gezonde en voedzame suggesties voor een gebalanceerd dieet."
+    featureDescription: "Gezonde en voedzame suggesties voor een gebalanceerd dieet.",
+    // Nuevos labels para pestañas
+    tabDesc: "Gezond",
+    // Banner dinámico
+    dietBannerTitle: "🥗 Gebalanceerde Voeding",
+    dietBannerDesc: "Gezonde voedingsmiddelen met gedetailleerde voedingsinformatie"
   }
 }
 

@@ -1830,7 +1830,7 @@ const HomeScreen = ({ navigation }) => {
       // Primero renderizar los 3 chips dinámicos
       ...dynamicChips.map((chip, index) => {
         const backgroundColor = hexToRgba(chip.icon_color, 0.15)
-        const borderColor = hexToRgba(chip.icon_color, 0.3)
+    
 
         return (
           <Animated.View
@@ -1846,8 +1846,9 @@ const HomeScreen = ({ navigation }) => {
           >
             <TouchableOpacity
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                backgroundColor: 'rgba(255, 255, 255, 0)',
                 borderWidth: 2,
+
                 borderColor: backgroundColor,
                 borderRadius: 25,
                 paddingHorizontal: isSmallIPhone ? 16 : 18,
@@ -1932,11 +1933,12 @@ const HomeScreen = ({ navigation }) => {
 
             {/* Revolutionary Integrated Hero Section */}
             <View style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              backgroundColor: 'rgba(255, 255, 255, 0.26)',
               borderRadius: 28,
               marginHorizontal: 16,
               marginVertical: 20,
               padding: 24,
+              marginTop: isSmallIPhone ? 30 : 40,
               borderWidth: 1,
               borderColor: 'rgba(255, 255, 255, 0.1)',
               shadowColor: '#000',

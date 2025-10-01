@@ -83,8 +83,11 @@ function AppContent() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        await Purchases.setDebugLogsEnabled(true)
-        await Purchases.configure({ apiKey: "appl_bHxScLAZLsKxfggiOiqVAZTXjJX" })
+        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG)
+        Purchases.configure({
+          apiKey: "appl_bHxScLAZLsKxfggiOiqVAZTXjJX",
+          appUserID: null
+        })
 
         await checkSubscription()
         await checkFirstTimeOpen()

@@ -938,11 +938,8 @@ export default function Suscribe() {
   useEffect(() => {
     const checkSubscription = async () => {
       if (Platform.OS === 'ios') {
-        Purchases.setDebugLogsEnabled(true);
-        Purchases.configure({ apiKey: 'appl_bHxScLAZLsKxfggiOiqVAZTXjJX' });
-
         try {
-          const purchaserInfo = await Purchases.getPurchaserInfo();
+          const purchaserInfo = await Purchases.getCustomerInfo();
           // Verificar cualquiera de las nuevas suscripciones
           if (purchaserInfo && (purchaserInfo.entitlements.active['premium'] ||
                               purchaserInfo.entitlements.active['12981'] ||
@@ -985,11 +982,8 @@ export default function Suscribe() {
   useEffect(() => {
     const initializePurchases = async () => {
       if (Platform.OS === 'ios') {
-        Purchases.setDebugLogsEnabled(true);
-        Purchases.configure({ apiKey: 'appl_bHxScLAZLsKxfggiOiqVAZTXjJX' });
-
         try {
-          const purchaserInfo = await Purchases.getPurchaserInfo();
+          const purchaserInfo = await Purchases.getCustomerInfo();
           // Verificar cualquiera de las nuevas suscripciones
           if (purchaserInfo && (purchaserInfo.entitlements.active['premium'] ||
                               purchaserInfo.entitlements.active['12981'] ||

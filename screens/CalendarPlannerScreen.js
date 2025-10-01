@@ -2743,7 +2743,7 @@ const CalendarPlannerScreen = () => {
                 }}
               >
                 <Ionicons name="add-circle" size={18} color="#16a34a" />
-                <Text style={[styles.controlButtonText, styles.addControlButtonText]}>{t.add}</Text>
+              
               </TouchableOpacity>
             </View>
           </View>

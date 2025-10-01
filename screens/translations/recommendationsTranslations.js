@@ -421,7 +421,10 @@ const recommendationsTranslations = {
     historyFeatureDescription: "Wir analysieren deine früheren Einkäufe, um Produkte vorzuschlagen, die du wirklich brauchst.",
     syncFeatureTitle: "Automatische Synchronisation",
     syncFeatureDescription: "Füge Produkte direkt zu deinen bestehenden Listen hinzu oder erstelle neue Listen.",
-    gotIt: "Verstanden!"
+    gotIt: "Verstanden!",
+    // Banner dinámico
+    historyBannerTitle: "🕒 Persönliche Empfehlungen",
+    historyBannerDesc: "Basierend auf deinen vorherigen Einkaufsgewohnheiten"
   },
   it: {
     title: "Raccomandazioni Intelligenti AI",
@@ -548,7 +551,10 @@ const recommendationsTranslations = {
     historyFeatureDescription: "Analizziamo i tuoi acquisti precedenti per suggerire prodotti di cui hai davvero bisogno.",
     syncFeatureTitle: "Sincronizzazione automatica",
     syncFeatureDescription: "Aggiungi prodotti direttamente alle tue liste esistenti o crea nuove liste.",
-    gotIt: "Capito!"
+    gotIt: "Capito!",
+    // Banner dinámico
+    historyBannerTitle: "🕒 Raccomandazioni Personali",
+    historyBannerDesc: "Basate sui tuoi precedenti modelli di acquisto"
   },
   fr: {
     title: "Recommandations Intelligentes IA",
@@ -675,7 +681,10 @@ const recommendationsTranslations = {
     historyFeatureDescription: "Nous analysons vos achats précédents pour suggérer des produits dont vous avez vraiment besoin.",
     syncFeatureTitle: "Synchronisation automatique",
     syncFeatureDescription: "Ajoutez des produits directement à vos listes existantes ou créez de nouvelles listes.",
-    gotIt: "Compris !"
+    gotIt: "Compris !",
+    // Banner dinámico
+    historyBannerTitle: "🕒 Recommandations Personnelles",
+    historyBannerDesc: "Basées sur vos habitudes d'achat précédentes"
   },
   pt: {
     title: "Recomendações Inteligentes com IA",
@@ -794,6 +803,9 @@ const recommendationsTranslations = {
     subscriptionRequiredMessage: "Assine para acessar recomendações sazonais e nutricionais com IA",
     subscriptionBenefits: "✨ Recomendações IA ilimitadas\n📅 Produtos da estação\n🥗 Análise nutricional",
     subscribeButton: "Assinar Agora",
+    // Banner dinámico
+    historyBannerTitle: "🕒 Recomendações Personalizadas",
+    historyBannerDesc: "Baseado nos seus padrões de compra anteriores"
   },
   ru: {
     title: "Умные Рекомендации ИИ",
@@ -912,6 +924,9 @@ const recommendationsTranslations = {
     subscriptionRequiredMessage: "Подпишитесь для доступа к сезонным и питательным рекомендациям с ИИ",
     subscriptionBenefits: "✨ Неограниченные рекомендации ИИ\n📅 Сезонные продукты\n🥗 Питательный анализ",
     subscribeButton: "Подписаться сейчас",
+    // Banner dinámico
+    historyBannerTitle: "🕒 Персональные Рекомендации",
+    historyBannerDesc: "На основе ваших предыдущих покупок"
   },
   ar: {
     title: "توصيات ذكية بالذكاء الاصطناعي",
@@ -1027,6 +1042,9 @@ const recommendationsTranslations = {
     subscriptionRequiredMessage: "اشترك للوصول إلى التوصيات الموسمية والغذائية بالذكاء الاصطناعي",
     subscriptionBenefits: "✨ توصيات ذكاء اصطناعي غير محدودة\n📅 منتجات موسمية\n🥗 تحليل غذائي",
     subscribeButton: "اشترك الآن",
+    // Banner dinámico
+    historyBannerTitle: "🕒 توصيات شخصية",
+    historyBannerDesc: "بناءً على أنماط التسوق السابقة"
   },
   hu: {
     title: "Intelligens AI Ajánlások",
@@ -1142,6 +1160,9 @@ const recommendationsTranslations = {
     subscriptionRequiredMessage: "Fizessen elő a szezonális és táplálkozási ajánlásokhoz AI-val",
     subscriptionBenefits: "✨ Korlátlan AI ajánlások\n📅 Szezonális termékek\n🥗 Táplálkozási elemzés",
     subscribeButton: "Előfizetés most",
+    // Banner dinámico
+    historyBannerTitle: "🕒 Személyre Szabott Ajánlások",
+    historyBannerDesc: "A korábbi vásárlási szokásai alapján"
   },
   ja: {
     title: "AIスマート推奨事項",
@@ -1257,6 +1278,9 @@ const recommendationsTranslations = {
     subscriptionRequiredMessage: "AIによる季節および栄養の推奨事項にアクセスするために購読してください",
     subscriptionBenefits: "✨ 無制限のAI推奨事項\n📅 季節の商品\n🥗 栄養分析",
     subscribeButton: "今すぐ購読",
+    // Banner dinámico
+    historyBannerTitle: "🕒 パーソナライズされた推奨事項",
+    historyBannerDesc: "過去の購買パターンに基づいています"
   },
   tr: {
     title: "Akıllı AI Önerileri",
@@ -1372,6 +1396,9 @@ const recommendationsTranslations = {
     subscriptionRequiredMessage: "AI ile mevsimsel ve beslenme önerilerine erişmek için abone olun",
     subscriptionBenefits: "✨ Sınırsız AI önerileri\n📅 Mevsimsel ürünler\n🥗 Beslenme analizi",
     subscribeButton: "Şimdi Abone Ol",
+    // Banner dinámico
+    historyBannerTitle: "🕒 Kişiselleştirilmiş Öneriler",
+    historyBannerDesc: "Önceki alışveriş alışkanlıklarınıza dayalı"
   },
   hi: {
     title: "स्मार्ट एआई सिफारिशें",
@@ -1487,6 +1514,9 @@ const recommendationsTranslations = {
     subscriptionRequiredMessage: "AI के साथ मौसमी और पोषण संबंधी सिफारिशों तक पहुंचने के लिए सदस्यता लें",
     subscriptionBenefits: "✨ असीमित AI सिफारिशें\n📅 मौसमी उत्पाद\n🥗 पोषण विश्लेषण",
     subscribeButton: "अभी सदस्यता लें",
+    // Banner dinámico
+    historyBannerTitle: "🕒 व्यक्तिगत सिफारिशें",
+    historyBannerDesc: "आपके पिछले खरीदारी पैटर्न के आधार पर"
   },
   nl: {
     title: "Slimme AI Aanbevelingen",
@@ -1602,6 +1632,9 @@ const recommendationsTranslations = {
     subscriptionRequiredMessage: "Abonneer u voor toegang tot seizoensgebonden en voedingsaanbevelingen met AI",
     subscriptionBenefits: "✨ Onbeperkte AI aanbevelingen\n📅 Seizoensproducten\n🥗 Voedingsanalyse",
     subscribeButton: "Nu abonneren",
+    // Banner dinámico
+    historyBannerTitle: "🕒 Gepersonaliseerde Aanbevelingen",
+    historyBannerDesc: "Gebaseerd op uw eerdere winkelpatronen"
   }
 }
 
