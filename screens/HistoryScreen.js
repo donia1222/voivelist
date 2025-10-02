@@ -833,8 +833,32 @@ const HistoryScreen = ({ navigation }) => {
             }
             return { ...item, list: correctedList }
           }
-          return item
+
+          // Migración: Convertir objetos {item, quantity, unit} a strings
+          const migratedList = item.list.map(listItem => {
+            if (typeof listItem === 'string') {
+              return listItem;
+            }
+            // Si es objeto con item, quantity, unit
+            if (listItem && listItem.item) {
+              const qty = listItem.quantity && listItem.quantity !== 'NaN' ? listItem.quantity : '';
+              const unit = listItem.unit || '';
+              if (qty && unit) {
+                return `${listItem.item} (${qty} ${unit})`;
+              } else if (qty) {
+                return `${listItem.item} (${qty})`;
+              } else {
+                return listItem.item || '';
+              }
+            }
+            return String(listItem);
+          }).filter(item => item.trim() !== '');
+
+          return { ...item, list: migratedList }
         })
+
+        // Guardar la migración de vuelta al storage
+        await AsyncStorage.setItem("@shopping_history", JSON.stringify(parsedHistory))
 
         // Reverse to show newest lists first (most recent at index 0)
         const reversedHistory = parsedHistory.reverse()

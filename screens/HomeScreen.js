@@ -1651,32 +1651,7 @@ const HomeScreen = ({ navigation }) => {
     } else {
       return (
         <View style={modernStyles.voiceButtonContainer}>
-          {/* Informative text for non-subscribed users */}
-          {isSubscribed === false && (
-            <TouchableOpacity
-              style={[modernStyles.voiceInfoContainer, isSmallIPhone && {marginTop: 10}]}
-              onPress={() => {
-                if (deviceVoiceCount >= 3) {
-                  handleSubscribePress()
-                }
-              }}
-              activeOpacity={deviceVoiceCount >= 3 ? 0.7 : 1}
-            >
-              <Text style={modernStyles.voiceInfoText}>
-                {deviceVoiceCount >= 3 ? voiceTexts.limitTitle : voiceTexts.freeTitle}
-              </Text>
-              <Text style={[
-                modernStyles.voiceInfoSubtext,
-                deviceVoiceCount >= 3 && modernStyles.voiceInfoSubtextClickable
-              ]}>
-                {deviceVoiceCount >= 3
-                  ? voiceTexts.limitSubtitle
-                  : voiceTexts.freeSubtitle.replace('${remaining}', Math.max(0, 3 - deviceVoiceCount))
-                }
-              </Text>
-            </TouchableOpacity>
-          )}
-          
+
           {/* Ultra Modern Multi-Layer Pulse Rings */}
           <View style={modernStyles.voiceFloatingContainer}>
             {started && (
@@ -1846,7 +1821,7 @@ const HomeScreen = ({ navigation }) => {
           >
             <TouchableOpacity
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0)',
+                backgroundColor: 'rgba(255, 255, 255, 0.54)',
                 borderWidth: 2,
 
                 borderColor: backgroundColor,
@@ -1933,15 +1908,12 @@ const HomeScreen = ({ navigation }) => {
 
             {/* Revolutionary Integrated Hero Section */}
             <View style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.26)',
+              backgroundColor: 'rgba(255, 255, 255, 0)',
               borderRadius: 28,
               marginHorizontal: 16,
               marginVertical: 20,
               padding: 24,
               marginTop: isSmallIPhone ? 30 : 40,
-              borderWidth: 1,
-              borderColor: 'rgba(255, 255, 255, 0.1)',
-              shadowColor: '#000',
               shadowOffset: { width: 0, height: 8 },
               shadowOpacity: 0.15,
               shadowRadius: 20,

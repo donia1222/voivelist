@@ -13,6 +13,7 @@ import {
   Image,
   TextInput,
 } from "react-native"
+import { Modalize } from 'react-native-modalize'
 import { Ionicons } from "@expo/vector-icons"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { useTheme } from "../../ThemeContext"
@@ -20,6 +21,7 @@ import { useRecording } from "../../RecordingContext"
 import * as RNLocalize from "react-native-localize"
 import { translations } from "../../translations"
 import texts from "../../screens/translations/texts"
+import mealPlannerTranslations from "../../screens/translations/mealPlannerTranslations"
 import DeviceInfo from "react-native-device-info"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Platform, Dimensions } from "react-native"
@@ -39,12 +41,18 @@ import ContactScreen from "../../screens/ContactScreen"
 import HandwrittenListScreen from "../../screens/HandwrittenListScreen"
 import RecommendationsScreen from "../../screens/RecommendationsScreen"
 import SeasonalRecommendationsScreen from "../../screens/SeasonalRecommendationsScreen"
+import MealPlannerScreen from "../../screens/MealPlannerScreen"
 
 const Stack = createNativeStackNavigator()
 
 const getCurrentTranslations = () => {
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   return translations[deviceLanguage] || translations["en"]
+}
+
+const getMealPlannerTranslations = () => {
+  const deviceLanguage = RNLocalize.getLocales()[0].languageCode
+  return mealPlannerTranslations[deviceLanguage] || mealPlannerTranslations["en"]
 }
 
 const getMenuTexts = () => {
@@ -76,6 +84,8 @@ const getMenuTexts = () => {
         "calendar-outline": "Planifica tus compras semanales",
         "create-outline": "Crea listas manualmente",
         "pencil": "Escribe tus listas a mano",
+        "bulb": "Ideas de productos recomendados",
+        "restaurant-outline": "Planifica tus menús semanales",
       }
     },
     en: {
@@ -104,6 +114,8 @@ const getMenuTexts = () => {
         "calendar-outline": "Plan your weekly shopping",
         "create-outline": "Create lists manually",
         "pencil": "Write your lists by hand",
+        "bulb": "Recommended product ideas",
+        "restaurant-outline": "Plan your weekly menus",
       }
     },
     de: {
@@ -132,6 +144,8 @@ const getMenuTexts = () => {
         "calendar-outline": "Plane deine wöchentlichen Einkäufe",
         "create-outline": "Listen manuell erstellen",
         "pencil": "Schreiben Sie Ihre Listen von Hand",
+        "bulb": "Empfohlene Produktideen",
+        "restaurant-outline": "Plane deine wöchentlichen Menüs",
       }
     },
     fr: {
@@ -160,6 +174,8 @@ const getMenuTexts = () => {
         "calendar-outline": "Planifiez vos achats hebdomadaires",
         "create-outline": "Créer des listes manuellement",
         "pencil": "Écrivez vos listes à la main",
+        "bulb": "Idées de produits recommandés",
+        "restaurant-outline": "Planifiez vos menus hebdomadaires",
       }
     },
     it: {
@@ -188,6 +204,8 @@ const getMenuTexts = () => {
         "calendar-outline": "Pianifica la tua spesa settimanale",
         "create-outline": "Crea liste manualmente",
         "pencil": "Scrivi le tue liste a mano",
+        "bulb": "Idee di prodotti consigliati",
+        "restaurant-outline": "Pianifica i tuoi menu settimanali",
       }
     },
     tr: {
@@ -216,6 +234,8 @@ const getMenuTexts = () => {
         "calendar-outline": "Haftalık alışverişinizi planlayın",
         "create-outline": "Manuel olarak listeler oluşturun",
         "pencil": "Listelerinizi elle yazın",
+        "bulb": "Önerilen ürün fikirleri",
+        "restaurant-outline": "Haftalık menülerinizi planlayın",
       }
     },
     pt: {
@@ -244,6 +264,8 @@ const getMenuTexts = () => {
         "calendar-outline": "Planeje suas compras semanais",
         "create-outline": "Criar listas manualmente",
         "pencil": "Escreva suas listas à mão",
+        "bulb": "Ideias de produtos recomendados",
+        "restaurant-outline": "Planeje seus menus semanais",
       }
     },
     ru: {
@@ -272,6 +294,8 @@ const getMenuTexts = () => {
         "calendar-outline": "Планируйте еженедельные покупки",
         "create-outline": "Создавайте списки вручную",
         "pencil": "Пишите свои списки от руки",
+        "bulb": "Рекомендуемые идеи продуктов",
+        "restaurant-outline": "Планируйте еженедельные меню",
       }
     },
     ar: {
@@ -300,6 +324,8 @@ const getMenuTexts = () => {
         "calendar-outline": "خطط لتسوقك الأسبوعي",
         "create-outline": "إنشاء قوائم يدويًا",
         "pencil": "اكتب قوائمك بخط اليد",
+        "bulb": "أفكار المنتجات الموصى بها",
+        "restaurant-outline": "خطط لقوائمك الأسبوعية",
       }
     },
     hu: {
@@ -328,6 +354,8 @@ const getMenuTexts = () => {
         "calendar-outline": "Tervezze meg heti bevásárlását",
         "create-outline": "Listák manuális létrehozása",
         "pencil": "Írja kézzel a listáit",
+        "bulb": "Ajánlott termékötletek",
+        "restaurant-outline": "Tervezze meg heti menüit",
       }
     },
     ja: {
@@ -356,6 +384,8 @@ const getMenuTexts = () => {
         "calendar-outline": "週間ショッピングを計画",
         "create-outline": "手動でリストを作成",
         "pencil": "リストを手書きで作成",
+        "bulb": "おすすめ商品アイデア",
+        "restaurant-outline": "週間メニューを計画",
       }
     },
     hi: {
@@ -384,6 +414,8 @@ const getMenuTexts = () => {
         "calendar-outline": "अपनी साप्ताहिक खरीदारी की योजना बनाएं",
         "create-outline": "मैन्युअल रूप से सूचियाँ बनाएं",
         "pencil": "अपनी सूचियाँ हाथ से लिखें",
+        "bulb": "अनुशंसित उत्पाद विचार",
+        "restaurant-outline": "अपनी साप्ताहिक मेनू की योजना बनाएं",
       }
     },
     nl: {
@@ -412,6 +444,8 @@ const getMenuTexts = () => {
         "calendar-outline": "Plan uw wekelijkse boodschappen",
         "create-outline": "Maak handmatig lijsten",
         "pencil": "Schrijf je lijsten met de hand",
+        "bulb": "Aanbevolen productideeën",
+        "restaurant-outline": "Plan uw wekelijkse menu's",
       }
     }
   }
@@ -420,7 +454,7 @@ const getMenuTexts = () => {
 
 const getMenuItemDescription = (icon) => {
   const menuTexts = getMenuTexts()
-  return menuTexts.descriptions[icon] || "More options"
+  return menuTexts.descriptions[icon] || menuTexts.menuSubtitle
 }
 
 function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home" }) {
@@ -428,11 +462,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const { isRecording } = useRecording()
   const currentTranslations = getCurrentTranslations()
   const menuTexts = getMenuTexts()
+  const mealPlannerTexts = getMealPlannerTranslations()
   const modernStyles = getModernStyles()
   const [activeTab, setActiveTab] = useState(initialTab)
   const [isMenuModalVisible, setMenuModalVisible] = useState(false)
   const [showNewBadge, setShowNewBadge] = useState(false)
   const iconScaleAnim = useRef(new Animated.Value(1)).current
+  const modalizeRef = useRef(null)
 
   // Detectar iPhone SE (pantalla pequeña)
   const { width, height } = Dimensions.get('window')
@@ -757,12 +793,12 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   }
 
   const handleContactPress = () => {
-    setMenuModalVisible(false)
+    modalizeRef.current?.close()
     setActiveTab("Contact")
   }
 
   const handleSettingsPress = () => {
-    setMenuModalVisible(false)
+    modalizeRef.current?.close()
     setSettingsModalVisible(true)
   }
 
@@ -1018,18 +1054,69 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     }
   }
 
-  const headerMenuItems = [
+  // Descripciones para los 3 ítems principales - 13 idiomas
+  const mainItemDescriptions = {
+    handwritten: {
+      es: "Escribe tus listas a mano o añade productos escaneando códigos QR",
+      en: "Write your lists by hand or add products by scanning QR codes",
+      de: "Schreiben Sie Ihre Listen von Hand oder fügen Sie Produkte durch Scannen von QR-Codes hinzu",
+      fr: "Écrivez vos listes à la main ou ajoutez des produits en scannant des codes QR",
+      it: "Scrivi le tue liste a mano o aggiungi prodotti scansionando codici QR",
+      tr: "Listelerinizi elle yazın veya QR kodları tarayarak ürün ekleyin",
+      pt: "Escreva suas listas à mão ou adicione produtos escaneando códigos QR",
+      ru: "Пишите списки вручную или добавляйте товары, сканируя QR-коды",
+      zh: "手写您的清单或通过扫描二维码添加产品",
+      ja: "リストを手書きするか、QRコードをスキャンして商品を追加",
+      sv: "Skriv dina listor för hand eller lägg till produkter genom att skanna QR-koder",
+      hu: "Írja le listáit kézzel, vagy adjon hozzá termékeket QR-kódok beolvasásával",
+      ar: "اكتب قوائمك يدويًا أو أضف المنتجات عن طريق مسح رموز QR"
+    },
+    recommendations: {
+      es: "Recibe recomendaciones de productos por historial, temporada o por dieta",
+      en: "Get product recommendations by history, season or diet",
+      de: "Erhalten Sie Produktempfehlungen nach Verlauf, Saison oder Diät",
+      fr: "Recevez des recommandations de produits par historique, saison ou régime",
+      it: "Ricevi raccomandazioni di prodotti per cronologia, stagione o dieta",
+      tr: "Geçmişe, sezona veya diyete göre ürün önerileri alın",
+      pt: "Receba recomendações de produtos por histórico, temporada ou dieta",
+      ru: "Получайте рекомендации товаров по истории, сезону или диете",
+      zh: "根据历史记录、季节或饮食获取产品推荐",
+      ja: "履歴、季節、または食事に基づいて商品の推奨を受け取る",
+      sv: "Få produktrekommendationer baserat på historik, säsong eller diet",
+      hu: "Kapjon termékajánlásokat előzmények, évszak vagy étrend alapján",
+      ar: "احصل على توصيات المنتجات حسب السجل أو الموسم أو النظام الغذائي"
+    },
+    mealPlanner: {
+      es: "Planifica tus menús semanales y genera listas de compra automáticas",
+      en: "Plan your weekly menus and generate automatic shopping lists",
+      de: "Planen Sie Ihre Wochenmenüs und erstellen Sie automatische Einkaufslisten",
+      fr: "Planifiez vos menus hebdomadaires et générez des listes de courses automatiques",
+      it: "Pianifica i tuoi menù settimanali e genera liste della spesa automatiche",
+      tr: "Haftalık menülerinizi planlayın ve otomatik alışveriş listeleri oluşturun",
+      pt: "Planeje seus cardápios semanais e gere listas de compras automáticas",
+      ru: "Планируйте еженедельное меню и создавайте автоматические списки покупок",
+      zh: "规划您的每周菜单并生成自动购物清单",
+      ja: "週間メニューを計画し、自動買い物リストを生成",
+      sv: "Planera dina veckomatsedlar och generera automatiska inköpslistor",
+      hu: "Tervezze meg heti menüit és hozzon létre automatikus bevásárlólistákat",
+      ar: "خطط قوائمك الأسبوعية وأنشئ قوائم تسوق تلقائية"
+    }
+  };
+
+  const mainMenuItems = [
     {
       label: currentTranslations.manualList || "Manual List",
+      description: mainItemDescriptions.handwritten[deviceLanguage] || mainItemDescriptions.handwritten['en'],
       icon: "pencil",
-      color: "#4a6bff",
+      color: "#8B5CF6",
       onPress: () => {
-        setMenuModalVisible(false)
+        modalizeRef.current?.close()
         setActiveTab("HandwrittenList")
       }
     },
     {
       label: menuTexts.recommendations || "Recomendaciones",
+      description: mainItemDescriptions.recommendations[deviceLanguage] || mainItemDescriptions.recommendations['en'],
       icon: "bulb",
       color: "#8B5CF6",
       onPress: async () => {
@@ -1037,23 +1124,34 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           await AsyncStorage.setItem("@has_seen_recommendations_badge", "true")
           setShowNewBadge(false)
         }
-        setMenuModalVisible(false)
+        modalizeRef.current?.close()
         setActiveTab("Recommendations")
       }
     },
+    {
+      label: mealPlannerTexts.title,
+      description: mainItemDescriptions.mealPlanner[deviceLanguage] || mainItemDescriptions.mealPlanner['en'],
+      icon: "restaurant-outline",
+      color: "#8B5CF6",
+      onPress: () => {
+        modalizeRef.current?.close()
+        setActiveTab("MealPlanner")
+      }
+    },
+  ];
+
+  const footerMenuItems = [
     ...(isSubscribed
       ? [
-
           {
             label: currentTranslations.mySubscription,
             icon: "star",
             color: "#ff375f",
             onPress: () => {
-              setMenuModalVisible(false)
+              modalizeRef.current?.close()
               setActiveTab("Subscription")
             }
           },
-
         ]
       : [
           {
@@ -1061,7 +1159,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             icon: "star-outline",
             color: "#ff375f",
             onPress: () => {
-              setMenuModalVisible(false)
+              modalizeRef.current?.close()
               setActiveTab("Subscribe")
             }
           },
@@ -1071,7 +1169,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       icon: "information-circle-outline",
       color: "#5856d6",
       onPress: () => {
-        setMenuModalVisible(false)
+        modalizeRef.current?.close()
         setActiveTab("Information")
       }
     },
@@ -1080,7 +1178,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       icon: "share-social-outline",
       color: "#4a6bff",
       onPress: () => {
-        setMenuModalVisible(false)
+        modalizeRef.current?.close()
         shareAppLink()
       }
     },
@@ -1089,7 +1187,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       icon: "mail-outline",
       color: "#ff9500",
       onPress: () => {
-        setMenuModalVisible(false)
+        modalizeRef.current?.close()
         handleContactPress()
       }
     },
@@ -1098,7 +1196,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       icon: "shield-outline",
       color: "#34c759",
       onPress: () => {
-        setMenuModalVisible(false)
+        modalizeRef.current?.close()
         setPrivacyModalVisible(true)
       }
     },
@@ -1107,11 +1205,10 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       icon: "document-text-outline",
       color: "#9b59b6",
       onPress: () => {
-        setMenuModalVisible(false)
+        modalizeRef.current?.close()
         setEulaModalVisible(true)
       }
     },
-
   ]
 
   const renderMenuScreen = () => {
@@ -1178,12 +1275,25 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             <Stack.Screen name="SeasonalRecommendationsScreen" component={SeasonalRecommendationsScreen} />
           </Stack.Navigator>
         )
+      case "MealPlanner":
+        return (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="MealPlannerScreen"
+              component={MealPlannerScreen}
+              initialParams={{
+                onNavigateToHistory: () => setActiveTab("History"),
+                onNavigateToSubscribe: () => setActiveTab("Subscribe")
+              }}
+            />
+          </Stack.Navigator>
+        )
       default:
         return null
     }
   }
 
-  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact", "HandwrittenList", "Recommendations"].includes(activeTab)
+  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact", "HandwrittenList", "Recommendations", "MealPlanner"].includes(activeTab)
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -1220,7 +1330,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           flexDirection: "row",
           alignItems: "center",
           flex: 1,
-          marginRight: isSmallIPhone ? 8 : 10
         }}>
 
           {!isMenuScreen && (
@@ -1360,87 +1469,10 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
              activeTab === "PriceCalculator" ? (currentTranslations.priceCalculator || "Price Calculator") :
              activeTab === "HandwrittenList" ? (currentTranslations.manualList || "Manual List") :
              activeTab === "Recommendations" ? (menuTexts.recommendations || "Recomendaciones") :
+             activeTab === "MealPlanner" ? mealPlannerTexts.title :
              "BuyVoice"}
           </Text>
         </View>
-        
-        <TouchableOpacity
-          onPress={() => {
-            console.log("Menu button pressed")
-            animateMenuBars() // Animar las barras
-            setMenuModalVisible(true)
-          }}
-          style={{
-            width: isSmallIPhone ? 40 : 50,
-            height: isSmallIPhone ? 40 : 50,
-            borderRadius: isSmallIPhone ? 20 : 25,
-            backgroundColor: theme.backgroundtres + "40",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <Animated.View
-            style={{
-              transform: [{ scale: pulseAnim }],
-            }}
-          >
-            {/* Modern animated hamburger menu */}
-            <View style={{
-              width: isSmallIPhone ? 18 : 24,
-              height: isSmallIPhone ? 14 : 18,
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-            }}>
-              <Animated.View style={{
-                width: bar1Anim.interpolate({
-                  inputRange: [0, 1, 2],
-                  outputRange: isSmallIPhone ? [18, 14, 16] : [24, 18, 21]
-                }),
-                height: isSmallIPhone ? 2 : 2.5,
-                backgroundColor: theme.text,
-                borderRadius: 2,
-                transform: [{
-                  translateX: bar1Anim.interpolate({
-                    inputRange: [0, 1, 2],
-                    outputRange: [0, -3, 3]
-                  })
-                }]
-              }} />
-              <Animated.View style={{
-                width: bar2Anim.interpolate({
-                  inputRange: [0, 1, 2],
-                  outputRange: isSmallIPhone ? [14, 16, 18] : [18, 21, 24]
-                }),
-                height: isSmallIPhone ? 2 : 2.5,
-                backgroundColor: theme.text,
-                borderRadius: 2,
-                alignSelf: 'flex-end',
-                transform: [{
-                  translateX: bar2Anim.interpolate({
-                    inputRange: [0, 1, 2],
-                    outputRange: [0, -6, -3]
-                  })
-                }]
-              }} />
-              <Animated.View style={{
-                width: bar3Anim.interpolate({
-                  inputRange: [0, 1, 2],
-                  outputRange: isSmallIPhone ? [16, 18, 14] : [21, 24, 18]
-                }),
-                height: isSmallIPhone ? 2 : 2.5,
-                backgroundColor: theme.text,
-                borderRadius: 2,
-                transform: [{
-                  translateX: bar3Anim.interpolate({
-                    inputRange: [0, 1, 2],
-                    outputRange: [0, 3, -2]
-                  })
-                }]
-              }} />
-            </View>
-          </Animated.View>
-        </TouchableOpacity>
       </View>
 
       {/* Content */}
@@ -1465,7 +1497,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                 onPress={tab.onPress}
               >
                 <Ionicons name={tab.icon} size={20} color={tab.color} />
-                <Text 
+                <Text
                   style={[
                     tab.key === "clear" ? modernStyles.deleteButtonText :
                     tab.key === "add" ? modernStyles.addButtonText :
@@ -1532,241 +1564,90 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               </TouchableOpacity>
             )
           })}
+
+          {/* Menu Button */}
+          <TouchableOpacity
+            onPress={() => {
+              console.log("Menu button pressed from tab bar")
+              animateMenuBars()
+              modalizeRef.current?.open()
+            }}
+            style={{
+              flex: 1,
+              alignItems: "center",
+              paddingVertical: isSmallIPhone ? 4 : 8,
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: isMenuScreen ? "#8B5CF620" : "transparent",
+                paddingHorizontal: isSmallIPhone ? 12 : 16,
+                paddingVertical: isSmallIPhone ? 10 : 12,
+                borderRadius: isSmallIPhone ? 16 : 20,
+                minWidth: isSmallIPhone ? 40 : 50,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <View style={{
+                width: isSmallIPhone ? 20 : 24,
+                height: isSmallIPhone ? 16 : 20,
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+              }}>
+                <Animated.View style={{
+                  width: bar1Anim.interpolate({
+                    inputRange: [0, 1, 2],
+                    outputRange: isSmallIPhone ? [20, 16, 18] : [24, 20, 22]
+                  }),
+                  height: isSmallIPhone ? 2.5 : 3,
+                  backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
+                  borderRadius: 2,
+                  transform: [{
+                    translateX: bar1Anim.interpolate({
+                      inputRange: [0, 1, 2],
+                      outputRange: [0, -2, 2]
+                    })
+                  }]
+                }} />
+                <Animated.View style={{
+                  width: bar2Anim.interpolate({
+                    inputRange: [0, 1, 2],
+                    outputRange: isSmallIPhone ? [16, 18, 20] : [20, 22, 24]
+                  }),
+                  height: isSmallIPhone ? 2.5 : 3,
+                  backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
+                  borderRadius: 2,
+                  alignSelf: 'flex-end',
+                  transform: [{
+                    translateX: bar2Anim.interpolate({
+                      inputRange: [0, 1, 2],
+                      outputRange: [0, -4, -2]
+                    })
+                  }]
+                }} />
+                <Animated.View style={{
+                  width: bar3Anim.interpolate({
+                    inputRange: [0, 1, 2],
+                    outputRange: isSmallIPhone ? [18, 20, 16] : [22, 24, 20]
+                  }),
+                  height: isSmallIPhone ? 2.5 : 3,
+                  backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
+                  borderRadius: 2,
+                  transform: [{
+                    translateX: bar3Anim.interpolate({
+                      inputRange: [0, 1, 2],
+                      outputRange: [0, 2, -1]
+                    })
+                  }]
+                }} />
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
       )}
 
-      {/* Better Menu Modal */}
-      <Modal
-        visible={isMenuModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setMenuModalVisible(false)}
-      >
-        <Animated.View
-          style={{
-            flex: 1,
-            backgroundColor: getTabColors().background,
-            justifyContent: "center",
-            alignItems: "center",
-            paddingHorizontal: 20,
-            opacity: fadeAnim,
-          }}
-        >
-          <Animated.View
-            style={{
-              backgroundColor: "rgba(255, 255, 255, 0.95)",
-              borderRadius: 25,
-              paddingVertical: 20,
-              paddingHorizontal: 20,
-              width: "100%",
-              maxWidth: 400,
-              height: "75%",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 15,
-              },
-              shadowOpacity: 0.35,
-              shadowRadius: 25,
-              elevation: 30,
-              transform: [{ scale: scaleAnim }],
-            }}
-          >
-            {/* Header */}
-            <View
-              style={{
-                alignItems: "center",
-                paddingBottom: 15,
-                borderBottomWidth: 1,
-                borderBottomColor: theme.backgroundtres + "15",
-                marginBottom: 15,
-                position: "relative",
-              }}
-            >
-              {/* Language/World Icon - Top Right */}
-              <TouchableOpacity
-                onPress={() => {
-                  setMenuModalVisible(false)
-                  setLanguageModalVisible(true)
-                }}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  width: 40,
-                  height: 40,
-                  borderRadius: 20,
-                  backgroundColor: "rgba(74, 107, 255, 0.1)",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  zIndex: 10,
-                }}
-              >
-                <Ionicons name="globe-outline" size={20} color="#4a6bff" />
-              </TouchableOpacity>
-              <Animated.View
-                style={{
-                  width: 50,
-                  height: 50,
-                  backgroundColor: getTabColors().primary,
-                  borderRadius: 25,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginBottom: 10,
-                  transform: [
-                    { 
-                      rotate: rotateAnim.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: ['0deg', '360deg']
-                      })
-                    }
-                  ],
-                }}
-              >
-                <Ionicons name="apps" size={25} color="white" />
-              </Animated.View>
-              <Text
-                style={{
-                  color: getTabColors().primary,
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                }}
-              >
-                {menuTexts.menuTitle}
-              </Text>
-              <Text
-                style={{
-                  color: "#ff9500",
-                  fontSize: 14,
-                  textAlign: "center",
-                  marginTop: 5,
-                }}
-              >
-                {menuTexts.menuSubtitle}
-              </Text>
-            </View>
-
-            {/* Menu Items */}
-            <ScrollView 
-              showsVerticalScrollIndicator={false}
-              style={{ maxHeight: "60%" }}
-            >
-              {headerMenuItems.map((item, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    item.onPress()
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingVertical: 12,
-                    paddingHorizontal: 15,
-                    marginBottom: 8,
-                    backgroundColor: item.color + "08",
-                    borderRadius: 18,
-                    borderLeftWidth: 4,
-                    borderLeftColor: item.color,
-                    position: 'relative',
-                  }}
-                >
-                  {showNewBadge && item.icon === "bulb" && (
-                    <View
-                      style={{
-                        position: 'absolute',
-                        top: 8,
-                        right: 10,
-                        backgroundColor: '#ff375f',
-                        borderRadius: 10,
-                        paddingHorizontal: 6,
-                        paddingVertical: 2,
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.25,
-                        shadowRadius: 3.84,
-                        elevation: 5,
-                        zIndex: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 9,
-                          fontWeight: 'bold',
-                          letterSpacing: 0.5,
-                        }}
-                      >
-                        {deviceLanguage === 'es' ? 'NUEVO' : deviceLanguage === 'de' ? 'NEU' : deviceLanguage === 'fr' ? 'NOUVEAU' : deviceLanguage === 'it' ? 'NUOVO' : deviceLanguage === 'pt' ? 'NOVO' : 'NEW'}
-                      </Text>
-                    </View>
-                  )}
-                  <View
-                    style={{
-                      backgroundColor: item.color + "20",
-                      padding: 8,
-                      borderRadius: 12,
-                      marginRight: 15,
-                    }}
-                  >
-                    <Ionicons name={item.icon} size={22} color={item.color} />
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text
-                      style={{
-                        color: "#2d3748",
-                        fontSize: 16,
-                        fontWeight: "600",
-                        marginBottom: 2,
-                      }}
-                    >
-                      {item.label}
-                    </Text>
-                    <Text
-                      style={{
-                        color: "#718096",
-                        fontSize: 12,
-                        fontWeight: "400",
-                      }}
-                    >
-                      {getMenuItemDescription(item.icon)}
-                    </Text>
-                  </View>
-                  <Ionicons 
-                    name="chevron-forward" 
-                    size={18} 
-                    color={theme.backgroundtres + "50"} 
-                  />
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-
-            {/* Close Button */}
-            <TouchableOpacity
-              onPress={() => setMenuModalVisible(false)}
-              style={{
-                marginTop: 15,
-                backgroundColor: getTabColors().primary,
-                paddingVertical: 12,
-                paddingHorizontal: 60,
-                borderRadius: 25,
-                alignItems: "center",
-                alignSelf: "center",
-              }}
-            >
-              <Text
-                style={{
-                  color: "#ffffffff",
-                  fontSize: 16,
-                  fontWeight: "600",
-                }}
-              >
-                {menuTexts.closeButton}
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </Animated.View>
-      </Modal>
+    
 
       {/* Privacy Modal */}
       <PrivacyModal
@@ -2081,6 +1962,233 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           </View>
         </View>
       </Modal>
+
+
+
+        {/* Better Menu Modal */}
+      <Modalize
+        ref={modalizeRef}
+        adjustToContentHeight
+        modalStyle={{
+          backgroundColor: "#e7ead2",
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+        }}
+        overlayStyle={{
+          backgroundColor: 'rgba(0,0,0,0.3)',
+        }}
+        closeOnOverlayTap={false}
+        panGestureEnabled={false}
+        withHandle={false}
+        scrollViewProps={{
+          showsVerticalScrollIndicator: false,
+          contentContainerStyle: {
+            paddingBottom: 40,
+          }
+        }}
+      >
+        {/* Header */}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingHorizontal: 16,
+            paddingTop: 20,
+            paddingBottom: 8,
+          }}
+        >
+          {/* Language Button */}
+          <TouchableOpacity
+            onPress={() => {
+              modalizeRef.current?.close()
+              setLanguageModalVisible(true)
+            }}
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 19,
+              backgroundColor: "rgba(74, 107, 255, 0.1)",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons name="globe-outline" size={20} color="#4a6bff" />
+          </TouchableOpacity>
+
+          {/* Spacer */}
+          <View style={{ flex: 1 }} />
+
+          {/* Close Button */}
+          <TouchableOpacity
+            onPress={() => modalizeRef.current?.close()}
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 19,
+              backgroundColor: "rgba(107, 114, 128, 0.1)",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons name="close" size={22} color="#6b7280" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Menu Items */}
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingTop: 24,
+          }}
+        >
+              {/* Main Items - 3 principales más grandes con descripciones */}
+              {mainMenuItems.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    item.onPress()
+                  }}
+                  style={{
+                    paddingVertical: 20,
+                    paddingHorizontal: 18,
+                    marginBottom: 14,
+                    backgroundColor: '#ffffff95',
+                    borderRadius: 18,
+                    borderLeftWidth: 5,
+                    borderLeftColor: item.color,
+                    position: 'relative',
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 3 },
+                    shadowOpacity: 0.08,
+                    shadowRadius: 10,
+                    elevation: 3,
+                  }}
+                >
+                  {showNewBadge && item.icon === "bulb" && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 12,
+                        backgroundColor: '#ff375f',
+                        borderRadius: 10,
+                        paddingHorizontal: 7,
+                        paddingVertical: 3,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.25,
+                        shadowRadius: 3.84,
+                        elevation: 5,
+                        zIndex: 10,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 10,
+                          fontWeight: 'bold',
+                          letterSpacing: 0.5,
+                        }}
+                      >
+                        {deviceLanguage === 'es' ? 'NUEVO' : deviceLanguage === 'de' ? 'NEU' : deviceLanguage === 'fr' ? 'NOUVEAU' : deviceLanguage === 'it' ? 'NUOVO' : deviceLanguage === 'pt' ? 'NOVO' : 'NEW'}
+                      </Text>
+                    </View>
+                  )}
+                  <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+                    <View
+                      style={{
+                        backgroundColor: item.color + "18",
+                        padding: 14,
+                        borderRadius: 16,
+                        marginRight: 16,
+                      }}
+                    >
+                      <Ionicons name={item.icon} size={28} color={item.color} />
+                    </View>
+                    <View style={{ flex: 1, paddingTop: 2 }}>
+                      <Text
+                        style={{
+                          color: "#1f2937",
+                          fontSize: 17,
+                          fontWeight: "700",
+                          marginBottom: 6,
+                          letterSpacing: -0.3,
+                        }}
+                      >
+                        {item.label}
+                      </Text>
+                      <Text
+                        style={{
+                          color: "#6b7280",
+                          fontSize: 14,
+                          fontWeight: "500",
+                          lineHeight: 20,
+                        }}
+                      >
+                        {item.description}
+                      </Text>
+                    </View>
+                    <Ionicons
+                      name="chevron-forward"
+                      size={22}
+                      color="#d1d5db"
+                      style={{ marginTop: 6 }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              ))}
+
+              {/* Footer Items Container - Grid 3x2 */}
+              <View
+                style={{
+                  backgroundColor: '#ffffff84',
+                  borderRadius: 16,
+                  padding: 16,
+                  marginTop: 8,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.04,
+                  shadowRadius: 4,
+                  elevation: 1,
+                }}
+              >
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+                  {footerMenuItems.map((item, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        item.onPress()
+                      }}
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingVertical: 12,
+                        paddingHorizontal: 14,
+                        borderRadius: 12,
+                        backgroundColor: 'rgba(0,0,0,0.03)',
+                        width: '47.5%',
+                      }}
+                    >
+                      <Ionicons name={item.icon} size={20} color={item.color} style={{ marginRight: 10 }} />
+                      <Text
+                        style={{
+                          color: "#4b5563",
+                          fontSize: 14,
+                          fontWeight: "600",
+                          letterSpacing: -0.1,
+                        }}
+                      >
+                        {item.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+        </View>
+      </Modalize>
+
+
     </View>
   )
 }

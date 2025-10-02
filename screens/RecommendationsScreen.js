@@ -930,7 +930,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
       opacity: 0.8,
     },
     cardButton: {
-      backgroundColor: 'rgba(74, 107, 255, 0.8)',
+      backgroundColor: 'rgba(74, 107, 255, 0.15)',
       borderRadius: 20,
       width: 36,
       height: 36,
@@ -938,7 +938,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
       alignItems: 'center',
       shadowColor: '#4a6bff',
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
+      shadowOpacity: 0.2,
       shadowRadius: 4,
       elevation: 3,
     },
@@ -1219,15 +1219,15 @@ const RecommendationsScreen = ({ navigation, route }) => {
       marginHorizontal: 2,
     },
     tabButtonActive: {
-      backgroundColor: '#4a6bff',
+      backgroundColor: 'rgba(74, 107, 255, 0.15)',
       shadowColor: '#4a6bff',
       shadowOffset: {
         width: 0,
-        height: 4,
+        height: 2,
       },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      elevation: 6,
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 3,
     },
     tabIcon: {
       marginRight: 6,
@@ -1235,11 +1235,12 @@ const RecommendationsScreen = ({ navigation, route }) => {
     tabLabel: {
       fontSize: isSmallIPhone ? 11 : 12,
       fontWeight: '600',
-      color: theme.text,
+      color: theme.textSecondary,
       textAlign: 'center',
     },
     tabLabelActive: {
-      color: 'white',
+      color: '#4a6bff',
+      fontWeight: '700',
     },
     // Estilos para banner dinámico
     dynamicBannerContainer: {
@@ -1456,7 +1457,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
               <Ionicons
                 name="time-outline"
                 size={16}
-                color={activeTab === 'history' ? "white" : "#4a6bff"}
+                color={activeTab === 'history' ? "#4a6bff" : theme.textSecondary}
                 style={styles.tabIcon}
               />
               <Text style={[styles.tabLabel, activeTab === 'history' && styles.tabLabelActive]}>
@@ -1474,7 +1475,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
               <Ionicons
                 name="leaf-outline"
                 size={16}
-                color={activeTab === 'seasonal' ? "white" : "#10b981"}
+                color={activeTab === 'seasonal' ? "#4a6bff" : theme.textSecondary}
                 style={styles.tabIcon}
               />
               <Text style={[styles.tabLabel, activeTab === 'seasonal' && styles.tabLabelActive]}>
@@ -1492,7 +1493,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
               <Ionicons
                 name="nutrition-outline"
                 size={16}
-                color={activeTab === 'diet' ? "white" : "#f59e0b"}
+                color={activeTab === 'diet' ? "#4a6bff" : theme.textSecondary}
                 style={styles.tabIcon}
               />
               <Text style={[styles.tabLabel, activeTab === 'diet' && styles.tabLabelActive]}>
@@ -1731,8 +1732,8 @@ const RecommendationsScreen = ({ navigation, route }) => {
                   >
                     <Ionicons
                       name={isAdded ? "checkmark" : "add"}
-                      size={18}
-                      color="white"
+                      size={22}
+                      color={isAdded ? "white" : "#4a6bff"}
                     />
                   </TouchableOpacity>
                 </TouchableOpacity>

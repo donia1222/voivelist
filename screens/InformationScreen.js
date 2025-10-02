@@ -35,8 +35,8 @@ const labels = {
     slide3Subtitle: "Save, edit, share, and print your lists.",
     slide3Description: "Create lists by voice, save, edit, and share them. Take a photo of a handwritten list and we'll digitize it for you. Organize your shopping easily! You can also create push notifications to remember everything.",
     slide4Title: "Without barriers!",
-
-    slide4Description: "You can create voice lists completely free, but to analyze images, you need a subscription. With a subscription, you can analyze up to 5 images every 10 hours. Your support is invaluable!",
+    slide4Subtitle: "3 free trial lists, unlimited with subscription.",
+    slide4Description: "Try the app with 3 free lists. For unlimited lists and image analysis, you need a subscription. With a subscription, you can analyze up to 5 images every 10 hours. Your support is invaluable!",
     slide5Title: "Your Privacy Matters",
     slide5Subtitle: "We prioritize your privacy.",
     slide5Description: "Our users' privacy is our top priority. No user is associated with data transmission. The data we send to OpenAI and for subscription management is handled using an anonymous ID, and responses are also sent to that anonymous ID. At no point is any of your data shared with third parties.",
@@ -61,8 +61,8 @@ const labels = {
     slide3Subtitle: "Guarda, edita, comparte e imprime tus listas.",
     slide3Description: "Crea listas por voz, guárdalas, edítalas y compártelas. Toma una foto de una lista escrita y nosotros la digitalizamos por ti. ¡Organiza tus compras fácilmente! También puedes crear notificaciones push para no olvidar nada.",
     slide4Title: "Sin barreras!",
-
-    slide4Description: "Puedes crear listas por voz completamente gratis, pero para analizar imágenes necesitas una suscripción. Con una suscripción, puedes analizar hasta 5 imágenes cada 10 horas. ¡Tu apoyo es invaluable!",
+    slide4Subtitle: "3 listas de prueba gratis, ilimitadas con suscripción.",
+    slide4Description: "Prueba la app con 3 listas gratis. Para listas ilimitadas y análisis de imágenes, necesitas una suscripción. Con una suscripción, puedes analizar hasta 5 imágenes cada 10 horas. ¡Tu apoyo es invaluable!",
     slide5Title: "Tu Privacidad Nos Importa",
     slide5Subtitle: "Priorizamos tu privacidad.",
     slide5Description: "La privacidad de nuestros usuarios es nuestra prioridad. Por eso, ningún usuario se relaciona con el envío de datos. Los datos que enviamos a OpenAI y para la suscripción se manejan con un ID anónimo y se reciben también a ese ID anónimo. En ningún momento se comparte ningún dato de usted con terceros.",
@@ -87,8 +87,8 @@ const labels = {
     slide3Subtitle: "Speichern, bearbeiten, teilen und drucken Sie Ihre Listen.",
     slide3Description: "Erstellen Sie Listen per Sprache, speichern, bearbeiten und teilen Sie sie. Machen Sie ein Foto von einer handgeschriebenen Liste und wir digitalisieren sie für Sie. Organisieren Sie Ihren Einkauf ganz einfach! Sie können auch Push-Benachrichtigungen erstellen, um an alles zu denken.",
     slide4Title: "Ohne Barrieren!",
-
-    slide4Description: "Sie können Sprachlisten völlig kostenlos erstellen, aber für die Bildanalyse benötigen Sie ein Abonnement. Mit einem Abonnement können Sie bis zu 5 Bilder alle 10 Stunden analysieren. Ihre Unterstützung ist von unschätzbarem Wert!",
+    slide4Subtitle: "3 kostenlose Testlisten, unbegrenzt mit Abonnement.",
+    slide4Description: "Testen Sie die App mit 3 kostenlosen Listen. Für unbegrenzte Listen und Bildanalyse benötigen Sie ein Abonnement. Mit einem Abonnement können Sie bis zu 5 Bilder alle 10 Stunden analysieren. Ihre Unterstützung ist von unschätzbarem Wert!",
     slide5Title: "Ihre Privatsphäre ist uns wichtig",
     slide5Subtitle: "Wir priorisieren Ihre Privatsphäre.",
     slide5Description: "Die Privatsphäre unserer Nutzer hat für uns oberste Priorität. Kein Benutzer wird mit der Datenübertragung in Verbindung gebracht. Die Daten, die wir an OpenAI und für das Abonnement-Management senden, werden anonymisiert verarbeitet und Antworten werden ebenfalls an diese anonyme ID gesendet. Ihre Daten werden zu keinem Zeitpunkt an Dritte weitergegeben.",
@@ -113,8 +113,8 @@ const labels = {
     slide3Subtitle: "Salva, modifica, condividi e stampa le tue liste.",
     slide3Description: "Crea liste con la voce, salvale, modificale e condividile. Scatta una foto di una lista scritta a mano e la digitalizzeremo per te. Organizza facilmente la tua spesa! Puoi anche creare notifiche push per ricordarti tutto.",
     slide4Title: "Senza barriere!",
-
-    slide4Description: "Puoi creare liste vocali completamente gratis, ma per analizzare immagini è necessario un abbonamento. Con un abbonamento, puoi analizzare fino a 5 immagini ogni 10 ore. Il tuo supporto è inestimabile!",
+    slide4Subtitle: "3 liste di prova gratuite, illimitate con abbonamento.",
+    slide4Description: "Prova l'app con 3 liste gratuite. Per liste illimitate e analisi di immagini è necessario un abbonamento. Con un abbonamento, puoi analizzare fino a 5 immagini ogni 10 ore. Il tuo supporto è inestimabile!",
     slide5Title: "La tua privacy è importante",
     slide5Subtitle: "Diamo priorità alla tua privacy.",
     slide5Description: "La privacy dei nostri utenti è la nostra massima priorità. Nessun utente è associato alla trasmissione dei dati. I dati che inviamo a OpenAI e per la gestione degli abbonamenti sono gestiti utilizzando un ID anonimo e le risposte vengono inviate a tale ID anonimo. In nessun momento i tuoi dati vengono condivisi con terze parti.",
@@ -139,8 +139,8 @@ const labels = {
     slide3Subtitle: "Enregistrez, modifiez, partagez et imprimez vos listes.",
     slide3Description: "Créez des listes par voix, enregistrez-les, modifiez-les et partagez-les. Prenez une photo d'une liste manuscrite et nous la numériserons pour vous. Organisez vos courses facilement! Vous pouvez également créer des notifications push pour tout vous rappeler.",
     slide4Title: "Sans barrières!",
-
-    slide4Description: "Vous pouvez créer des listes vocales gratuitement, mais pour analyser les images, un abonnement est nécessaire. Avec un abonnement, vous pouvez analyser jusqu'à 5 images toutes les 10 heures. Votre soutien est inestimable!",
+    slide4Subtitle: "3 listes d'essai gratuites, illimitées avec abonnement.",
+    slide4Description: "Essayez l'app avec 3 listes gratuites. Pour des listes illimitées et l'analyse d'images, un abonnement est nécessaire. Avec un abonnement, vous pouvez analyser jusqu'à 5 images toutes les 10 heures. Votre soutien est inestimable!",
     slide5Title: "Votre vie privée est importante",
     slide5Subtitle: "Nous priorisons votre vie privée.",
     slide5Description: "La vie privée de nos utilisateurs est notre priorité absolue. Aucun utilisateur n'est associé à la transmission de données. Les données que nous envoyons à OpenAI et pour la gestion des abonnements sont traitées à l'aide d'un ID anonyme, et les réponses sont également envoyées à cet ID anonyme. À aucun moment vos données ne sont partagées avec des tiers.",
@@ -165,8 +165,8 @@ const labels = {
     slide3Subtitle: "Listelerinizi kaydedin, düzenleyin, paylaşın ve yazdırın.",
     slide3Description: "Sesli listeler oluşturun, kaydedin, düzenleyin ve paylaşın. El yazısıyla yazılmış bir listenin fotoğrafını çekin, biz sizin için dijital hale getirelim. Alışverişinizi kolayca organize edin! Ayrıca, her şeyi hatırlamak için push bildirimleri oluşturabilirsiniz.",
     slide4Title: "Engelsiz!",
-
-    slide4Description: "Sesli listeler oluşturmak tamamen ücretsizdir, ancak görüntü analizi için abonelik gereklidir. Abonelikle, her 10 saatte 5 görüntüye kadar analiz edebilirsiniz. Desteğiniz paha biçilemez!",
+    slide4Subtitle: "3 ücretsiz deneme listesi, abonelikle sınırsız.",
+    slide4Description: "Uygulamayı 3 ücretsiz liste ile deneyin. Sınırsız listeler ve görüntü analizi için abonelik gereklidir. Abonelikle, her 10 saatte 5 görüntüye kadar analiz edebilirsiniz. Desteğiniz paha biçilemez!",
     slide5Title: "Gizliliğiniz Önemlidir",
     slide5Subtitle: "Gizliliğinize öncelik veriyoruz.",
     slide5Description: "Kullanıcılarımızın gizliliği en önemli önceliğimizdir. Hiçbir kullanıcı veri iletimine bağlanmaz. OpenAI'ye ve abonelik yönetimi için gönderdiğimiz veriler anonim bir kimlik kullanılarak işlenir ve yanıtlar da bu anonim kimliğe gönderilir. Hiçbir zaman verileriniz üçüncü şahıslarla paylaşılmaz.",
@@ -191,8 +191,8 @@ const labels = {
     slide3Subtitle: "Salve, edite, compartilhe e imprima suas listas.",
     slide3Description: "Crie listas por voz, salve, edite e compartilhe-as. Tire uma foto de uma lista manuscrita e nós a digitalizaremos para você. Organize suas compras facilmente! Você também pode criar notificações push para lembrar de tudo.",
     slide4Title: "Sem barreiras!",
-
-    slide4Description: "Você pode criar listas de voz gratuitamente, mas para analisar imagens, é necessário um plano de assinatura. Com uma assinatura, você pode analisar até 5 imagens a cada 10 horas. Seu apoio é inestimável!",
+    slide4Subtitle: "3 listas de teste grátis, ilimitadas com assinatura.",
+    slide4Description: "Experimente o app com 3 listas grátis. Para listas ilimitadas e análise de imagens, é necessário um plano de assinatura. Com uma assinatura, você pode analisar até 5 imagens a cada 10 horas. Seu apoio é inestimável!",
     slide5Title: "Sua Privacidade Importa",
     slide5Subtitle: "Nós priorizamos sua privacidade.",
     slide5Description: "A privacidade de nossos usuários é nossa principal prioridade. Nenhum usuário está associado à transmissão de dados. Os dados que enviamos para a OpenAI e para a gestão de assinaturas são tratados usando um ID anônimo, e as respostas também são enviadas para esse ID anônimo. Em nenhum momento os seus dados são compartilhados com terceiros.",
@@ -217,8 +217,8 @@ const labels = {
     slide3Subtitle: "Сохраняйте, редактируйте, делитесь и распечатывайте свои списки.",
     slide3Description: "Создавайте списки голосом, сохраняйте, редактируйте и делитесь ими. Сделайте фото написанного от руки списка, и мы его оцифруем. Легко организуйте свои покупки! Вы также можете создавать push-уведомления, чтобы помнить обо всем.",
     slide4Title: "Без барьеров!",
-
-    slide4Description: "Вы можете создавать голосовые списки бесплатно, но для анализа изображений требуется подписка. С подпиской вы можете анализировать до 5 изображений каждые 10 часов. Ваша поддержка бесценна!",
+    slide4Subtitle: "3 пробных списка бесплатно, неограниченно с подпиской.",
+    slide4Description: "Попробуйте приложение с 3 бесплатными списками. Для неограниченных списков и анализа изображений требуется подписка. С подпиской вы можете анализировать до 5 изображений каждые 10 часов. Ваша поддержка бесценна!",
     slide5Title: "Ваша конфиденциальность важна",
     slide5Subtitle: "Мы придаем первостепенное значение вашей конфиденциальности.",
     slide5Description: "Конфиденциальность наших пользователей является нашим главным приоритетом. Ни один пользователь не связан с передачей данных. Данные, которые мы отправляем в OpenAI и для управления подписками, обрабатываются с использованием анонимного идентификатора, и ответы также отправляются на этот анонимный идентификатор. В любой момент ваши данные не передаются третьим лицам.",
@@ -243,8 +243,8 @@ const labels = {
     slide3Subtitle: "احفظ، حرر، شارك واطبع قوائمك.",
     slide3Description: "أنشئ قوائم بالصوت، احفظها، حررها وشاركها. التقط صورة لقائمة مكتوبة بخط اليد وسنقوم برقمنتها من أجلك. نظم تسوقك بسهولة! يمكنك أيضًا إنشاء إشعارات لتذكيرك بكل شيء.",
     slide4Title: "بدون حواجز!",
-
-    slide4Description: "يمكنك إنشاء قوائم صوتية مجانًا، لكن يتطلب تحليل الصور اشتراكًا. مع الاشتراك، يمكنك تحليل ما يصل إلى 5 صور كل 10 ساعات. دعمك لا يقدر بثمن!",
+    slide4Subtitle: "3 قوائم تجريبية مجانية، غير محدودة مع الاشتراك.",
+    slide4Description: "جرب التطبيق مع 3 قوائم مجانية. للحصول على قوائم غير محدودة وتحليل الصور، يتطلب اشتراكًا. مع الاشتراك، يمكنك تحليل ما يصل إلى 5 صور كل 10 ساعات. دعمك لا يقدر بثمن!",
     slide5Title: "خصوصيتك تهمنا",
     slide5Subtitle: "نحن نعطي الأولوية لخصوصيتك.",
     slide5Description: "خصوصية مستخدمينا هي أولويتنا القصوى. لا يرتبط أي مستخدم بنقل البيانات. تتم معالجة البيانات التي نرسلها إلى OpenAI ولإدارة الاشتراكات باستخدام معرف مجهول، ويتم إرسال الردود أيضًا إلى هذا المعرف المجهول. في أي وقت، لا يتم مشاركة بياناتك مع أطراف ثالثة.",
@@ -269,8 +269,8 @@ const labels = {
     slide3Subtitle: "Mentse, szerkessze, ossza meg és nyomtassa ki a listáit.",
     slide3Description: "Hozzon létre listákat hanggal, mentse el, szerkessze és ossza meg őket. Készítsen fényképet egy kézzel írt listáról, és mi digitalizáljuk Önnek. Könnyen szervezze meg a vásárlást! Push értesítéseket is létrehozhat, hogy mindenre emlékezzen.",
     slide4Title: "Nincs akadály!",
-
-    slide4Description: "A hangalapú lista készítés teljesen ingyenes, de a képelemzéshez előfizetés szükséges. Előfizetéssel 10 óránként legfeljebb 5 képet elemezhet. Támogatása felbecsülhetetlen!",
+    slide4Subtitle: "3 ingyenes próbalista, korlátlan előfizetéssel.",
+    slide4Description: "Próbálja ki az alkalmazást 3 ingyenes listával. A korlátlan listákhoz és képelemzéshez előfizetés szükséges. Előfizetéssel 10 óránként legfeljebb 5 képet elemezhet. Támogatása felbecsülhetetlen!",
     slide5Title: "A magánéleted számít",
     slide5Subtitle: "Elsődleges szempont számunkra a magánéleted.",
     slide5Description: "Felhasználóink magánélete a legfontosabb számunkra. Egyetlen felhasználó sem kapcsolódik az adatok továbbításához. Az OpenAI-nak és az előfizetés kezeléséhez küldött adatokat anonim azonosítóval kezeljük, és a válaszokat is erre az anonim azonosítóra küldjük. Az Ön adatait soha nem adjuk át harmadik feleknek.",
@@ -295,8 +295,8 @@ const labels = {
     slide3Subtitle: "リストを保存、編集、共有、および印刷する。",
     slide3Description: "音声でリストを作成し、保存、編集、共有します。手書きのリストの写真を撮り、それをデジタル化します。買い物を簡単に整理しましょう！また、すべてを覚えておくためにプッシュ通知を作成することもできます。",
     slide4Title: "障害なし！",
-
-    slide4Description: "音声リスト作成は無料ですが、画像解析にはサブスクリプションが必要です。サブスクリプションで、10時間ごとに最大5枚の画像を解析できます。サポートをお願いします！",
+    slide4Subtitle: "3つの無料トライアルリスト、サブスクリプションで無制限。",
+    slide4Description: "3つの無料リストでアプリをお試しください。無制限のリストと画像解析にはサブスクリプションが必要です。サブスクリプションで、10時間ごとに最大5枚の画像を解析できます。サポートをお願いします！",
     slide5Title: "プライバシーが重要です",
     slide5Subtitle: "プライバシーを最優先します。",
     slide5Description: "ユーザーのプライバシーは最優先事項です。データ送信にユーザーは関連付けられていません。OpenAIおよびサブスクリプション管理に送信するデータは匿名IDを使用して処理され、応答もその匿名IDに送信されます。お客様のデータが第三者と共有されることはありません。",
@@ -321,8 +321,8 @@ const labels = {
     slide3Subtitle: "שמור, ערוך, שתף והדפס את הרשימות שלך.",
     slide3Description: "צור רשימות בקול, שמור, ערוך ושתף אותן. צלם תמונה של רשימה כתובה ביד ואנחנו נדפיס אותה עבורך. ארגן את הקניות שלך בקלות! תוכל גם ליצור התראות דחיפה כדי לזכור הכל.",
     slide4Title: "ללא מחסומים!",
-
-    slide4Description: "תוכל ליצור רשימות קוליות בחינם, אך נדרש מנוי לניתוח תמונות. עם מנוי, תוכל לנתח עד 5 תמונות כל 10 שעות. התמיכה שלך היא לא יסולא בפז!",
+    slide4Subtitle: "3 רשימות ניסיון בחינם, ללא הגבלה עם מנוי.",
+    slide4Description: "נסה את האפליקציה עם 3 רשימות בחינם. לרשימות ללא הגבלה וניתוח תמונות, נדרש מנוי. עם מנוי, תוכל לנתח עד 5 תמונות כל 10 שעות. התמיכה שלך היא לא יסולא בפז!",
     slide5Title: "הפרטיות שלך חשובה",
     slide5Subtitle: "אנו נותנים עדיפות לפרטיות שלך.",
     slide5Description: "הפרטיות של המשתמשים שלנו היא בראש סדר העדיפויות שלנו. אף משתמש לא מקושר להעברת נתונים. הנתונים שאנו שולחים ל-OpenAI ולניהול המנויים מטופלים באמצעות מזהה אנונימי, והתגובות נשלחות גם למזהה אנונימי זה. בשום שלב הנתונים שלך לא משותפים עם צדדים שלישיים.",
@@ -442,7 +442,9 @@ const OnboardingScreen = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <View style={[styles.slide, { width }]}>
         <Animated.Image source={item.image} style={[styles.image, { transform: [{ translateY }] }]} />
-      <Text style={[styles.subtitle, isSmallIPhone && {fontSize: 16, marginVertical: 3, padding: 15}]}>{currentLabels[item.subtitleKey]}</Text>
+      <View style={[styles.titleContainer, isSmallIPhone && {marginHorizontal: 15, paddingVertical: 8}]}>
+        <Text style={[styles.subtitle, isSmallIPhone && {fontSize: 16}]}>{currentLabels[item.subtitleKey]}</Text>
+      </View>
       <Text style={[styles.description, isSmallIPhone && {fontSize: 14, marginHorizontal: 15}]}>{currentLabels[item.descriptionKey]}</Text>
     </View>
   );
@@ -517,14 +519,22 @@ const getStyles = (theme) => StyleSheet.create({
     color: '#7B68EE', 
     padding: 20,
   },
+  titleContainer: {
+    backgroundColor: 'rgba(123, 104, 238, 0.08)',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    marginHorizontal: 20,
+    marginVertical: 8,
+    borderWidth: 1.5,
+    borderColor: 'rgba(123, 104, 238, 0.2)',
+  },
   subtitle: {
-    fontSize: isSmallIPhone ? 16 : 21,
+    fontSize: isSmallIPhone ? 14 : 17,
     textAlign: 'center',
-    color:'#3e50f3ff', 
-    marginVertical: isSmallIPhone ? 3 : 5,
-    padding: isSmallIPhone ? 15 : 20,
-  fontFamily: 'Poppins-Regular',
-
+    color:'#6B21A8',
+    fontFamily: 'Poppins-SemiBold',
+    fontWeight: '600',
   },
   description: {
     fontSize: isSmallIPhone ? 14 : 16,
