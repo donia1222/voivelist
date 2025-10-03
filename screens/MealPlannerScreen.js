@@ -486,7 +486,7 @@ const MealPlannerScreen = ({ route }) => {
       setGeneratingMeals(prev => ({ ...prev, [mealKey]: true }));
 
       console.log(`🍽️ [generateSingleMeal] Llamando a suggestMeal para ${mealType}...`);
-      const suggestedMeal = await MealPlanService.suggestMeal(mealType, preferences);
+      const suggestedMeal = await MealPlanService.suggestMeal(mealType, preferences, weekPlan, day);
       console.log(`🍽️ [generateSingleMeal] Comida sugerida:`, suggestedMeal);
       console.log(`🍽️ [generateSingleMeal] Guardando en día: ${day}, tipo: ${mealType}`);
 
@@ -503,12 +503,16 @@ const MealPlannerScreen = ({ route }) => {
         console.log(`🍽️ [generateSingleMeal] Recargando plan...`);
         console.log(`🍽️ [generateSingleMeal] Día activo antes de recargar: ${activeDay}`);
 
-        // Actualizar el día activo al día donde se generó la comida
-        setActiveDay(day);
-
-        // Recargar el plan manteniendo el día actual
-        await loadWeekPlan(true);
+        // Recargar el plan primero (sin mantener día actual)
+        await loadWeekPlan(false);
         console.log(`🍽️ [generateSingleMeal] Plan recargado`);
+
+        // Actualizar el día activo y hacer scroll al día donde se generó la comida
+        setActiveDay(day);
+        setTimeout(() => {
+          scrollToDay(day);
+          console.log(`🍽️ [generateSingleMeal] Scroll a día: ${day}`);
+        }, 200);
 
         // Limpiar estado de generación DESPUÉS de recargar el plan
         setGeneratingMeals(prev => {
@@ -551,26 +555,30 @@ const MealPlannerScreen = ({ route }) => {
 
       const mealTypes = ['breakfast', 'lunch', 'dinner'];
 
-      // Generar las 3 comidas en paralelo
-      const promises = mealTypes.map(mealType =>
-        MealPlanService.suggestMeal(mealType, preferences)
-      );
-
+      // Generar las 3 comidas secuencialmente para tener contexto
       console.log('Generando las 3 comidas del día...');
-      const meals = await Promise.all(promises);
-      console.log('Comidas generadas:', meals);
-
-      // Guardar todas las comidas
       for (let i = 0; i < mealTypes.length; i++) {
+        // Recargar el plan para tener el contexto actualizado
+        const currentPlan = await MealPlanService.getWeeklyPlan(currentWeekStart);
+
+        const meal = await MealPlanService.suggestMeal(mealTypes[i], preferences, currentPlan, day);
+        console.log(`Comida ${mealTypes[i]} generada:`, meal);
+
         await MealPlanService.addMealToSlot(
           currentWeekStart,
           day,
           mealTypes[i],
-          meals[i]
+          meal
         );
       }
 
-      await loadWeekPlan();
+      // Recargar el plan y hacer scroll al día
+      await loadWeekPlan(false);
+      setActiveDay(day);
+      setTimeout(() => {
+        scrollToDay(day);
+        console.log(`📅 Scroll a día: ${day}`);
+      }, 200);
 
       // Limpiar estado de generación DESPUÉS de recargar el plan
       setGeneratingMeals(prev => {

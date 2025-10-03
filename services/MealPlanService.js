@@ -29,6 +29,8 @@ const promptTranslations = {
     req3: '- Seasonal ingredients',
     req4: '- Practical and realistic recipes',
     req5: '- Reasonable preparation times',
+    varietyRules: '\n\nCRITICAL RULES FOR VARIETY:\n- DO NOT repeat any main protein in the same day (if lunch has chicken, dinner must have fish, beef, pork, legumes, eggs, or another protein)\n- DO NOT use chicken more than 2 times across the entire week\n- DO NOT use salmon or fish more than 2 times across the entire week\n- MUST include at least: 1-2 beef/red meat meals, 1-2 pork meals, 2-3 fish meals (not just salmon - vary with tuna, cod, sea bass, etc.), 2 vegetarian/legume meals, 1-2 egg-based meals, 1-2 chicken meals\n- MUST vary cooking methods: grilled, baked, steamed, stir-fried, roasted, pan-seared, braised\n- MUST vary cuisines: Mediterranean, Asian, Latin American, Middle Eastern, European\n- For pasta: vary types (spaghetti, penne, lasagna, ravioli) and sauces (tomato, cream, pesto, carbonara, bolognese)\n- For salads: vary bases (lettuce, spinach, arugula, quinoa) and always include protein\n- Include diverse dishes: stews, casseroles, soups, grills, stir-fries, curries, tacos, bowls',
+    varietyRulesIndividual: '\n\nIMPORTANT: Create a VARIED and INTERESTING meal. Avoid common/repetitive dishes like plain chicken salad or basic avocado toast. Be creative with proteins (beef, pork, fish varieties, legumes, eggs), cooking methods (grilled, baked, stir-fried, braised), and cuisines (Mediterranean, Asian, Latin, Middle Eastern).',
     mealTypes: { breakfast: 'breakfast', lunch: 'lunch', dinner: 'dinner' },
     chefRole: 'You are a chef who suggests meals in JSON format.',
     suggestMeal: 'Suggest a healthy and delicious',
@@ -58,6 +60,8 @@ const promptTranslations = {
     req3: '- Ingredientes de temporada',
     req4: '- Recetas prácticas y realistas',
     req5: '- Tiempos de preparación razonables',
+    varietyRules: '\n\nREGLAS CRÍTICAS PARA VARIEDAD:\n- NO repetir ninguna proteína principal en el mismo día (si el almuerzo tiene pollo, la cena debe tener pescado, carne, cerdo, legumbres, huevos u otra proteína)\n- NO usar pollo más de 2 veces en toda la semana\n- NO usar salmón o pescado más de 2 veces en toda la semana\n- DEBE incluir al menos: 1-2 comidas de carne roja/ternera, 1-2 comidas de cerdo, 2-3 comidas de pescado (no solo salmón - variar con atún, bacalao, lubina, etc.), 2 comidas vegetarianas/legumbres, 1-2 comidas con huevos, 1-2 comidas de pollo\n- DEBE variar métodos de cocción: a la parrilla, al horno, al vapor, salteado, asado, sellado, estofado\n- DEBE variar cocinas: mediterránea, asiática, latinoamericana, medio oriente, europea\n- Para pasta: variar tipos (espaguetis, penne, lasaña, raviolis) y salsas (tomate, nata, pesto, carbonara, boloñesa)\n- Para ensaladas: variar bases (lechuga, espinaca, rúcula, quinoa) y siempre incluir proteína\n- Incluir platos diversos: guisos, cazuelas, sopas, parrillas, salteados, currys, tacos, bowls',
+    varietyRulesIndividual: '\n\nIMPORTANTE: Crea una comida VARIADA e INTERESANTE. Evita platos comunes/repetitivos como ensalada de pollo simple o tostadas básicas de aguacate. Sé creativo con proteínas (ternera, cerdo, variedades de pescado, legumbres, huevos), métodos de cocción (a la parrilla, al horno, salteado, estofado), y cocinas (mediterránea, asiática, latina, medio oriente).',
     mealTypes: { breakfast: 'desayuno', lunch: 'almuerzo', dinner: 'cena' },
     chefRole: 'Eres un chef que sugiere comidas en formato JSON.',
     suggestMeal: 'Sugiere un',
@@ -87,6 +91,8 @@ const promptTranslations = {
     req3: '- Saisonale Zutaten',
     req4: '- Praktische und realistische Rezepte',
     req5: '- Angemessene Zubereitungszeiten',
+    varietyRules: '\n\nKRITISCHE REGELN FÜR VIELFALT:\n- KEIN Hauptprotein am selben Tag wiederholen (wenn Mittag Hähnchen hat, muss Abendessen Fisch, Rindfleisch, Schweinefleisch, Hülsenfrüchte, Eier oder anderes Protein haben)\n- Hähnchen NICHT mehr als 2-mal in der ganzen Woche verwenden\n- Lachs oder Fisch NICHT mehr als 2-mal in der ganzen Woche verwenden\n- MUSS mindestens enthalten: 1-2 Rindfleisch/rotes Fleisch-Gerichte, 1-2 Schweinefleisch-Gerichte, 2-3 Fischgerichte (nicht nur Lachs - variieren mit Thunfisch, Kabeljau, Wolfsbarsch usw.), 2 vegetarische/Hülsenfrucht-Gerichte, 1-2 Eier-Gerichte, 1-2 Hähnchen-Gerichte\n- MUSS Kochmethoden variieren: gegrillt, gebacken, gedämpft, pfannengerührt, gebraten, angebraten, geschmort\n- MUSS Küchen variieren: mediterran, asiatisch, lateinamerikanisch, nahöstlich, europäisch\n- Für Pasta: Typen variieren (Spaghetti, Penne, Lasagne, Ravioli) und Soßen (Tomate, Sahne, Pesto, Carbonara, Bolognese)\n- Für Salate: Basen variieren (Kopfsalat, Spinat, Rucola, Quinoa) und immer Protein einschließen\n- Diverse Gerichte einschließen: Eintöpfe, Aufläufe, Suppen, Grills, Pfannengerichte, Currys, Tacos, Bowls',
+    varietyRulesIndividual: '\n\nWICHTIG: Erstellen Sie eine ABWECHSLUNGSREICHE und INTERESSANTE Mahlzeit. Vermeiden Sie gewöhnliche/sich wiederholende Gerichte wie einfachen Hähnchensalat oder einfachen Avocado-Toast. Seien Sie kreativ mit Proteinen (Rindfleisch, Schweinefleisch, Fischsorten, Hülsenfrüchte, Eier), Kochmethoden (gegrillt, gebacken, pfannengerührt, geschmort) und Küchen (mediterran, asiatisch, lateinisch, nahöstlich).',
     mealTypes: { breakfast: 'Frühstück', lunch: 'Mittagessen', dinner: 'Abendessen' },
     chefRole: 'Sie sind ein Koch, der Mahlzeiten im JSON-Format vorschlägt.',
     suggestMeal: 'Schlagen Sie ein gesundes und leckeres',
@@ -116,6 +122,8 @@ const promptTranslations = {
     req3: '- Ingrédients de saison',
     req4: '- Recettes pratiques et réalistes',
     req5: '- Temps de préparation raisonnables',
+    varietyRules: '\n\nRÈGLES CRITIQUES POUR LA VARIÉTÉ:\n- NE PAS répéter de protéine principale le même jour (si le déjeuner a du poulet, le dîner doit avoir du poisson, du bœuf, du porc, des légumineuses, des œufs ou une autre protéine)\n- NE PAS utiliser de poulet plus de 2 fois dans toute la semaine\n- NE PAS utiliser de saumon ou de poisson plus de 2 fois dans toute la semaine\n- DOIT inclure au moins: 1-2 repas de bœuf/viande rouge, 1-2 repas de porc, 2-3 repas de poisson (pas seulement du saumon - varier avec thon, cabillaud, bar, etc.), 2 repas végétariens/légumineuses, 1-2 repas aux œufs, 1-2 repas de poulet\n- DOIT varier les méthodes de cuisson: grillé, cuit au four, vapeur, sauté, rôti, poêlé, braisé\n- DOIT varier les cuisines: méditerranéenne, asiatique, latino-américaine, moyen-orientale, européenne\n- Pour les pâtes: varier les types (spaghetti, penne, lasagne, raviolis) et les sauces (tomate, crème, pesto, carbonara, bolognaise)\n- Pour les salades: varier les bases (laitue, épinards, roquette, quinoa) et toujours inclure des protéines\n- Inclure des plats divers: ragoûts, casseroles, soupes, grillades, sautés, currys, tacos, bols',
+    varietyRulesIndividual: '\n\nIMPORTANT: Créez un repas VARIÉ et INTÉRESSANT. Évitez les plats communs/répétitifs comme la simple salade de poulet ou le toast d\'avocat basique. Soyez créatif avec les protéines (bœuf, porc, variétés de poisson, légumineuses, œufs), les méthodes de cuisson (grillé, cuit au four, sauté, braisé) et les cuisines (méditerranéenne, asiatique, latine, moyen-orientale).',
     mealTypes: { breakfast: 'petit-déjeuner', lunch: 'déjeuner', dinner: 'dîner' },
     chefRole: 'Vous êtes un chef qui suggère des repas au format JSON.',
     suggestMeal: 'Suggérez un',
@@ -145,6 +153,8 @@ const promptTranslations = {
     req3: '- Ingredienti stagionali',
     req4: '- Ricette pratiche e realistiche',
     req5: '- Tempi di preparazione ragionevoli',
+    varietyRules: '\n\nREGOLE CRITICHE PER LA VARIETÀ:\n- NON ripetere nessuna proteina principale nello stesso giorno (se il pranzo ha pollo, la cena deve avere pesce, manzo, maiale, legumi, uova o altra proteina)\n- NON usare pollo più di 2 volte in tutta la settimana\n- NON usare salmone o pesce più di 2 volte in tutta la settimana\n- DEVE includere almeno: 1-2 pasti di manzo/carne rossa, 1-2 pasti di maiale, 2-3 pasti di pesce (non solo salmone - variare con tonno, merluzzo, branzino, ecc.), 2 pasti vegetariani/legumi, 1-2 pasti con uova, 1-2 pasti di pollo\n- DEVE variare i metodi di cottura: alla griglia, al forno, al vapore, saltato, arrosto, scottato, brasato\n- DEVE variare le cucine: mediterranea, asiatica, latino-americana, medio-orientale, europea\n- Per la pasta: variare i tipi (spaghetti, penne, lasagne, ravioli) e le salse (pomodoro, panna, pesto, carbonara, bolognese)\n- Per le insalate: variare le basi (lattuga, spinaci, rucola, quinoa) e includere sempre proteine\n- Includere piatti diversi: stufati, casseruole, zuppe, grigliate, saltati, curry, tacos, bowl',
+    varietyRulesIndividual: '\n\nIMPORTANTE: Crea un pasto VARIO e INTERESSANTE. Evita piatti comuni/ripetitivi come semplice insalata di pollo o toast basic di avocado. Sii creativo con proteine (manzo, maiale, varietà di pesce, legumi, uova), metodi di cottura (alla griglia, al forno, saltato, brasato) e cucine (mediterranea, asiatica, latina, medio-orientale).',
     mealTypes: { breakfast: 'colazione', lunch: 'pranzo', dinner: 'cena' },
     chefRole: 'Sei uno chef che suggerisce pasti in formato JSON.',
     suggestMeal: 'Suggerisci un',
@@ -174,6 +184,8 @@ const promptTranslations = {
     req3: '- Ingredientes sazonais',
     req4: '- Receitas práticas e realistas',
     req5: '- Tempos de preparação razoáveis',
+    varietyRules: '\n\nREGRAS CRÍTICAS PARA VARIEDADE:\n- NÃO repetir nenhuma proteína principal no mesmo dia (se o almoço tem frango, o jantar deve ter peixe, carne bovina, porco, leguminosas, ovos ou outra proteína)\n- NÃO usar frango mais de 2 vezes em toda a semana\n- NÃO usar salmão ou peixe mais de 2 vezes em toda a semana\n- DEVE incluir pelo menos: 1-2 refeições de carne bovina/vermelha, 1-2 refeições de porco, 2-3 refeições de peixe (não apenas salmão - variar com atum, bacalhau, robalo, etc.), 2 refeições vegetarianas/leguminosas, 1-2 refeições com ovos, 1-2 refeições de frango\n- DEVE variar métodos de cozimento: grelhado, assado, no vapor, refogado, assado no forno, selado, ensopado\n- DEVE variar cozinhas: mediterrânea, asiática, latino-americana, do oriente médio, europeia\n- Para massas: variar tipos (espaguete, penne, lasanha, ravioli) e molhos (tomate, creme, pesto, carbonara, bolonhesa)\n- Para saladas: variar bases (alface, espinafre, rúcula, quinoa) e sempre incluir proteína\n- Incluir pratos diversos: ensopados, caçarolas, sopas, grelhados, refogados, curries, tacos, bowls',
+    varietyRulesIndividual: '\n\nIMPORTANTE: Crie uma refeição VARIADA e INTERESSANTE. Evite pratos comuns/repetitivos como salada de frango simples ou torrada básica de abacate. Seja criativo com proteínas (carne bovina, porco, variedades de peixe, leguminosas, ovos), métodos de cozimento (grelhado, assado, refogado, ensopado) e cozinhas (mediterrânea, asiática, latina, do oriente médio).',
     mealTypes: { breakfast: 'café da manhã', lunch: 'almoço', dinner: 'jantar' },
     chefRole: 'Você é um chef que sugere refeições em formato JSON.',
     suggestMeal: 'Sugira um',
@@ -203,6 +215,8 @@ const promptTranslations = {
     req3: '- Сезонные ингредиенты',
     req4: '- Практичные и реалистичные рецепты',
     req5: '- Разумное время приготовления',
+    varietyRules: '\n\nКРИТИЧЕСКИЕ ПРАВИЛА РАЗНООБРАЗИЯ:\n- НЕ повторять основной белок в один день (если на обед курица, на ужин должна быть рыба, говядина, свинина, бобовые, яйца или другой белок)\n- НЕ использовать курицу более 2 раз за всю неделю\n- НЕ использовать лосось или рыбу более 2 раз за всю неделю\n- ДОЛЖНО включать минимум: 1-2 блюда из говядины/красного мяса, 1-2 блюда из свинины, 2-3 рыбных блюда (не только лосось - варьировать с тунцом, треской, сибасом и т.д.), 2 вегетарианских/бобовых блюда, 1-2 блюда с яйцами, 1-2 блюда с курицей\n- ДОЛЖНЫ варьироваться способы приготовления: на гриле, запеченное, на пару, жареное, тушеное, обжаренное, томленое\n- ДОЛЖНЫ варьироваться кухни: средиземноморская, азиатская, латиноамериканская, ближневосточная, европейская\n- Для пасты: варьировать виды (спагетти, пенне, лазанья, равиоли) и соусы (томатный, сливочный, песто, карбонара, болоньезе)\n- Для салатов: варьировать основы (салат, шпинат, руккола, киноа) и всегда включать белок\n- Включать разнообразные блюда: рагу, запеканки, супы, гриль, жаркое, карри, тако, боулы',
+    varietyRulesIndividual: '\n\nВАЖНО: Создайте РАЗНООБРАЗНОЕ и ИНТЕРЕСНОЕ блюдо. Избегайте обычных/повторяющихся блюд, таких как простой куриный салат или базовый тост с авокадо. Проявите креативность с белками (говядина, свинина, разные виды рыбы, бобовые, яйца), способами приготовления (гриль, запекание, жарка, тушение) и кухнями (средиземноморская, азиатская, латиноамериканская, ближневосточная).',
     mealTypes: { breakfast: 'завтрак', lunch: 'обед', dinner: 'ужин' },
     chefRole: 'Вы шеф-повар, который предлагает блюда в формате JSON.',
     suggestMeal: 'Предложите здоровый и вкусный',
@@ -232,6 +246,8 @@ const promptTranslations = {
     req3: '- Mevsimsel malzemeler',
     req4: '- Pratik ve gerçekçi tarifler',
     req5: '- Makul hazırlama süreleri',
+    varietyRules: '\n\nÇEŞİTLİLİK İÇİN KRİTİK KURALLAR:\n- Aynı gün ana proteini TEKRAR ETMEYİN (öğle yemeği tavuk içeriyorsa, akşam yemeği balık, sığır eti, domuz eti, baklagiller, yumurta veya başka bir protein içermelidir)\n- Tüm hafta boyunca tavuğu 2 kezden fazla KULLANMAYIN\n- Tüm hafta boyunca somon veya balığı 2 kezden fazla KULLANMAYIN\n- En az şunları içermelidir: 1-2 sığır eti/kırmızı et yemeği, 1-2 domuz eti yemeği, 2-3 balık yemeği (sadece somon değil - ton balığı, morina, levrek vb. ile çeşitlendirin), 2 vejetaryen/baklagil yemeği, 1-2 yumurta bazlı yemek, 1-2 tavuk yemeği\n- Pişirme yöntemlerini çeşitlendirmelidir: ızgara, fırında, buğulama, sote, rosto, kızartma, haşlama\n- Mutfakları çeşitlendirmelidir: Akdeniz, Asya, Latin Amerika, Orta Doğu, Avrupa\n- Makarna için: türleri (spagetti, penne, lazanya, ravioli) ve sosları (domates, krema, pesto, karbonara, bolonez) çeşitlendirin\n- Salatalar için: tabanları (marul, ıspanak, roka, kinoa) çeşitlendirin ve her zaman protein ekleyin\n- Çeşitli yemekler dahil edin: güveçler, fırın yemekleri, çorbalar, ızgaralar, soteler, köriler, takolar, kaseler',
+    varietyRulesIndividual: '\n\nÖNEMLİ: ÇEŞİTLİ ve İLGİNÇ bir yemek oluşturun. Sade tavuk salatası veya basit avokado tostu gibi yaygın/tekrarlayan yemeklerden kaçının. Proteinlerde (sığır eti, domuz eti, balık çeşitleri, baklagiller, yumurta), pişirme yöntemlerinde (ızgara, fırında, sote, haşlama) ve mutfaklarda (Akdeniz, Asya, Latin, Orta Doğu) yaratıcı olun.',
     mealTypes: { breakfast: 'kahvaltı', lunch: 'öğle yemeği', dinner: 'akşam yemeği' },
     chefRole: 'JSON formatında yemek öneren bir şefsiniz.',
     suggestMeal: 'Sağlıklı ve lezzetli bir',
@@ -261,6 +277,8 @@ const promptTranslations = {
     req3: '- المكونات الموسمية',
     req4: '- وصفات عملية وواقعية',
     req5: '- أوقات تحضير معقولة',
+    varietyRules: '\n\nقواعد حاسمة للتنوع:\n- لا تكرر أي بروتين رئيسي في نفس اليوم (إذا كان الغداء يحتوي على دجاج، يجب أن يحتوي العشاء على سمك أو لحم بقري أو لحم خنزير أو بقوليات أو بيض أو بروتين آخر)\n- لا تستخدم الدجاج أكثر من مرتين في الأسبوع بأكمله\n- لا تستخدم السلمون أو السمك أكثر من مرتين في الأسبوع بأكمله\n- يجب أن تشمل على الأقل: 1-2 وجبة لحم بقري/لحم أحمر، 1-2 وجبة لحم خنزير، 2-3 وجبات سمك (ليس فقط السلمون - تنويع مع التونة والقد والقاروص وغيرها)، 2 وجبة نباتية/بقوليات، 1-2 وجبة بالبيض، 1-2 وجبة دجاج\n- يجب تنويع طرق الطهي: مشوي، مخبوز، على البخار، مقلي، محمص، مقلي بالمقلاة، مطهو ببطء\n- يجب تنويع المطابخ: البحر الأبيض المتوسط، الآسيوية، أمريكا اللاتينية، الشرق الأوسط، الأوروبية\n- للمعكرونة: تنويع الأنواع (سباغيتي، بيني، لازانيا، رافيولي) والصلصات (طماطم، كريمة، بيستو، كاربونارا، بولونيز)\n- للسلطات: تنويع القواعد (خس، سبانخ، جرجير، كينوا) وتضمين البروتين دائماً\n- تضمين أطباق متنوعة: يخنات، كسرولات، شوربات، مشويات، مقليات، كاري، تاكو، أوعية',
+    varietyRulesIndividual: '\n\nمهم: أنشئ وجبة متنوعة ومثيرة للاهتمام. تجنب الأطباق الشائعة/المتكررة مثل سلطة الدجاج البسيطة أو توست الأفوكادو الأساسي. كن مبدعاً مع البروتينات (لحم بقري، لحم خنزير، أنواع السمك، البقوليات، البيض)، وطرق الطهي (مشوي، مخبوز، مقلي، مطهو ببطء)، والمطابخ (البحر الأبيض المتوسط، الآسيوية، اللاتينية، الشرق الأوسط).',
     mealTypes: { breakfast: 'الإفطار', lunch: 'الغداء', dinner: 'العشاء' },
     chefRole: 'أنت طاهٍ يقترح وجبات بتنسيق JSON.',
     suggestMeal: 'اقترح',
@@ -290,6 +308,8 @@ const promptTranslations = {
     req3: '- Szezonális alapanyagok',
     req4: '- Gyakorlatias és valószerű receptek',
     req5: '- Ésszerű elkészítési idők',
+    varietyRules: '\n\nKRITIKUS SZABÁLYOK A VÁLTOZATOSSÁGHOZ:\n- NE ismételje meg ugyanazt a fő fehérjét ugyanazon a napon (ha ebédre csirke van, vacsorára halnak, marhahúsnak, sertéshúsnak, hüvelyeseknek, tojásnak vagy más fehérjének kell lennie)\n- NE használjon csirkét többször, mint 2 alkalommal az egész héten\n- NE használjon lazacot vagy halat többször, mint 2 alkalommal az egész héten\n- Tartalmaznia KELL legalább: 1-2 marhahús/vöröshús ételt, 1-2 sertéshús ételt, 2-3 halételt (nem csak lazac - váltakozzon tonhallal, tőkehallal, tengeri sügérrel stb.), 2 vegetáriánus/hüvelyes ételt, 1-2 tojásos ételt, 1-2 csirkés ételt\n- Változatosnak KELL lennie a főzési módoknak: grillezett, sült, párolt, pirított, sütött, serpenyőben sütött, párolt\n- Változatosnak KELL lennie a konyháknak: mediterrán, ázsiai, latin-amerikai, közel-keleti, európai\n- Tésztákhoz: váltakozzon a típusokat (spagetti, penne, lasagne, ravioli) és szószokat (paradicsom, tejszín, pesto, carbonara, bolognai)\n- Salátákhoz: váltakozzon az alapokat (fejes saláta, spenót, rukkola, quinoa) és mindig tartalmazzon fehérjét\n- Tartalmazzon változatos ételeket: pörköltek, rakott ételek, levesek, grillezések, pirított ételek, currys, tacok, tálak',
+    varietyRulesIndividual: '\n\nFONTOS: Készítsen VÁLTOZATOS és ÉRDEKES ételt. Kerülje a hétköznapi/ismétlődő ételeket, mint az egyszerű csirkesaláta vagy az alap avokádós pirítós. Legyen kreatív a fehérjékkel (marhahús, sertéshús, halfajták, hüvelyesek, tojás), főzési módokkal (grillezett, sült, pirított, párolt) és konyhákkal (mediterrán, ázsiai, latin, közel-keleti).',
     mealTypes: { breakfast: 'reggeli', lunch: 'ebéd', dinner: 'vacsora' },
     chefRole: 'Ön egy szakács, aki JSON formátumban javasol ételeket.',
     suggestMeal: 'Javasoljon egészséges és finom',
@@ -319,6 +339,8 @@ const promptTranslations = {
     req3: '- 季節の食材',
     req4: '- 実用的で現実的なレシピ',
     req5: '- 合理的な調理時間',
+    varietyRules: '\n\n多様性のための重要なルール:\n- 同じ日に主要なタンパク質を繰り返さないでください（昼食に鶏肉がある場合、夕食には魚、牛肉、豚肉、豆類、卵、または別のタンパク質が必要です）\n- 週全体で鶏肉を2回以上使用しないでください\n- 週全体でサーモンまたは魚を2回以上使用しないでください\n- 少なくとも以下を含める必要があります：1-2回の牛肉/赤身肉の食事、1-2回の豚肉の食事、2-3回の魚料理（サーモンだけでなく - マグロ、タラ、スズキなどで変化をつける）、2回のベジタリアン/豆類の食事、1-2回の卵ベースの食事、1-2回の鶏肉の食事\n- 調理方法を変える必要があります：グリル、オーブン焼き、蒸し、炒め、ロースト、パンシアー、煮込み\n- 料理のジャンルを変える必要があります：地中海料理、アジア料理、ラテンアメリカ料理、中東料理、ヨーロッパ料理\n- パスタの場合：種類（スパゲッティ、ペンネ、ラザニア、ラビオリ）とソース（トマト、クリーム、ペスト、カルボナーラ、ボロネーゼ）を変える\n- サラダの場合：ベース（レタス、ほうれん草、ルッコラ、キヌア）を変え、常にタンパク質を含める\n- 多様な料理を含める：シチュー、キャセロール、スープ、グリル、炒め物、カレー、タコス、ボウル',
+    varietyRulesIndividual: '\n\n重要：多様で興味深い食事を作成してください。シンプルなチキンサラダや基本的なアボカドトーストのような一般的/繰り返しの料理は避けてください。タンパク質（牛肉、豚肉、魚の種類、豆類、卵）、調理方法（グリル、オーブン焼き、炒め、煮込み）、料理のジャンル（地中海料理、アジア料理、ラテン料理、中東料理）で創造的になってください。',
     mealTypes: { breakfast: '朝食', lunch: '昼食', dinner: '夕食' },
     chefRole: 'あなたはJSON形式で食事を提案するシェフです。',
     suggestMeal: '健康的でおいしい',
@@ -348,6 +370,8 @@ const promptTranslations = {
     req3: '- मौसमी सामग्री',
     req4: '- व्यावहारिक और यथार्थवादी व्यंजन',
     req5: '- उचित तैयारी समय',
+    varietyRules: '\n\nविविधता के लिए महत्वपूर्ण नियम:\n- एक ही दिन में किसी भी मुख्य प्रोटीन को दोहराएं नहीं (यदि दोपहर के भोजन में चिकन है, तो रात के खाने में मछली, बीफ, पोर्क, फलियां, अंडे या अन्य प्रोटीन होना चाहिए)\n- पूरे सप्ताह में चिकन का उपयोग 2 बार से अधिक न करें\n- पूरे सप्ताह में सैल्मन या मछली का उपयोग 2 बार से अधिक न करें\n- कम से कम इन्हें शामिल करना चाहिए: 1-2 बीफ/रेड मीट भोजन, 1-2 पोर्क भोजन, 2-3 मछली भोजन (केवल सैल्मन नहीं - टूना, कॉड, सी बास आदि के साथ विविधता लाएं), 2 शाकाहारी/फलियां भोजन, 1-2 अंडे आधारित भोजन, 1-2 चिकन भोजन\n- खाना पकाने के तरीकों में विविधता लानी चाहिए: ग्रिल्ड, बेक्ड, स्टीम्ड, स्टिर-फ्राइड, रोस्टेड, पैन-सियर्ड, ब्रेज़्ड\n- व्यंजनों में विविधता लानी चाहिए: भूमध्यसागरीय, एशियाई, लैटिन अमेरिकी, मध्य पूर्वी, यूरोपीय\n- पास्ता के लिए: प्रकारों (स्पेगेटी, पेन्ने, लज़ान्या, रैवियोली) और सॉस (टमाटर, क्रीम, पेस्टो, कार्बोनारा, बोलोग्नीज़) में विविधता लाएं\n- सलाद के लिए: आधारों (लेटिस, पालक, अरुगुला, क्विनोआ) में विविधता लाएं और हमेशा प्रोटीन शामिल करें\n- विविध व्यंजन शामिल करें: स्टू, कैसरोल, सूप, ग्रिल, स्टिर-फ्राई, करी, टैकोस, बाउल',
+    varietyRulesIndividual: '\n\nमहत्वपूर्ण: एक विविध और दिलचस्प भोजन बनाएं। सादे चिकन सलाद या बुनियादी एवोकाडो टोस्ट जैसे सामान्य/दोहराए जाने वाले व्यंजनों से बचें। प्रोटीन (बीफ, पोर्क, मछली की किस्में, फलियां, अंडे), खाना पकाने के तरीकों (ग्रिल्ड, बेक्ड, स्टिर-फ्राइड, ब्रेज़्ड), और व्यंजनों (भूमध्यसागरीय, एशियाई, लैटिन, मध्य पूर्वी) के साथ रचनात्मक रहें।',
     mealTypes: { breakfast: 'नाश्ता', lunch: 'दोपहर का भोजन', dinner: 'रात का खाना' },
     chefRole: 'आप एक शेफ हैं जो JSON प्रारूप में भोजन सुझाते हैं।',
     suggestMeal: 'एक स्वस्थ और स्वादिष्ट',
@@ -377,6 +401,8 @@ const promptTranslations = {
     req3: '- Seizoensingrediënten',
     req4: '- Praktische en realistische recepten',
     req5: '- Redelijke bereidingstijden',
+    varietyRules: '\n\nKRITISCHE REGELS VOOR VARIATIE:\n- Herhaal NIET hetzelfde hoofdeiwit op dezelfde dag (als de lunch kip bevat, moet het diner vis, rundvlees, varkensvlees, peulvruchten, eieren of een ander eiwit bevatten)\n- Gebruik NIET meer dan 2 keer kip gedurende de hele week\n- Gebruik NIET meer dan 2 keer zalm of vis gedurende de hele week\n- MOET ten minste bevatten: 1-2 rundvlees/rood vlees maaltijden, 1-2 varkensvlees maaltijden, 2-3 vismaaltijden (niet alleen zalm - varieer met tonijn, kabeljauw, zeebaars, enz.), 2 vegetarische/peulvruchten maaltijden, 1-2 eimaaltijden, 1-2 kipmaaltijden\n- MOET bereidingsmethoden variëren: gegrild, gebakken, gestoomd, geroerbakt, geroosterd, aangebraden, gesmoord\n- MOET keukens variëren: mediterraan, Aziatisch, Latijns-Amerikaans, Midden-Oosters, Europees\n- Voor pasta: varieer types (spaghetti, penne, lasagne, ravioli) en sauzen (tomaat, room, pesto, carbonara, bolognese)\n- Voor salades: varieer basissen (sla, spinazie, rucola, quinoa) en voeg altijd eiwit toe\n- Neem diverse gerechten op: stoofschotels, ovenschotels, soepen, grills, roerbakgerechten, curry\'s, taco\'s, bowls',
+    varietyRulesIndividual: '\n\nBELANGRIJK: Creëer een GEVARIEERDE en INTERESSANTE maaltijd. Vermijd gewone/herhaalde gerechten zoals eenvoudige kipsalade of basis avocadotoast. Wees creatief met eiwitten (rundvlees, varkensvlees, vissoorten, peulvruchten, eieren), bereidingsmethoden (gegrild, gebakken, geroerbakt, gesmoord) en keukens (mediterraan, Aziatisch, Latijns, Midden-Oosters).',
     mealTypes: { breakfast: 'ontbijt', lunch: 'lunch', dinner: 'diner' },
     chefRole: 'U bent een chef-kok die maaltijden in JSON-formaat suggereert.',
     suggestMeal: 'Stel een gezonde en heerlijke',
@@ -732,13 +758,14 @@ ${t.req1}
 ${t.req2}
 ${t.req3}
 ${t.req4}
-${t.req5}`;
+${t.req5}${t.varietyRules}${preferences.restrictions && preferences.restrictions.length > 0 ? `\n- ${deviceLanguage === 'es' ? 'RESPETAR restricciones dietéticas' : deviceLanguage === 'en' ? 'RESPECT dietary restrictions' : deviceLanguage === 'de' ? 'Diätetische Einschränkungen BEACHTEN' : deviceLanguage === 'fr' ? 'RESPECTER les restrictions alimentaires' : deviceLanguage === 'it' ? 'RISPETTARE le restrizioni dietetiche' : deviceLanguage === 'pt' ? 'RESPEITAR restrições alimentares' : deviceLanguage === 'ru' ? 'СОБЛЮДАТЬ диетические ограничения' : deviceLanguage === 'tr' ? 'Diyet kısıtlamalarına UYUN' : deviceLanguage === 'ar' ? 'احترام القيود الغذائية' : deviceLanguage === 'hu' ? 'Diétás korlátozások BETARTÁSA' : deviceLanguage === 'ja' ? '食事制限を守る' : deviceLanguage === 'hi' ? 'आहार प्रतिबंधों का सम्मान करें' : deviceLanguage === 'nl' ? 'Dieetbeperkingen RESPECTEREN' : 'RESPECT dietary restrictions'}: ${preferences.restrictions.join(', ')} - ${deviceLanguage === 'es' ? 'NO incluir estos ingredientes' : deviceLanguage === 'en' ? 'DO NOT include these ingredients' : deviceLanguage === 'de' ? 'Diese Zutaten NICHT einschließen' : deviceLanguage === 'fr' ? 'NE PAS inclure ces ingrédients' : deviceLanguage === 'it' ? 'NON includere questi ingredienti' : deviceLanguage === 'pt' ? 'NÃO incluir estes ingredientes' : deviceLanguage === 'ru' ? 'НЕ включать эти ингредиенты' : deviceLanguage === 'tr' ? 'Bu malzemeleri dahil ETMEYİN' : deviceLanguage === 'ar' ? 'لا تدرج هذه المكونات' : deviceLanguage === 'hu' ? 'Ezeket a hozzávalókat NE tartalmazza' : deviceLanguage === 'ja' ? 'これらの材料を含めないでください' : deviceLanguage === 'hi' ? 'इन सामग्रियों को शामिल न करें' : deviceLanguage === 'nl' ? 'Deze ingrediënten NIET opnemen' : 'DO NOT include these ingredients'}` : ''}`;
 
       console.log('📝 [MealPlanService] Prompt generado (primeros 200 chars):', prompt.substring(0, 200));
       console.log('📝 [MealPlanService] Realizando petición a API...');
 
       const requestBody = {
-        model: 'gpt-4.1',
+
+         model: 'gpt-4.1',
         max_tokens: 3000,
         messages: [
           {
@@ -804,12 +831,65 @@ ${t.req5}`;
   /**
    * Sugerir una comida específica con IA
    */
-  async suggestMeal(mealType, preferences) {
+  async suggestMeal(mealType, preferences, weekPlan = null, currentDay = null) {
     try {
       // Obtener idioma del dispositivo
       const RNLocalize = require('react-native-localize');
       const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
       const t = promptTranslations[deviceLanguage] || promptTranslations['en'];
+
+      // Analizar proteínas ya usadas en la semana y el día actual
+      let usedProteins = [];
+      let todayProteins = [];
+      if (weekPlan && weekPlan.plan) {
+        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        days.forEach(day => {
+          if (weekPlan.plan[day]) {
+            ['breakfast', 'lunch', 'dinner'].forEach(meal => {
+              if (weekPlan.plan[day][meal]) {
+                const mealName = weekPlan.plan[day][meal].name?.toLowerCase() || '';
+                // Detectar proteínas principales
+                if (mealName.includes('pollo') || mealName.includes('chicken')) usedProteins.push('pollo');
+                if (mealName.includes('salmón') || mealName.includes('salmon')) usedProteins.push('salmón');
+                if (mealName.includes('pescado') || mealName.includes('fish') || mealName.includes('atún') || mealName.includes('tuna') || mealName.includes('bacalao') || mealName.includes('cod')) usedProteins.push('pescado');
+                if (mealName.includes('carne') || mealName.includes('beef') || mealName.includes('ternera') || mealName.includes('res')) usedProteins.push('carne');
+                if (mealName.includes('cerdo') || mealName.includes('pork') || mealName.includes('chuleta')) usedProteins.push('cerdo');
+                if (mealName.includes('huevo') || mealName.includes('egg')) usedProteins.push('huevo');
+                if (mealName.includes('camarón') || mealName.includes('gamba') || mealName.includes('shrimp') || mealName.includes('langostino')) usedProteins.push('camarón');
+
+                // Proteínas del día actual
+                if (day === currentDay) {
+                  if (mealName.includes('pollo') || mealName.includes('chicken')) todayProteins.push('pollo');
+                  if (mealName.includes('salmón') || mealName.includes('salmon')) todayProteins.push('salmón');
+                  if (mealName.includes('pescado') || mealName.includes('fish') || mealName.includes('atún') || mealName.includes('tuna')) todayProteins.push('pescado');
+                  if (mealName.includes('carne') || mealName.includes('beef') || mealName.includes('ternera')) todayProteins.push('carne');
+                  if (mealName.includes('cerdo') || mealName.includes('pork')) todayProteins.push('cerdo');
+                  if (mealName.includes('huevo') || mealName.includes('egg')) todayProteins.push('huevo');
+                  if (mealName.includes('camarón') || mealName.includes('shrimp') || mealName.includes('gamba')) todayProteins.push('camarón');
+                }
+              }
+            });
+          }
+        });
+      }
+
+      // Contar cuántas veces se ha usado cada proteína
+      const proteinCount = {};
+      usedProteins.forEach(p => {
+        proteinCount[p] = (proteinCount[p] || 0) + 1;
+      });
+
+      // Construir contexto de restricciones basado en uso
+      let contextRestrictions = '';
+      if (todayProteins.length > 0) {
+        contextRestrictions += `\n${deviceLanguage === 'es' ? 'HOY YA SE USÓ' : 'TODAY ALREADY USED'}: ${todayProteins.join(', ')}. ${deviceLanguage === 'es' ? 'DEBE usar una proteína DIFERENTE' : 'MUST use a DIFFERENT protein'}.`;
+      }
+      if (proteinCount['pollo'] >= 2) {
+        contextRestrictions += `\n${deviceLanguage === 'es' ? 'Pollo ya usado 2+ veces esta semana - NO USAR' : 'Chicken already used 2+ times this week - DO NOT USE'}.`;
+      }
+      if (proteinCount['salmón'] >= 2 || proteinCount['pescado'] >= 2) {
+        contextRestrictions += `\n${deviceLanguage === 'es' ? 'Pescado/salmón ya usado 2+ veces esta semana - NO USAR' : 'Fish/salmon already used 2+ times this week - DO NOT USE'}.`;
+      }
 
       // Obtener país y fecha para productos de temporada
       const AsyncStorage = require('@react-native-async-storage/async-storage').default;
@@ -851,7 +931,7 @@ ${t.req5}`;
 ${t.userPreferences}
 - ${t.diet}: ${preferences.diet}
 - ${t.servings}: ${preferences.servings} ${t.people}
-- ${t.restrictions}: ${preferences.restrictions?.join(', ') || t.none}${preferences.maxCaloriesEnabled && preferences.maxCalories ? `\n- ${t.maxCalories}: ${preferences.maxCalories} kcal` : ''}${preferences.seasonalProducts && country ? `\n- ${t.seasonalProducts} ${country} ${deviceLanguage === 'es' ? 'en' : 'in'} ${currentMonth} (${currentSeason})` : ''}
+- ${t.restrictions}: ${preferences.restrictions?.join(', ') || t.none}${preferences.maxCaloriesEnabled && preferences.maxCalories ? `\n- ${t.maxCalories}: ${preferences.maxCalories} kcal` : ''}${preferences.seasonalProducts && country ? `\n- ${t.seasonalProducts} ${country} ${deviceLanguage === 'es' ? 'en' : 'in'} ${currentMonth} (${currentSeason})` : ''}${t.varietyRulesIndividual}${contextRestrictions}${preferences.restrictions && preferences.restrictions.length > 0 ? `\n${deviceLanguage === 'es' ? 'RESPETAR restricciones dietéticas' : deviceLanguage === 'en' ? 'RESPECT dietary restrictions' : deviceLanguage === 'de' ? 'Diätetische Einschränkungen BEACHTEN' : deviceLanguage === 'fr' ? 'RESPECTER les restrictions alimentaires' : deviceLanguage === 'it' ? 'RISPETTARE le restrizioni dietetiche' : deviceLanguage === 'pt' ? 'RESPEITAR restrições alimentares' : deviceLanguage === 'ru' ? 'СОБЛЮДАТЬ диетические ограничения' : deviceLanguage === 'tr' ? 'Diyet kısıtlamalarına UYUN' : deviceLanguage === 'ar' ? 'احترام القيود الغذائية' : deviceLanguage === 'hu' ? 'Diétás korlátozások BETARTÁSA' : deviceLanguage === 'ja' ? '食事制限を守る' : deviceLanguage === 'hi' ? 'आहार प्रतिबंधों का सम्मान करें' : deviceLanguage === 'nl' ? 'Dieetbeperkingen RESPECTEREN' : 'RESPECT dietary restrictions'}: ${preferences.restrictions.join(', ')} - ${deviceLanguage === 'es' ? 'NO incluir estos ingredientes' : deviceLanguage === 'en' ? 'DO NOT include these ingredients' : deviceLanguage === 'de' ? 'Diese Zutaten NICHT einschließen' : deviceLanguage === 'fr' ? 'NE PAS inclure ces ingrédients' : deviceLanguage === 'it' ? 'NON includere questi ingredienti' : deviceLanguage === 'pt' ? 'NÃO incluir estes ingredientes' : deviceLanguage === 'ru' ? 'НЕ включать эти ингредиенты' : deviceLanguage === 'tr' ? 'Bu malzemeleri dahil ETMEYİN' : deviceLanguage === 'ar' ? 'لا تدرج هذه المكونات' : deviceLanguage === 'hu' ? 'Ezeket a hozzávalókat NE tartalmazza' : deviceLanguage === 'ja' ? 'これらの材料を含めないでください' : deviceLanguage === 'hi' ? 'इन सामग्रियों को शामिल न करें' : deviceLanguage === 'nl' ? 'Deze ingrediënten NIET opnemen' : 'DO NOT include these ingredients'}.` : ''}
 
 ${t.respondJSON}
 {
@@ -864,8 +944,9 @@ ${t.respondJSON}
 }`;
 
       const response = await axios.post(API_KEY_CHAT, {
-        model: 'gpt-4.1',
-        max_tokens: 500,
+        model: 'gpt-4o-mini',
+        temperature: 0.8,
+        max_tokens: 600,
         messages: [
           {
             role: 'system',
