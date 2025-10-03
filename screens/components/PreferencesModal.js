@@ -23,6 +23,9 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
   const [preferences, setPreferences] = useState(null);
   const [loading, setLoading] = useState(true);
   const [country, setCountry] = useState('');
+  const [cuisineDropdownOpen, setCuisineDropdownOpen] = useState(false);
+  const [dietDropdownOpen, setDietDropdownOpen] = useState(false);
+  const [customRestrictionText, setCustomRestrictionText] = useState('');
 
   const dietOptions = [
     { value: 'normal', label: t.noRestrictions || 'Sin restricciones', icon: null },
@@ -30,7 +33,6 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
     { value: 'vegan', label: t.vegan || 'Vegana', icon: 'nutrition' },
     { value: 'keto', label: t.keto || 'Keto', icon: 'flame' },
     { value: 'gluten-free', label: t.glutenFree || 'Sin gluten', icon: 'ban' },
-    { value: 'mediterranean', label: t.mediterranean || 'Mediterránea', icon: 'fish' },
     { value: 'paleo', label: t.paleo || 'Paleo', icon: 'fitness' },
     { value: 'low-fat', label: t.lowFat || 'Baja en grasas', icon: 'water-outline' },
   ];
@@ -52,6 +54,13 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
     { value: 'beginner', label: t.beginner || 'Principiante' },
     { value: 'intermediate', label: t.intermediate || 'Intermedio' },
     { value: 'advanced', label: t.advanced || 'Avanzado' },
+  ];
+
+  const cuisineTypeOptions = [
+    { value: 'asian', label: t.asian || 'Asiática', icon: 'restaurant' },
+    { value: 'italian', label: t.italian || 'Italiana', icon: 'pizza' },
+    { value: 'mexican', label: t.mexican || 'Mexicana', icon: 'cafe' },
+    { value: 'mediterranean', label: t.mediterraneanCuisine || 'Mediterránea', icon: 'fish' },
   ];
 
   useEffect(() => {
@@ -123,6 +132,23 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
     return preferences?.restrictions?.includes(restriction) || false;
   };
 
+  const addCustomRestriction = () => {
+    const text = customRestrictionText.trim();
+    if (!text) return;
+
+    const currentCustom = preferences?.customRestrictions || [];
+    const newCustom = [...currentCustom, text];
+
+    updatePreference('customRestrictions', newCustom);
+    setCustomRestrictionText('');
+  };
+
+  const removeCustomRestriction = (index) => {
+    const currentCustom = preferences?.customRestrictions || [];
+    const newCustom = currentCustom.filter((_, i) => i !== index);
+    updatePreference('customRestrictions', newCustom);
+  };
+
   const handleSave = async () => {
     // Verificar suscripción antes de guardar preferencias
     if (isSubscribed === false) {
@@ -152,12 +178,21 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
       const success = await MealPlanService.savePreferences(preferences);
 
       if (success) {
-        Alert.alert(t.saved || 'Guardado', t.preferencesSaved || 'Preferencias guardadas correctamente');
         onPreferencesUpdated && onPreferencesUpdated(preferences);
         onClose();
       }
     } catch (error) {
       Alert.alert(t.error || 'Error', t.errorSaving || 'No se pudieron guardar las preferencias');
+    }
+  };
+
+  const handleClose = async () => {
+    try {
+      await MealPlanService.savePreferences(preferences);
+      onPreferencesUpdated && onPreferencesUpdated(preferences);
+      onClose();
+    } catch (error) {
+      onClose();
     }
   };
 
@@ -178,50 +213,150 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
       visible={visible}
       animationType="slide"
       presentationStyle="pageSheet"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <SafeAreaView style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Ionicons name="close" size={28} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t.dietaryPreferences || 'Preferencias Dietéticas'}</Text>
           <View style={styles.headerSpacer} />
+          <Text style={styles.headerTitle}>{t.dietaryPreferences || 'Preferencias Dietéticas'}</Text>
+          <TouchableOpacity onPress={handleSave} style={styles.saveHeaderButton}>
+            <Ionicons name="checkmark-circle" size={32} color="#10B981" />
+          </TouchableOpacity>
         </View>
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Tipo de Dieta */}
+          {/* Tipo de Dieta - Dropdown */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t.dietType || 'Tipo de Dieta'}</Text>
-            <View style={styles.optionsGrid}>
-              {dietOptions.map((option) => (
-                <TouchableOpacity
-                  key={option.value}
-                  style={[
-                    styles.dietOption,
-                    preferences?.diet === option.value && styles.dietOptionSelected,
-                  ]}
-                  onPress={() => updatePreference('diet', option.value)}
-                >
-                  {option.icon && (
-                    <Ionicons
-                      name={option.icon}
-                      size={24}
-                      color="#6B21A8"
-                    />
-                  )}
-                  <Text
+            <TouchableOpacity
+              style={styles.dropdownHeader}
+              onPress={() => setDietDropdownOpen(!dietDropdownOpen)}
+            >
+              <View style={styles.dropdownHeaderLeft}>
+                <Ionicons name="nutrition-outline" size={24} color="#8B5CF6" />
+                <Text style={styles.dropdownHeaderText}>
+                  {t.dietType || 'Tipo de Dieta'}
+                </Text>
+                {preferences?.diet && preferences.diet !== 'normal' && (
+                  <View style={styles.selectedBadge}>
+                    <Text style={styles.selectedBadgeText}>
+                      {dietOptions.find(o => o.value === preferences.diet)?.label || ''}
+                    </Text>
+                  </View>
+                )}
+              </View>
+              <Ionicons
+                name={dietDropdownOpen ? 'chevron-up' : 'chevron-down'}
+                size={24}
+                color="#8B5CF6"
+              />
+            </TouchableOpacity>
+
+            {dietDropdownOpen && (
+              <View style={styles.dropdownContent}>
+                {dietOptions.map((option) => (
+                  <TouchableOpacity
+                    key={option.value}
                     style={[
-                      styles.dietOptionText,
-                      preferences?.diet === option.value && styles.dietOptionTextSelected,
+                      styles.dropdownOption,
+                      preferences?.diet === option.value && styles.dropdownOptionSelected,
                     ]}
+                    onPress={() => {
+                      updatePreference('diet', option.value);
+                      setDietDropdownOpen(false);
+                    }}
                   >
-                    {option.label}
-                  </Text>
+                    {option.icon ? (
+                      <Ionicons name={option.icon} size={22} color="#6B21A8" />
+                    ) : (
+                      <Ionicons name="checkmark-outline" size={22} color="#6B21A8" />
+                    )}
+                    <Text style={styles.dropdownOptionText}>{option.label}</Text>
+                    {preferences?.diet === option.value && (
+                      <Ionicons name="checkmark-circle" size={20} color="#10B981" />
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+
+            <Text style={styles.helperText}>
+              {t.dietTypeHelper || 'Selecciona el tipo de dieta que prefieres'}
+            </Text>
+          </View>
+
+          {/* Tipo de Cocina - Dropdown */}
+          <View style={styles.section}>
+            <TouchableOpacity
+              style={styles.dropdownHeader}
+              onPress={() => setCuisineDropdownOpen(!cuisineDropdownOpen)}
+            >
+              <View style={styles.dropdownHeaderLeft}>
+                <Ionicons name="restaurant-outline" size={24} color="#8B5CF6" />
+                <Text style={styles.dropdownHeaderText}>
+                  {t.cuisineType || 'Tipo de Cocina'}
+                </Text>
+                {preferences?.cuisineType && preferences.cuisineType !== 'varied' && (
+                  <View style={styles.selectedBadge}>
+                    <Text style={styles.selectedBadgeText}>
+                      {cuisineTypeOptions.find(o => o.value === preferences.cuisineType)?.label || ''}
+                    </Text>
+                  </View>
+                )}
+              </View>
+              <Ionicons
+                name={cuisineDropdownOpen ? 'chevron-up' : 'chevron-down'}
+                size={24}
+                color="#8B5CF6"
+              />
+            </TouchableOpacity>
+
+            {cuisineDropdownOpen && (
+              <View style={styles.dropdownContent}>
+                {/* Opción "Variada" por defecto */}
+                <TouchableOpacity
+                  style={[
+                    styles.dropdownOption,
+                    (!preferences?.cuisineType || preferences.cuisineType === 'varied') && styles.dropdownOptionSelected,
+                  ]}
+                  onPress={() => {
+                    updatePreference('cuisineType', 'varied');
+                    setCuisineDropdownOpen(false);
+                  }}
+                >
+                  <Ionicons name="earth" size={22} color="#6B21A8" />
+                  <Text style={styles.dropdownOptionText}>{t.varied || 'Variada'}</Text>
+                  {(!preferences?.cuisineType || preferences.cuisineType === 'varied') && (
+                    <Ionicons name="checkmark-circle" size={20} color="#10B981" />
+                  )}
                 </TouchableOpacity>
-              ))}
-            </View>
+
+                {/* Opciones específicas */}
+                {cuisineTypeOptions.map((option) => (
+                  <TouchableOpacity
+                    key={option.value}
+                    style={[
+                      styles.dropdownOption,
+                      preferences?.cuisineType === option.value && styles.dropdownOptionSelected,
+                    ]}
+                    onPress={() => {
+                      updatePreference('cuisineType', option.value);
+                      setCuisineDropdownOpen(false);
+                    }}
+                  >
+                    <Ionicons name={option.icon} size={22} color="#6B21A8" />
+                    <Text style={styles.dropdownOptionText}>{option.label}</Text>
+                    {preferences?.cuisineType === option.value && (
+                      <Ionicons name="checkmark-circle" size={20} color="#10B981" />
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+
+            <Text style={styles.helperText}>
+              {t.cuisineTypeHelper || 'Las recetas se enfocarán en este tipo de cocina'}
+            </Text>
           </View>
 
           {/* Porciones */}
@@ -267,6 +402,41 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
                 </TouchableOpacity>
               ))}
             </View>
+
+            {/* Input para otras restricciones */}
+            <View style={styles.customRestrictionInput}>
+              <Ionicons name="add-circle-outline" size={20} color="#8B5CF6" />
+              <TextInput
+                style={styles.restrictionTextInput}
+                placeholder={t.customRestrictions || 'Otras restricciones (ej: cebolla, ajo, picante...)'}
+                placeholderTextColor="#999"
+                value={customRestrictionText}
+                onChangeText={setCustomRestrictionText}
+                multiline
+              />
+              {customRestrictionText.trim().length > 0 && (
+                <TouchableOpacity onPress={addCustomRestriction} style={styles.addRestrictionButton}>
+                  <Ionicons name="checkmark-circle" size={24} color="#10B981" />
+                </TouchableOpacity>
+              )}
+            </View>
+            <Text style={styles.helperText}>
+              {t.customRestrictionsHelper || 'Escribe otras alergias o restricciones separadas por comas'}
+            </Text>
+
+            {/* Restricciones personalizadas agregadas */}
+            {preferences?.customRestrictions && Array.isArray(preferences.customRestrictions) && preferences.customRestrictions.length > 0 && (
+              <View style={styles.customRestrictionsChips}>
+                {preferences.customRestrictions.map((restriction, index) => (
+                  <View key={index} style={styles.restrictionChip}>
+                    <Text style={styles.restrictionChipText}>{restriction}</Text>
+                    <TouchableOpacity onPress={() => removeCustomRestriction(index)}>
+                      <Ionicons name="close-circle" size={18} color="#EF4444" />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
 
           {/* Presupuesto */}
@@ -409,14 +579,6 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
 
           <View style={styles.bottomPadding} />
         </ScrollView>
-
-        {/* Save Button */}
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Ionicons name="checkmark-circle" size={20} color="#10B981" />
-            <Text style={styles.saveButtonText}>{t.savePreferences || 'Guardar Preferencias'}</Text>
-          </TouchableOpacity>
-        </View>
       </SafeAreaView>
     </Modal>
   );
@@ -534,6 +696,50 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: '500',
   },
+  customRestrictionInput: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    backgroundColor: 'rgba(139, 92, 246, 0.05)',
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: '#D1D5DB',
+  },
+  restrictionTextInput: {
+    flex: 1,
+    fontSize: 14,
+    color: '#333',
+    minHeight: 40,
+    textAlignVertical: 'top',
+  },
+  addRestrictionButton: {
+    padding: 4,
+  },
+  customRestrictionsChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 12,
+  },
+  restrictionChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#8B5CF6',
+  },
+  restrictionChipText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#6B21A8',
+  },
   segmentedControl: {
     flexDirection: 'row',
     borderRadius: 10,
@@ -618,6 +824,66 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     fontWeight: '500',
+  },
+  dropdownHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    backgroundColor: 'rgba(139, 92, 246, 0.05)',
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: '#D1D5DB',
+  },
+  dropdownHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  dropdownHeaderText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#333',
+  },
+  selectedBadge: {
+    backgroundColor: 'rgba(139, 92, 246, 0.15)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginLeft: 8,
+  },
+  selectedBadgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#6B21A8',
+  },
+  dropdownContent: {
+    marginTop: 8,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    overflow: 'hidden',
+  },
+  dropdownOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    gap: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  dropdownOptionSelected: {
+    backgroundColor: 'rgba(139, 92, 246, 0.08)',
+  },
+  dropdownOptionText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#333',
+    flex: 1,
   },
   bottomPadding: {
     height: 20,

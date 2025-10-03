@@ -1128,7 +1128,16 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
         setActiveTab("Recommendations")
       }
     },
- 
+    {
+      label: mealPlannerTexts.title,
+      description: mainItemDescriptions.mealPlanner[deviceLanguage] || mainItemDescriptions.mealPlanner['en'],
+      icon: "restaurant-outline",
+      color: "#8B5CF6",
+      onPress: () => {
+        modalizeRef.current?.close()
+        setActiveTab("MealPlanner")
+      }
+    },
   ];
 
   const footerMenuItems = [
@@ -2056,6 +2065,36 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                     elevation: 3,
                   }}
                 >
+                  {showNewBadge && item.icon === "bulb" && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 12,
+                        backgroundColor: '#ff375f',
+                        borderRadius: 10,
+                        paddingHorizontal: 7,
+                        paddingVertical: 3,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.25,
+                        shadowRadius: 3.84,
+                        elevation: 5,
+                        zIndex: 10,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 10,
+                          fontWeight: 'bold',
+                          letterSpacing: 0.5,
+                        }}
+                      >
+                        {deviceLanguage === 'es' ? 'NUEVO' : deviceLanguage === 'de' ? 'NEU' : deviceLanguage === 'fr' ? 'NOUVEAU' : deviceLanguage === 'it' ? 'NUOVO' : deviceLanguage === 'pt' ? 'NOVO' : 'NEW'}
+                      </Text>
+                    </View>
+                  )}
                   <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
                     <View
                       style={{
@@ -2090,40 +2129,12 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                         {item.description}
                       </Text>
                     </View>
-                    <View style={{ alignItems: "center", justifyContent: "space-between", paddingTop: 6 }}>
-                      {showNewBadge && item.icon === "bulb" && (
-                        <View
-                          style={{
-                            backgroundColor: '#ff375f',
-                            borderRadius: 10,
-                            paddingHorizontal: 7,
-                            paddingVertical: 3,
-                            marginBottom: 8,
-                            shadowColor: '#000',
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.25,
-                            shadowRadius: 3.84,
-                            elevation: 5,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontSize: 10,
-                              fontWeight: 'bold',
-                              letterSpacing: 0.5,
-                            }}
-                          >
-                            {deviceLanguage === 'es' ? 'NUEVO' : deviceLanguage === 'de' ? 'NEU' : deviceLanguage === 'fr' ? 'NOUVEAU' : deviceLanguage === 'it' ? 'NUOVO' : deviceLanguage === 'pt' ? 'NOVO' : 'NEW'}
-                          </Text>
-                        </View>
-                      )}
-                      <Ionicons
-                        name="chevron-forward"
-                        size={22}
-                        color="#d1d5db"
-                      />
-                    </View>
+                    <Ionicons
+                      name="chevron-forward"
+                      size={22}
+                      color="#d1d5db"
+                      style={{ marginTop: 6 }}
+                    />
                   </View>
                 </TouchableOpacity>
               ))}

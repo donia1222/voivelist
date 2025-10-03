@@ -186,6 +186,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'Maximum calories per meal:',
     useSeasonalProducts: 'Use seasonal products',
     seasonalHelper: 'Recipes will use seasonal ingredients based on your location and current month',
+    cuisineType: 'Cuisine Type',
+    cuisineTypeHelper: 'Recipes will focus on this type of cuisine',
+    varied: 'Varied',
+    asian: 'Asian',
+    italian: 'Italian',
+    mexican: 'Mexican',
+    mediterraneanCuisine: 'Mediterranean',
   },
 
   es: {
@@ -375,6 +382,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'Calorías máximas por comida:',
     useSeasonalProducts: 'Usar productos de temporada',
     seasonalHelper: 'Las recetas usarán ingredientes de temporada según tu ubicación y mes actual',
+    cuisineType: 'Tipo de Cocina',
+    cuisineTypeHelper: 'Las recetas se enfocarán en este tipo de cocina',
+    varied: 'Variada',
+    asian: 'Asiática',
+    italian: 'Italiana',
+    mexican: 'Mexicana',
+    mediterraneanCuisine: 'Mediterránea',
   },
 
   de: {
@@ -557,6 +571,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'Maximale Kalorien pro Mahlzeit:',
     useSeasonalProducts: 'Saisonale Produkte verwenden',
     seasonalHelper: 'Rezepte verwenden saisonale Zutaten basierend auf Ihrem Standort und aktuellen Monat',
+    cuisineType: 'Küchentyp',
+    cuisineTypeHelper: 'Rezepte konzentrieren sich auf diese Art von Küche',
+    varied: 'Abwechslungsreich',
+    asian: 'Asiatisch',
+    italian: 'Italienisch',
+    mexican: 'Mexikanisch',
+    mediterraneanCuisine: 'Mediterran',
   },
 
   fr: {
@@ -739,6 +760,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'Calories maximales par repas:',
     useSeasonalProducts: 'Utiliser des produits de saison',
     seasonalHelper: 'Les recettes utiliseront des ingrédients de saison en fonction de votre emplacement et du mois actuel',
+    cuisineType: 'Type de Cuisine',
+    cuisineTypeHelper: 'Les recettes se concentreront sur ce type de cuisine',
+    varied: 'Variée',
+    asian: 'Asiatique',
+    italian: 'Italienne',
+    mexican: 'Mexicaine',
+    mediterraneanCuisine: 'Méditerranéen',
   },
 
   it: {
@@ -921,6 +949,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'Calorie massime per pasto:',
     useSeasonalProducts: 'Usa prodotti di stagione',
     seasonalHelper: 'Le ricette utilizzeranno ingredienti di stagione in base alla tua posizione e al mese corrente',
+    cuisineType: 'Cucina',
+    cuisineTypeHelper: 'Le ricette si concentreranno su questo tipo di cucina',
+    varied: 'Variata',
+    asian: 'Asiatica',
+    italian: 'Italiana',
+    mexican: 'Messicana',
+    mediterraneanCuisine: 'Mediterranea',
   },
 
   pt: {
@@ -1103,6 +1138,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'Calorias máximas por refeição:',
     useSeasonalProducts: 'Usar produtos sazonais',
     seasonalHelper: 'As receitas usarão ingredientes sazonais com base na sua localização e mês atual',
+    cuisineType: 'Cozinha',
+    cuisineTypeHelper: 'As receitas se concentrarão neste tipo de cozinha',
+    varied: 'Variada',
+    asian: 'Asiática',
+    italian: 'Italiana',
+    mexican: 'Mexicana',
+    mediterraneanCuisine: 'Mediterrânea',
   },
 
   ru: {
@@ -1285,6 +1327,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'Максимум калорий на прием пищи:',
     useSeasonalProducts: 'Использовать сезонные продукты',
     seasonalHelper: 'В рецептах будут использоваться сезонные ингредиенты в зависимости от вашего местоположения и текущего месяца',
+    cuisineType: 'Кухня',
+    cuisineTypeHelper: 'Рецепты будут сосредоточены на этом типе кухни',
+    varied: 'Разнообразная',
+    asian: 'Азиатская',
+    italian: 'Итальянская',
+    mexican: 'Мексиканская',
+    mediterraneanCuisine: 'Средиземная',
   },
 
   tr: {
@@ -1467,6 +1516,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'Öğün başına maksimum kalori:',
     useSeasonalProducts: 'Mevsimsel ürünler kullan',
     seasonalHelper: 'Tarifler konumunuza ve mevcut aya göre mevsimsel malzemeler kullanacaktır',
+    cuisineType: 'Mutfak',
+    cuisineTypeHelper: 'Tarifler bu tür mutfağa odaklanacaktır',
+    varied: 'Çeşitli',
+    asian: 'Asya',
+    italian: 'İtalyan',
+    mexican: 'Meksika',
+    mediterraneanCuisine: 'Akdeniz',
   },
 
   ar: {
@@ -1632,6 +1688,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'الحد الأقصى للسعرات لكل وجبة:',
     useSeasonalProducts: 'استخدام المنتجات الموسمية',
     seasonalHelper: 'ستستخدم الوصفات مكونات موسمية بناءً على موقعك والشهر الحالي',
+    cuisineType: 'نوع المطبخ',
+    cuisineTypeHelper: 'ستركز الوصفات على هذا النوع من المطبخ',
+    varied: 'متنوع',
+    asian: 'آسيوي',
+    italian: 'إيطالي',
+    mexican: 'مكسيكي',
+    mediterraneanCuisine: 'متوسطي',
   },
 
   hu: {
@@ -1797,6 +1860,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'Maximum kalória étkezésenként:',
     useSeasonalProducts: 'Szezonális termékek használata',
     seasonalHelper: 'A receptek szezonális hozzávalókat fognak használni a tartózkodási hely és az aktuális hónap alapján',
+    cuisineType: 'Konyha',
+    cuisineTypeHelper: 'A receptek erre a konyhát típusra összpontosítanak',
+    varied: 'Változatos',
+    asian: 'Ázsiai',
+    italian: 'Olasz',
+    mexican: 'Mexikói',
+    mediterraneanCuisine: 'Mediterrán',
   },
 
   ja: {
@@ -1962,6 +2032,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: '食事ごとの最大カロリー:',
     useSeasonalProducts: '季節の食材を使用',
     seasonalHelper: 'レシピはあなたの場所と現在の月に基づいて季節の食材を使用します',
+    cuisineType: '料理タイプ',
+    cuisineTypeHelper: 'レシピはこのタイプの料理に焦点を当てます',
+    varied: '多様',
+    asian: 'アジア料理',
+    italian: 'イタリア料理',
+    mexican: 'メキシコ料理',
+    mediterraneanCuisine: '地中海料理',
   },
 
   hi: {
@@ -2127,6 +2204,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'प्रति भोजन अधिकतम कैलोरी:',
     useSeasonalProducts: 'मौसमी उत्पाद उपयोग करें',
     seasonalHelper: 'व्यंजन आपके स्थान और वर्तमान महीने के आधार पर मौसमी सामग्री का उपयोग करेंगे',
+    cuisineType: 'व्यंजन प्रकार',
+    cuisineTypeHelper: 'व्यंजन इस प्रकार की खाना पकाने पर ध्यान केंद्रित करेंगे',
+    varied: 'विविध',
+    asian: 'एशियाई',
+    italian: 'इतालवी',
+    mexican: 'मैक्सिकन',
+    mediterraneanCuisine: 'भूमध्यसागरीय',
   },
 
   nl: {
@@ -2292,6 +2376,13 @@ export const mealPlannerTranslations = {
     maxCaloriesPerMeal: 'Maximum calorieën per maaltijd:',
     useSeasonalProducts: 'Seizoensproducten gebruiken',
     seasonalHelper: 'Recepten gebruiken seizoensingrediënten op basis van uw locatie en de huidige maand',
+    cuisineType: 'Keukentype',
+    cuisineTypeHelper: 'Recepten zullen zich richten op dit type keuken',
+    varied: 'Gevarieerd',
+    asian: 'Aziatisch',
+    italian: 'Italiaans',
+    mexican: 'Mexicaans',
+    mediterraneanCuisine: 'Mediterraan',
   },
 };
 
