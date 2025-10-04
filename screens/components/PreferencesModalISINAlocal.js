@@ -577,73 +577,6 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
             )}
           </View>
 
-          {/* IA Local (Ollama) */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>🤖 IA Local (Experimental)</Text>
-            <TouchableOpacity
-              style={styles.toggleOption}
-              onPress={() => {
-                const newValue = !preferences?.useLocalAI;
-                console.log('🔄 Switch IA Local:', newValue ? 'Activado' : 'Desactivado');
-                updatePreference('useLocalAI', newValue);
-              }}
-            >
-              <View style={styles.toggleLeft}>
-                <Ionicons name="hardware-chip-outline" size={24} color="#3B82F6" />
-                <View style={styles.toggleTextContainer}>
-                  <Text style={styles.toggleLabel}>Usar IA Local (Ollama)</Text>
-                </View>
-              </View>
-              <Ionicons
-                name={preferences?.useLocalAI ? 'checkbox' : 'square-outline'}
-                size={28}
-                color="#3B82F6"
-              />
-            </TouchableOpacity>
-            {preferences?.useLocalAI && (
-              <View>
-                <Text style={styles.helperText}>
-                  ⚡ Las recetas se generarán con tu IA local en lugar de ChatGPT
-                </Text>
-
-                {/* Selector de modelo */}
-                <View style={styles.modelSelector}>
-                  <Text style={[styles.toggleLabel, { marginBottom: 8 }]}>Modelo de IA:</Text>
-                  {[
-                    { value: 'llama3.2:1b', label: 'Llama 3.2 1B 🔥 (Recomendado)', icon: 'flame' },
-                    { value: 'gemma2:2b', label: 'Gemma 2 2B (Balance)', icon: 'star' },
-                    { value: 'qwen2.5:1.5b', label: 'Qwen 2.5 1.5B ⚡', icon: 'flash-outline' },
-                    { value: 'gemma3:1b', label: 'Gemma 3 1B', icon: 'rocket-outline' },
-                  ].map((model) => (
-                    <TouchableOpacity
-                      key={model.value}
-                      style={[
-                        styles.modelOption,
-                        (preferences?.aiModel || 'llama3.2:1b') === model.value && styles.modelOptionSelected
-                      ]}
-                      onPress={() => {
-                        console.log('🎯 Modelo seleccionado:', model.value);
-                        updatePreference('aiModel', model.value);
-                      }}
-                    >
-                      <Ionicons
-                        name={model.icon}
-                        size={20}
-                        color={(preferences?.aiModel || 'llama3.2:1b') === model.value ? '#3B82F6' : '#666'}
-                      />
-                      <Text style={[
-                        styles.modelLabel,
-                        (preferences?.aiModel || 'llama3.2:1b') === model.value && styles.modelLabelSelected
-                      ]}>
-                        {model.label}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-            )}
-          </View>
-
           <View style={styles.bottomPadding} />
         </ScrollView>
       </SafeAreaView>
@@ -951,38 +884,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#333',
     flex: 1,
-  },
-  modelSelector: {
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-  },
-  modelOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    marginTop: 8,
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  modelOptionSelected: {
-    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    borderColor: '#3B82F6',
-  },
-  modelLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#666',
-    flex: 1,
-  },
-  modelLabelSelected: {
-    color: '#3B82F6',
-    fontWeight: '600',
   },
   bottomPadding: {
     height: 20,

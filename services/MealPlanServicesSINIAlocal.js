@@ -213,8 +213,6 @@ export const MealPlanService = {
       budget: 'medium',
       cookingLevel: 'intermediate',
       cuisineType: 'varied', // ✅ NUEVO: Tipo de cocina por defecto
-      useLocalAI: false, // ✅ NUEVO: Usar IA local (Ollama)
-      aiModel: 'llama3.2:1b', // ✅ NUEVO: Modelo de IA por defecto
       defaultBreakfastTime: '08:00',
       defaultLunchTime: '13:00',
       defaultDinnerTime: '19:00',
@@ -381,83 +379,6 @@ export const MealPlanService = {
   /**
    * Sugerir una comida específica con IA
    */
-  /**
-   * Llamar a IA local (Ollama) para generar receta
-   */
-  async callLocalAI(prompt, model = 'llama3.2:1b') {
-    const OLLAMA_URL = process.env.OLLAMA_API_URL;
-
-    console.log('🤖 [LocalAI] Llamando a Ollama...');
-    console.log('🤖 [LocalAI] Modelo:', model);
-    console.log('🤖 [LocalAI] Prompt (primeros 300 chars):', prompt.substring(0, 300));
-
-    // 🔥 Agregar instrucciones estrictas para JSON
-    const strictPrompt = `${prompt}
-
-🚨 CRITICAL: You MUST respond with ONLY valid JSON. No explanations, no text before or after. Just the JSON object.
-Example:
-{"name": "Dish Name", "servings": 2, "time": "30 min", "ingredients": [{"item": "Ingredient", "quantity": "100", "unit": "g"}]}`;
-
-    try {
-      // 🔄 Reintentar hasta 2 veces (ngrok puede dar 421 en el primer intento)
-      let response;
-      let lastError;
-
-      for (let attempt = 1; attempt <= 2; attempt++) {
-        try {
-          console.log(`🤖 [LocalAI] Intento ${attempt}/2...`);
-
-          response = await axios.post(OLLAMA_URL, {
-            message: strictPrompt,
-            model: model
-          }, {
-            headers: {
-              'Content-Type': 'application/json',
-              'ngrok-skip-browser-warning': 'true',  // ✅ Evitar error 421 de ngrok
-              'User-Agent': 'VoiceList-App/1.0'
-            },
-            timeout: 90000 // 90 segundos (1.5 min) para modelos grandes
-          });
-
-          console.log('🤖 [LocalAI] Respuesta recibida');
-          console.log('🤖 [LocalAI] Status:', response.status);
-          console.log('🤖 [LocalAI] Data:', response.data);
-
-          if (!response.data || response.data.status !== 'success') {
-            throw new Error(response.data?.error || response.data?.respuesta || 'Error en respuesta de Ollama');
-          }
-
-          // Si llegamos aquí, la petición fue exitosa
-          break;
-        } catch (err) {
-          lastError = err;
-          console.warn(`⚠️ [LocalAI] Intento ${attempt} falló:`, err.message);
-
-          if (attempt < 2) {
-            // Esperar 1 segundo antes del siguiente intento
-            await new Promise(resolve => setTimeout(resolve, 1000));
-          }
-        }
-      }
-
-      if (!response || !response.data || response.data.status !== 'success') {
-        throw lastError || new Error('No se pudo conectar con IA local');
-      }
-
-      const content = response.data.respuesta
-        .replace(/<think>[\s\S]*?<\/think>/g, '')  // Eliminar tags <think>
-        .replace(/^think[\s\S]*?$/gm, '')  // Eliminar líneas de pensamiento
-        .trim();
-
-      console.log('🤖 [LocalAI] Contenido limpio:', content);
-
-      return content;
-    } catch (error) {
-      console.error('❌ [LocalAI] Error final:', error.message);
-      throw new Error(`Error en IA local: ${error.message}`);
-    }
-  },
-
   async suggestMeal(mealType, preferences, weekPlan = null, currentDay = null) {
     try {
       // ✅ LÓGICA LIMPIA - Solo español
@@ -576,56 +497,32 @@ Example:
 
       console.log('📝 [suggestMeal] Prompt generado (primeros 300 chars):', prompt.substring(0, 300));
 
-      let content;
+      const response = await axios.post(API_KEY_CHAT, {
+        model: 'gpt-4o-mini',
+        temperature: 0.6,
+        max_tokens: 600,
+        messages: [
+          {
+            role: 'system',
+            content: SYSTEM_ROLE_CHEF
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
+      });
 
-      // 🤖 Decidir si usar IA local o ChatGPT
-      if (preferences.useLocalAI) {
-        console.log('🤖 [suggestMeal] Usando IA Local (Ollama)');
-        const aiModel = preferences.aiModel || 'llama3.2:1b';
-        console.log('🤖 [suggestMeal] Modelo seleccionado:', aiModel);
+      console.log('📝 [MealPlanService] Sugerencia de comida recibida');
 
-        content = await this.callLocalAI(prompt, aiModel);
-      } else {
-        console.log('🤖 [suggestMeal] Usando ChatGPT');
-
-        const response = await axios.post(API_KEY_CHAT, {
-          model: 'gpt-4o-mini',
-          temperature: 0.6,
-          max_tokens: 600,
-          messages: [
-            {
-              role: 'system',
-              content: SYSTEM_ROLE_CHEF
-            },
-            {
-              role: 'user',
-              content: prompt
-            }
-          ]
-        });
-
-        console.log('📝 [MealPlanService] Sugerencia de comida recibida de ChatGPT');
-
-        if (!response.data || !response.data.choices || !response.data.choices[0]) {
-          throw new Error('Respuesta del servidor no tiene el formato esperado');
-        }
-
-        content = response.data.choices[0].message.content;
+      if (!response.data || !response.data.choices || !response.data.choices[0]) {
+        throw new Error('Respuesta del servidor no tiene el formato esperado');
       }
 
+      const content = response.data.choices[0].message.content;
       console.log('📝 [MealPlanService] Contenido:', content);
 
-      // Limpiar respuesta - extraer JSON
-      let jsonContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-
-      // 🤖 Si viene de IA local, extraer solo el JSON entre llaves
-      if (preferences.useLocalAI) {
-        const jsonMatch = jsonContent.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          jsonContent = jsonMatch[0];
-          console.log('🤖 [LocalAI] JSON extraído:', jsonContent);
-        }
-      }
+      const jsonContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
 
       try {
         return JSON.parse(jsonContent);
