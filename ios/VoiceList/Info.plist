@@ -16,19 +16,18 @@
 	<string>1.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
-<key>EXUpdatesEnabled</key>
-<true/>
-<key>EXUpdatesURL</key>
-<string>https://u.expo.dev/984ecb66-4ba2-4e09-8ebf-6756e9002e81</string>
-<key>EXUpdatesRuntimeVersion</key>
-<string>1.0.0</string>
-<key>EXUpdatesCheckOnLaunch</key>
-<string>ALWAYS</string>
-
+	<key>EXUpdatesEnabled</key>
+	<true/>
+	<key>EXUpdatesURL</key>
+	<string>https://u.expo.dev/984ecb66-4ba2-4e09-8ebf-6756e9002e81</string>
+	<key>EXUpdatesRuntimeVersion</key>
+	<string>2.0.2</string>
+	<key>EXUpdatesCheckOnLaunch</key>
+	<string>ALWAYS</string>
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.1</string>
+	<string>2.0.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -53,7 +52,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>16</string>
+	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

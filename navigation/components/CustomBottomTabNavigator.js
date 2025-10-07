@@ -558,6 +558,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const [isEulaModalVisible, setEulaModalVisible] = useState(false)
   const [isSettingsModalVisible, setSettingsModalVisible] = useState(false)
   const [isLanguageModalVisible, setLanguageModalVisible] = useState(false)
+  const [showLanguageButton, setShowLanguageButton] = useState(true)
   const [hasActiveList, setHasActiveList] = useState(false) // Estado para lista activa
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [nameModalVisible, setNameModalVisible] = useState(false)
@@ -812,10 +813,35 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     setLanguageModalVisible(false)
   }
 
+  const closeLanguageModal = async () => {
+    setLanguageModalVisible(false)
+    setShowLanguageButton(false)
+    try {
+      await AsyncStorage.setItem('hasSeenLanguageModal', 'true')
+    } catch (error) {
+      console.log('Error saving language modal state:', error)
+    }
+  }
+
   // Ensure activeTab is set to initialTab
   useEffect(() => {
     setActiveTab(initialTab)
   }, [initialTab])
+
+  // Cargar estado del botón de idiomas desde AsyncStorage
+  useEffect(() => {
+    const loadLanguageButtonState = async () => {
+      try {
+        const hasSeenLanguageModal = await AsyncStorage.getItem('hasSeenLanguageModal')
+        if (hasSeenLanguageModal === 'true') {
+          setShowLanguageButton(false)
+        }
+      } catch (error) {
+        console.log('Error loading language button state:', error)
+      }
+    }
+    loadLanguageButtonState()
+  }, [])
 
   // Handle deep links for widget navigation
   useEffect(() => {
@@ -1087,20 +1113,37 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       ar: "احصل على توصيات المنتجات حسب السجل أو الموسم أو النظام الغذائي"
     },
     mealPlanner: {
-      es: "Planifica tus menús semanales y genera listas de compra automáticas",
-      en: "Plan your weekly menus and generate automatic shopping lists",
-      de: "Planen Sie Ihre Wochenmenüs und erstellen Sie automatische Einkaufslisten",
-      fr: "Planifiez vos menus hebdomadaires et générez des listes de courses automatiques",
-      it: "Pianifica i tuoi menù settimanali e genera liste della spesa automatiche",
-      tr: "Haftalık menülerinizi planlayın ve otomatik alışveriş listeleri oluşturun",
-      pt: "Planeje seus cardápios semanais e gere listas de compras automáticas",
-      ru: "Планируйте еженедельное меню и создавайте автоматические списки покупок",
-      zh: "规划您的每周菜单并生成自动购物清单",
-      ja: "週間メニューを計画し、自動買い物リストを生成",
-      sv: "Planera dina veckomatsedlar och generera automatiska inköpslistor",
-      hu: "Tervezze meg heti menüit és hozzon létre automatikus bevásárlólistákat",
-      ar: "خطط قوائمك الأسبوعية وأنشئ قوائم تسوق تلقائية"
+      es: "Planifica tus menús y genera listas automáticas",
+      en: "Plan your menus and generate shopping lists",
+      de: "Planen Sie Ihre Menüs und Einkaufslisten",
+      fr: "Planifiez vos menus et générez vos listes",
+      it: "Pianifica i tuoi menù e genera liste automatiche",
+      tr: "Menülerinizi planlayın ve listeler oluşturun",
+      pt: "Planeje seus menus e gere listas automáticas",
+      ru: "Планируйте меню и создавайте списки",
+      zh: "规划菜单并生成购物清单",
+      ja: "メニューを計画し、リストを生成",
+      sv: "Planera menyer och generera listor",
+      hu: "Tervezze meg menüit és listákat",
+      ar: "خطط قوائمك وأنشئ قوائم التسوق"
     }
+  };
+
+  // Traducciones para el banner de "Disponible a partir de Noviembre"
+  const comingSoonTexts = {
+    es: "¡Disponible a partir de Noviembre!",
+    en: "Available from November!",
+    de: "Verfügbar ab November!",
+    fr: "Disponible à partir de novembre!",
+    it: "Disponibile da novembre!",
+    tr: "Kasım'dan itibaren mevcut!",
+    pt: "Disponível a partir de novembro!",
+    ru: "Доступно с ноября!",
+    ar: "متاح من نوفمبر!",
+    hu: "Novembertől elérhető!",
+    ja: "11月から利用可能！",
+    hi: "नवंबर से उपलब्ध!",
+    nl: "Beschikbaar vanaf november!"
   };
 
   const mainMenuItems = [
@@ -1666,7 +1709,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
         visible={isLanguageModalVisible}
         transparent={true}
         animationType="fade"
-        onRequestClose={() => setLanguageModalVisible(false)}
+        onRequestClose={closeLanguageModal}
       >
         <View style={modernStyles.modalOverlay}>
           <View style={{
@@ -1685,7 +1728,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           }}>
             {/* Close Button */}
             <TouchableOpacity
-              onPress={() => setLanguageModalVisible(false)}
+              onPress={closeLanguageModal}
               style={{
                 position: 'absolute',
                 top: 16,
@@ -1787,7 +1830,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                   flexDirection: 'row',
                   justifyContent: 'center',
                 }}
-                onPress={() => setLanguageModalVisible(false)}
+                onPress={closeLanguageModal}
                 activeOpacity={0.8}
               >
                 <Ionicons name="checkmark-circle" size={20} color="white" style={{ marginRight: 8 }} />
@@ -1993,28 +2036,34 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            paddingHorizontal: 16,
-            paddingTop: 20,
-            paddingBottom: 8,
+            paddingHorizontal: 20,
+            paddingTop: 24,
+            paddingBottom: 16,
           }}
         >
           {/* Language Button */}
-          <TouchableOpacity
-            onPress={() => {
-              modalizeRef.current?.close()
-              setLanguageModalVisible(true)
-            }}
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: 19,
-              backgroundColor: "rgba(74, 107, 255, 0.1)",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Ionicons name="globe-outline" size={20} color="#4a6bff" />
-          </TouchableOpacity>
+          {showLanguageButton && (
+            <TouchableOpacity
+              key="language-button"
+              onPress={() => {
+                setLanguageModalVisible(true)
+              }}
+              style={{
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                borderRadius: 12,
+                backgroundColor: "#4a6bff15",
+                borderWidth: 1,
+                borderColor: "#4a6bff30",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 8,
+              }}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="globe-outline" size={18} color="#4a6bff" />
+            </TouchableOpacity>
+          )}
 
           {/* Spacer */}
           <View style={{ flex: 1 }} />
@@ -2026,23 +2075,25 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               width: 38,
               height: 38,
               borderRadius: 19,
-              backgroundColor: "rgba(107, 114, 128, 0.1)",
+              backgroundColor: "rgba(107, 114, 128, 0.12)",
               justifyContent: "center",
               alignItems: "center",
+              borderWidth: 1,
+              borderColor: "rgba(107, 114, 128, 0.2)",
             }}
+            activeOpacity={0.7}
           >
-            <Ionicons name="close" size={22} color="#6b7280" />
+            <Ionicons name="close" size={20} color="#6b7280" />
           </TouchableOpacity>
         </View>
 
         {/* Menu Items */}
         <View
           style={{
-            paddingHorizontal: 20,
-            paddingTop: 24,
+            paddingTop: 4,
           }}
         >
-              {/* Main Items - 3 principales más grandes con descripciones */}
+              {/* Main Items - 3 principales estilo header full width */}
               {mainMenuItems.map((item, index) => (
                 <TouchableOpacity
                   key={index}
@@ -2050,63 +2101,36 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                     item.onPress()
                   }}
                   style={{
-                    paddingVertical: 20,
-                    paddingHorizontal: 18,
-                    marginBottom: 14,
-                    backgroundColor: '#ffffff95',
-                    borderRadius: 18,
-                    borderLeftWidth: 5,
-                    borderLeftColor: item.color,
+                    paddingVertical: 22,
+                    paddingHorizontal: 20,
+                    marginBottom: 0,
+                    backgroundColor: 'transparent',
+                    borderTopWidth: index === 0 ? 1 : 0,
+                    borderBottomWidth: 1,
+                    borderColor: '#d4d8c0',
                     position: 'relative',
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 3 },
-                    shadowOpacity: 0.08,
-                    shadowRadius: 10,
-                    elevation: 3,
+                    overflow: 'hidden',
                   }}
+                  activeOpacity={0.7}
                 >
-                  {showNewBadge && item.icon === "bulb" && (
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <View
                       style={{
-                        position: 'absolute',
-                        top: 10,
-                        right: 12,
-                        backgroundColor: '#ff375f',
-                        borderRadius: 10,
-                        paddingHorizontal: 7,
-                        paddingVertical: 3,
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.25,
-                        shadowRadius: 3.84,
-                        elevation: 5,
-                        zIndex: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 10,
-                          fontWeight: 'bold',
-                          letterSpacing: 0.5,
-                        }}
-                      >
-                        {deviceLanguage === 'es' ? 'NUEVO' : deviceLanguage === 'de' ? 'NEU' : deviceLanguage === 'fr' ? 'NOUVEAU' : deviceLanguage === 'it' ? 'NUOVO' : deviceLanguage === 'pt' ? 'NOVO' : 'NEW'}
-                      </Text>
-                    </View>
-                  )}
-                  <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-                    <View
-                      style={{
-                        backgroundColor: item.color + "18",
+                        backgroundColor: item.color + "15",
                         padding: 14,
                         borderRadius: 16,
                         marginRight: 16,
+                        borderWidth: 1.5,
+                        borderColor: item.color + '30',
                       }}
                     >
-                      <Ionicons name={item.icon} size={28} color={item.color} />
+                      <Ionicons
+                        name={item.icon}
+                        size={28}
+                        color={item.color}
+                      />
                     </View>
-                    <View style={{ flex: 1, paddingTop: 2 }}>
+                    <View style={{ flex: 1 }}>
                       <Text
                         style={{
                           color: "#1f2937",
@@ -2121,19 +2145,47 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                       <Text
                         style={{
                           color: "#6b7280",
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: "500",
-                          lineHeight: 20,
+                          lineHeight: 19,
+                          marginBottom: item.comingSoon ? 6 : 0,
                         }}
                       >
                         {item.description}
                       </Text>
+
+                      {/* Banner "Disponible a partir de Noviembre" */}
+                      {item.comingSoon && (
+                        <View
+                          style={{
+                            backgroundColor: '#f3f4f6',
+                            borderRadius: 8,
+                            paddingHorizontal: 8,
+                            paddingVertical: 4,
+                            marginTop: 4,
+                            alignSelf: 'flex-start',
+                            borderWidth: 1,
+                            borderColor: '#e5e7eb',
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: '#6b7280',
+                              fontSize: 10,
+                              fontWeight: '700',
+                              letterSpacing: 0.3,
+                            }}
+                          >
+                            {comingSoonTexts[deviceLanguage] || comingSoonTexts['en']}
+                          </Text>
+                        </View>
+                      )}
                     </View>
                     <Ionicons
                       name="chevron-forward"
                       size={22}
-                      color="#d1d5db"
-                      style={{ marginTop: 6 }}
+                      color="#9ca3af"
+                      style={{ marginLeft: 8 }}
                     />
                   </View>
                 </TouchableOpacity>
@@ -2142,18 +2194,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               {/* Footer Items Container - Grid 3x2 */}
               <View
                 style={{
-                  backgroundColor: '#ffffff84',
+                  backgroundColor: 'transparent',
                   borderRadius: 16,
-                  padding: 16,
+                  padding: 12,
                   marginTop: 8,
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.04,
-                  shadowRadius: 4,
-                  elevation: 1,
                 }}
               >
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
                   {footerMenuItems.map((item, index) => (
                     <TouchableOpacity
                       key={index}
@@ -2163,8 +2210,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                       style={{
                         flexDirection: "row",
                         alignItems: "center",
-                        paddingVertical: 12,
-                        paddingHorizontal: 14,
+                        paddingVertical: 10,
+                        paddingHorizontal: 12,
                         borderRadius: 12,
                         backgroundColor: 'rgba(0,0,0,0.03)',
                         width: '47.5%',
@@ -2184,6 +2231,32 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                     </TouchableOpacity>
                   ))}
                 </View>
+              </View>
+
+              {/* Version */}
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 20,
+                marginBottom: 10,
+                gap: 6,
+              }}>
+                <Text style={{
+                  color: '#9ca3af',
+                  fontSize: 13,
+                  fontWeight: '700',
+                  letterSpacing: 0.3,
+                }}>
+                  BuyVoice
+                </Text>
+                <Text style={{
+                  color: '#9ca3af',
+                  fontSize: 12,
+                  fontWeight: '500',
+                }}>
+                  v2.0.1
+                </Text>
               </View>
         </View>
       </Modalize>

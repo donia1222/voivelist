@@ -336,6 +336,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
       console.log("🤖 Generando 12 recomendaciones de temporada con IA")
 
       // Guardar el país en el estado para mostrarlo en el banner
+      console.log('🏳️ País guardado para banner:', savedCountry)
       setSeasonalCountry(savedCountry)
 
       const date = new Date()
@@ -1258,8 +1259,6 @@ const RecommendationsScreen = ({ navigation, route }) => {
       fontSize: isSmallIPhone ? 16 : 18,
       fontWeight: '700',
       color: theme.text,
-      textAlign: 'center',
-      marginBottom: 6,
     },
     dynamicBannerSubtitle: {
       fontSize: isSmallIPhone ? 13 : 14,
@@ -1401,26 +1400,23 @@ const RecommendationsScreen = ({ navigation, route }) => {
       borderColor: theme.backgroundtres + '20',
     },
     subscriptionButton: {
-      backgroundColor: '#4a6bff',
+      backgroundColor: '#4a6bff15',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal: 24,
       paddingVertical: 12,
-      borderRadius: 12,
-      shadowColor: '#4a6bff',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
-      elevation: 4,
+      borderRadius: 14,
+      borderWidth: 1.5,
+      borderColor: '#4a6bff40',
     },
     subscriptionButtonIcon: {
       marginRight: 8,
     },
     subscriptionButtonText: {
-      color: 'white',
+      color: '#3a5aef',
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: '700',
     },
   }
 
@@ -1515,11 +1511,27 @@ const RecommendationsScreen = ({ navigation, route }) => {
 
         {/* Banner dinámico con descripción de la pestaña activa */}
         <View style={styles.dynamicBannerContainer}>
-          <Text style={styles.dynamicBannerTitle}>
-            {activeTab === 'history' && (t.historyBannerTitle || '🕒 Personal Recommendations')}
-            {activeTab === 'seasonal' && (tSeasonal.seasonalBannerTitle || '🍃 Seasonal Products')}
-            {activeTab === 'diet' && (tDiet.dietBannerTitle || '🥗 Balanced Nutrition')}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
+            <View style={{
+              backgroundColor: '#4a6bff15',
+              borderRadius: 12,
+              padding: 8,
+              marginRight: 12,
+              borderWidth: 1,
+              borderColor: '#4a6bff30'
+            }}>
+              <Ionicons
+                name={activeTab === 'history' ? 'time-outline' : activeTab === 'seasonal' ? 'leaf-outline' : 'nutrition-outline'}
+                size={24}
+                color="#4a6bff"
+              />
+            </View>
+            <Text style={styles.dynamicBannerTitle}>
+              {activeTab === 'history' && (t.historyBannerTitle || 'Personal Recommendations')}
+              {activeTab === 'seasonal' && (tSeasonal.seasonalBannerTitle || 'Seasonal Products')}
+              {activeTab === 'diet' && (tDiet.dietBannerTitle || 'Balanced Nutrition')}
+            </Text>
+          </View>
           <Text style={styles.dynamicBannerSubtitle}>
             {activeTab === 'history' && (t.historyBannerDesc || 'Based on your previous shopping patterns')}
             {activeTab === 'seasonal' && (tSeasonal.seasonalBannerDesc || 'Fresh products ideal for this season')}
@@ -1529,28 +1541,154 @@ const RecommendationsScreen = ({ navigation, route }) => {
 
         {/* Estadísticas - solo mostrar en historial */}
         {stats && activeTab === 'history' && (
-          <View style={styles.statsContainer}>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{stats.totalAnalyzedLists || 0}</Text>
-              <Text style={styles.statLabel}>{t.analyzedLists}</Text>
+          <View style={{
+            flexDirection: 'row',
+            marginHorizontal: 16,
+            marginTop: 8,
+            marginBottom: 12,
+            gap: 10,
+          }}>
+            {/* Tarjeta de Listas Analizadas */}
+            <View style={{
+              flex: 1,
+              backgroundColor: 'rgba(74, 107, 255, 0.08)',
+              borderRadius: 16,
+              paddingVertical: 12,
+              paddingHorizontal: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1.5,
+              borderColor: 'rgba(74, 107, 255, 0.15)',
+            }}>
+              <View style={{
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                backgroundColor: 'rgba(74, 107, 255, 0.15)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 4,
+              }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#4a6bff' }}>
+                  {stats.totalAnalyzedLists || 0}
+                </Text>
+              </View>
+              <Text style={{
+                fontSize: 10,
+                fontWeight: '700',
+                color: '#4a6bff',
+                textAlign: 'center',
+                letterSpacing: 0.3,
+              }}>{t.analyzedLists}</Text>
             </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{stats.uniqueProducts || 0}</Text>
-              <Text style={styles.statLabel}>{t.uniqueProducts}</Text>
+
+            {/* Tarjeta de Productos Únicos */}
+            <View style={{
+              flex: 1,
+              backgroundColor: 'rgba(74, 107, 255, 0.08)',
+              borderRadius: 16,
+              paddingVertical: 12,
+              paddingHorizontal: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1.5,
+              borderColor: 'rgba(74, 107, 255, 0.15)',
+            }}>
+              <View style={{
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                backgroundColor: 'rgba(74, 107, 255, 0.15)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 4,
+              }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#4a6bff' }}>
+                  {stats.uniqueProducts || 0}
+                </Text>
+              </View>
+              <Text style={{
+                fontSize: 10,
+                fontWeight: '700',
+                color: '#4a6bff',
+                textAlign: 'center',
+                letterSpacing: 0.3,
+              }}>{t.uniqueProducts}</Text>
             </View>
           </View>
         )}
 
         {/* Banner de temporada - ubicación y fecha */}
         {activeTab === 'seasonal' && (
-          <View style={styles.statsContainer}>
-            <View style={styles.statItem}>
-              <Ionicons name="location-outline" size={24} color="#4a6bff" style={styles.statIcon} />
-              <Text style={styles.statLabel}>{seasonalCountry || tSeasonal.currentLocation || 'Ubicación'}</Text>
+          <View style={{
+            flexDirection: 'row',
+            marginHorizontal: 16,
+            marginTop: 8,
+            marginBottom: 12,
+            gap: 10,
+          }}>
+            {/* Tarjeta de País */}
+            <View style={{
+              flex: 1,
+              backgroundColor: 'rgba(74, 107, 255, 0.08)',
+              borderRadius: 16,
+              paddingVertical: 12,
+              paddingHorizontal: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1.5,
+              borderColor: 'rgba(74, 107, 255, 0.15)',
+            }}>
+              <View style={{
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                backgroundColor: 'rgba(74, 107, 255, 0.15)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 4,
+              }}>
+                <Ionicons name="location-outline" size={20} color="#4a6bff" />
+              </View>
+              <Text style={{
+                fontSize: 10,
+                fontWeight: '700',
+                color: '#4a6bff',
+                textAlign: 'center',
+                letterSpacing: 0.3,
+              }}>{seasonalCountry || tSeasonal.currentLocation || 'Ubicación'}</Text>
             </View>
-            <View style={styles.statItem}>
-              <Ionicons name="calendar-outline" size={24} color="#4a6bff" style={styles.statIcon} />
-              <Text style={styles.statLabel}>
+
+            {/* Tarjeta de Fecha */}
+            <View style={{
+              flex: 1,
+              backgroundColor: 'rgba(74, 107, 255, 0.08)',
+              borderRadius: 16,
+              paddingVertical: 12,
+              paddingHorizontal: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1.5,
+              borderColor: 'rgba(74, 107, 255, 0.15)',
+            }}>
+              <View style={{
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                backgroundColor: 'rgba(74, 107, 255, 0.15)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 4,
+              }}>
+                <Ionicons name="calendar-outline" size={20} color="#4a6bff" />
+              </View>
+              <Text style={{
+                fontSize: 10,
+                fontWeight: '700',
+                color: '#4a6bff',
+                textAlign: 'center',
+                letterSpacing: 0.3,
+              }}>
                 {tSeasonal.monthNames[new Date().getMonth() + 1]} {new Date().getFullYear()}
               </Text>
             </View>
@@ -1559,26 +1697,37 @@ const RecommendationsScreen = ({ navigation, route }) => {
 
         {/* Banner de nutrición */}
         {activeTab === 'diet' && (
-          <View style={styles.statsContainer}>
-            <View style={styles.statItem}>
-              <Ionicons name="nutrition-outline" size={24} color="#4a6bff" style={styles.statIcon} />
-              <Text style={styles.statLabel}>{tDiet.title || 'Nutrición'}</Text>
-            </View>
+          <View style={{ alignItems: 'center', marginTop: 8, marginBottom: 16 }}>
             <TouchableOpacity
-              style={styles.refreshButton}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#4a6bff15',
+                borderRadius: 14,
+                paddingVertical: 12,
+                paddingHorizontal: 20,
+                borderWidth: 1.5,
+                borderColor: '#4a6bff40',
+              }}
               onPress={() => {
                 console.log("🔄 BOTÓN REFRESCAR PRESIONADO - Cargando nuevos productos de dieta")
                 triggerHaptic()
                 loadDietRecommendations(false)
               }}
               disabled={dietRefreshing}
+              activeOpacity={0.7}
             >
               {dietRefreshing ? (
-                <ActivityIndicator size="small" color="#4a6bff" style={{ marginRight: 6 }} />
+                <ActivityIndicator size="small" color="#3a5aef" style={{ marginRight: 8 }} />
               ) : (
-                <Ionicons name="refresh-outline" size={20} color="#4a6bff" style={{ marginRight: 6 }} />
+                <Ionicons name="refresh-outline" size={20} color="#3a5aef" style={{ marginRight: 8 }} />
               )}
-              <Text style={styles.refreshButtonText}>
+              <Text style={{
+                color: '#3a5aef',
+                fontSize: 15,
+                fontWeight: '700',
+              }}>
                 {tDiet.refreshList || 'Refrescar lista'}
               </Text>
             </TouchableOpacity>
@@ -1602,8 +1751,9 @@ const RecommendationsScreen = ({ navigation, route }) => {
             <TouchableOpacity
               style={styles.subscriptionButton}
               onPress={handleSubscribePress}
+              activeOpacity={0.7}
             >
-              <Ionicons name="star" size={20} color="white" style={styles.subscriptionButtonIcon} />
+              <Ionicons name="star" size={20} color="#3a5aef" style={styles.subscriptionButtonIcon} />
               <Text style={styles.subscriptionButtonText}>{t.subscribeButton}</Text>
             </TouchableOpacity>
           </View>
@@ -1647,8 +1797,9 @@ const RecommendationsScreen = ({ navigation, route }) => {
             <TouchableOpacity
               style={styles.subscriptionButton}
               onPress={handleSubscribePress}
+              activeOpacity={0.7}
             >
-              <Ionicons name="star" size={20} color="white" style={styles.subscriptionButtonIcon} />
+              <Ionicons name="star" size={20} color="#3a5aef" style={styles.subscriptionButtonIcon} />
               <Text style={styles.subscriptionButtonText}>{t.subscribeButton}</Text>
             </TouchableOpacity>
           </View>

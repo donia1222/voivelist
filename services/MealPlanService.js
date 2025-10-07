@@ -406,6 +406,17 @@ Example:
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
           console.log(`🤖 [LocalAI] Intento ${attempt}/2...`);
+          console.log(`🤖 [LocalAI] URL: ${OLLAMA_URL}`);
+          console.log(`🤖 [LocalAI] Modelo a usar: ${model}`);
+
+          // 🔥 Timeout más largo para modelos grandes (4.7 GB)
+          const isLargeModel = model.includes('recipemaker') || model.includes('4b') || model.includes('7b');
+          const timeout = isLargeModel ? 180000 : 90000; // 3 min para modelos grandes, 1.5 min para pequeños
+
+          console.log(`🤖 [LocalAI] Timeout configurado: ${timeout}ms (${timeout/1000}s)`);
+          console.log(`🤖 [LocalAI] Iniciando petición POST...`);
+
+          const startTime = Date.now();
 
           response = await axios.post(OLLAMA_URL, {
             message: strictPrompt,
@@ -416,12 +427,14 @@ Example:
               'ngrok-skip-browser-warning': 'true',  // ✅ Evitar error 421 de ngrok
               'User-Agent': 'VoiceList-App/1.0'
             },
-            timeout: 90000 // 90 segundos (1.5 min) para modelos grandes
+            timeout: timeout
           });
 
-          console.log('🤖 [LocalAI] Respuesta recibida');
+          const endTime = Date.now();
+          const duration = endTime - startTime;
+          console.log(`🤖 [LocalAI] Respuesta recibida en ${duration}ms (${(duration/1000).toFixed(1)}s)`);
           console.log('🤖 [LocalAI] Status:', response.status);
-          console.log('🤖 [LocalAI] Data:', response.data);
+          console.log('🤖 [LocalAI] Data (primeros 500 chars):', JSON.stringify(response.data).substring(0, 500));
 
           if (!response.data || response.data.status !== 'success') {
             throw new Error(response.data?.error || response.data?.respuesta || 'Error en respuesta de Ollama');
@@ -432,15 +445,26 @@ Example:
         } catch (err) {
           lastError = err;
           console.warn(`⚠️ [LocalAI] Intento ${attempt} falló:`, err.message);
+          console.warn(`⚠️ [LocalAI] Error code:`, err.code);
+          console.warn(`⚠️ [LocalAI] Error completo:`, JSON.stringify({
+            message: err.message,
+            code: err.code,
+            response: err.response ? {
+              status: err.response.status,
+              data: err.response.data
+            } : 'no response'
+          }));
 
           if (attempt < 2) {
-            // Esperar 1 segundo antes del siguiente intento
+            console.log(`🔄 [LocalAI] Esperando 1 segundo antes del siguiente intento...`);
             await new Promise(resolve => setTimeout(resolve, 1000));
           }
         }
       }
 
       if (!response || !response.data || response.data.status !== 'success') {
+        console.error('❌ [LocalAI] No se recibió respuesta válida después de 2 intentos');
+        console.error('❌ [LocalAI] Último error:', lastError?.message);
         throw lastError || new Error('No se pudo conectar con IA local');
       }
 

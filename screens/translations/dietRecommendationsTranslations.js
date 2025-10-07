@@ -21,7 +21,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "Healthy",
     // Banner dinámico
-    dietBannerTitle: "🥗 Balanced Nutrition",
+    dietBannerTitle: "Balanced Nutrition",
     dietBannerDesc: "Healthy foods with detailed nutritional information"
   },
   es: {
@@ -46,7 +46,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "Saludable",
     // Banner dinámico
-    dietBannerTitle: "🥗 Nutrición Balanceada",
+    dietBannerTitle: "Nutrición Balanceada",
     dietBannerDesc: "Alimentos saludables con información nutricional detallada"
   },
   de: {
@@ -71,7 +71,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "Gesund",
     // Banner dinámico
-    dietBannerTitle: "🥗 Ausgewogene Ernährung",
+    dietBannerTitle: "Ausgewogene Ernährung",
     dietBannerDesc: "Gesunde Lebensmittel mit detaillierten Nährwertangaben"
   },
   fr: {
@@ -96,7 +96,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "Sain",
     // Banner dinámico
-    dietBannerTitle: "🥗 Nutrition Équilibrée",
+    dietBannerTitle: "Nutrition Équilibrée",
     dietBannerDesc: "Aliments sains avec informations nutritionnelles détaillées"
   },
   it: {
@@ -121,7 +121,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "Salutare",
     // Banner dinámico
-    dietBannerTitle: "🥗 Nutrizione Equilibrata",
+    dietBannerTitle: "Nutrizione Equilibrata",
     dietBannerDesc: "Alimenti salutari con informazioni nutrizionali dettagliate"
   },
   pt: {
@@ -146,7 +146,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "Saudável",
     // Banner dinámico
-    dietBannerTitle: "🥗 Nutrição Balanceada",
+    dietBannerTitle: "Nutrição Balanceada",
     dietBannerDesc: "Alimentos saudáveis com informações nutricionais detalhadas"
   },
   ru: {
@@ -170,7 +170,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "Здоровое",
     // Banner dinámico
-    dietBannerTitle: "🥗 Сбалансированное Питание",
+    dietBannerTitle: "Сбалансированное Питание",
     dietBannerDesc: "Здоровые продукты с подробной питательной информацией"
   },
   ar: {
@@ -194,7 +194,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "صحي",
     // Banner dinámico
-    dietBannerTitle: "🥗 تغذية متوازنة",
+    dietBannerTitle: "تغذية متوازنة",
     dietBannerDesc: "أطعمة صحية مع معلومات غذائية مفصلة"
   },
   hu: {
@@ -218,7 +218,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "Egészséges",
     // Banner dinámico
-    dietBannerTitle: "🥗 Kiegyensúlyozott Táplálkozás",
+    dietBannerTitle: "Kiegyensúlyozott Táplálkozás",
     dietBannerDesc: "Egészséges élelmiszerek részletes táplálkozási információkkal"
   },
   ja: {
@@ -242,7 +242,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "健康的",
     // Banner dinámico
-    dietBannerTitle: "🥗 バランスの取れた栄養",
+    dietBannerTitle: "バランスの取れた栄養",
     dietBannerDesc: "詳細な栄養情報付きの健康的な食品"
   },
   tr: {
@@ -266,7 +266,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "Sağlıklı",
     // Banner dinámico
-    dietBannerTitle: "🥗 Dengeli Beslenme",
+    dietBannerTitle: "Dengeli Beslenme",
     dietBannerDesc: "Detaylı beslenme bilgileri içeren sağlıklı gıdalar"
   },
   hi: {
@@ -290,7 +290,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "स्वस्थ",
     // Banner dinámico
-    dietBannerTitle: "🥗 संतुलित पोषण",
+    dietBannerTitle: "संतुलित पोषण",
     dietBannerDesc: "विस्तृत पोषण जानकारी के साथ स्वस्थ खाद्य पदार्थ"
   },
   nl: {
@@ -314,7 +314,7 @@ const dietRecommendationsTranslations = {
     // Nuevos labels para pestañas
     tabDesc: "Gezond",
     // Banner dinámico
-    dietBannerTitle: "🥗 Gebalanceerde Voeding",
+    dietBannerTitle: "Gebalanceerde Voeding",
     dietBannerDesc: "Gezonde voedingsmiddelen met gedetailleerde voedingsinformatie"
   }
 }

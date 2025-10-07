@@ -137,12 +137,12 @@ const recommendationsTranslations = {
     seasonalTab: "Seasonal",
     seasonalDesc: "Fresh products",
     // Banner dinámico
-    historyBannerTitle: "🕒 Personal Recommendations",
+    historyBannerTitle: "Personal Recommendations",
     historyBannerDesc: "Based on your previous shopping patterns",
-    seasonalBannerTitle: "🍃 Seasonal Products",
+    seasonalBannerTitle: "Seasonal Products",
     seasonalBannerDesc: "Fresh products ideal for this season",
     // Mensaje de suscripción requerida
-    subscriptionRequiredTitle: "🔒 Premium Feature",
+    subscriptionRequiredTitle: "Premium Feature",
     subscriptionRequiredMessage: "Subscribe to access seasonal and nutrition recommendations with AI",
     subscribeButton: "Subscribe Now",
     subscriptionBenefits: "✨ Unlimited AI recommendations\n📅 Seasonal products\n🥗 Nutrition analysis"
@@ -285,12 +285,12 @@ const recommendationsTranslations = {
     seasonalTab: "Temporada",
     seasonalDesc: "Productos frescos",
     // Banner dinámico
-    historyBannerTitle: "🕒 Recomendaciones Personalizadas",
+    historyBannerTitle: "Recomendaciones Personalizadas",
     historyBannerDesc: "Basado en tu patrón de compras anterior",
-    seasonalBannerTitle: "🍃 Productos de Temporada",
+    seasonalBannerTitle: "Productos de Temporada",
     seasonalBannerDesc: "Productos frescos ideales para esta época",
     // Mensaje de suscripción requerida
-    subscriptionRequiredTitle: "🔒 Función Premium",
+    subscriptionRequiredTitle: "Función Premium",
     subscriptionRequiredMessage: "Suscríbete para acceder a recomendaciones de temporada y nutrición con IA",
     subscribeButton: "Suscribirse Ahora",
     subscriptionBenefits: "✨ Recomendaciones IA ilimitadas\n📅 Productos de temporada\n🥗 Análisis nutricional"
@@ -410,7 +410,7 @@ const recommendationsTranslations = {
     dietResponseFormat: "Antworten Sie mit einem Produkt pro Zeile im Format: Produktname - Nährstoffbeschreibung",
     dietExample: "Beispiel:\nGurke 🥒 - Nur 16 Kalorien pro 100g, hoher Wassergehalt\nSpinat 🥬 - 23 Kalorien pro 100g, reich an Eisen und Ballaststoffen",
     // Mensaje de suscripción requerida
-    subscriptionRequiredTitle: "🔒 Premium-Funktion",
+    subscriptionRequiredTitle: "Premium-Funktion",
     subscriptionRequiredMessage: "Abonnieren Sie für Zugang zu saisonalen und Ernährungsempfehlungen mit KI",
     subscribeButton: "Jetzt abonnieren",
     subscriptionBenefits: "✨ Unbegrenzte KI-Empfehlungen\n📅 Saisonale Produkte\n🥗 Ernährungsanalyse",
@@ -423,7 +423,7 @@ const recommendationsTranslations = {
     syncFeatureDescription: "Füge Produkte direkt zu deinen bestehenden Listen hinzu oder erstelle neue Listen.",
     gotIt: "Verstanden!",
     // Banner dinámico
-    historyBannerTitle: "🕒 Persönliche Empfehlungen",
+    historyBannerTitle: "Persönliche Empfehlungen",
     historyBannerDesc: "Basierend auf deinen vorherigen Einkaufsgewohnheiten"
   },
   it: {
@@ -540,7 +540,7 @@ const recommendationsTranslations = {
     dietResponseFormat: "Rispondi con un prodotto per riga nel formato: Nome Prodotto - descrizione nutrizionale",
     dietExample: "Esempio:\nCetriolo 🥒 - Solo 16 calorie per 100g, alto contenuto d'acqua\nSpinaci 🥬 - 23 calorie per 100g, ricchi di ferro e fibre",
     // Mensaje de suscripción requerida
-    subscriptionRequiredTitle: "🔒 Funzione Premium",
+    subscriptionRequiredTitle: "Funzione Premium",
     subscriptionRequiredMessage: "Abbonati per accedere a raccomandazioni stagionali e nutrizionali con IA",
     subscribeButton: "Abbonati ora",
     subscriptionBenefits: "✨ Raccomandazioni IA illimitate\n📅 Prodotti di stagione\n🥗 Analisi nutrizionale",
@@ -553,7 +553,7 @@ const recommendationsTranslations = {
     syncFeatureDescription: "Aggiungi prodotti direttamente alle tue liste esistenti o crea nuove liste.",
     gotIt: "Capito!",
     // Banner dinámico
-    historyBannerTitle: "🕒 Raccomandazioni Personali",
+    historyBannerTitle: "Raccomandazioni Personali",
     historyBannerDesc: "Basate sui tuoi precedenti modelli di acquisto"
   },
   fr: {
@@ -670,7 +670,7 @@ const recommendationsTranslations = {
     dietResponseFormat: "Répondez avec un produit par ligne au format: Nom du Produit - description nutritionnelle",
     dietExample: "Exemple:\nConcombre 🥒 - Seulement 16 calories pour 100g, forte teneur en eau\nÉpinards 🥬 - 23 calories pour 100g, riches en fer et fibres",
     // Mensaje de suscripción requerida
-    subscriptionRequiredTitle: "🔒 Fonctionnalité Premium",
+    subscriptionRequiredTitle: "Fonctionnalité Premium",
     subscriptionRequiredMessage: "Abonnez-vous pour accéder aux recommandations saisonnières et nutritionnelles avec IA",
     subscribeButton: "S'abonner maintenant",
     subscriptionBenefits: "✨ Recommandations IA illimitées\n📅 Produits de saison\n🥗 Analyse nutritionnelle",
@@ -683,7 +683,7 @@ const recommendationsTranslations = {
     syncFeatureDescription: "Ajoutez des produits directement à vos listes existantes ou créez de nouvelles listes.",
     gotIt: "Compris !",
     // Banner dinámico
-    historyBannerTitle: "🕒 Recommandations Personnelles",
+    historyBannerTitle: "Recommandations Personnelles",
     historyBannerDesc: "Basées sur vos habitudes d'achat précédentes"
   },
   pt: {
@@ -799,12 +799,12 @@ const recommendationsTranslations = {
     dietResponseFormat: "Responda com um produto por linha no formato: Nome do Produto - descrição nutricional",
     dietExample: "Exemplo:\nPepino 🥒 - Apenas 16 calorias por 100g, alto teor de água\nEspinafre 🥬 - 23 calorias por 100g, rico em ferro e fibras",
     // Subscription translations
-    subscriptionRequiredTitle: "🔒 Recurso Premium",
+    subscriptionRequiredTitle: "Recurso Premium",
     subscriptionRequiredMessage: "Assine para acessar recomendações sazonais e nutricionais com IA",
     subscriptionBenefits: "✨ Recomendações IA ilimitadas\n📅 Produtos da estação\n🥗 Análise nutricional",
     subscribeButton: "Assinar Agora",
     // Banner dinámico
-    historyBannerTitle: "🕒 Recomendações Personalizadas",
+    historyBannerTitle: "Recomendações Personalizadas",
     historyBannerDesc: "Baseado nos seus padrões de compra anteriores"
   },
   ru: {
@@ -920,12 +920,12 @@ const recommendationsTranslations = {
     dietResponseFormat: "Отвечайте одним продуктом на строку в формате: Название Продукта - питательное описание",
     dietExample: "Пример:\nОгурец 🥒 - Только 16 калорий на 100г, высокое содержание воды\nШпинат 🥬 - 23 калории на 100г, богат железом и клетчаткой",
     // Subscription translations
-    subscriptionRequiredTitle: "🔒 Премиум функция",
+    subscriptionRequiredTitle: "Премиум функция",
     subscriptionRequiredMessage: "Подпишитесь для доступа к сезонным и питательным рекомендациям с ИИ",
     subscriptionBenefits: "✨ Неограниченные рекомендации ИИ\n📅 Сезонные продукты\n🥗 Питательный анализ",
     subscribeButton: "Подписаться сейчас",
     // Banner dinámico
-    historyBannerTitle: "🕒 Персональные Рекомендации",
+    historyBannerTitle: "Персональные Рекомендации",
     historyBannerDesc: "На основе ваших предыдущих покупок"
   },
   ar: {
@@ -1038,12 +1038,12 @@ const recommendationsTranslations = {
     dietResponseFormat: "أجب بمنتج واحد لكل سطر بالتنسيق: اسم المنتج - وصف غذائي",
     dietExample: "مثال:\nخيار 🥒 - فقط 16 سعرة حرارية لكل 100غ، محتوى عالي من الماء\nسبانخ 🥬 - 23 سعرة حرارية لكل 100غ، غني بالحديد والألياف",
     // Subscription translations
-    subscriptionRequiredTitle: "🔒 ميزة مميزة",
+    subscriptionRequiredTitle: "ميزة مميزة",
     subscriptionRequiredMessage: "اشترك للوصول إلى التوصيات الموسمية والغذائية بالذكاء الاصطناعي",
     subscriptionBenefits: "✨ توصيات ذكاء اصطناعي غير محدودة\n📅 منتجات موسمية\n🥗 تحليل غذائي",
     subscribeButton: "اشترك الآن",
     // Banner dinámico
-    historyBannerTitle: "🕒 توصيات شخصية",
+    historyBannerTitle: "توصيات شخصية",
     historyBannerDesc: "بناءً على أنماط التسوق السابقة"
   },
   hu: {
@@ -1156,12 +1156,12 @@ const recommendationsTranslations = {
     dietResponseFormat: "Válaszoljon egy termékkel soronként a következő formátumban: Termék Neve - táplálkozási leírás",
     dietExample: "Példa:\nUborka 🥒 - Csak 16 kalória 100g-onként, magas víztartalom\nSpenót 🥬 - 23 kalória 100g-onként, gazdag vasban és rostban",
     // Subscription translations
-    subscriptionRequiredTitle: "🔒 Prémium funkció",
+    subscriptionRequiredTitle: "Prémium funkció",
     subscriptionRequiredMessage: "Fizessen elő a szezonális és táplálkozási ajánlásokhoz AI-val",
     subscriptionBenefits: "✨ Korlátlan AI ajánlások\n📅 Szezonális termékek\n🥗 Táplálkozási elemzés",
     subscribeButton: "Előfizetés most",
     // Banner dinámico
-    historyBannerTitle: "🕒 Személyre Szabott Ajánlások",
+    historyBannerTitle: "Személyre Szabott Ajánlások",
     historyBannerDesc: "A korábbi vásárlási szokásai alapján"
   },
   ja: {
@@ -1274,12 +1274,12 @@ const recommendationsTranslations = {
     dietResponseFormat: "1行に1つの商品を次の形式で回答してください：商品名 - 栄養説明",
     dietExample: "例：\nきゅうり 🥒 - 100gあたりわずか16カロリー、水分含有量が高い\nほうれん草 🥬 - 100gあたり23カロリー、鉄分と繊維が豊富",
     // Subscription translations
-    subscriptionRequiredTitle: "🔒 プレミアム機能",
+    subscriptionRequiredTitle: "プレミアム機能",
     subscriptionRequiredMessage: "AIによる季節および栄養の推奨事項にアクセスするために購読してください",
     subscriptionBenefits: "✨ 無制限のAI推奨事項\n📅 季節の商品\n🥗 栄養分析",
     subscribeButton: "今すぐ購読",
     // Banner dinámico
-    historyBannerTitle: "🕒 パーソナライズされた推奨事項",
+    historyBannerTitle: "パーソナライズされた推奨事項",
     historyBannerDesc: "過去の購買パターンに基づいています"
   },
   tr: {
@@ -1392,12 +1392,12 @@ const recommendationsTranslations = {
     dietResponseFormat: "Şu formatta satır başına bir ürün ile yanıt verin: Ürün Adı - beslenme açıklaması",
     dietExample: "Örnek:\nSalatalık 🥒 - 100g başına sadece 16 kalori, yüksek su içeriği\nIspanak 🥬 - 100g başına 23 kalori, demir ve lifçe zengin",
     // Subscription translations
-    subscriptionRequiredTitle: "🔒 Premium Özellik",
+    subscriptionRequiredTitle: "Premium Özellik",
     subscriptionRequiredMessage: "AI ile mevsimsel ve beslenme önerilerine erişmek için abone olun",
     subscriptionBenefits: "✨ Sınırsız AI önerileri\n📅 Mevsimsel ürünler\n🥗 Beslenme analizi",
     subscribeButton: "Şimdi Abone Ol",
     // Banner dinámico
-    historyBannerTitle: "🕒 Kişiselleştirilmiş Öneriler",
+    historyBannerTitle: "Kişiselleştirilmiş Öneriler",
     historyBannerDesc: "Önceki alışveriş alışkanlıklarınıza dayalı"
   },
   hi: {
@@ -1510,12 +1510,12 @@ const recommendationsTranslations = {
     dietResponseFormat: "निम्नलिखित प्रारूप में प्रति पंक्ति एक उत्पाद के साथ उत्तर दें: उत्पाद का नाम - पोषण विवरण",
     dietExample: "उदाहरण:\nखीरा 🥒 - प्रति 100 ग्राम केवल 16 कैलोरी, उच्च पानी की मात्रा\nपालक 🥬 - प्रति 100 ग्राम 23 कैलोरी, आयरन और फाइबर से भरपूर",
     // Subscription translations
-    subscriptionRequiredTitle: "🔒 प्रीमियम सुविधा",
+    subscriptionRequiredTitle: "प्रीमियम सुविधा",
     subscriptionRequiredMessage: "AI के साथ मौसमी और पोषण संबंधी सिफारिशों तक पहुंचने के लिए सदस्यता लें",
     subscriptionBenefits: "✨ असीमित AI सिफारिशें\n📅 मौसमी उत्पाद\n🥗 पोषण विश्लेषण",
     subscribeButton: "अभी सदस्यता लें",
     // Banner dinámico
-    historyBannerTitle: "🕒 व्यक्तिगत सिफारिशें",
+    historyBannerTitle: "व्यक्तिगत सिफारिशें",
     historyBannerDesc: "आपके पिछले खरीदारी पैटर्न के आधार पर"
   },
   nl: {
@@ -1628,12 +1628,12 @@ const recommendationsTranslations = {
     dietResponseFormat: "Antwoord met één product per regel in het formaat: Productnaam - voedingsbeschrijving",
     dietExample: "Voorbeeld:\nKomkommer 🥒 - Slechts 16 calorieën per 100g, hoog watergehalte\nSpinaze 🥬 - 23 calorieën per 100g, rijk aan ijzer en vezels",
     // Subscription translations
-    subscriptionRequiredTitle: "🔒 Premium Functie",
+    subscriptionRequiredTitle: "Premium Functie",
     subscriptionRequiredMessage: "Abonneer u voor toegang tot seizoensgebonden en voedingsaanbevelingen met AI",
     subscriptionBenefits: "✨ Onbeperkte AI aanbevelingen\n📅 Seizoensproducten\n🥗 Voedingsanalyse",
     subscribeButton: "Nu abonneren",
     // Banner dinámico
-    historyBannerTitle: "🕒 Gepersonaliseerde Aanbevelingen",
+    historyBannerTitle: "Gepersonaliseerde Aanbevelingen",
     historyBannerDesc: "Gebaseerd op uw eerdere winkelpatronen"
   }
 }

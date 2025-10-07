@@ -38,7 +38,7 @@ const seasonalRecommendationsTranslations = {
     responseFormat: "Respond with one product per line in format: Product Name - specific seasonal description for {location}",
     exampleFormat: "Example:\nOranges 🍊 - rich in vitamin C, peak season in {location}\nPumpkin 🎃 - rich in fiber, harvest season\nMushrooms 🍄 - fresh and local, ideal for autumn dishes",
     // Banner titles and descriptions
-    seasonalBannerTitle: "🍃 Seasonal Products",
+    seasonalBannerTitle: "Seasonal Products",
     seasonalBannerDesc: "Fresh products ideal for this season",
     // Modal informativo
     featureTitle: "Seasonal products",
@@ -83,7 +83,7 @@ const seasonalRecommendationsTranslations = {
     responseFormat: "Responde con un producto por línea en formato: Nombre del Producto - descripción estacional específica para {location}",
     exampleFormat: "Ejemplo:\nNaranjas 🍊 - ricas en vitamina C, temporada alta en {location}\nCalabaza 🎃 - rica en fibra, temporada de cosecha\nSetas 🍄 - frescas y locales, ideales para platos de otoño",
     // Banner titles and descriptions
-    seasonalBannerTitle: "🍃 Productos de Temporada",
+    seasonalBannerTitle: "Productos de Temporada",
     seasonalBannerDesc: "Productos frescos ideales para esta época",
     // Modal informativo
     featureTitle: "Productos de temporada",
@@ -128,7 +128,7 @@ const seasonalRecommendationsTranslations = {
     responseFormat: "Antworten Sie mit einem Produkt pro Zeile im Format: Produktname - spezifische saisonale Beschreibung für {location}",
     exampleFormat: "Beispiel:\nOrangen 🍊 - reich an Vitamin C, Hochsaison in {location}\nKürbis 🎃 - reich an Ballaststoffen, Erntezeit\nPilze 🍄 - frisch und lokal, ideal für Herbstgerichte",
     // Banner titles and descriptions
-    seasonalBannerTitle: "🍃 Saisonale Produkte",
+    seasonalBannerTitle: "Saisonale Produkte",
     seasonalBannerDesc: "Frische Produkte ideal für diese Jahreszeit"
   },
   fr: {
@@ -170,7 +170,7 @@ const seasonalRecommendationsTranslations = {
     responseFormat: "Répondez avec un produit par ligne au format : Nom du Produit - description saisonnière spécifique pour {location}",
     exampleFormat: "Exemple :\nOranges 🍊 - riches en vitamine C, haute saison à {location}\nCitrouille 🎃 - riche en fibres, saison des récoltes\nChampignons 🍄 - frais et locaux, idéaux pour les plats d'automne",
     // Banner titles and descriptions
-    seasonalBannerTitle: "🍃 Produits de Saison",
+    seasonalBannerTitle: "Produits de Saison",
     seasonalBannerDesc: "Produits frais idéaux pour cette saison"
   },
   it: {
@@ -323,7 +323,7 @@ const seasonalRecommendationsTranslations = {
     responseFormat: "أجب بمنتج واحد لكل سطر بالتنسيق: اسم المنتج - وصف موسمي محدد لـ {location}",
     exampleFormat: "مثال:\nالبرتقال 🍊 - غني بفيتامين سي، ذروة الموسم في {location}\nالقرع 🎃 - غني بالألياف، موسم الحصاد\nالفطر 🍄 - طازج ومحلي، مثالي لأطباق الخريف",
     // Banner titles and descriptions
-    seasonalBannerTitle: "🍃 منتجات موسمية",
+    seasonalBannerTitle: "منتجات موسمية",
     seasonalBannerDesc: "منتجات طازجة مثالية لهذا الموسم",
     featureTitle: "منتجات موسمية",
     featureDescription: "منتجات طازجة وموسمية حسب موقعك ووقت السنة."
@@ -363,7 +363,7 @@ const seasonalRecommendationsTranslations = {
     responseFormat: "Válaszoljon soronként egy termékkel a következő formátumban: Termék neve - konkrét szezonális leírás {location} számára",
     exampleFormat: "Példa:\nNarancs 🍊 - gazdag C-vitaminban, csúcsszezon {location}-ban\nTök 🎃 - gazdag rostokban, betakarítási szezon\nGomba 🍄 - friss és helyi, ideális őszi ételekhez",
     // Banner titles and descriptions
-    seasonalBannerTitle: "🍃 Szezonális Termékek",
+    seasonalBannerTitle: "Szezonális Termékek",
     seasonalBannerDesc: "Friss termékek ideálisak ehhez az évszakhoz",
     featureTitle: "Szezonális termékek",
     featureDescription: "Friss és szezonális termékek az Ön helyszíne és az évszak szerint."
@@ -403,7 +403,7 @@ const seasonalRecommendationsTranslations = {
     responseFormat: "1行に1つの商品を次の形式で回答してください：商品名 - {location}の具体的な季節の説明",
     exampleFormat: "例：\nオレンジ 🍊 - ビタミンC豊富、{location}での旬の季節\nかぼちゃ 🎃 - 食物繊維豊富、収穫の季節\nきのこ 🍄 - 新鮮で地元産、秋の料理に最適",
     // Banner titles and descriptions
-    seasonalBannerTitle: "🍃 季節の商品",
+    seasonalBannerTitle: "季節の商品",
     seasonalBannerDesc: "この季節に最適な新鮮な商品",
     featureTitle: "季節商品",
     featureDescription: "お住まいの地域と季節に応じた新鮮で季節の商品。"
@@ -443,7 +443,7 @@ const seasonalRecommendationsTranslations = {
     responseFormat: "Her satırda bir ürün olacak şekilde şu formatta yanıt verin: Ürün Adı - {location} için özel mevsimsel açıklama",
     exampleFormat: "Örnek:\nPortakal 🍊 - C vitamini açısından zengin, {location}'da mevsimin zirvesi\nKabak 🎃 - lif açısından zengin, hasat mevsimi\nMantar 🍄 - taze ve yerel, sonbahar yemekleri için ideal",
     // Banner titles and descriptions
-    seasonalBannerTitle: "🍃 Mevsimlik Ürünler",
+    seasonalBannerTitle: "Mevsimlik Ürünler",
     seasonalBannerDesc: "Bu mevsim için ideal taze ürünler",
     featureTitle: "Mevsimsel ürünler",
     featureDescription: "Konumunuz ve yılın zamanına göre taze ve mevsimsel ürünler."
@@ -483,7 +483,7 @@ const seasonalRecommendationsTranslations = {
     responseFormat: "प्रति पंक्ति एक उत्पाद के साथ इस प्रारूप में उत्तर दें: उत्पाद का नाम - {location} के लिए विशिष्ट मौसमी विवरण",
     exampleFormat: "उदाहरण:\nसंतरा 🍊 - विटामिन सी से भरपूर, {location} में चरम मौसम\nकद्दू 🎃 - फाइबर से भरपूर, फसल का मौसम\nमशरूम 🍄 - ताजा और स्थानीय, शरद ऋतु के व्यंजनों के लिए आदर्श",
     // Banner titles and descriptions
-    seasonalBannerTitle: "🍃 मौसमी उत्पाद",
+    seasonalBannerTitle: "मौसमी उत्पाद",
     seasonalBannerDesc: "इस मौसम के लिए आदर्श ताज़े उत्पाद",
     featureTitle: "मौसमी उत्पाद",
     featureDescription: "आपके स्थान और वर्ष के समय के अनुसार ताजे और मौसमी उत्पाद।"
@@ -523,7 +523,7 @@ const seasonalRecommendationsTranslations = {
     responseFormat: "Antwoord met één product per regel in het formaat: Productnaam - specifieke seizoensbeschrijving voor {location}",
     exampleFormat: "Voorbeeld:\nSinaasappels 🍊 - rijk aan vitamine C, piekseizoen in {location}\nPompoen 🎃 - rijk aan vezels, oogstseizoen\nPaddenstoelen 🍄 - vers en lokaal, ideaal voor herfstgerechten",
     // Banner titles and descriptions
-    seasonalBannerTitle: "🍃 Seizoensproducten",
+    seasonalBannerTitle: "Seizoensproducten",
     seasonalBannerDesc: "Verse producten ideaal voor dit seizoen",
     featureTitle: "Seizoensproducten",
     featureDescription: "Verse en seizoensgebonden producten volgens uw locatie en tijd van het jaar."

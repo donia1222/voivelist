@@ -281,7 +281,7 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
             )}
 
             <Text style={styles.helperText}>
-              {t.dietTypeHelper || 'Selecciona el tipo de dieta que prefieres'}
+              {t.dietTypeHelper}
             </Text>
           </View>
 
@@ -408,7 +408,7 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
               <Ionicons name="add-circle-outline" size={20} color="#8B5CF6" />
               <TextInput
                 style={styles.restrictionTextInput}
-                placeholder={t.customRestrictions || 'Otras restricciones (ej: cebolla, ajo, picante...)'}
+                placeholder={t.customRestrictions}
                 placeholderTextColor="#999"
                 value={customRestrictionText}
                 onChangeText={setCustomRestrictionText}
@@ -421,7 +421,7 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
               )}
             </View>
             <Text style={styles.helperText}>
-              {t.customRestrictionsHelper || 'Escribe otras alergias o restricciones separadas por comas'}
+              {t.customRestrictionsHelper}
             </Text>
 
             {/* Restricciones personalizadas agregadas */}
@@ -540,7 +540,7 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
                   value={preferences?.maxCalories?.toString() || ''}
                   onChangeText={(text) => updatePreference('maxCalories', parseInt(text) || 0)}
                   keyboardType="numeric"
-                  placeholder="Ej: 500"
+                  placeholder={t.caloriesPlaceholder}
                   placeholderTextColor="#999"
                 />
                 <Text style={styles.inputUnit}>kcal</Text>
@@ -610,8 +610,10 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
                 <View style={styles.modelSelector}>
                   <Text style={[styles.toggleLabel, { marginBottom: 8 }]}>Modelo de IA:</Text>
                   {[
+                    { value: 'ALIENTELLIGENCE/gourmetglobetrotter:latest', label: 'Gourmet Globetrotter 🌍 (Especializado)', icon: 'globe' },
+                    { value: 'gemma3:4b', label: 'Gemma 3 4B (Alta calidad)', icon: 'star' },
                     { value: 'llama3.2:1b', label: 'Llama 3.2 1B 🔥 (Recomendado)', icon: 'flame' },
-                    { value: 'gemma2:2b', label: 'Gemma 2 2B (Balance)', icon: 'star' },
+                    { value: 'gemma2:2b', label: 'Gemma 2 2B (Balance)', icon: 'checkmark-circle' },
                     { value: 'qwen2.5:1.5b', label: 'Qwen 2.5 1.5B ⚡', icon: 'flash-outline' },
                     { value: 'gemma3:1b', label: 'Gemma 3 1B', icon: 'rocket-outline' },
                   ].map((model) => (
