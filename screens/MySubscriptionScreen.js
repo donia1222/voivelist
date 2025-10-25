@@ -301,21 +301,9 @@ const MySubscriptionScreen = () => {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.headerContainer}>
-          <View style={styles.badgeContainer}>
-            <Text style={styles.badgeText}>✓ {texts.subscriptionActive}</Text>
+       <View style={styles.badgeContainer}>
+            <Text style={styles.badgeText}>  🎉 {texts.welcomeMessage || 'Welcome to Premium!'}</Text>
           </View>
-
-          <Image 
-            source={require('../assets/images/checked3.png')} 
-            style={styles.image} 
-            resizeMode="contain"
-          />
-          
-          <Text style={styles.welcomeText}>
-            {texts.welcomeMessage || 'Welcome to Premium!'}
-          </Text>
-        </View>
 
         {subscriptionInfo ? (
           <View style={styles.infoContainer}>
@@ -370,7 +358,7 @@ const MySubscriptionScreen = () => {
             </TouchableOpacity>
 
             <TouchableOpacity onPress={handleSupportPress} style={[styles.linkButton, styles.supportButton]}>
-              <Text style={[styles.linkText, styles.supportButtonText]}>📧 Support</Text>
+              <Text style={[styles.linkText, styles.supportButtonText]}> Support</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -421,7 +409,7 @@ const getStyles = (theme) => StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 25,
-    marginBottom: 24,
+
     shadowColor: 'rgba(34, 197, 94, 0.3)',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -430,10 +418,10 @@ const getStyles = (theme) => StyleSheet.create({
     marginTop: -20,
   },
   badgeText: {
-    color: '#16a34a',
+    color: '#149142ff',
     fontFamily: 'Poppins-Bold',
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 16,
+    fontWeight: '600',
   },
   image: {
     width: 80,
@@ -441,15 +429,15 @@ const getStyles = (theme) => StyleSheet.create({
     marginBottom: 16,
   },
   welcomeText: {
-    fontSize: 20,
+    fontSize: 21,
     fontFamily: 'Poppins-SemiBold',
-    color: theme === 'dark' ? '#ffffff' : '#1f2937',
+    color: theme === 'dark' ? '#ffffff' : '#1d8a26be',
     textAlign: 'center',
     marginTop: 8,
     fontWeight: '600',
   },
   infoContainer: {
-    backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffffad',
+    backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff05',
     borderRadius: 20,
     padding: 28,
     width: '100%',

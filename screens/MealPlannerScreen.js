@@ -716,7 +716,7 @@ const MealPlannerScreen = ({ route }) => {
             style={styles.headerTab}
             onPress={() => setCalendarModalVisible(true)}
           >
-            <Ionicons name="calendar-outline" size={20} color="#8B5CF6" />
+            <Ionicons name="calendar-outline" size={20} color="#414141ff" />
             <Text style={styles.headerTabText}>{weekPlan?.weekRange || t.currentWeek}</Text>
           </TouchableOpacity>
 
@@ -724,11 +724,12 @@ const MealPlannerScreen = ({ route }) => {
             style={styles.headerTab}
             onPress={() => setPreferencesModalVisible(true)}
           >
-            <Ionicons name="settings-outline" size={20} color="#8B5CF6" />
+            <Ionicons name="settings-outline" size={20} color="#414141ff" />
             <Text style={styles.headerTabText}>{t.preferences}</Text>
           </TouchableOpacity>
         </View>
 
+         
       {/* Scroll horizontal de días */}
       <ScrollView
         horizontal
@@ -759,6 +760,7 @@ const MealPlannerScreen = ({ route }) => {
             )}
           </TouchableOpacity>
         ))}
+        
       </ScrollView>
 
       <ScrollView
@@ -779,6 +781,8 @@ const MealPlannerScreen = ({ route }) => {
         }}
         scrollEventThrottle={16}
       >
+
+        
         {days.map((day) => {
           const dayDate = MealPlanService.getDateForDay(day, currentWeekStart);
           const dayName = getDayName(day);
@@ -827,26 +831,7 @@ const MealPlannerScreen = ({ route }) => {
                 translations={t}
               />
 
-              {/* Botón generar día completo */}
-              <TouchableOpacity
-                style={styles.generateDayButton}
-                onPress={() => generateFullDayWithAI(day)}
-                disabled={generatingMeals[`${day}_fullday`]}
-              >
-                {generatingMeals[`${day}_fullday`] ? (
-                  <>
-                    <ActivityIndicator size="small" color="#7C3AED" />
-                    <Text style={styles.generateDayButtonText}>{t.generatingDay}</Text>
-                  </>
-                ) : (
-                  <>
-                    <Ionicons name="sparkles" size={18} color="#7C3AED" />
-                    <Text style={styles.generateDayButtonText}>
-                      {isDayComplete(day) ? t.regenerateDay : t.generateDay}
-                    </Text>
-                  </>
-                )}
-              </TouchableOpacity>
+
 
               {/* Botón generar lista para este día */}
               <TouchableOpacity
@@ -858,28 +843,6 @@ const MealPlannerScreen = ({ route }) => {
               </TouchableOpacity>
                 </View>
 
-                {/* Bloque de lista semanal - solo en lunes */}
-                {day === 'sunday' && (
-                  <View style={styles.weekListContainer}>
-                    <View style={styles.weekListHeader}>
-                      <Ionicons name="cart" size={32} color="#10B981" />
-                      <View style={styles.weekListTextContainer}>
-                        <Text style={styles.weekListTitle}>{t.weeklyShoppingList}</Text>
-                        <Text style={styles.weekListSubtitle}>
-                          {t.weeklyShoppingListSubtitle}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <TouchableOpacity
-                      style={styles.weekListButton}
-                      onPress={() => openListSelectionModal('week')}
-                    >
-                      <Ionicons name="add-circle-outline" size={20} color="#10B981" />
-                      <Text style={styles.weekListButtonText}>{t.createWeeklyList}</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
 
               </ScrollView>
             </View>
@@ -993,21 +956,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
-    backgroundColor: 'rgba(139, 92, 246, 0.1)',
-    borderWidth: 1.5,
-    borderColor: 'rgba(139, 92, 246, 0.3)',
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+ 
     minWidth: 40,
     alignItems: 'center',
     position: 'relative',
   },
   dayTabActive: {
-    backgroundColor: '#8B5CF6',
-    borderColor: '#8B5CF6',
+     backgroundColor: 'rgba(16, 185, 129, 0.7)',
+
   },
   dayTabText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#8B5CF6',
+   color: '#414141ff',
   },
   dayTabTextActive: {
     color: '#fff',
@@ -1031,19 +993,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(139, 92, 246, 0.12)',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+     backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    paddingVertical: 8,
+    paddingHorizontal: 1,
     borderRadius: 12,
     gap: 8,
-    borderWidth: 1.5,
-    borderColor: 'rgba(139, 92, 246, 0.3)',
-    minHeight: 48,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
   },
   headerTabText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#8B5CF6',
+    color: '#414141ff',
     textAlign: 'center',
     flexShrink: 1,
   },
@@ -1094,7 +1055,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(16, 185, 129, 0.3)',
   },
   weekListButtonText: {
-    color: '#10B981',
+    color: '#414141ff',
     fontSize: 15,
     fontWeight: '700',
   },
@@ -1104,9 +1065,10 @@ const styles = StyleSheet.create({
   dayContainerHorizontal: {
     width: Dimensions.get('window').width,
     paddingHorizontal: 16,
+  
   },
   dayContainer: {
-    backgroundColor: '#ffffffe4',
+    backgroundColor: '#ffffffb5',
     marginVertical: 8,
     padding: 16,
     borderRadius: 12,
@@ -1123,7 +1085,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#cbbdbdff',
   },
   dayName: {
     fontSize: 18,

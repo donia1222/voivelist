@@ -493,6 +493,10 @@ Example:
       let todayMeals = [];
       let allWeekMeals = []; // ✅ NUEVO: Todos los platos de la semana
 
+      console.log(`🔍 [suggestMeal] Analizando platos existentes en la semana...`);
+      console.log(`🔍 [suggestMeal] weekPlan recibido:`, weekPlan ? 'SÍ' : 'NO');
+      console.log(`🔍 [suggestMeal] Día actual:`, currentDay || 'no especificado');
+
       if (weekPlan && weekPlan.plan) {
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
@@ -501,26 +505,31 @@ Example:
             ['breakfast', 'lunch', 'dinner'].forEach(meal => {
               if (weekPlan.plan[day][meal]) {
                 const mealName = weekPlan.plan[day][meal].name?.toLowerCase() || '';
+                console.log(`  📋 ${day}.${meal}: "${weekPlan.plan[day][meal].name}"`);
 
-                // Detectar proteínas
-                if (mealName.includes('pollo') || mealName.includes('chicken')) usedProteins.push('pollo');
+                // Detectar proteínas (ampliado)
+                if (mealName.includes('pollo') || mealName.includes('chicken') || mealName.includes('pechuga')) usedProteins.push('pollo');
                 if (mealName.includes('salmón') || mealName.includes('salmon')) usedProteins.push('salmón');
-                if (mealName.includes('pescado') || mealName.includes('fish') || mealName.includes('atún') || mealName.includes('bacalao')) usedProteins.push('pescado');
-                if (mealName.includes('carne') || mealName.includes('beef') || mealName.includes('ternera') || mealName.includes('res')) usedProteins.push('carne');
-                if (mealName.includes('cerdo') || mealName.includes('pork')) usedProteins.push('cerdo');
-                if (mealName.includes('huevo') || mealName.includes('egg')) usedProteins.push('huevo');
+                if (mealName.includes('pescado') || mealName.includes('fish') || mealName.includes('atún') || mealName.includes('bacalao') || mealName.includes('merluza') || mealName.includes('trucha')) usedProteins.push('pescado');
+                if (mealName.includes('carne') || mealName.includes('beef') || mealName.includes('ternera') || mealName.includes('res') || mealName.includes('bistec') || mealName.includes('filete')) usedProteins.push('carne');
+                if (mealName.includes('cerdo') || mealName.includes('pork') || mealName.includes('carnita')) usedProteins.push('cerdo');
+                if (mealName.includes('huevo') || mealName.includes('egg') || mealName.includes('omelette') || mealName.includes('tortilla')) usedProteins.push('huevo');
+                if (mealName.includes('camarón') || mealName.includes('shrimp') || mealName.includes('langostino')) usedProteins.push('camarón');
+                if (mealName.includes('pavo') || mealName.includes('turkey')) usedProteins.push('pavo');
 
                 // ✅ Guardar TODOS los platos de la semana para detectar repeticiones
                 allWeekMeals.push(mealName);
 
                 // Si es el día actual, también guardar proteínas y platos
                 if (day === currentDay) {
-                  if (mealName.includes('pollo') || mealName.includes('chicken')) todayProteins.push('pollo');
+                  if (mealName.includes('pollo') || mealName.includes('chicken') || mealName.includes('pechuga')) todayProteins.push('pollo');
                   if (mealName.includes('salmón') || mealName.includes('salmon')) todayProteins.push('salmón');
-                  if (mealName.includes('pescado') || mealName.includes('fish')) todayProteins.push('pescado');
-                  if (mealName.includes('carne') || mealName.includes('beef')) todayProteins.push('carne');
-                  if (mealName.includes('cerdo') || mealName.includes('pork')) todayProteins.push('cerdo');
-                  if (mealName.includes('huevo') || mealName.includes('egg')) todayProteins.push('huevo');
+                  if (mealName.includes('pescado') || mealName.includes('fish') || mealName.includes('atún') || mealName.includes('bacalao') || mealName.includes('merluza') || mealName.includes('trucha')) todayProteins.push('pescado');
+                  if (mealName.includes('carne') || mealName.includes('beef') || mealName.includes('ternera') || mealName.includes('res') || mealName.includes('bistec') || mealName.includes('filete')) todayProteins.push('carne');
+                  if (mealName.includes('cerdo') || mealName.includes('pork') || mealName.includes('carnita')) todayProteins.push('cerdo');
+                  if (mealName.includes('huevo') || mealName.includes('egg') || mealName.includes('omelette') || mealName.includes('tortilla')) todayProteins.push('huevo');
+                  if (mealName.includes('camarón') || mealName.includes('shrimp') || mealName.includes('langostino')) todayProteins.push('camarón');
+                  if (mealName.includes('pavo') || mealName.includes('turkey')) todayProteins.push('pavo');
 
                   todayMeals.push(mealName);
                 }
@@ -530,29 +539,57 @@ Example:
         });
       }
 
+      console.log(`📊 [suggestMeal] Total de platos encontrados en la semana: ${allWeekMeals.length}`);
+      console.log(`📊 [suggestMeal] Platos de la semana:`, allWeekMeals);
+
       // ✅ NUEVO: Detectar platos base repetidos EN TODA LA SEMANA
       const dishBaseKeywords = [
         'tortita', 'pancake', 'avena', 'oatmeal', 'yogurt', 'smoothie',
         'huevo', 'egg', 'tostada', 'toast', 'francesa', 'french',
         'bowl', 'quinoa', 'ensalada', 'salad',
         'pasta', 'arroz', 'rice', 'sopa', 'soup',
-        'wraps', 'tacos', 'burger', 'hamburguesa',
-        'pizza', 'sandwich', 'wrap'
+        'wraps', 'tacos', 'taco', 'burger', 'hamburguesa',
+        'pizza', 'sandwich', 'wrap', 'burrito', 'quesadilla',
+        'enchilada', 'fajita', 'nachos'
       ];
       const usedDishBases = [];
 
       dishBaseKeywords.forEach(keyword => {
         const count = allWeekMeals.filter(meal => meal.includes(keyword)).length;
-        if (count >= 2) { // ✅ Si ya se usó 2+ veces, bloquearlo (permitir 1 uso)
+        if (count >= 1) { // ✅ Si ya se usó 1+ vez, bloquearlo (NO permitir repeticiones)
           usedDishBases.push(keyword);
         }
       });
 
+      console.log(`🚫 [suggestMeal] Platos base detectados (para bloquear):`, usedDishBases);
+      console.log(`🥩 [suggestMeal] Proteínas detectadas en la semana:`, usedProteins);
+
       let weeklyDishRestrictions = '';
+      let proteinRestrictions = '';
+
+      // Restricciones de platos base
       if (usedDishBases.length > 0) {
-        weeklyDishRestrictions = `\n\n❌ ESTOS PLATOS YA FUERON USADOS ESTA SEMANA - PROHIBIDO REPETIR: ${usedDishBases.join(', ').toUpperCase()}
-🚫 NO PUEDES usar ninguna de estas palabras: ${usedDishBases.join(', ')}
-✅ DEBES crear un plato COMPLETAMENTE DIFERENTE sin usar ninguna de las palabras prohibidas.`;
+        weeklyDishRestrictions = `\n\n❌ PLATOS BASE YA USADOS ESTA SEMANA - PROHIBIDO REPETIR: ${usedDishBases.join(', ').toUpperCase()}
+🚫 NO PUEDES usar ninguna de estas palabras: ${usedDishBases.join(', ')}`;
+        console.log(`⚠️ [suggestMeal] RESTRICCIONES DE PLATOS: ${usedDishBases.length} bloqueados`);
+      }
+
+      // Restricciones de proteínas (para evitar repetir proteínas en días consecutivos)
+      if (usedProteins.length > 0) {
+        // Crear un set para eliminar duplicados
+        const uniqueProteins = [...new Set(usedProteins)];
+        proteinRestrictions = `\n\n🥩 PROTEÍNAS YA USADAS ESTA SEMANA - EVITAR: ${uniqueProteins.join(', ').toUpperCase()}
+⚠️ Intenta usar una proteína DIFERENTE a estas: ${uniqueProteins.join(', ')}
+✅ Opciones alternativas: atún, lentejas, garbanzos, tofu, pavo, pato, cordero, camarones`;
+        console.log(`⚠️ [suggestMeal] RESTRICCIONES DE PROTEÍNAS: ${uniqueProteins.length} bloqueadas`);
+      }
+
+      // Combinar todas las restricciones
+      const allRestrictions = weeklyDishRestrictions + proteinRestrictions;
+      if (allRestrictions) {
+        console.log(`⚠️ [suggestMeal] Total restricciones aplicadas: ${usedDishBases.length} platos + ${[...new Set(usedProteins)].length} proteínas`);
+      } else {
+        console.log(`✅ [suggestMeal] No hay restricciones (semana vacía o primera comida)`);
       }
 
       // Obtener contexto geográfico y temporal
@@ -588,7 +625,7 @@ Example:
         usedProteins,
         todayProteins,
         todayMeals,
-        weeklyDishRestrictions,
+        weeklyDishRestrictions: allRestrictions, // Incluye restricciones de platos Y proteínas
         country,
         currentMonth,
         currentSeason,
@@ -599,6 +636,16 @@ Example:
       const prompt = PROMPT_COMIDA_INDIVIDUAL(mealType, preferences, context);
 
       console.log('📝 [suggestMeal] Prompt generado (primeros 300 chars):', prompt.substring(0, 300));
+      if (usedDishBases.length > 0 || usedProteins.length > 0) {
+        const uniqueProteins = [...new Set(usedProteins)];
+        console.log('🔒 [suggestMeal] Restricciones enviadas a la IA:');
+        if (usedDishBases.length > 0) {
+          console.log('   📋 Platos bloqueados:', usedDishBases.join(', '));
+        }
+        if (uniqueProteins.length > 0) {
+          console.log('   🥩 Proteínas bloqueadas:', uniqueProteins.join(', '));
+        }
+      }
 
       let content;
 
@@ -652,7 +699,28 @@ Example:
       }
 
       try {
-        return JSON.parse(jsonContent);
+        const parsedMeal = JSON.parse(jsonContent);
+        console.log(`✅ [suggestMeal] Comida generada exitosamente: "${parsedMeal.name}"`);
+
+        // Verificar si el plato generado incluye alguna palabra bloqueada
+        const mealNameLower = parsedMeal.name.toLowerCase();
+        const foundBlockedDishes = usedDishBases.filter(blocked => mealNameLower.includes(blocked));
+        const uniqueProteins = [...new Set(usedProteins)];
+        const foundBlockedProteins = uniqueProteins.filter(protein => mealNameLower.includes(protein));
+
+        if (foundBlockedDishes.length > 0 || foundBlockedProteins.length > 0) {
+          if (foundBlockedDishes.length > 0) {
+            console.warn(`⚠️ [suggestMeal] ADVERTENCIA: La IA repitió platos bloqueados: ${foundBlockedDishes.join(', ')}`);
+          }
+          if (foundBlockedProteins.length > 0) {
+            console.warn(`⚠️ [suggestMeal] ADVERTENCIA: La IA repitió proteínas bloqueadas: ${foundBlockedProteins.join(', ')}`);
+          }
+          console.warn(`⚠️ [suggestMeal] Esto puede indicar que el prompt necesita ser más estricto`);
+        } else if (usedDishBases.length > 0 || usedProteins.length > 0) {
+          console.log(`✅ [suggestMeal] Verificado: No se repitieron platos ni proteínas bloqueados`);
+        }
+
+        return parsedMeal;
       } catch (parseError) {
         console.error('❌ [MealPlanService] Error al parsear sugerencia:', parseError);
         console.error('❌ [MealPlanService] Contenido:', jsonContent);

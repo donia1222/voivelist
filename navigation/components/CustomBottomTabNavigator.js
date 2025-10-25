@@ -1176,9 +1176,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       description: mainItemDescriptions.mealPlanner[deviceLanguage] || mainItemDescriptions.mealPlanner['en'],
       icon: "restaurant-outline",
       color: "#8B5CF6",
+      comingSoon: true, // Marcar como "próximamente"
       onPress: () => {
-        modalizeRef.current?.close()
-        setActiveTab("MealPlanner")
+        // No hace nada al presionar
       }
     },
   ];
@@ -2111,6 +2111,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                     position: 'relative',
                     overflow: 'hidden',
                   }}
+                  disabled={item.comingSoon}
                   activeOpacity={0.7}
                 >
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -2181,12 +2182,14 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                         </View>
                       )}
                     </View>
-                    <Ionicons
-                      name="chevron-forward"
-                      size={22}
-                      color="#9ca3af"
-                      style={{ marginLeft: 8 }}
-                    />
+                    {!item.comingSoon && (
+                      <Ionicons
+                        name="chevron-forward"
+                        size={22}
+                        color="#9ca3af"
+                        style={{ marginLeft: 8 }}
+                      />
+                    )}
                   </View>
                 </TouchableOpacity>
               ))}

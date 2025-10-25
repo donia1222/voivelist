@@ -1272,50 +1272,47 @@ export default function Suscribe() {
                           return null;
                         }
 
-                        // Log temporal para diagnosticar
-                        console.log('🔍 Producto identificador:', pkg.product.identifier);
+                        // Log para diagnosticar
+                        console.log('🔍 Producto:', pkg.product.identifier, 'PackageType:', pkg.packageType);
 
-                        // Determinar el diseño según el producto e índice
+                        // Determinar el diseño según el packageType o identificador del producto
                         let iconColor = "#6366f1";
-                        let gradientColors = ['rgba(99, 102, 241, 0.08)', 'rgba(99, 102, 241, 0.04)'];
-                        let buttonGradient = ['rgba(99, 102, 241, 0.9)', 'rgba(79, 70, 229, 0.9)'];
                         let duration = '';
                         let isBestOption = false;
                         let cardStyle = styles.packageCardHorizontal;
                         let badgeText = '';
+                        let periodText = '';
 
-                        // Asignar propiedades basándose en el índice global (0, 1, 2)
-                        if (globalIndex === 0) {
-                          // Primera carta - 1 Mes
+                        // Identificar el producto por su packageType o identifier
+                        if (pkg.packageType === 'MONTHLY' || pkg.product.identifier === '12981') {
+                          // 1 Mes
                           iconColor = "#10b981";
-                          gradientColors = ['rgba(16, 185, 129, 0.06)', 'rgba(16, 185, 129, 0.03)'];
-                          buttonGradient = ['rgba(16, 185, 129, 0.9)', 'rgba(5, 150, 105, 0.9)'];
                           duration = systemLanguage === 'es' ? '1 Mes' : '1 Month';
                           badgeText = systemLanguage === 'es' ? 'Básico' : 'Basic';
-                        } else if (globalIndex === 1) {
-                          // Segunda carta - 6 Meses
-                          iconColor = "#10b981";
-                          gradientColors = ['rgba(16, 185, 129, 0.06)', 'rgba(16, 185, 129, 0.03)'];
-                          buttonGradient = ['rgba(16, 185, 129, 0.9)', 'rgba(5, 150, 105, 0.9)'];
+                          periodText = systemLanguage === 'es' ? '/mes' : '/month';
+                        } else if (pkg.packageType === 'SIX_MONTH' || pkg.product.identifier === '06mes') {
+                          // 6 Meses
+                          iconColor = "#6366f1";
                           duration = systemLanguage === 'es' ? '6 Meses' : '6 Months';
-                          badgeText = systemLanguage === 'es' ? 'Básico' : 'Basic';
-                        } else if (globalIndex === 2) {
-                          // Tercera carta - 1 Año (Best Value)
+                          badgeText = systemLanguage === 'es' ? 'Popular' : 'Popular';
+                          periodText = systemLanguage === 'es' ? '/6 meses' : '/6 months';
+                        } else if (pkg.packageType === 'ANNUAL' || pkg.product.identifier === 'year') {
+                          // 1 Año (Best Value)
                           iconColor = "#ef7744ff";
-                          gradientColors = ['rgba(239, 68, 68, 0.12)', 'rgba(239, 68, 68, 0.06)'];
-                          buttonGradient = ['rgba(220, 123, 38, 0.95)', 'rgba(220, 123, 38, 0.95)'];
                           duration = systemLanguage === 'es' ? '1 Año' : '1 Year';
                           isBestOption = true;
                           cardStyle = styles.packageCardBest;
                           badgeText = systemLanguage === 'es' ? 'Mejor Valor' : 'Best Value';
+                          periodText = systemLanguage === 'es' ? '/año' : '/year';
                         } else {
-                          // Fallback para más cartas
+                          // Fallback para productos no identificados
                           duration = systemLanguage === 'es' ? '1 Mes' : '1 Month';
                           badgeText = systemLanguage === 'es' ? 'Básico' : 'Basic';
+                          periodText = systemLanguage === 'es' ? '/mes' : '/month';
                         }
 
-                        // Log temporal para verificar la asignación de duration
-                        console.log('🏷️ Duration asignado:', duration, 'para ID:', pkg.product.identifier);
+                        // Log para verificar la asignación
+                        console.log('🏷️ Asignado:', duration, 'para', pkg.product.identifier);
 
                         const uniqueKey = `${offeringKey}_${pkg.product.identifier}_${globalIndex}`;
 
@@ -1343,10 +1340,7 @@ export default function Suscribe() {
                               <View style={styles.packagePriceContainerHorizontal}>
                                 <Text style={[styles.packagePriceHorizontal, { color: theme?.isDark ? '#FFFFFF' : '#2c3e50' }]}>{pkg.product.priceString}</Text>
                                 <Text style={[styles.packagePricePerMonth, { color: theme?.isDark ? '#CCCCCC' : '#666666' }]}>
-                                  {globalIndex === 0 && (systemLanguage === 'es' ? '/mes' : '/month')}
-                                  {globalIndex === 1 && (systemLanguage === 'es' ? '/6 meses' : '/6 months')}
-                                  {globalIndex === 2 && (systemLanguage === 'es' ? '/año' : '/year')}
-                                  {globalIndex > 2 && (systemLanguage === 'es' ? '/mes' : '/month')}
+                                  {periodText}
                                 </Text>
                               </View>
 
