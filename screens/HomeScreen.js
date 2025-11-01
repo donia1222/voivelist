@@ -1908,7 +1908,7 @@ const HomeScreen = ({ navigation }) => {
 
             {/* Revolutionary Integrated Hero Section */}
             <View style={{
-              backgroundColor: 'rgba(255, 255, 255, 0)',
+              backgroundColor: 'rgba(255, 255, 255, 1)',
               borderRadius: 28,
               marginHorizontal: 16,
               marginVertical: 20,

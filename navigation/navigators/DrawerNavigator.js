@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from "react"
 import {
-  View,
   Animated,
   Easing,
 } from "react-native"
@@ -128,9 +127,9 @@ function AppContent() {
   if (isTablet) {
     return (
       <NavigationContainer>
-        <CustomBottomTabNavigator 
-          isSubscribed={isSubscribed} 
-          initialTab={initialRoute === "HomeScreen" ? "Home" : "Home"} 
+        <CustomBottomTabNavigator
+          isSubscribed={isSubscribed}
+          initialTab={initialRoute === "HomeScreen" ? "Home" : "Home"}
         />
       </NavigationContainer>
     )
@@ -138,9 +137,9 @@ function AppContent() {
 
   return (
     <NavigationContainer>
-      <CustomBottomTabNavigator 
-        isSubscribed={isSubscribed} 
-        initialTab={initialRoute === "HomeScreen" ? "Home" : "Home"} 
+      <CustomBottomTabNavigator
+        isSubscribed={isSubscribed}
+        initialTab={initialRoute === "HomeScreen" ? "Home" : "Home"}
       />
     </NavigationContainer>
   )

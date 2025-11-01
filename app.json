@@ -34,8 +34,9 @@
       }
     },
     "android": {
+      "icon": "./assets/images/app-android.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/app-android.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.lwebch.VoiceList",

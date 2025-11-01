@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Text,
   Image,
+  Platform,
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { useDrawerStatus } from "@react-navigation/drawer"

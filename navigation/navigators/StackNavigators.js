@@ -1,5 +1,5 @@
 import React from "react"
-import { View, TouchableOpacity } from "react-native"
+import { View, TouchableOpacity, Platform } from "react-native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { useDrawerStatus } from "@react-navigation/drawer"
 import { Ionicons } from "@expo/vector-icons"

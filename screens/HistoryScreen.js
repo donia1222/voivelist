@@ -173,35 +173,37 @@ const HistoryScreen = ({ navigation }) => {
   const [editingListIndex, setEditingListIndex] = useState(null)
   const [editingItemText, setEditingItemText] = useState("")
 
-  // Configurar notificaciones push
+  // Configurar notificaciones push (solo iOS)
   useEffect(() => {
-    PushNotification.configure({
-      onRegister: (token) => {
-        console.log("TOKEN:", token)
-      },
-      onNotification: (notification) => {
-        console.log("NOTIFICATION:", notification)
-      },
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true,
-      },
-      popInitialNotification: true,
-      requestPermissions: true,
-    })
+    if (Platform.OS === "ios") {
+      PushNotification.configure({
+        onRegister: (token) => {
+          console.log("TOKEN:", token)
+        },
+        onNotification: (notification) => {
+          console.log("NOTIFICATION:", notification)
+        },
+        permissions: {
+          alert: true,
+          badge: true,
+          sound: true,
+        },
+        popInitialNotification: true,
+        requestPermissions: true,
+      })
 
-    PushNotification.createChannel(
-      {
-        channelId: "shopping-reminders",
-        channelName: "Shopping Reminders",
-        channelDescription: "Notifications for shopping list reminders",
-        soundName: "default",
-        importance: 4,
-        vibrate: true,
-      },
-      (created) => console.log(`createChannel returned '${created}'`),
-    )
+      PushNotification.createChannel(
+        {
+          channelId: "shopping-reminders",
+          channelName: "Shopping Reminders",
+          channelDescription: "Notifications for shopping list reminders",
+          soundName: "default",
+          importance: 4,
+          vibrate: true,
+        },
+        (created) => console.log(`createChannel returned '${created}'`),
+      )
+    }
   }, [])
 
   // DISABLED: This reordering was causing issues with widget touch functionality
@@ -658,8 +660,14 @@ const HistoryScreen = ({ navigation }) => {
     gifts: [require("../assets/images/favoritos/compras1.png"), require("../assets/images/favoritos/compras2.png")],
   })
 
-  // Funciones de notificaciones push corregidas
+  // Funciones de notificaciones push corregidas (solo iOS)
   const scheduleNotification = (listName, date, listIndex) => {
+    if (Platform.OS !== "ios") {
+      // Skip notifications on Android
+      setSuccessModalVisible(true)
+      return
+    }
+
     const notificationId = `reminder_${listIndex}_${Date.now()}`
 
     PushNotification.localNotificationSchedule({
@@ -681,6 +689,10 @@ const HistoryScreen = ({ navigation }) => {
   }
 
   const cancelNotification = (listIndex) => {
+    if (Platform.OS !== "ios" || !reminders[listIndex]) {
+      return
+    }
+
     if (reminders[listIndex]) {
       PushNotification.cancelLocalNotifications({ id: reminders[listIndex].notificationId })
       const newReminders = { ...reminders }
@@ -1120,7 +1132,8 @@ const HistoryScreen = ({ navigation }) => {
   }
 
   const checkNotificationPermissions = () => {
-    if (Platform.OS === "android") {
+    // Notifications disabled for Android - only works on iOS
+    if (Platform.OS === "ios") {
       PushNotification.requestPermissions()
     }
     setReminderModalVisible(true)

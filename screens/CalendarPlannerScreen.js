@@ -1053,40 +1053,42 @@ const CalendarPlannerScreen = () => {
     }
   }, [t, currentMonth])
 
-  // Configurar notificaciones push
+  // Configurar notificaciones push (solo iOS)
   useEffect(() => {
-    console.log("🔔 Configurando notificaciones push...")
-    
-    PushNotification.configure({
-      onRegister: (token) => {
-        console.log("✅ TOKEN registrado:", token)
-      },
-      onNotification: (notification) => {
-        console.log("📱 NOTIFICACIÓN recibida:", notification)
-        notification.finish(PushNotificationIOS.FetchResult.NoData)
-      },
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true,
-      },
-      popInitialNotification: true,
-      requestPermissions: true,
-    })
+    if (Platform.OS === "ios") {
+      console.log("🔔 Configurando notificaciones push...")
 
-    // Crear canal para Android
-    PushNotification.createChannel(
-      {
-        channelId: "shopping-reminders",
-        channelName: "Shopping Reminders",
-        channelDescription: "Notifications for shopping list reminders",
-        soundName: "default",
-        importance: 4,
-        vibrate: true,
-        playSound: true,
-      },
-      (created) => console.log(`📢 Canal creado: ${created}`),
-    )
+      PushNotification.configure({
+        onRegister: (token) => {
+          console.log("✅ TOKEN registrado:", token)
+        },
+        onNotification: (notification) => {
+          console.log("📱 NOTIFICACIÓN recibida:", notification)
+          notification.finish(PushNotificationIOS.FetchResult.NoData)
+        },
+        permissions: {
+          alert: true,
+          badge: true,
+          sound: true,
+        },
+        popInitialNotification: true,
+        requestPermissions: true,
+      })
+
+      // Crear canal para Android
+      PushNotification.createChannel(
+        {
+          channelId: "shopping-reminders",
+          channelName: "Shopping Reminders",
+          channelDescription: "Notifications for shopping list reminders",
+          soundName: "default",
+          importance: 4,
+          vibrate: true,
+          playSound: true,
+        },
+        (created) => console.log(`📢 Canal creado: ${created}`),
+      )
+    }
   }, [])
 
   useEffect(() => {
@@ -1267,8 +1269,8 @@ const CalendarPlannerScreen = () => {
         return
       }
 
-      // Request notification permissions if needed
-      if (reminderEnabled && Platform.OS === 'android') {
+      // Request notification permissions if needed (solo iOS)
+      if (reminderEnabled && Platform.OS === 'ios') {
         PushNotification.requestPermissions()
       }
 
@@ -1301,8 +1303,8 @@ const CalendarPlannerScreen = () => {
         // Si estamos editando, buscar y actualizar el evento existente
         const existingEvent = events.find(e => e.id === editingEventId)
         
-        // Cancelar notificación anterior si existe
-        if (existingEvent?.notificationId) {
+        // Cancelar notificación anterior si existe (solo iOS)
+        if (Platform.OS === "ios" && existingEvent?.notificationId) {
           PushNotification.cancelLocalNotification(existingEvent.notificationId)
         }
 
@@ -1450,6 +1452,12 @@ const CalendarPlannerScreen = () => {
 
 
   const scheduleNotification = (eventData) => {
+    // Skip notifications on Android
+    if (Platform.OS !== "ios") {
+      console.log("⚠️ Notificaciones deshabilitadas en Android")
+      return null
+    }
+
     console.log("🔔 Intentando programar notificación...")
     console.log("📅 Event data:", eventData)
     console.log("⏰ Reminder enabled:", reminderEnabled)
@@ -1463,11 +1471,11 @@ const CalendarPlannerScreen = () => {
     const eventDate = new Date(eventData.date)
     const reminderDate = new Date(eventDate.getTime() - (parseInt(reminderMinutes) * 60 * 1000))
     const now = new Date()
-    
+
     console.log("📅 Fecha del evento:", eventDate.toLocaleString())
     console.log("⏰ Fecha del recordatorio:", reminderDate.toLocaleString())
     console.log("🕐 Ahora:", now.toLocaleString())
-    
+
     // No programar notificación si ya pasó la fecha del recordatorio
     if (reminderDate <= now) {
       console.log('❌ La fecha del recordatorio ya pasó')
@@ -1489,13 +1497,13 @@ const CalendarPlannerScreen = () => {
         playSound: true,
         soundName: 'default',
         vibrate: true,
-        userInfo: { 
-          eventId: eventData.id, 
+        userInfo: {
+          eventId: eventData.id,
           eventTitle: eventData.title,
           type: 'calendar_shopping_reminder'
         },
       })
-      
+
       console.log(`✅ Notificación programada exitosamente para ${reminderDate.toLocaleString()}`)
       return notificationId
     } catch (error) {
@@ -1524,8 +1532,8 @@ const CalendarPlannerScreen = () => {
     try {
       const eventToDelete = events.find(e => e.id === eventId)
       
-      // Cancelar notificación si existe
-      if (eventToDelete?.notificationId) {
+      // Cancelar notificación si existe (solo iOS)
+      if (Platform.OS === "ios" && eventToDelete?.notificationId) {
         PushNotification.cancelLocalNotification(eventToDelete.notificationId)
         console.log(`Notification ${eventToDelete.notificationId} cancelled`)
       }

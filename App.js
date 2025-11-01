@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import { Platform, StyleSheet, StatusBar } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import * as Updates from "expo-updates"
 import { ThemeProvider } from "./ThemeContext"
@@ -12,6 +13,14 @@ import LoadingScreen from "./screens/LoadingScreen"
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true)
+
+  // Configure StatusBar for Android
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setTranslucent(true)
+      StatusBar.setBackgroundColor('transparent')
+    }
+  }, [])
 
   useEffect(() => {
     async function checkForUpdates() {
@@ -37,14 +46,14 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={styles.container}>
         <LoadingScreen />
       </GestureHandlerRootView>
     )
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={styles.container}>
       <ThemeProvider>
         <NotificationProvider>
           <RecordingProvider>
@@ -57,3 +66,9 @@ export default function App() {
     </GestureHandlerRootView>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+})
