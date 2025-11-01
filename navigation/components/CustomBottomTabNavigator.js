@@ -1176,9 +1176,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       description: mainItemDescriptions.mealPlanner[deviceLanguage] || mainItemDescriptions.mealPlanner['en'],
       icon: "restaurant-outline",
       color: "#8B5CF6",
-      comingSoon: true, // Marcar como "próximamente"
       onPress: () => {
-        // No hace nada al presionar
+        modalizeRef.current?.close()
+        setActiveTab("MealPlanner")
       }
     },
   ];
@@ -1515,6 +1515,16 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
              activeTab === "MealPlanner" ? mealPlannerTexts.title :
              "BuyVoice"}
           </Text>
+
+          {/* Bookmark icon for Home and Images tabs */}
+          {(activeTab === "Home" || activeTab === "Images") && (
+            <TouchableOpacity
+              onPress={() => setActiveTab("History")}
+              style={{ marginLeft: 10 }}
+            >
+              <Ionicons name="bookmark" size={26} color="#34c759" />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 

@@ -53,6 +53,11 @@ function HomeStackNavigator({ navigation }) {
             ) : (
               <View />
             ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate("HistoryScreen")} style={{ marginRight: 15 }}>
+              <Ionicons name="heart" size={26} color="#ff375f" />
+            </TouchableOpacity>
+          ),
         }}
       />
 
@@ -434,6 +439,11 @@ function ImageListStackNavigator({ navigation }) {
             ) : (
               <View />
             ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate("HistoryScreen")} style={{ marginRight: 15 }}>
+              <Ionicons name="heart" size={26} color="#ff375f" />
+            </TouchableOpacity>
+          ),
         }}
       />
 
