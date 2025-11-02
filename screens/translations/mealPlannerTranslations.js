@@ -31,6 +31,20 @@ export const mealPlannerTranslations = {
     saturdayShort: 'Sat',
     sundayShort: 'Sun',
 
+    // Months
+    january: 'January',
+    february: 'February',
+    march: 'March',
+    april: 'April',
+    may: 'May',
+    june: 'June',
+    july: 'July',
+    august: 'August',
+    september: 'September',
+    october: 'October',
+    november: 'November',
+    december: 'December',
+
     // Meal types
     breakfast: 'Breakfast',
     lunch: 'Lunch',
@@ -53,6 +67,7 @@ export const mealPlannerTranslations = {
 
     // Messages
     emptySlot: 'Tap to add',
+    addMealText: 'Add a meal',
     persons: 'persons',
     person: 'person',
 
@@ -227,6 +242,20 @@ export const mealPlannerTranslations = {
     saturdayShort: 'Sá',
     sundayShort: 'Do',
 
+    // Months
+    january: 'Enero',
+    february: 'Febrero',
+    march: 'Marzo',
+    april: 'Abril',
+    may: 'Mayo',
+    june: 'Junio',
+    july: 'Julio',
+    august: 'Agosto',
+    september: 'Septiembre',
+    october: 'Octubre',
+    november: 'Noviembre',
+    december: 'Diciembre',
+
     // Meal types
     breakfast: 'Desayuno',
     lunch: 'Almuerzo',
@@ -249,6 +278,7 @@ export const mealPlannerTranslations = {
 
     // Messages
     emptySlot: 'Toca para añadir',
+    addMealText: 'Añade una comida',
     persons: 'personas',
     person: 'persona',
 
@@ -423,6 +453,20 @@ export const mealPlannerTranslations = {
     saturdayShort: 'Sa',
     sundayShort: 'So',
 
+    // Months
+    january: 'Januar',
+    february: 'Februar',
+    march: 'März',
+    april: 'April',
+    may: 'Mai',
+    june: 'Juni',
+    july: 'Juli',
+    august: 'August',
+    september: 'September',
+    october: 'Oktober',
+    november: 'November',
+    december: 'Dezember',
+
     // Meal types
     breakfast: 'Frühstück',
     lunch: 'Mittagessen',
@@ -445,6 +489,7 @@ export const mealPlannerTranslations = {
 
     // Messages
     emptySlot: 'Tippen zum Hinzufügen',
+    addMealText: 'Füge eine Mahlzeit hinzu',
     persons: 'Personen',
     person: 'Person',
 
@@ -612,6 +657,20 @@ export const mealPlannerTranslations = {
     saturdayShort: 'Sam',
     sundayShort: 'Dim',
 
+    // Months
+    january: 'Janvier',
+    february: 'Février',
+    march: 'Mars',
+    april: 'Avril',
+    may: 'Mai',
+    june: 'Juin',
+    july: 'Juillet',
+    august: 'Août',
+    september: 'Septembre',
+    october: 'Octobre',
+    november: 'Novembre',
+    december: 'Décembre',
+
     // Meal types
     breakfast: 'Petit-déjeuner',
     lunch: 'Déjeuner',
@@ -634,6 +693,7 @@ export const mealPlannerTranslations = {
 
     // Messages
     emptySlot: 'Appuyer pour ajouter',
+    addMealText: 'Ajouter un repas',
     persons: 'personnes',
     person: 'personne',
 
@@ -801,6 +861,20 @@ export const mealPlannerTranslations = {
     saturdayShort: 'Sab',
     sundayShort: 'Dom',
 
+    // Months
+    january: 'Gennaio',
+    february: 'Febbraio',
+    march: 'Marzo',
+    april: 'Aprile',
+    may: 'Maggio',
+    june: 'Giugno',
+    july: 'Luglio',
+    august: 'Agosto',
+    september: 'Settembre',
+    october: 'Ottobre',
+    november: 'Novembre',
+    december: 'Dicembre',
+
     // Meal types
     breakfast: 'Colazione',
     lunch: 'Pranzo',
@@ -823,6 +897,7 @@ export const mealPlannerTranslations = {
 
     // Messages
     emptySlot: 'Tocca per aggiungere',
+    addMealText: 'Aggiungi un pasto',
     persons: 'persone',
     person: 'persona',
 
@@ -990,6 +1065,20 @@ export const mealPlannerTranslations = {
     saturdayShort: 'Sáb',
     sundayShort: 'Dom',
 
+    // Months
+    january: 'Janeiro',
+    february: 'Fevereiro',
+    march: 'Março',
+    april: 'Abril',
+    may: 'Maio',
+    june: 'Junho',
+    july: 'Julho',
+    august: 'Agosto',
+    september: 'Setembro',
+    october: 'Outubro',
+    november: 'Novembro',
+    december: 'Dezembro',
+
     // Meal types
     breakfast: 'Café da manhã',
     lunch: 'Almoço',
@@ -1012,6 +1101,7 @@ export const mealPlannerTranslations = {
 
     // Messages
     emptySlot: 'Toque para adicionar',
+    addMealText: 'Adicionar uma refeição',
     persons: 'pessoas',
     person: 'pessoa',
 
@@ -1179,6 +1269,20 @@ export const mealPlannerTranslations = {
     saturdayShort: 'Сб',
     sundayShort: 'Вс',
 
+    // Months
+    january: 'Январь',
+    february: 'Февраль',
+    march: 'Март',
+    april: 'Апрель',
+    may: 'Май',
+    june: 'Июнь',
+    july: 'Июль',
+    august: 'Август',
+    september: 'Сентябрь',
+    october: 'Октябрь',
+    november: 'Ноябрь',
+    december: 'Декабрь',
+
     // Meal types
     breakfast: 'Завтрак',
     lunch: 'Обед',
@@ -1201,6 +1305,7 @@ export const mealPlannerTranslations = {
 
     // Messages
     emptySlot: 'Нажмите, чтобы добавить',
+    addMealText: 'Добавить блюдо',
     persons: 'человек',
     person: 'человек',
 
@@ -1368,6 +1473,20 @@ export const mealPlannerTranslations = {
     saturdayShort: 'Cmt',
     sundayShort: 'Paz',
 
+    // Months
+    january: 'Ocak',
+    february: 'Şubat',
+    march: 'Mart',
+    april: 'Nisan',
+    may: 'Mayıs',
+    june: 'Haziran',
+    july: 'Temmuz',
+    august: 'Ağustos',
+    september: 'Eylül',
+    october: 'Ekim',
+    november: 'Kasım',
+    december: 'Aralık',
+
     // Meal types
     breakfast: 'Kahvaltı',
     lunch: 'Öğle Yemeği',
@@ -1390,6 +1509,7 @@ export const mealPlannerTranslations = {
 
     // Messages
     emptySlot: 'Eklemek için dokunun',
+    addMealText: 'Bir yemek ekleyin',
     persons: 'kişi',
     person: 'kişi',
 
@@ -1900,12 +2020,28 @@ export const mealPlannerTranslations = {
     saturdayShort: '土',
     sundayShort: '日',
 
+    // Months
+    january: '1月',
+    february: '2月',
+    march: '3月',
+    april: '4月',
+    may: '5月',
+    june: '6月',
+    july: '7月',
+    august: '8月',
+    september: '9月',
+    october: '10月',
+    november: '11月',
+    december: '12月',
+
     // Meal types
     breakfast: '朝食',
     lunch: '昼食',
     dinner: '夕食',
 
     // Messages
+    emptySlot: 'タップして追加',
+    addMealText: '食事を追加',
     persons: '人分',
     person: '人分',
 
@@ -2072,12 +2208,28 @@ export const mealPlannerTranslations = {
     saturdayShort: 'शनि',
     sundayShort: 'रवि',
 
+    // Months
+    january: 'जनवरी',
+    february: 'फरवरी',
+    march: 'मार्च',
+    april: 'अप्रैल',
+    may: 'मई',
+    june: 'जून',
+    july: 'जुलाई',
+    august: 'अगस्त',
+    september: 'सितंबर',
+    october: 'अक्टूबर',
+    november: 'नवंबर',
+    december: 'दिसंबर',
+
     // Meal types
     breakfast: 'नाश्ता',
     lunch: 'दोपहर का भोजन',
     dinner: 'रात का खाना',
 
     // Messages
+    emptySlot: 'जोड़ने के लिए टैप करें',
+    addMealText: 'भोजन जोड़ें',
     persons: 'लोग',
     person: 'व्यक्ति',
 
@@ -2244,12 +2396,28 @@ export const mealPlannerTranslations = {
     saturdayShort: 'Za',
     sundayShort: 'Zo',
 
+    // Months
+    january: 'Januari',
+    february: 'Februari',
+    march: 'Maart',
+    april: 'April',
+    may: 'Mei',
+    june: 'Juni',
+    july: 'Juli',
+    august: 'Augustus',
+    september: 'September',
+    october: 'Oktober',
+    november: 'November',
+    december: 'December',
+
     // Meal types
     breakfast: 'Ontbijt',
     lunch: 'Lunch',
     dinner: 'Diner',
 
     // Messages
+    emptySlot: 'Tik om toe te voegen',
+    addMealText: 'Voeg een maaltijd toe',
     persons: 'personen',
     person: 'persoon',
 

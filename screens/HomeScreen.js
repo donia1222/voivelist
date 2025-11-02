@@ -1728,12 +1728,12 @@ const HomeScreen = ({ navigation }) => {
                   modernStyles.voiceButton,
                   {
                     transform: [{ scale: started ? 1.05 : pulseAnim }],
-                    backgroundColor: showPencilMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(99, 102, 241, 0.15)',
+                    backgroundColor: Platform.OS === 'android' ? '#e7ead2' : (showPencilMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(99, 102, 241, 0.15)'),
                     borderWidth: 2,
                     borderColor: showPencilMode ? 'rgba(16, 185, 129, 0.3)' : 'rgba(99, 102, 241, 0.3)',
                     backdropFilter: 'blur(10px)'
                   },
-                  started && { backgroundColor: 'rgba(239, 68, 68, 0.15)', borderColor: 'rgba(239, 68, 68, 0.3)' }
+                  started && { backgroundColor: Platform.OS === 'android' ? '#e7ead2' : 'rgba(239, 68, 68, 0.15)', borderColor: 'rgba(239, 68, 68, 0.3)' }
                 ]}
               >
                 <View style={modernStyles.micIconContainer}>
@@ -1757,7 +1757,7 @@ const HomeScreen = ({ navigation }) => {
                 position: 'absolute',
                 top: -8,
                 right: -38,
-                backgroundColor: showPencilMode ? 'rgba(99, 102, 241, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+                backgroundColor: Platform.OS === 'android' ? '#e7ead2' : (showPencilMode ? 'rgba(99, 102, 241, 0.15)' : 'rgba(16, 185, 129, 0.15)'),
                 borderWidth: 2,
                 borderColor: showPencilMode ? 'rgba(99, 102, 241, 0.3)' : 'rgba(16, 185, 129, 0.3)',
                 borderRadius: 52,
@@ -1821,7 +1821,7 @@ const HomeScreen = ({ navigation }) => {
           >
             <TouchableOpacity
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.54)',
+                backgroundColor: 'rgba(233, 233, 233, 1)',
                 borderWidth: 2,
 
                 borderColor: backgroundColor,
@@ -1908,12 +1908,12 @@ const HomeScreen = ({ navigation }) => {
 
             {/* Revolutionary Integrated Hero Section */}
             <View style={{
-              backgroundColor: 'rgba(255, 255, 255, 1)',
+            backgroundColor:  "#e7ead2",
               borderRadius: 28,
               marginHorizontal: 16,
               marginVertical: 20,
               padding: 24,
-              marginTop: isSmallIPhone ? 30 : 40,
+              marginTop: isSmallIPhone ? 80 : 90,
               shadowOffset: { width: 0, height: 8 },
               shadowOpacity: 0.15,
               shadowRadius: 20,

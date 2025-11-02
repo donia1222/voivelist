@@ -76,21 +76,7 @@ const PreferencesModal = ({ visible, onClose, onPreferencesUpdated, isSubscribed
 
       if (!savedCountry || savedCountry.trim() === '') {
         const countryCode = RNLocalize.getCountry();
-        const countryNames = {
-          'ES': 'España', 'MX': 'México', 'US': 'Estados Unidos',
-          'AR': 'Argentina', 'CO': 'Colombia', 'CL': 'Chile',
-          'PE': 'Perú', 'VE': 'Venezuela', 'EC': 'Ecuador',
-          'BO': 'Bolivia', 'PY': 'Paraguay', 'UY': 'Uruguay',
-          'CR': 'Costa Rica', 'PA': 'Panamá', 'GT': 'Guatemala',
-          'HN': 'Honduras', 'SV': 'El Salvador', 'NI': 'Nicaragua',
-          'DO': 'República Dominicana', 'PR': 'Puerto Rico', 'CU': 'Cuba',
-          'FR': 'Francia', 'IT': 'Italia', 'DE': 'Alemania',
-          'GB': 'Reino Unido', 'PT': 'Portugal', 'BR': 'Brasil',
-          'CA': 'Canadá', 'JP': 'Japón', 'CN': 'China',
-          'IN': 'India', 'RU': 'Rusia', 'AU': 'Australia',
-          'CH': 'Suiza'
-        };
-        savedCountry = countryNames[countryCode] || countryCode || "tu zona";
+        savedCountry = countryCode || "";
       }
 
       setCountry(savedCountry);

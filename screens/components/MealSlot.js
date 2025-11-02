@@ -78,7 +78,7 @@ const MealSlot = ({ mealType, meal, onPress, onRemove, onGenerateWithAI, isGener
           <Text style={[styles.emptyText, { color: colors.icon }]}>
             {getMealLabel(mealType)}
           </Text>
-          <Text style={styles.emptySubtext}>Añade una comida</Text>
+          <Text style={styles.emptySubtext}>{translations?.addMealText || 'Añade una comida'}</Text>
         </View>
 
         <View style={styles.emptyActions}>

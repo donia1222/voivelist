@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react"
 import {
   Animated,
   Easing,
+  Platform,
 } from "react-native"
 import { NavigationContainer } from "@react-navigation/native"
 import { createDrawerNavigator } from "@react-navigation/drawer"
@@ -83,8 +84,14 @@ function AppContent() {
     const initializeApp = async () => {
       try {
         Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG)
+
+        // Configurar API key según plataforma
+        const apiKey = Platform.OS === 'ios'
+          ? "appl_bHxScLAZLsKxfggiOiqVAZTXjJX"  // iOS API key
+          : "goog_PLACEHOLDER_ANDROID_KEY";      // Android API key (reemplazar cuando esté disponible)
+
         Purchases.configure({
-          apiKey: "appl_bHxScLAZLsKxfggiOiqVAZTXjJX",
+          apiKey: apiKey,
           appUserID: null
         })
 

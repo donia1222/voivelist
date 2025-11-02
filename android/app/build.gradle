@@ -87,7 +87,7 @@ android {
     defaultConfig {
         applicationId 'com.lwebch.VoiceList'
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion 35  // Forzado a 35 para Google Play (aunque compile con 34)
         versionCode 1
         versionName "1.0.3"
     }
@@ -117,6 +117,18 @@ android {
             useLegacyPackaging (findProperty('expo.useLegacyPackaging')?.toBoolean() ?: false)
         }
     }
+
+    // Support for 16KB page sizes (Android 15+)
+    // En EAS Build, esto generará splits optimizados
+    splits {
+        abi {
+            reset()
+            enable true
+            universalApk false
+            // Incluye todas para desarrollo, EAS filtrará para producción
+            include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+    }
 }
 
 // Apply static values from `gradle.properties` to the `android.packagingOptions`
@@ -142,11 +154,6 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
-    // Exclude Firebase from react-native-push-notification (we only use local notifications)
-    configurations.all {
-        exclude group: 'com.google.firebase', module: 'firebase-messaging'
-    }
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";

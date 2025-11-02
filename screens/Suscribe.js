@@ -34,6 +34,42 @@ const restoreButtonTextTranslations = {
   el: "Επαναφορά αγοράς"
 };
 
+const comingSoonTitleTranslations = {
+  en: "Coming Soon!",
+  es: "¡Próximamente disponible!",
+  de: "Bald verfügbar!",
+  fr: "Bientôt disponible!",
+  it: "Prossimamente disponibile!",
+  tr: "Yakında gelecek!",
+  pt: "Em breve disponível!",
+  ru: "Скоро будет доступно!",
+  zh: "即将推出！",
+  ja: "近日公開！",
+  sv: "Kommer snart!",
+  hu: "Hamarosan elérhető!",
+  ar: "قريبا!",
+  hi: "जल्द आ रहा है!",
+  el: "Έρχεται σύντομα!"
+};
+
+const comingSoonMessageTranslations = {
+  en: "Premium subscriptions for Android will be available very soon. Stay tuned!",
+  es: "Las suscripciones premium para Android estarán disponibles muy pronto. ¡Mantente atento!",
+  de: "Premium-Abonnements für Android werden sehr bald verfügbar sein. Bleiben Sie dran!",
+  fr: "Les abonnements premium pour Android seront bientôt disponibles. Restez à l'écoute!",
+  it: "Gli abbonamenti premium per Android saranno disponibili molto presto. Restate sintonizzati!",
+  tr: "Android için premium abonelikler çok yakında kullanılabilir olacak. Bizi takip edin!",
+  pt: "As assinaturas premium para Android estarão disponíveis em breve. Fique atento!",
+  ru: "Премиум-подписки для Android скоро станут доступны. Следите за обновлениями!",
+  zh: "Android高级订阅即将推出。敬请期待！",
+  ja: "Android向けプレミアムサブスクリプションは間もなく利用可能になります。お楽しみに！",
+  sv: "Premium-prenumerationer för Android kommer snart att finnas tillgängliga. Håll utkik!",
+  hu: "Az Android premium előfizetések hamarosan elérhetők lesznek. Maradjon velünk!",
+  ar: "ستتوفر الاشتراكات المميزة لنظام Android قريبًا جدًا. ابق على اطلاع!",
+  hi: "एंड्रॉइड के लिए प्रीमियम सदस्यता जल्द ही उपलब्ध होगी। बने रहें!",
+  el: "Οι premium συνδρομές για Android θα είναι διαθέσιμες πολύ σύντομα. Μείνετε συντονισμένοι!"
+};
+
 const accessButtonTextTranslations = {
   en: "PRESS HERE TO ENTER →",
   es: "PRESIONA AQUÍ PARA ENTRAR →",
@@ -403,7 +439,7 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
     marginBottom: isTablet ? 30 : 25,
     padding: 5,
     borderRadius: isTablet ? 45 : 40,
-    backgroundColor: 'transparent',
+    backgroundColor:  'rgba(237, 237, 237, 1)',
     shadowColor: '#9b59b6',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.2,
@@ -556,6 +592,42 @@ const getResponsiveStyles = (theme) => StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     letterSpacing: 0.5,
+  },
+
+  androidBanner: {
+    backgroundColor: 'rgba(155, 89, 182, 0.1)',
+    borderWidth: 2,
+    borderColor: 'rgba(155, 89, 182, 0.3)',
+    borderRadius: 20,
+    padding: isTablet ? 30 : 25,
+    marginBottom: 25,
+    alignItems: 'center',
+    shadowColor: '#9b59b6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+
+  androidBannerIcon: {
+    marginBottom: 15,
+  },
+
+  androidBannerTitle: {
+    color: '#9b59b6',
+    fontSize: isTablet ? 24 : isSmallIPhone ? 18 : 20,
+    fontWeight: '800',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+
+  androidBannerText: {
+    color: theme?.text || '#666',
+    fontSize: isTablet ? 16 : isSmallIPhone ? 13 : 14,
+    fontWeight: '500',
+    textAlign: 'center',
+    lineHeight: isTablet ? 24 : 20,
+    opacity: 0.8,
   },
 
   linksContainer: {
@@ -981,46 +1053,55 @@ export default function Suscribe() {
 
   useEffect(() => {
     const initializePurchases = async () => {
-      if (Platform.OS === 'ios') {
-        try {
-          const purchaserInfo = await Purchases.getCustomerInfo();
-          // Verificar cualquiera de las nuevas suscripciones
-          if (purchaserInfo && (purchaserInfo.entitlements.active['premium'] ||
-                              purchaserInfo.entitlements.active['12981'] ||
-                              Object.keys(purchaserInfo.activeSubscriptions || {}).length > 0)) {
-            console.log('Usuario ya suscrito');
-            setIsSubscribed(true);
-            // No cerrar automáticamente, mostrar estado premium
-          }
-        } catch (error) {
-          console.log('Error al obtener la información del comprador:', error);
-        }
-
-        try {
-          const response = await Purchases.getOfferings();
-          console.log('📦 Todas las Offerings disponibles:', response);
-
-          // Configurar offering actual
-          setOfferings(response.current);
-
-          // Configurar todas las offerings para mostrar múltiples opciones
-          const allOfferingsData = {};
-          if (response.all && Object.keys(response.all).length > 0) {
-            Object.entries(response.all).forEach(([key, offering]) => {
-              allOfferingsData[key] = offering;
-            });
-            setAllOfferings(allOfferingsData);
-            console.log('✅ AllOfferings configuradas:', allOfferingsData);
-          } else if (response.current) {
-            // Fallback si no hay múltiples offerings
-            allOfferingsData['default'] = response.current;
-            setAllOfferings(allOfferingsData);
-          }
-        } catch (error) {
-          console.log('Error al obtener ofertas:', error);
-        } finally {
+      // Timeout para Android si no hay offerings configuradas
+      const timeout = setTimeout(() => {
+        if (Platform.OS === 'android') {
+          console.log('⏱️ Timeout: No se encontraron offerings para Android');
           setIsLoading(false);
         }
+      }, 8000); // 8 segundos timeout
+
+      try {
+        const purchaserInfo = await Purchases.getCustomerInfo();
+        // Verificar cualquiera de las nuevas suscripciones
+        if (purchaserInfo && (purchaserInfo.entitlements.active['premium'] ||
+                            purchaserInfo.entitlements.active['12981'] ||
+                            Object.keys(purchaserInfo.activeSubscriptions || {}).length > 0)) {
+          console.log('Usuario ya suscrito');
+          setIsSubscribed(true);
+          // No cerrar automáticamente, mostrar estado premium
+        }
+      } catch (error) {
+        console.log('Error al obtener la información del comprador:', error);
+      }
+
+      try {
+        const response = await Purchases.getOfferings();
+        console.log('📦 Todas las Offerings disponibles:', response);
+
+        // Configurar offering actual
+        setOfferings(response.current);
+
+        // Configurar todas las offerings para mostrar múltiples opciones
+        const allOfferingsData = {};
+        if (response.all && Object.keys(response.all).length > 0) {
+          Object.entries(response.all).forEach(([key, offering]) => {
+            allOfferingsData[key] = offering;
+          });
+          setAllOfferings(allOfferingsData);
+          console.log('✅ AllOfferings configuradas:', allOfferingsData);
+        } else if (response.current) {
+          // Fallback si no hay múltiples offerings
+          allOfferingsData['default'] = response.current;
+          setAllOfferings(allOfferingsData);
+        }
+
+        clearTimeout(timeout);
+      } catch (error) {
+        console.log('Error al obtener ofertas:', error);
+        clearTimeout(timeout);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -1130,7 +1211,23 @@ export default function Suscribe() {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" color="#9b59b6" />
-        <Text style={[styles.priceText, { marginTop: 20 }]}>Loading...</Text>
+        <Text style={[styles.priceText, { marginTop: 20 }]}>
+          {Platform.OS === 'android' ? 'Cargando suscripciones...' : 'Loading...'}
+        </Text>
+        {Platform.OS === 'android' && (
+          <TouchableOpacity
+            style={{ marginTop: 30, padding: 15, backgroundColor: '#9b59b6', borderRadius: 10 }}
+            onPress={() => {
+              Alert.alert(
+                'Suscripciones no disponibles',
+                'Las suscripciones para Android aún no están configuradas. Por favor, contacta con soporte.',
+                [{ text: 'OK', onPress: () => navigation.goBack() }]
+              );
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 16 }}>Volver</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }
@@ -1391,6 +1488,21 @@ export default function Suscribe() {
                   </TouchableOpacity>
                 ))
               )}
+            </View>
+          )}
+
+          {/* Banner para Android cuando no hay offerings */}
+          {Platform.OS === 'android' && !offerings && !allOfferings && (
+            <View style={styles.androidBanner}>
+              <View style={styles.androidBannerIcon}>
+                <Text style={{ fontSize: 40 }}>🚀</Text>
+              </View>
+              <Text style={styles.androidBannerTitle}>
+                {comingSoonTitleTranslations[systemLanguage] || comingSoonTitleTranslations['en']}
+              </Text>
+              <Text style={styles.androidBannerText}>
+                {comingSoonMessageTranslations[systemLanguage] || comingSoonMessageTranslations['en']}
+              </Text>
             </View>
           )}
 

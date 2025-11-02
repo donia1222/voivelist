@@ -12,7 +12,11 @@ import {
   Alert,
   Image,
   TextInput,
+  Platform,
+  Dimensions,
 } from "react-native"
+import { GestureDetector, Gesture } from 'react-native-gesture-handler'
+import ReanimatedAnimated, { useSharedValue, useAnimatedStyle, withSpring, withTiming, runOnJS } from 'react-native-reanimated'
 import { Modalize } from 'react-native-modalize'
 import { Ionicons } from "@expo/vector-icons"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
@@ -24,7 +28,6 @@ import texts from "../../screens/translations/texts"
 import mealPlannerTranslations from "../../screens/translations/mealPlannerTranslations"
 import DeviceInfo from "react-native-device-info"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { Platform, Dimensions } from "react-native"
 import PrivacyModal from "../../screens/links/PrivacyModal"
 import EulaModal from "../../screens/links/EulaModal"
 import getModernStyles from "../../screens/Styles/HomeScreenModernStyles"
@@ -473,6 +476,10 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   // Detectar iPhone SE (pantalla pequeña)
   const { width, height } = Dimensions.get('window')
   const isSmallIPhone = Platform.OS === 'ios' && (width <= 375 || height <= 667)
+
+  // Shared value for swipe animation
+  const translateX = useSharedValue(0)
+  const screenWidth = useSharedValue(Dimensions.get('window').width)
   
   // Get current language labels for success modal
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
@@ -755,8 +762,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     },
     {
       key: "Images",
-      label: currentTranslations.imageList,
-      icon: "cloud-upload",
+      label: currentTranslations.analyzeList || currentTranslations.imageList,
+      icon: "scan",
       color: "#ff9500",
       screen: ImageListScreen,
     },
@@ -767,13 +774,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       color: "#34c759",
       screen: HistoryScreen,
     },
-    {
-      key: "Calendar",
-      label: currentTranslations.calendar,
-      icon: "calendar",
-      color: "#6B7280",
-      screen: CalendarPlannerScreen,
-    },
+
     {
       key: "PriceCalculator",
       label: currentTranslations.priceCalculator || "Price Calculator",
@@ -1008,9 +1009,80 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     }
   }, [isMenuModalVisible])
 
+  const getTabIndex = (tabKey) => {
+    'worklet'
+    return mainTabs.findIndex(tab => tab.key === tabKey)
+  }
+
   const handleTabPress = (tab) => {
     setActiveTab(tab.key)
   }
+
+  const changeTab = (newTabKey) => {
+    setActiveTab(newTabKey)
+  }
+
+  // Animated style for smooth swipe
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }]
+    }
+  })
+
+  // Gesture handler for swipe navigation
+  const panGesture = Gesture.Pan()
+    .activeOffsetX([-30, 30])
+    .failOffsetY([-30, 30])
+    .onUpdate((event) => {
+      // Only handle swipe for main tabs
+      if (!["Home", "Images", "History", "PriceCalculator"].includes(activeTab)) {
+        return
+      }
+      // Update position as finger moves
+      translateX.value = event.translationX
+    })
+    .onEnd((event) => {
+      'worklet'
+      const currentIndex = getTabIndex(activeTab)
+      const threshold = 50
+      const velocity = event.velocityX
+      const distance = event.translationX
+
+      // Only handle swipe for main tabs
+      if (!["Home", "Images", "History", "PriceCalculator"].includes(activeTab)) {
+        translateX.value = withTiming(0, { duration: 200 })
+        return
+      }
+
+      // Swipe right (dedo va derecha) -> pantalla ANTERIOR (izquierda)
+      if ((distance > threshold || velocity > 500) && currentIndex > 0) {
+        const prevTab = mainTabs[currentIndex - 1]
+        if (prevTab) {
+          translateX.value = withTiming(screenWidth.value, { duration: 200 }, () => {
+            runOnJS(changeTab)(prevTab.key)
+            translateX.value = 0
+          })
+        } else {
+          translateX.value = withTiming(0, { duration: 200 })
+        }
+      }
+      // Swipe left (dedo va izquierda) -> pantalla SIGUIENTE (derecha)
+      else if ((distance < -threshold || velocity < -500) && currentIndex < mainTabs.length - 1) {
+        const nextTab = mainTabs[currentIndex + 1]
+        if (nextTab) {
+          translateX.value = withTiming(-screenWidth.value, { duration: 200 }, () => {
+            runOnJS(changeTab)(nextTab.key)
+            translateX.value = 0
+          })
+        } else {
+          translateX.value = withTiming(0, { duration: 200 })
+        }
+      }
+      // Not enough distance, snap back
+      else {
+        translateX.value = withTiming(0, { duration: 200 })
+      }
+    })
 
   const renderActiveScreen = () => {
     switch (activeTab) {
@@ -1126,6 +1198,21 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       sv: "Planera menyer och generera listor",
       hu: "Tervezze meg menüit és listákat",
       ar: "خطط قوائمك وأنشئ قوائم التسوق"
+    },
+    shoppingCalendar: {
+      es: "Planea todas tus compras con antelación",
+      en: "Plan all your shopping in advance",
+      de: "Planen Sie alle Ihre Einkäufe im Voraus",
+      fr: "Planifiez tous vos achats à l'avance",
+      it: "Pianifica tutti i tuoi acquisti in anticipo",
+      tr: "Tüm alışverişlerinizi önceden planlayın",
+      pt: "Planeje todas as suas compras com antecedência",
+      ru: "Планируйте все покупки заранее",
+      zh: "提前计划您的所有购物",
+      ja: "すべての買い物を事前に計画",
+      sv: "Planera alla dina inköp i förväg",
+      hu: "Tervezze meg előre minden vásárlását",
+      ar: "خطط لجميع مشترياتك مسبقًا"
     }
   };
 
@@ -1152,6 +1239,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       description: mainItemDescriptions.handwritten[deviceLanguage] || mainItemDescriptions.handwritten['en'],
       icon: "pencil",
       color: "#8B5CF6",
+      tabKey: "HandwrittenList",
       onPress: () => {
         modalizeRef.current?.close()
         setActiveTab("HandwrittenList")
@@ -1162,6 +1250,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       description: mainItemDescriptions.recommendations[deviceLanguage] || mainItemDescriptions.recommendations['en'],
       icon: "bulb",
       color: "#8B5CF6",
+      tabKey: "Recommendations",
       onPress: async () => {
         if (showNewBadge) {
           await AsyncStorage.setItem("@has_seen_recommendations_badge", "true")
@@ -1176,9 +1265,21 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       description: mainItemDescriptions.mealPlanner[deviceLanguage] || mainItemDescriptions.mealPlanner['en'],
       icon: "restaurant-outline",
       color: "#8B5CF6",
+      tabKey: "MealPlanner",
       onPress: () => {
         modalizeRef.current?.close()
         setActiveTab("MealPlanner")
+      }
+    },
+    {
+      label: currentTranslations.shoppingCalendar || "Shopping Calendar",
+      description: mainItemDescriptions.shoppingCalendar[deviceLanguage] || mainItemDescriptions.shoppingCalendar['en'],
+      icon: "calendar-outline",
+      color: "#8B5CF6",
+      tabKey: "CalendarPlanner",
+      onPress: () => {
+        modalizeRef.current?.close()
+        setActiveTab("CalendarPlanner")
       }
     },
   ];
@@ -1331,12 +1432,22 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             />
           </Stack.Navigator>
         )
+      case "CalendarPlanner":
+        return (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="CalendarPlannerScreen" component={CalendarPlannerScreen} />
+          </Stack.Navigator>
+        )
       default:
         return null
     }
   }
 
-  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact", "HandwrittenList", "Recommendations", "MealPlanner"].includes(activeTab)
+  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact", "HandwrittenList", "Recommendations", "MealPlanner", "CalendarPlanner"].includes(activeTab)
+
+  // Screens that should open menu modal on back, not go to Home
+  const menuModalScreens = ["HandwrittenList", "Recommendations", "MealPlanner", "CalendarPlanner"]
+  const shouldOpenMenuOnBack = menuModalScreens.includes(activeTab)
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -1352,45 +1463,32 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           backgroundColor: theme.background,
         }}
       >
-        {/* Back button for menu screens */}
-        {isMenuScreen && (
-          <TouchableOpacity
-            style={{
-              padding: 8,
-              borderRadius: 20,
-              backgroundColor: theme.backgroundtres + '10',
-              borderWidth: 1,
-              borderColor: theme.backgroundtres + '20',
-              marginRight: 10,
-            }}
-            onPress={() => setActiveTab("Home")}
-          >
-            <Ionicons name="chevron-back" size={24} color={theme.text} />
-          </TouchableOpacity>
-        )}
-
         <View style={{
           flexDirection: "row",
           alignItems: "center",
           flex: 1,
         }}>
 
-          {!isMenuScreen && (
-            <View
-              style={{
-                width: isSmallIPhone ? 32 : 40,
-                height: isSmallIPhone ? 32 : 40,
-                borderRadius: isSmallIPhone ? 8 : 10,
-                backgroundColor: activeTab === "Images" ? "#ff950020" :
-                                activeTab === "History" ? "#34c75920" :
-                                activeTab === "Calendar" ? "#6B728020" :
-                                activeTab === "PriceCalculator" ? "#dc262620" :
-                                "#4a6bff20",
-                justifyContent: "center",
-                alignItems: "center",
-                marginRight: isSmallIPhone ? 8 : 12,
-              }}
-            >
+          {/* Icon for all screens including menu screens */}
+          <View
+            style={{
+              width: isSmallIPhone ? 32 : 40,
+              height: isSmallIPhone ? 32 : 40,
+              borderRadius: isSmallIPhone ? 8 : 10,
+              backgroundColor: activeTab === "Images" ? "#ff950020" :
+                              activeTab === "History" ? "#34c75920" :
+                              activeTab === "Calendar" ? "#6B728020" :
+                              activeTab === "PriceCalculator" ? "#dc262620" :
+                              activeTab === "HandwrittenList" ? "#8B5CF620" :
+                              activeTab === "Recommendations" ? "#4a6bff20" :
+                              activeTab === "MealPlanner" ? "#34c75920" :
+                              activeTab === "CalendarPlanner" ? "#6B728020" :
+                              "#4a6bff20",
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: isSmallIPhone ? 8 : 12,
+            }}
+          >
             {activeTab === "Home" ? (
               <Animated.View style={{ transform: [{ scale: iconScaleAnim }] }}>
                 <Image
@@ -1401,7 +1499,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             ) : activeTab === "Images" ? (
               <View style={{ position: 'relative' }}>
                 <Ionicons
-                  name="image"
+                  name="scan"
                   size={isSmallIPhone ? 20 : 24}
                   color="#ff9500"
                 />
@@ -1414,7 +1512,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                   padding: 2,
                 }}>
                   <Ionicons
-                    name="arrow-up"
+                    name="image"
                     size={10}
                     color="white"
                   />
@@ -1482,6 +1580,30 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                   <Text style={{ fontSize: 10, color: "white", fontWeight: "bold" }}>$</Text>
                 </View>
               </View>
+            ) : activeTab === "HandwrittenList" ? (
+              <Ionicons
+                name="pencil"
+                size={isSmallIPhone ? 20 : 24}
+                color="#8B5CF6"
+              />
+            ) : activeTab === "Recommendations" ? (
+              <Ionicons
+                name="bulb"
+                size={isSmallIPhone ? 20 : 24}
+                color="#4a6bff"
+              />
+            ) : activeTab === "MealPlanner" ? (
+              <Ionicons
+                name="restaurant-outline"
+                size={isSmallIPhone ? 20 : 24}
+                color="#34c759"
+              />
+            ) : activeTab === "CalendarPlanner" ? (
+              <Ionicons
+                name="calendar-outline"
+                size={isSmallIPhone ? 20 : 24}
+                color="#6B7280"
+              />
             ) : (
               <Ionicons
                 name="storefront"
@@ -1489,8 +1611,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                 color="#4a6bff"
               />
             )}
-            </View>
-          )}
+          </View>
           <Text
             style={{
               fontSize: isSmallIPhone ? 16 : 21,
@@ -1502,36 +1623,30 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             ellipsizeMode="tail"
           >
             {activeTab === "Home" ? "BuyVoice" :
-             activeTab === "Images" ? currentTranslations.imageList :
+             activeTab === "Images" ? (currentTranslations.analyzeList || currentTranslations.imageList) :
              activeTab === "Calendar" ? currentTranslations.calendar :
              activeTab === "History" ? currentTranslations.saved :
              activeTab === "Subscribe" ? currentTranslations.subscribe :
              activeTab === "Subscription" ? currentTranslations.mySubscription :
              activeTab === "Information" ? currentTranslations.information :
              activeTab === "Contact" ? currentTranslations.contactUs :
-             activeTab === "PriceCalculator" ? (currentTranslations.priceCalculator || "Price Calculator") :
+             activeTab === "PriceCalculator" ? (currentTranslations.priceCalculatorTitle || "Calculate Prices") :
              activeTab === "HandwrittenList" ? (currentTranslations.manualList || "Manual List") :
              activeTab === "Recommendations" ? (menuTexts.recommendations || "Recomendaciones") :
              activeTab === "MealPlanner" ? mealPlannerTexts.title :
+             activeTab === "CalendarPlanner" ? (currentTranslations.shoppingCalendar || "Shopping Calendar") :
              "BuyVoice"}
           </Text>
 
-          {/* Bookmark icon for Home and Images tabs */}
-          {(activeTab === "Home" || activeTab === "Images") && (
-            <TouchableOpacity
-              onPress={() => setActiveTab("History")}
-              style={{ marginLeft: 10 }}
-            >
-              <Ionicons name="bookmark" size={26} color="#34c759" />
-            </TouchableOpacity>
-          )}
         </View>
       </View>
 
       {/* Content */}
-      <View style={{ flex: 1 }}>
-        {isMenuScreen ? renderMenuScreen() : renderActiveScreen()}
-      </View>
+      <GestureDetector gesture={panGesture}>
+        <ReanimatedAnimated.View style={[{ flex: 1 }, animatedStyle]}>
+          {isMenuScreen ? renderMenuScreen() : renderActiveScreen()}
+        </ReanimatedAnimated.View>
+      </GestureDetector>
 
       {/* Custom Bottom Tab Bar */}
       {activeTab === "Home" && hasActiveList ? (
@@ -1606,6 +1721,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                     borderRadius: isSmallIPhone ? 16 : 20,
                     minWidth: isSmallIPhone ? 40 : 50,
                     alignItems: "center",
+                    position: 'relative',
                   }}
                 >
                   <Ionicons
@@ -1618,10 +1734,10 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             )
           })}
 
-          {/* Menu Button */}
+          {/* Menu button in bottom tab bar */}
           <TouchableOpacity
             onPress={() => {
-              console.log("Menu button pressed from tab bar")
+              console.log("Menu button pressed from bottom tab")
               animateMenuBars()
               modalizeRef.current?.open()
             }}
@@ -1633,13 +1749,11 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           >
             <View
               style={{
-                backgroundColor: isMenuScreen ? "#8B5CF620" : "transparent",
                 paddingHorizontal: isSmallIPhone ? 12 : 16,
-                paddingVertical: isSmallIPhone ? 10 : 12,
+                paddingVertical: isSmallIPhone ? 6 : 8,
                 borderRadius: isSmallIPhone ? 16 : 20,
                 minWidth: isSmallIPhone ? 40 : 50,
                 alignItems: "center",
-                justifyContent: "center",
               }}
             >
               <View style={{
@@ -1653,7 +1767,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                     inputRange: [0, 1, 2],
                     outputRange: isSmallIPhone ? [20, 16, 18] : [24, 20, 22]
                   }),
-                  height: isSmallIPhone ? 2.5 : 3,
+                  height: isSmallIPhone ? 2 : 2.5,
                   backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
                   borderRadius: 2,
                   transform: [{
@@ -1666,9 +1780,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                 <Animated.View style={{
                   width: bar2Anim.interpolate({
                     inputRange: [0, 1, 2],
-                    outputRange: isSmallIPhone ? [16, 18, 20] : [20, 22, 24]
+                    outputRange: isSmallIPhone ? [14, 16, 18] : [18, 20, 22]
                   }),
-                  height: isSmallIPhone ? 2.5 : 3,
+                  height: isSmallIPhone ? 2 : 2.5,
                   backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
                   borderRadius: 2,
                   alignSelf: 'flex-end',
@@ -1682,9 +1796,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                 <Animated.View style={{
                   width: bar3Anim.interpolate({
                     inputRange: [0, 1, 2],
-                    outputRange: isSmallIPhone ? [18, 20, 16] : [22, 24, 20]
+                    outputRange: isSmallIPhone ? [16, 18, 14] : [20, 22, 18]
                   }),
-                  height: isSmallIPhone ? 2.5 : 3,
+                  height: isSmallIPhone ? 2 : 2.5,
                   backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
                   borderRadius: 2,
                   transform: [{
@@ -2033,6 +2147,64 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
         closeOnOverlayTap={false}
         panGestureEnabled={false}
         withHandle={false}
+        HeaderComponent={
+          <View
+            style={{
+              backgroundColor: "#e7ead2",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingHorizontal: 16,
+              paddingTop: 12,
+              paddingBottom: 10,
+            }}
+          >
+            {/* Language Button */}
+            {showLanguageButton && (
+              <TouchableOpacity
+                key="language-button"
+                onPress={() => {
+                  setLanguageModalVisible(true)
+                }}
+                style={{
+                  paddingVertical: 8,
+                  paddingHorizontal: 12,
+                  borderRadius: 12,
+                  backgroundColor: "#4a6bff15",
+                  borderWidth: 1,
+                  borderColor: "#4a6bff30",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="globe-outline" size={18} color="#4a6bff" />
+              </TouchableOpacity>
+            )}
+
+            {/* Spacer */}
+            <View style={{ flex: 1 }} />
+
+            {/* Close Button */}
+            <TouchableOpacity
+              onPress={() => modalizeRef.current?.close()}
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 19,
+                backgroundColor: "rgba(107, 114, 128, 0.12)",
+                justifyContent: "center",
+                alignItems: "center",
+                borderWidth: 1,
+                borderColor: "rgba(107, 114, 128, 0.2)",
+              }}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="close" size={20} color="#6b7280" />
+            </TouchableOpacity>
+          </View>
+        }
         scrollViewProps={{
           showsVerticalScrollIndicator: false,
           contentContainerStyle: {
@@ -2040,63 +2212,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           }
         }}
       >
-        {/* Header */}
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingHorizontal: 20,
-            paddingTop: 24,
-            paddingBottom: 16,
-          }}
-        >
-          {/* Language Button */}
-          {showLanguageButton && (
-            <TouchableOpacity
-              key="language-button"
-              onPress={() => {
-                setLanguageModalVisible(true)
-              }}
-              style={{
-                paddingVertical: 8,
-                paddingHorizontal: 12,
-                borderRadius: 12,
-                backgroundColor: "#4a6bff15",
-                borderWidth: 1,
-                borderColor: "#4a6bff30",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 8,
-              }}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="globe-outline" size={18} color="#4a6bff" />
-            </TouchableOpacity>
-          )}
-
-          {/* Spacer */}
-          <View style={{ flex: 1 }} />
-
-          {/* Close Button */}
-          <TouchableOpacity
-            onPress={() => modalizeRef.current?.close()}
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: 19,
-              backgroundColor: "rgba(107, 114, 128, 0.12)",
-              justifyContent: "center",
-              alignItems: "center",
-              borderWidth: 1,
-              borderColor: "rgba(107, 114, 128, 0.2)",
-            }}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="close" size={20} color="#6b7280" />
-          </TouchableOpacity>
-        </View>
-
         {/* Menu Items */}
         <View
           style={{
@@ -2193,12 +2308,31 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                       )}
                     </View>
                     {!item.comingSoon && (
-                      <Ionicons
-                        name="chevron-forward"
-                        size={22}
-                        color="#9ca3af"
-                        style={{ marginLeft: 8 }}
-                      />
+                      item.tabKey && activeTab === item.tabKey ? (
+                        <View
+                          style={{
+                            backgroundColor: item.color + '15',
+                            borderRadius: 20,
+                            padding: 8,
+                            marginLeft: 8,
+                            borderWidth: 1.5,
+                            borderColor: item.color + '30',
+                          }}
+                        >
+                          <Ionicons
+                            name="checkmark"
+                            size={20}
+                            color={item.color}
+                          />
+                        </View>
+                      ) : (
+                        <Ionicons
+                          name="chevron-forward"
+                          size={22}
+                          color="#9ca3af"
+                          style={{ marginLeft: 8 }}
+                        />
+                      )
                     )}
                   </View>
                 </TouchableOpacity>

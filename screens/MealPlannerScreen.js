@@ -101,6 +101,14 @@ const MealPlannerScreen = ({ route }) => {
     return dayNames[day] || day;
   };
 
+  const getMonthName = (monthIndex) => {
+    const months = [
+      t.january, t.february, t.march, t.april, t.may, t.june,
+      t.july, t.august, t.september, t.october, t.november, t.december
+    ];
+    return months[monthIndex] || monthIndex + 1;
+  };
+
   const scrollToDay = (day) => {
     setActiveDay(day);
     const dayIndex = days.indexOf(day);
@@ -110,11 +118,43 @@ const MealPlannerScreen = ({ route }) => {
     }
   };
 
+  const getTodayDay = () => {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = domingo, 1 = lunes, ..., 6 = sábado
+    const dayMapping = {
+      0: 'sunday',
+      1: 'monday',
+      2: 'tuesday',
+      3: 'wednesday',
+      4: 'thursday',
+      5: 'friday',
+      6: 'saturday'
+    };
+    return dayMapping[dayOfWeek];
+  };
+
   useEffect(() => {
     loadWeekPlan();
     loadPreferences();
     checkSubscriptionStatus();
   }, [currentWeekStart]);
+
+  // Scroll al día de hoy cuando se carga la pantalla
+  useEffect(() => {
+    const todayDay = getTodayDay();
+    // Verificar si el día de hoy está dentro de la semana actual
+    const today = new Date();
+    const weekStart = MealPlanService.getWeekStart(today);
+
+    if (weekStart.getTime() === currentWeekStart.getTime()) {
+      // Solo hacer scroll si estamos en la semana actual
+      setActiveDay(todayDay);
+      // Pequeño delay para asegurar que el ScrollView esté renderizado
+      setTimeout(() => {
+        scrollToDay(todayDay);
+      }, 100);
+    }
+  }, []);
 
   // Verificar estado de suscripción
   const checkSubscriptionStatus = async () => {
@@ -786,7 +826,8 @@ const MealPlannerScreen = ({ route }) => {
         {days.map((day) => {
           const dayDate = MealPlanService.getDateForDay(day, currentWeekStart);
           const dayName = getDayName(day);
-          const formattedDate = `${dayDate.getDate()}/${dayDate.getMonth() + 1}`;
+          const monthName = getMonthName(dayDate.getMonth());
+          const formattedDate = `${dayDate.getDate()} ${monthName}`;
 
           return (
             <View
@@ -967,12 +1008,22 @@ const styles = StyleSheet.create({
 
   },
   dayTabText: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
-   color: '#414141ff',
+    color: '#414141ff',
   },
   dayTabTextActive: {
     color: '#fff',
+  },
+  dayTabDate: {
+    fontSize: 9,
+    fontWeight: '500',
+    color: '#6B7280',
+    marginTop: 2,
+  },
+  dayTabDateActive: {
+    color: '#fff',
+    opacity: 0.9,
   },
   dayTabDot: {
     position: 'absolute',

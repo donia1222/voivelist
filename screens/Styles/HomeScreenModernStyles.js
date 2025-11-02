@@ -352,6 +352,7 @@ export const getModernStyles = () => {
       position: 'relative',
       alignItems: "center",
       justifyContent: "center",
+
     },
     
     // Outer pulse ring - COLORES VIBRANTES MEJORADOS
@@ -424,14 +425,14 @@ export const getModernStyles = () => {
     
     // Glass morphism effect when active
     voiceButtonActive: {
-      backgroundColor: "rgba(239, 68, 68, 0.9)",
+      backgroundColor: Platform.OS === 'android' ? "#e7ead2" : "rgba(239, 68, 68, 0.9)",
       shadowColor: "#ef4444",
       borderColor: 'rgba(255, 255, 255, 0.5)',
     },
-    
+
     // Ultra modern gradient when inactive - COLORES VIBRANTES
     voiceButtonInactive: {
-      backgroundColor: "#4a6bff",
+      backgroundColor: Platform.OS === 'android' ? "#e7ead2" : "#4a6bff",
       shadowColor: "#4a6bff",
       borderColor: 'rgba(255, 255, 255, 0.8)',
     },
