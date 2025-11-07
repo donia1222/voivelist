@@ -881,12 +881,20 @@ const ImageListScreen = ({ route }) => {
 
   const requestGalleryPermission = async () => {
     try {
-      const result = await request(
-        Platform.select({
-          android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-          ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
-        }),
-      )
+      // En Android 13+ usar READ_MEDIA_IMAGES, en versiones anteriores READ_EXTERNAL_STORAGE
+      let permission = Platform.select({
+        ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+        android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+      })
+
+      if (Platform.OS === 'android') {
+        const androidVersion = Platform.Version
+        if (androidVersion >= 33) {
+          permission = PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+        }
+      }
+
+      const result = await request(permission)
       return result === RESULTS.GRANTED
     } catch (error) {
       console.error(alertText.failedGalleryPermission, error)

@@ -389,7 +389,7 @@ const OnboardingScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const translateY = useRef(new Animated.Value(0)).current;
-  const filteredSlides = isSubscribed ? slides.slice(0, 3) : slides;
+  const filteredSlides = isSubscribed ? slides : slides.slice(0, 3);
   const [buttonVisible, setButtonVisible] = useState(true); // Estado para manejar la visibilidad del botón
   const [showCloseIcon, setShowCloseIcon] = useState(false); // Estado para manejar la visibilidad del icono de cerrar
 

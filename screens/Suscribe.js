@@ -1010,16 +1010,24 @@ export default function Suscribe() {
   useEffect(() => {
     const checkSubscription = async () => {
       try {
+        console.log('🔍 Verificando suscripción inicial...');
         const purchaserInfo = await Purchases.getCustomerInfo();
         const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161';
+
+        console.log('📊 Entitlements activos:', Object.keys(purchaserInfo.entitlements.active || {}));
+        console.log('🎫 Buscando entitlement:', entitlementId);
+
         // Verificar cualquiera de las nuevas suscripciones
         if (purchaserInfo && (purchaserInfo.entitlements.active['premium'] ||
                             purchaserInfo.entitlements.active[entitlementId] ||
                             Object.keys(purchaserInfo.activeSubscriptions || {}).length > 0)) {
+          console.log('✅ Suscripción encontrada en verificación inicial');
           setIsSubscribed(true);
+        } else {
+          console.log('❌ No se encontró suscripción activa');
         }
       } catch (error) {
-        console.log('Error al obtener la información del comprador:', error);
+        console.log('❌ Error al obtener la información del comprador:', error);
       } finally {
         setIsLoading(false);
       }

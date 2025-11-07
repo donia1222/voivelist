@@ -89,6 +89,7 @@ const MySubscriptionScreen = () => {
   const [subscriptionInfo, setSubscriptionInfo] = useState(null);
   const [userId, setUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [subscriptionPrice, setSubscriptionPrice] = useState(null);
   const locale = RNLocalize.getLocales()[0];
   const texts = getTextsForLocale(locale);
   const currencyCode = RNLocalize.getCurrencies()[0];
@@ -221,20 +222,22 @@ const MySubscriptionScreen = () => {
         const allActiveSubscriptions = [];
 
         // Verificar cada tipo de suscripción y recopilar información
-        const entitlementTypes = ['06mes', 'year', 'semana16', '12981', 'premium'];
+        const entitlementTypes = ['06mes', 'year', 'semana16', '12981', 'an6161', 'premium'];
 
         entitlementTypes.forEach(entitlementId => {
           if (activeEntitlements[entitlementId]) {
             const subscription = activeEntitlements[entitlementId];
             const productId = subscription.productIdentifier;
+            const productPlanId = subscription.productPlanIdentifier;
+
+            // Para Android, la clave puede ser "productId:basePlanId"
+            const purchaseDateKey = productPlanId ? `${productId}:${productPlanId}` : productId;
 
             // Obtener fechas
-            subscription.purchaseDate = entitlementId === '12981'
-              ? customerInfo.allPurchaseDates['12981']
-              : customerInfo.allPurchaseDates[productId];
-            subscription.expirationDate = entitlementId === '12981'
-              ? customerInfo.allExpirationDates['12981']
-              : customerInfo.allExpirationDates[productId];
+            subscription.purchaseDate = customerInfo.allPurchaseDates[purchaseDateKey] ||
+                                       customerInfo.allPurchaseDates[productId];
+            subscription.expirationDate = customerInfo.allExpirationDates[purchaseDateKey] ||
+                                         customerInfo.allExpirationDates[productId];
 
             console.log(`🔍 Suscripción encontrada (${entitlementId}):`, subscription);
             console.log(`📅 Expira: ${subscription.expirationDate}`);
@@ -267,6 +270,57 @@ const MySubscriptionScreen = () => {
 
         if (foundSubscription) {
           setSubscriptionInfo(foundSubscription);
+
+          // Obtener el precio del producto
+          try {
+            const offerings = await Purchases.getOfferings();
+            const productId = foundSubscription.productIdentifier;
+
+            console.log('💰 Buscando precio para productId:', productId);
+
+            // Buscar en todas las offerings (current y all)
+            let foundPrice = null;
+            const allOfferings = [];
+
+            // Agregar current si existe
+            if (offerings.current) {
+              allOfferings.push(offerings.current);
+            }
+
+            // Agregar todas las demás offerings
+            if (offerings.all) {
+              Object.values(offerings.all).forEach(offering => {
+                allOfferings.push(offering);
+              });
+            }
+
+            console.log('💰 Total offerings a revisar:', allOfferings.length);
+
+            // Buscar en todas las offerings
+            for (const offering of allOfferings) {
+              if (offering.availablePackages) {
+                for (const pkg of offering.availablePackages) {
+                  console.log('💰 Paquete:', pkg.product.identifier, 'Precio:', pkg.product.priceString);
+
+                  if (pkg.product.identifier === productId ||
+                      pkg.product.identifier.includes(productId)) {
+                    foundPrice = pkg.product.priceString;
+                    console.log('✅ Precio encontrado:', foundPrice);
+                    break;
+                  }
+                }
+              }
+              if (foundPrice) break;
+            }
+
+            if (foundPrice) {
+              setSubscriptionPrice(foundPrice);
+            } else {
+              console.log('⚠️ No se encontró precio para productId:', productId);
+            }
+          } catch (error) {
+            console.log('❌ Error obteniendo precio:', error);
+          }
         } else {
           console.log('❌ No se encontró ninguna suscripción activa');
         }
@@ -329,7 +383,7 @@ const MySubscriptionScreen = () => {
             
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>{texts.amountPaid}:</Text>
-              <Text style={styles.infoValue}>3 {currencySymbol}</Text>
+              <Text style={styles.infoValue}>{subscriptionPrice || `3 ${currencySymbol}`}</Text>
             </View>
           </View>
         ) : (
@@ -420,7 +474,7 @@ const getStyles = (theme) => StyleSheet.create({
   badgeText: {
     color: '#149142ff',
     fontFamily: 'Poppins-Bold',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
   },
   image: {
@@ -429,18 +483,19 @@ const getStyles = (theme) => StyleSheet.create({
     marginBottom: 16,
   },
   welcomeText: {
-    fontSize: 21,
+    fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
     color: theme === 'dark' ? '#ffffff' : '#1d8a26be',
     textAlign: 'center',
     marginTop: 8,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   infoContainer: {
-    backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff05',
+    backgroundColor: theme === 'dark' ? '#2a2a2af9' : '#fffffff8',
     borderRadius: 20,
     padding: 28,
     width: '100%',
+    marginTop: 32,
     marginBottom: 32,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
