@@ -2257,17 +2257,43 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                       />
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Text
-                        style={{
-                          color: "#1f2937",
-                          fontSize: 17,
-                          fontWeight: "700",
-                          marginBottom: 6,
-                          letterSpacing: -0.3,
-                        }}
-                      >
-                        {item.label}
-                      </Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text
+                          style={{
+                            color: "#1f2937",
+                            fontSize: 17,
+                            fontWeight: "700",
+                            marginBottom: 6,
+                            letterSpacing: -0.3,
+                          }}
+                        >
+                          {item.label}
+                        </Text>
+                        {/* Badge "New" for MealPlanner */}
+                        {item.tabKey === "MealPlanner" && (
+                          <View
+                            style={{
+                              backgroundColor: '#8B5CF6',
+                              borderRadius: 6,
+                              paddingHorizontal: 6,
+                              paddingVertical: 2,
+                              marginLeft: 8,
+                              marginBottom: 4,
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: '#FFFFFF',
+                                fontSize: 9,
+                                fontWeight: '800',
+                                letterSpacing: 0.5,
+                              }}
+                            >
+                              NEW
+                            </Text>
+                          </View>
+                        )}
+                      </View>
                       <Text
                         style={{
                           color: "#6b7280",

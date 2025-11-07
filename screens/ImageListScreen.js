@@ -740,10 +740,14 @@ const ImageListScreen = ({ route }) => {
 
         // Solo verificar si no viene de navegación
         await Purchases.setDebugLogsEnabled(true)
-        await Purchases.configure({ apiKey: "appl_bHxScLAZLsKxfggiOiqVAZTXjJX" })
+        const apiKey = Platform.OS === 'ios'
+          ? "appl_bHxScLAZLsKxfggiOiqVAZTXjJX"  // iOS API key
+          : "goog_kddUeAkPdJXeWtbTBEEnrFLQYdW";  // Android API key
+        await Purchases.configure({ apiKey: apiKey })
 
         const customerInfo = await Purchases.getCustomerInfo()
-        if (customerInfo.entitlements.active["12981"]) {
+        const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161'
+        if (customerInfo.entitlements.active[entitlementId]) {
           setIsSubscribed(true)
         } else {
           setIsSubscribed(false)

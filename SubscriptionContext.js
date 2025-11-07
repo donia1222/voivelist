@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import Purchases from 'react-native-purchases'
+import { Platform } from 'react-native'
 
 const SubscriptionContext = createContext()
 
@@ -19,8 +20,9 @@ export const SubscriptionProvider = ({ children }) => {
     try {
       setIsLoading(true)
       const customerInfo = await Purchases.getCustomerInfo()
-      // Usar el mismo identificador que en DrawerNavigator
-      const hasActiveSubscription = customerInfo.entitlements.active["12981"] !== undefined
+      // Usar identificador según plataforma
+      const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161'
+      const hasActiveSubscription = customerInfo.entitlements.active[entitlementId] !== undefined
       setIsSubscribed(hasActiveSubscription)
       console.log('🔄 Estado de suscripción actualizado:', hasActiveSubscription ? 'Activa' : 'Inactiva')
       return hasActiveSubscription

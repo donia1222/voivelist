@@ -50,7 +50,8 @@ function AppContent() {
   const checkSubscription = async () => {
     try {
       const customerInfo = await Purchases.getCustomerInfo()
-      if (customerInfo.entitlements.active["12981"]) {
+      const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161'
+      if (customerInfo.entitlements.active[entitlementId]) {
         console.log("Usuario ya suscrito")
         setIsSubscribed(true)
       } else {
@@ -76,8 +77,11 @@ function AppContent() {
 
   const handleAcceptPermission = async () => {
     setPermissionModalVisible(false)
-    await requestNotificationPermission()
-    configurePushNotifications(null)
+    // Solo notificaciones en iOS
+    if (Platform.OS === 'ios') {
+      await requestNotificationPermission()
+      configurePushNotifications(null)
+    }
   }
 
   useEffect(() => {
@@ -88,7 +92,7 @@ function AppContent() {
         // Configurar API key según plataforma
         const apiKey = Platform.OS === 'ios'
           ? "appl_bHxScLAZLsKxfggiOiqVAZTXjJX"  // iOS API key
-          : "goog_PLACEHOLDER_ANDROID_KEY";      // Android API key (reemplazar cuando esté disponible)
+          : "goog_kddUeAkPdJXeWtbTBEEnrFLQYdW";  // Android API key
 
         Purchases.configure({
           apiKey: apiKey,
@@ -97,7 +101,10 @@ function AppContent() {
 
         await checkSubscription()
         await checkFirstTimeOpen()
-        configurePushNotifications(null)
+        // Solo notificaciones en iOS
+        if (Platform.OS === 'ios') {
+          configurePushNotifications(null)
+        }
       } catch (error) {
         console.log("Error al inicializar la aplicación:", error)
       } finally {

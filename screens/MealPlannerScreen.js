@@ -160,7 +160,8 @@ const MealPlannerScreen = ({ route }) => {
   const checkSubscriptionStatus = async () => {
     try {
       const customerInfo = await Purchases.getCustomerInfo();
-      const hasActiveSubscription = customerInfo.entitlements.active["12981"] !== undefined;
+      const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161';
+      const hasActiveSubscription = customerInfo.entitlements.active[entitlementId] !== undefined;
       setIsSubscribed(hasActiveSubscription);
       console.log('🔄 MealPlanner - Estado de suscripción:', hasActiveSubscription ? 'Activa' : 'Inactiva');
     } catch (error) {

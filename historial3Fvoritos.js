@@ -162,7 +162,8 @@ const HistoryScreen = ({ navigation }) => {
   
   const listener = Purchases.addCustomerInfoUpdateListener((customerInfo) => {
     console.log('Información del cliente actualizada:', customerInfo);
-    if (customerInfo.entitlements.active['12981']) {
+    const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161';
+    if (customerInfo.entitlements.active[entitlementId]) {
       console.log('Usuario ya suscrito');
       setIsSubscribed(true);
     } else {
@@ -175,12 +176,16 @@ const HistoryScreen = ({ navigation }) => {
     const initializePurchases = async () => {
       try {
         await Purchases.setDebugLogsEnabled(true);
-        await Purchases.configure({ apiKey: 'appl_bHxScLAZLsKxfggiOiqVAZTXjJX' });
+        const apiKey = Platform.OS === 'ios'
+          ? 'appl_bHxScLAZLsKxfggiOiqVAZTXjJX'  // iOS API key
+          : 'goog_kddUeAkPdJXeWtbTBEEnrFLQYdW';  // Android API key
+        await Purchases.configure({ apiKey: apiKey });
 
         const customerInfo = await Purchases.getCustomerInfo();
         console.log('Información del cliente:', customerInfo);
 
-        if (customerInfo.entitlements.active['12981']) {
+        const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161';
+        if (customerInfo.entitlements.active[entitlementId]) {
           console.log('Usuario ya suscrito');
           setIsSubscribed(true);
         } else {
@@ -196,7 +201,8 @@ const HistoryScreen = ({ navigation }) => {
 
     const handleCustomerInfoUpdate = (info) => {
       console.log('Información del cliente actualizada:', info);
-      if (info.entitlements.active['12981']) {
+      const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161';
+      if (info.entitlements.active[entitlementId]) {
         console.log('Usuario ya suscrito');
         setIsSubscribed(true);
       } else {
@@ -241,21 +247,27 @@ const HistoryScreen = ({ navigation }) => {
   };
   
   const checkNotificationPermissions = () => {
-    PushNotification.checkPermissions((permissions) => {
-      if (!permissions.alert || !permissions.badge || !permissions.sound) {
-        Alert.alert(
-          currentLabels.notificationsDisabledTittle, // Título de la alerta traducido
-          currentLabels.notificationsDisabled, // Mensaje de la alerta traducido
-          [
-            { text: currentLabels.cancel, style: "cancel" },
-            { text: currentLabels.active, onPress: () => Linking.openSettings() }
-          ],
-          { cancelable: false }
-        );
-      } else {
-        setReminderModalVisible(true);
-      }
-    });
+    // Solo notificaciones en iOS
+    if (Platform.OS === 'ios') {
+      PushNotification.checkPermissions((permissions) => {
+        if (!permissions.alert || !permissions.badge || !permissions.sound) {
+          Alert.alert(
+            currentLabels.notificationsDisabledTittle, // Título de la alerta traducido
+            currentLabels.notificationsDisabled, // Mensaje de la alerta traducido
+            [
+              { text: currentLabels.cancel, style: "cancel" },
+              { text: currentLabels.active, onPress: () => Linking.openSettings() }
+            ],
+            { cancelable: false }
+          );
+        } else {
+          setReminderModalVisible(true);
+        }
+      });
+    } else {
+      // En Android, abrir directamente el modal sin verificar permisos
+      setReminderModalVisible(true);
+    }
   };
 
   useEffect(() => {
@@ -395,7 +407,10 @@ const HistoryScreen = ({ navigation }) => {
 
   const cancelNotification = (listIndex) => {
     if (reminders[listIndex]) {
-      PushNotification.cancelLocalNotification(`${listIndex}`); // Usa el método correcto
+      // Solo notificaciones en iOS
+      if (Platform.OS === 'ios') {
+        PushNotification.cancelLocalNotification(`${listIndex}`);
+      }
       const newReminders = { ...reminders };
       delete newReminders[listIndex];
       setReminders(newReminders);
@@ -406,18 +421,21 @@ const HistoryScreen = ({ navigation }) => {
   
 
   const scheduleNotification = (listName, date, listIndex) => {
-    PushNotification.localNotificationSchedule({
-      id: `${listIndex}`, // Añade esta línea para establecer un ID único
-      title: currentLabels.reminderTitle,
-      message: `${currentLabels.reminderMessage} ${listName}`,
-      date: date,
-      allowWhileIdle: true,
-    });
-  
+    // Solo notificaciones en iOS
+    if (Platform.OS === 'ios') {
+      PushNotification.localNotificationSchedule({
+        id: `${listIndex}`,
+        title: currentLabels.reminderTitle,
+        message: `${currentLabels.reminderMessage} ${listName}`,
+        date: date,
+        allowWhileIdle: true,
+      });
+    }
+
     const newReminders = { ...reminders, [listIndex]: date };
     setReminders(newReminders);
     saveReminders(newReminders);
-  
+
     setSuccessModalVisible(true);
   };
   

@@ -1009,20 +1009,19 @@ export default function Suscribe() {
 
   useEffect(() => {
     const checkSubscription = async () => {
-      if (Platform.OS === 'ios') {
-        try {
-          const purchaserInfo = await Purchases.getCustomerInfo();
-          // Verificar cualquiera de las nuevas suscripciones
-          if (purchaserInfo && (purchaserInfo.entitlements.active['premium'] ||
-                              purchaserInfo.entitlements.active['12981'] ||
-                              Object.keys(purchaserInfo.activeSubscriptions || {}).length > 0)) {
-            setIsSubscribed(true);
-          }
-        } catch (error) {
-          console.log('Error al obtener la información del comprador:', error);
-        } finally {
-          setIsLoading(false);
+      try {
+        const purchaserInfo = await Purchases.getCustomerInfo();
+        const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161';
+        // Verificar cualquiera de las nuevas suscripciones
+        if (purchaserInfo && (purchaserInfo.entitlements.active['premium'] ||
+                            purchaserInfo.entitlements.active[entitlementId] ||
+                            Object.keys(purchaserInfo.activeSubscriptions || {}).length > 0)) {
+          setIsSubscribed(true);
         }
+      } catch (error) {
+        console.log('Error al obtener la información del comprador:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -1063,9 +1062,10 @@ export default function Suscribe() {
 
       try {
         const purchaserInfo = await Purchases.getCustomerInfo();
+        const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161';
         // Verificar cualquiera de las nuevas suscripciones
         if (purchaserInfo && (purchaserInfo.entitlements.active['premium'] ||
-                            purchaserInfo.entitlements.active['12981'] ||
+                            purchaserInfo.entitlements.active[entitlementId] ||
                             Object.keys(purchaserInfo.activeSubscriptions || {}).length > 0)) {
           console.log('Usuario ya suscrito');
           setIsSubscribed(true);
@@ -1119,8 +1119,9 @@ export default function Suscribe() {
       console.log('📦 Resultado de compra:', purchaseMade);
 
       // Verificar cualquier entitlement activo o suscripción
+      const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161';
       const hasActiveSubscription = purchaseMade?.customerInfo?.entitlements?.active?.['premium'] ||
-                                   purchaseMade?.customerInfo?.entitlements?.active?.['12981'] ||
+                                   purchaseMade?.customerInfo?.entitlements?.active?.[entitlementId] ||
                                    Object.keys(purchaseMade?.customerInfo?.activeSubscriptions || {}).length > 0;
 
       if (hasActiveSubscription) {
@@ -1165,8 +1166,9 @@ export default function Suscribe() {
         console.log('Restored Purchases:', restoredPurchases);
 
         // Verificar cualquier entitlement activo o suscripción
+        const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161';
         const hasActiveSubscription = restoredPurchases?.entitlements?.active?.['premium'] ||
-                                     restoredPurchases?.entitlements?.active?.['12981'] ||
+                                     restoredPurchases?.entitlements?.active?.[entitlementId] ||
                                      Object.keys(restoredPurchases?.activeSubscriptions || {}).length > 0;
 
         if (hasActiveSubscription) {

@@ -761,7 +761,8 @@ const HomeScreen = ({ navigation }) => {
 
   const listener = Purchases.addCustomerInfoUpdateListener((customerInfo) => {
     console.log("Información del cliente actualizada:", customerInfo)
-    if (customerInfo.entitlements.active["12981"]) {
+    const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161'
+    if (customerInfo.entitlements.active[entitlementId]) {
       console.log("Usuario ya suscrito")
       setIsSubscribed(true)
     } else {
@@ -774,12 +775,16 @@ const HomeScreen = ({ navigation }) => {
     const initializePurchases = async () => {
       try {
         await Purchases.setDebugLogsEnabled(true)
-        await Purchases.configure({ apiKey: "appl_bHxScLAZLsKxfggiOiqVAZTXjJX" })
+        const apiKey = Platform.OS === 'ios'
+          ? "appl_bHxScLAZLsKxfggiOiqVAZTXjJX"  // iOS API key
+          : "goog_kddUeAkPdJXeWtbTBEEnrFLQYdW";  // Android API key
+        await Purchases.configure({ apiKey: apiKey })
 
         const customerInfo = await Purchases.getCustomerInfo()
         console.log("Información del cliente:", customerInfo)
 
-        if (customerInfo.entitlements.active["12981"]) {
+        const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161'
+        if (customerInfo.entitlements.active[entitlementId]) {
           console.log("Usuario ya suscrito")
           setIsSubscribed(true)
         } else {
@@ -795,7 +800,8 @@ const HomeScreen = ({ navigation }) => {
 
     const handleCustomerInfoUpdate = (info) => {
       console.log("Información del cliente actualizada:", info)
-      if (info.entitlements.active["12981"]) {
+      const entitlementId = Platform.OS === 'ios' ? '12981' : 'an6161'
+      if (info.entitlements.active[entitlementId]) {
         console.log("Usuario ya suscrito")
         setIsSubscribed(true)
       } else {
