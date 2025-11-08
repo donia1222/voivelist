@@ -143,7 +143,7 @@ function AppContent() {
       <NavigationContainer>
         <CustomBottomTabNavigator
           isSubscribed={isSubscribed}
-          initialTab={initialRoute === "HomeScreen" ? "Home" : "Home"}
+          initialTab={initialRoute === "HomeScreen" ? "Home" : "Information"}
         />
       </NavigationContainer>
     )
@@ -153,7 +153,7 @@ function AppContent() {
     <NavigationContainer>
       <CustomBottomTabNavigator
         isSubscribed={isSubscribed}
-        initialTab={initialRoute === "HomeScreen" ? "Home" : "Home"}
+        initialTab={initialRoute === "HomeScreen" ? "Home" : "Information"}
       />
     </NavigationContainer>
   )

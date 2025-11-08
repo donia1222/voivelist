@@ -332,7 +332,7 @@ const GDPRModal = ({ visible, onClose }) => {
                 </ScrollView>
             </View>
         </PanGestureHandler>
-        
+
     </GestureHandlerRootView>
 </Modal>
     );

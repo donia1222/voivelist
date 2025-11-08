@@ -17,6 +17,7 @@ export const translations = {
     home: "Home",
     calendar: "Shopping Calendar",
     priceCalculator: "Price Calculator",
+    createFirstList: "Create My First List",
     // Header titles
     voiceGrocery: "Voice Grocery",
     history: "History",
@@ -41,6 +42,7 @@ export const translations = {
     home: "Inicio",
     calendar: "Calendario de Compras",
     priceCalculator: "Calculadora de Precios",
+    createFirstList: "Crear Mi Primera Lista",
     // Header titles
     voiceGrocery: "Lista de Voz",
     history: "Historial",
@@ -65,6 +67,7 @@ export const translations = {
     home: "Startseite",
     calendar: "Einkaufskalender",
     priceCalculator: "Preisrechner",
+    createFirstList: "Meine Erste Liste Erstellen",
     // Header titles
     voiceGrocery: "Spracheinkaufsliste",
     history: "Verlauf",
@@ -89,6 +92,7 @@ export const translations = {
     home: "Home",
     calendar: "Calendario della Spesa",
     priceCalculator: "Calcolatore di Prezzi",
+    createFirstList: "Crea La Mia Prima Lista",
     // Header titles
     voiceGrocery: "Lista della Spesa Vocale",
     history: "Cronologia",
@@ -113,6 +117,7 @@ export const translations = {
     home: "Accueil",
     calendar: "Calendrier des Courses",
     priceCalculator: "Calculateur de Prix",
+    createFirstList: "Créer Ma Première Liste",
     // Header titles
     voiceGrocery: "Liste de Courses Vocale",
     history: "Historique",
@@ -136,6 +141,7 @@ export const translations = {
     information: "Bilgi",
     home: "Ana Sayfa",
     calendar: "Alışveriş Takvimi",
+    createFirstList: "İlk Listemi Oluştur",
     // Header titles
     voiceGrocery: "Sesli Alışveriş Listesi",
     history: "Geçmiş",
@@ -159,6 +165,7 @@ export const translations = {
     information: "Informações",
     home: "Início",
     calendar: "Calendário de Compras",
+    createFirstList: "Criar Minha Primeira Lista",
     // Header titles
     voiceGrocery: "Lista de Compras por Voz",
     history: "Histórico",
@@ -181,6 +188,7 @@ export const translations = {
     information: "Информация",
     home: "Главная",
     calendar: "Календарь Покупок",
+    createFirstList: "Создать Мой Первый Список",
     // Header titles
     voiceGrocery: "Голосовой Список Покупок",
     history: "История",
@@ -203,6 +211,7 @@ export const translations = {
     information: "معلومات",
     home: "الرئيسية",
     calendar: "تقويم التسوق",
+    createFirstList: "إنشاء قائمتي الأولى",
     // Header titles
     voiceGrocery: "قائمة التسوق الصوتية",
     history: "السجل",
@@ -225,6 +234,7 @@ export const translations = {
     information: "Információ",
     home: "Főoldal",
     calendar: "Vásárlási Naptár",
+    createFirstList: "Első Listám Létrehozása",
     // Header titles
     voiceGrocery: "Hangos Bevásárlólista",
     history: "Előzmények",
@@ -247,6 +257,7 @@ export const translations = {
     information: "情報",
     home: "ホーム",
     calendar: "ショッピングカレンダー",
+    createFirstList: "最初のリストを作成",
     // Header titles
     voiceGrocery: "音声買い物リスト",
     history: "履歴",

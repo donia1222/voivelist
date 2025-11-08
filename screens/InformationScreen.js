@@ -1,11 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Dimensions, ActivityIndicator, Animated, Linking, Platform } from 'react-native';
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Dimensions, ActivityIndicator, Animated, Linking, Platform, Modal } from 'react-native';
 import { useTheme } from '../ThemeContext'; // Importa el hook useTheme
 import * as RNLocalize from 'react-native-localize';
 import { Ionicons } from 'react-native-vector-icons';
 import Purchases from 'react-native-purchases';
 import RNRestart from 'react-native-restart'; // Importa para reiniciar la app (si es necesario)
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { translations } from '../translations';
+import PrivacyModal from './links/PrivacyModal';
+import EULAModal from './links/EulaModal';
+import GDPRModal from './links/GDPRModal';
+import ContactScreen from './ContactScreen';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const isSmallIPhone = Platform.OS === 'ios' && (screenWidth <= 375 || screenHeight <= 667);
@@ -379,19 +384,25 @@ const slides = [
 ];
 
 const { width } = Dimensions.get('window');
-const OnboardingScreen = ({ navigation }) => {
+const OnboardingScreen = ({ navigation, onNavigateHome }) => {
   const { theme } = useTheme();
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
   const currentLabels = labels[deviceLanguage] || labels['en'];
+  const currentTranslations = translations[deviceLanguage] || translations['en'];
   const styles = getStyles(theme);
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const translateY = useRef(new Animated.Value(0)).current;
-  const filteredSlides = isSubscribed ? slides : slides.slice(0, 3);
+  const filteredSlides = slides; // Mostrar todas las 5 pantallas siempre
   const [buttonVisible, setButtonVisible] = useState(true); // Estado para manejar la visibilidad del botón
   const [showCloseIcon, setShowCloseIcon] = useState(false); // Estado para manejar la visibilidad del icono de cerrar
+  const [showCreateListButton, setShowCreateListButton] = useState(false); // Botón de "Crear mi primera lista"
+  const [isPrivacyModalVisible, setIsPrivacyModalVisible] = useState(false);
+  const [isEULAModalVisible, setIsEULAModalVisible] = useState(false);
+  const [isGDPRModalVisible, setIsGDPRModalVisible] = useState(false);
+  const [isContactModalVisible, setIsContactModalVisible] = useState(false);
 
   useEffect(() => {
     const checkSubscription = async () => {
@@ -417,6 +428,9 @@ const OnboardingScreen = ({ navigation }) => {
       if (hasButtonShown !== null) {
         setButtonVisible(false); // Si ya se ha mostrado, no mostrar el botón
         setShowCloseIcon(true); // Mostrar el icono de cerrar
+        setShowCreateListButton(false); // No mostrar botón de crear lista
+      } else {
+        setShowCreateListButton(true); // Mostrar botón de crear lista solo la primera vez
       }
     };
 
@@ -426,6 +440,14 @@ const OnboardingScreen = ({ navigation }) => {
   const navigate = async () => {
     await AsyncStorage.setItem('hasButtonShown', 'true'); // Guardar que el botón ya se mostró
     RNRestart.Restart(); // Esto reiniciará la app
+  };
+
+  const handleCreateFirstList = async () => {
+    await AsyncStorage.setItem('hasButtonShown', 'true'); // Guardar que el botón ya se mostró
+    // Navegar a Home sin reiniciar
+    if (onNavigateHome) {
+      onNavigateHome();
+    }
   };
 
   const handleScroll = (event) => {
@@ -455,6 +477,11 @@ const OnboardingScreen = ({ navigation }) => {
       flatListRef.current.scrollToIndex({ index: currentIndex + 1, animated: true });
     }
   };
+
+  const handlePrivacyPress = () => setIsPrivacyModalVisible(true);
+  const handleEULAPress = () => setIsEULAModalVisible(true);
+  const handleGDPRPress = () => setIsGDPRModalVisible(true);
+  const handleContactPress = () => setIsContactModalVisible(true);
 
   return (
     <View style={styles.container}>
@@ -488,6 +515,88 @@ const OnboardingScreen = ({ navigation }) => {
         </View>
       )}
 
+      {showCreateListButton && currentIndex === filteredSlides.length - 1 && (
+        <TouchableOpacity
+          style={styles.createListIconButton}
+          onPress={handleCreateFirstList}
+        >
+          <Ionicons name="mic" size={28} color="#009688" />
+
+          <Text style={styles.createListButtonText}>START</Text>
+
+        </TouchableOpacity>
+      )}
+
+      {/* Footer Links */}
+      <View style={styles.linksContainer}>
+        <TouchableOpacity
+          onPress={handlePrivacyPress}
+          style={styles.linkButton}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.linkText}>Privacy Policy</Text>
+        </TouchableOpacity>
+        {Platform.OS === 'ios' && (
+          <TouchableOpacity
+            onPress={handleEULAPress}
+            style={styles.linkButton}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.linkText}>EULA</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity
+          onPress={handleGDPRPress}
+          style={styles.linkButton}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.linkText}>Terms</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleContactPress}
+          style={styles.linkButton}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.linkText}>Support</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Modals */}
+      <PrivacyModal visible={isPrivacyModalVisible} onClose={() => setIsPrivacyModalVisible(false)} />
+      <EULAModal visible={isEULAModalVisible} onClose={() => setIsEULAModalVisible(false)} />
+      <GDPRModal visible={isGDPRModalVisible} onClose={() => setIsGDPRModalVisible(false)} />
+
+      {/* Contact Modal */}
+      <Modal
+        visible={isContactModalVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setIsContactModalVisible(false)}
+      >
+        <View style={{ flex: 1 }}>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            paddingTop: Platform.OS === 'ios' ? 50 : 20,
+            paddingBottom: 10,
+            backgroundColor: theme?.background || '#ffffff',
+            borderBottomWidth: 1,
+            borderBottomColor: theme?.isDark ? '#374151' : '#e5e7eb',
+          }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: theme?.text || '#111827'
+            }}>Contact Support</Text>
+            <TouchableOpacity onPress={() => setIsContactModalVisible(false)}>
+              <Ionicons name="close" size={28} color={theme?.text || '#111827'} />
+            </TouchableOpacity>
+          </View>
+          <ContactScreen navigation={{ goBack: () => setIsContactModalVisible(false) }} />
+        </View>
+      </Modal>
 
     </View>
   );
@@ -507,10 +616,10 @@ const getStyles = (theme) => StyleSheet.create({
     height: '100%',
   },
   image: {
-    width: isSmallIPhone ? 100 : 150,
-    height: isSmallIPhone ? 100 : 150,
+    width: isSmallIPhone ? 120 : 180,
+    height: isSmallIPhone ? 120 : 180,
     resizeMode: 'contain',
-    marginBottom: isSmallIPhone ? 20 : 40,
+    marginBottom: isSmallIPhone ? 10 : 20,
   },
   title: {
     fontSize: 24,
@@ -636,6 +745,48 @@ const getStyles = (theme) => StyleSheet.create({
 position: 'absolute',
 top:10,
 right:20,
+  },
+  createListIconButton: {
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: isSmallIPhone ? 5 : 10,
+
+  paddingHorizontal: isSmallIPhone ? 8 : 15,
+  paddingVertical: isSmallIPhone ? 8 : 2,
+  borderRadius: 50,
+    // Fo
+    // pando azul-lila suave semitransparente
+  },
+  createListButtonText: {
+    color: '#009688',
+    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
+    fontWeight: '600',
+  },
+  linksContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    paddingHorizontal: 20,
+    marginBottom: -5,
+  },
+  linkButton: {
+    backgroundColor: 'transparent',
+    paddingHorizontal: isSmallIPhone ? 8 : 12,
+    paddingVertical: isSmallIPhone ? 4 : 6,
+    margin: 2,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: theme?.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+  },
+  linkText: {
+    color: theme?.text ? theme.text + '99' : '#8e8e93',
+    fontSize: isSmallIPhone ? 10 : 12,
+    fontWeight: '600',
+    letterSpacing: 0.3,
   },
 
 });

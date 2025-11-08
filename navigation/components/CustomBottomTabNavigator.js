@@ -1378,7 +1378,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       case "Information":
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="InformationScreen" component={InformationScreen} />
+            <Stack.Screen name="InformationScreen">
+              {(props) => <InformationScreen {...props} onNavigateHome={() => setActiveTab('Home')} />}
+            </Stack.Screen>
           </Stack.Navigator>
         )
       case "PriceCalculator":

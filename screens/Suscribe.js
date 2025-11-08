@@ -5,7 +5,8 @@ import RNRestart from 'react-native-restart';
 import PrivacyModal from './links/PrivacyModal';
 import EULAModal from './links/EulaModal';
 import GDPRModal from './links/GDPRModal';
-import DeviceInfo from 'react-native-device-info';
+import ContactScreen from './ContactScreen';
+import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import Purchases from 'react-native-purchases';
 import { useTheme } from '../ThemeContext';
@@ -969,6 +970,7 @@ export default function Suscribe() {
   const [isPrivacyModalVisible, setIsPrivacyModalVisible] = useState(false);
   const [isEULAModalVisible, setIsEULAModalVisible] = useState(false);
   const [isGDPRModalVisible, setIsGDPRModalVisible] = useState(false);
+  const [isContactModalVisible, setIsContactModalVisible] = useState(false);
   const [currencyCode, setCurrencyCode] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
   
@@ -1208,14 +1210,7 @@ export default function Suscribe() {
   const handlePrivacyPress = () => setIsPrivacyModalVisible(true);
   const handleEULAPress = () => setIsEULAModalVisible(true);
   const handleGDPRPress = () => setIsGDPRModalVisible(true);
-
-  const handleContactPress = async () => {
-    const deviceModel = DeviceInfo.getModel();
-    const systemVersion = DeviceInfo.getSystemVersion();
-    const emailBody = `Device Information:\nDevice Model: ${deviceModel}\niOS Version: ${systemVersion}`;
-    const mailtoURL = `mailto:info@lweb.ch?body=${encodeURIComponent(emailBody)}`;
-    Linking.openURL(mailtoURL).catch(err => console.error('Failed to open mail app:', err));
-  };
+  const handleContactPress = () => setIsContactModalVisible(true);
 
   if (isLoading) {
     return (
@@ -1540,29 +1535,31 @@ export default function Suscribe() {
           styles.linksContainer,
           { opacity: fadeAnim }
         ]}>
-          <TouchableOpacity 
-            onPress={handlePrivacyPress} 
+          <TouchableOpacity
+            onPress={handlePrivacyPress}
             style={styles.linkButton}
             activeOpacity={0.7}
           >
             <Text style={styles.linkText}>Privacy Policy</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
-            onPress={handleEULAPress} 
-            style={styles.linkButton}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.linkText}>EULA</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            onPress={handleGDPRPress} 
+          {Platform.OS === 'ios' && (
+            <TouchableOpacity
+              onPress={handleEULAPress}
+              style={styles.linkButton}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.linkText}>EULA</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            onPress={handleGDPRPress}
             style={styles.linkButton}
             activeOpacity={0.7}
           >
             <Text style={styles.linkText}>Terms</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
-            onPress={handleContactPress} 
+          <TouchableOpacity
+            onPress={handleContactPress}
             style={styles.linkButton}
             activeOpacity={0.7}
           >
@@ -1574,6 +1571,38 @@ export default function Suscribe() {
         <PrivacyModal visible={isPrivacyModalVisible} onClose={() => setIsPrivacyModalVisible(false)} />
         <EULAModal visible={isEULAModalVisible} onClose={() => setIsEULAModalVisible(false)} />
         <GDPRModal visible={isGDPRModalVisible} onClose={() => setIsGDPRModalVisible(false)} />
+
+        {/* Contact Modal */}
+        <Modal
+          visible={isContactModalVisible}
+          animationType="slide"
+          presentationStyle="pageSheet"
+          onRequestClose={() => setIsContactModalVisible(false)}
+        >
+          <View style={{ flex: 1 }}>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingHorizontal: 20,
+              paddingTop: Platform.OS === 'ios' ? 50 : 20,
+              paddingBottom: 10,
+              backgroundColor: theme?.background || '#ffffff',
+              borderBottomWidth: 1,
+              borderBottomColor: theme?.isDark ? '#374151' : '#e5e7eb',
+            }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: theme?.text || '#111827'
+              }}>Contact Support</Text>
+              <TouchableOpacity onPress={() => setIsContactModalVisible(false)}>
+                <Ionicons name="close" size={28} color={theme?.text || '#111827'} />
+              </TouchableOpacity>
+            </View>
+            <ContactScreen navigation={{ goBack: () => setIsContactModalVisible(false) }} />
+          </View>
+        </Modal>
       </ScrollView>
     </View>
   );
