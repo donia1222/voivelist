@@ -536,22 +536,16 @@ const OnboardingScreen = ({ navigation, onNavigateHome }) => {
         >
           <Text style={styles.linkText}>Privacy Policy</Text>
         </TouchableOpacity>
-        {Platform.OS === 'ios' && (
+    
           <TouchableOpacity
             onPress={handleEULAPress}
             style={styles.linkButton}
             activeOpacity={0.7}
           >
-            <Text style={styles.linkText}>EULA</Text>
-          </TouchableOpacity>
-        )}
-        <TouchableOpacity
-          onPress={handleGDPRPress}
-          style={styles.linkButton}
-          activeOpacity={0.7}
-        >
           <Text style={styles.linkText}>Terms</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+
+
         <TouchableOpacity
           onPress={handleContactPress}
           style={styles.linkButton}
@@ -561,10 +555,101 @@ const OnboardingScreen = ({ navigation, onNavigateHome }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Modals */}
-      <PrivacyModal visible={isPrivacyModalVisible} onClose={() => setIsPrivacyModalVisible(false)} />
-      <EULAModal visible={isEULAModalVisible} onClose={() => setIsEULAModalVisible(false)} />
-      <GDPRModal visible={isGDPRModalVisible} onClose={() => setIsGDPRModalVisible(false)} />
+      {/* Privacy Policy Modal */}
+      <Modal
+        visible={isPrivacyModalVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setIsPrivacyModalVisible(false)}
+      >
+        <View style={{ flex: 1 }}>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            paddingTop: Platform.OS === 'ios' ? 50 : 20,
+            paddingBottom: 10,
+            backgroundColor: '#f8f9ff',
+            borderBottomWidth: 1,
+            borderBottomColor: '#e5e7eb',
+          }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#111827'
+            }}>Privacy Policy</Text>
+            <TouchableOpacity onPress={() => setIsPrivacyModalVisible(false)}>
+              <Ionicons name="close" size={28} color="#111827" />
+            </TouchableOpacity>
+          </View>
+          <PrivacyModal visible={true} onClose={() => setIsPrivacyModalVisible(false)} />
+        </View>
+      </Modal>
+
+      {/* EULA Modal */}
+      <Modal
+        visible={isEULAModalVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setIsEULAModalVisible(false)}
+      >
+        <View style={{ flex: 1 }}>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            paddingTop: Platform.OS === 'ios' ? 50 : 20,
+            paddingBottom: 10,
+            backgroundColor: '#f0f4ff',
+            borderBottomWidth: 1,
+            borderBottomColor: '#e5e7eb',
+          }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#111827'
+            }}>Terms of Service</Text>
+            <TouchableOpacity onPress={() => setIsEULAModalVisible(false)}>
+              <Ionicons name="close" size={28} color="#111827" />
+            </TouchableOpacity>
+          </View>
+          <EULAModal visible={true} onClose={() => setIsEULAModalVisible(false)} />
+        </View>
+      </Modal>
+
+      {/* GDPR/Terms Modal */}
+      <Modal
+        visible={isGDPRModalVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setIsGDPRModalVisible(false)}
+      >
+        <View style={{ flex: 1 }}>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            paddingTop: Platform.OS === 'ios' ? 50 : 20,
+            paddingBottom: 10,
+            backgroundColor: '#faf5ff',
+            borderBottomWidth: 1,
+            borderBottomColor: '#e5e7eb',
+          }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#111827'
+            }}>Terms & Conditions</Text>
+            <TouchableOpacity onPress={() => setIsGDPRModalVisible(false)}>
+              <Ionicons name="close" size={28} color="#111827" />
+            </TouchableOpacity>
+          </View>
+          <GDPRModal visible={true} onClose={() => setIsGDPRModalVisible(false)} />
+        </View>
+      </Modal>
 
       {/* Contact Modal */}
       <Modal

@@ -420,9 +420,9 @@ const HomeScreen = ({ navigation }) => {
   const [showRateButton, setShowRateButton] = useState(false)
   const rateTexts = rateAppTexts[deviceLanguage] || rateAppTexts["en"]
 
-  // Estado para chips dinámicos desde la API
+  // Estado para chips dinámicos desde la API - inicializar vacío para evitar parpadeo
   const [dynamicChips, setDynamicChips] = useState([])
-  const [chipsLoading, setChipsLoading] = useState(true)
+  const [chipsLoading, setChipsLoading] = useState(false)
 
   // Estado para modal informativo de chips
   const [chipInfoModalVisible, setChipInfoModalVisible] = useState(false)
@@ -474,71 +474,73 @@ const HomeScreen = ({ navigation }) => {
 
   // Función para cargar chips dinámicos según el idioma del usuario
   const loadDynamicChips = async () => {
+    // Establecer chips por defecto INMEDIATAMENTE (sin esperar API)
+    const defaultChips = [
+      {
+        chip_position: 1,
+        chip_key: `lightning_fast_${deviceLanguage}`,
+        icon_name: 'flash',
+        icon_color: '#10b981',
+        text_content: currentLabels.lightningFast || 'Lightning Fast'
+      },
+      {
+        chip_position: 2,
+        chip_key: `ai_powered_${deviceLanguage}`,
+        icon_name: 'shield-checkmark',
+        icon_color: '#4a6bff',
+        text_content: currentLabels.aiPowered || 'AI Powered'
+      },
+      {
+        chip_position: 3,
+        chip_key: `voice_effortless_${deviceLanguage}`,
+        icon_name: showPencilMode ? 'pencil-outline' : 'mic-outline',
+        icon_color: '#f59e0b',
+        text_content: showPencilMode ? (texts[deviceLanguage]?.manualLists || texts["en"].manualLists || 'Crear listas manuales') : (currentLabels.voiceEffortless || 'Crea listas con tu voz')
+      },
+      {
+        chip_position: 4,
+        chip_key: `super_easy_${deviceLanguage}`,
+        icon_name: 'heart',
+        icon_color: '#ec4899',
+        text_content: currentLabels.superEasy || 'Super Easy'
+      }
+    ]
+
+    setDynamicChips(defaultChips)
+    setChipsLoading(false)
+
+    // API deshabilitada - usar SOLO chips locales (no actualizar nada desde backend)
+    // Esto evita que los íconos y textos cambien después de cargar
+    /*
+    // Cargar solo íconos desde API, mantener textos locales
     try {
-      setChipsLoading(true)
       const response = await fetch(`https://web.lweb.ch/voice/chips_por_idioma.php?lang=${deviceLanguage}`)
       const data = await response.json()
 
       if (data.success && data.chips && data.chips.length > 0) {
         console.log(`✅ Chips loaded for language: ${deviceLanguage}`, data.chips)
-        // Agregar siempre el chip de voz sin esfuerzo al final
-        const chipsWithVoice = [
-          ...data.chips,
-          {
-            chip_position: data.chips.length + 1,
-            chip_key: `voice_effortless_info_${deviceLanguage}`,
-            icon_name: showPencilMode ? 'pencil-outline' : 'mic-outline',
-            icon_color: '#f59e0b',
-            text_content: showPencilMode ? (texts[deviceLanguage]?.manualLists || texts["en"].manualLists || 'Crear listas manuales') : (currentLabels.voiceEffortless || 'Crea listas con tu voz')
+        // Actualizar solo los íconos, mantener textos locales
+        const updatedChips = defaultChips.map((defaultChip, index) => {
+          const apiChip = data.chips[index]
+          if (apiChip) {
+            return {
+              chip_position: defaultChip.chip_position,
+              chip_key: defaultChip.chip_key,
+              icon_name: apiChip.icon_name || defaultChip.icon_name,
+              icon_color: apiChip.icon_color || defaultChip.icon_color,
+              text_content: defaultChip.text_content  // SIEMPRE usar texto local
+            }
           }
-        ]
-        setDynamicChips(chipsWithVoice)
-      } else {
-        throw new Error('No chips found for this language')
+          return defaultChip
+        })
+        console.log('🔄 Chips actualizados (solo íconos):', updatedChips)
+        setDynamicChips(updatedChips)
       }
     } catch (error) {
       console.error('❌ Error loading dynamic chips:', error)
-      // Usar chips por defecto si falla la API
-      setDynamicChips([
-        {
-          chip_position: 1,
-          chip_key: `lightning_fast_${deviceLanguage}`,
-          icon_name: 'flash',
-          icon_color: '#10b981',
-          text_content: currentLabels.lightningFast || 'Lightning Fast'
-        },
-        {
-          chip_position: 2,
-          chip_key: `ai_powered_${deviceLanguage}`,
-          icon_name: 'shield-checkmark',
-          icon_color: '#4a6bff',
-          text_content: currentLabels.aiPowered || 'AI Powered'
-        },
-        {
-          chip_position: 3,
-          chip_key: `voice_effortless_${deviceLanguage}`,
-          icon_name: showPencilMode ? 'pencil-outline' : 'mic-outline',
-          icon_color: '#f59e0b',
-          text_content: showPencilMode ? (texts[deviceLanguage]?.manualLists || texts["en"].manualLists || 'Crear listas manuales') : (currentLabels.voiceEffortless || 'Crea listas con tu voz')
-        },
-        {
-          chip_position: 4,
-          chip_key: `super_easy_${deviceLanguage}`,
-          icon_name: 'heart',
-          icon_color: '#ec4899',
-          text_content: currentLabels.superEasy || 'Super Easy'
-        },
-        {
-          chip_position: 5,
-          chip_key: `voice_effortless_info_${deviceLanguage}`,
-          icon_name: 'mic-outline',
-          icon_color: '#f59e0b',
-          text_content: currentLabels.voiceEffortless || 'Crea listas con tu voz'
-        }
-      ])
-    } finally {
-      setChipsLoading(false)
+      // Mantener los chips por defecto si falla la API
     }
+    */
   }
 
   // Función para abrir modal informativo del chip
@@ -841,11 +843,8 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (!loading && showEmptyListText && !showCreatingMessage) {
-      Animated.timing(emptyStateFadeAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }).start()
+      // Sin animación - aparecer inmediatamente
+      emptyStateFadeAnim.setValue(1)
     } else {
       emptyStateFadeAnim.setValue(0)
     }
@@ -1814,16 +1813,8 @@ const HomeScreen = ({ navigation }) => {
     
 
         return (
-          <Animated.View
+          <View
             key={chip.chip_key || `chip_${index}`}
-            style={{
-              transform: [{
-                scale: pulseAnim.interpolate({
-                  inputRange: [1, 1.2],
-                  outputRange: [1, 1.02]
-                })
-              }]
-            }}
           >
             <TouchableOpacity
               style={{
@@ -1845,7 +1836,7 @@ const HomeScreen = ({ navigation }) => {
                 width: '100%',
                 justifyContent: 'flex-start',
               }}
-              onPress={() => openChipInfoModal(chip)}
+              onPress={() => {}}
               activeOpacity={0.8}
             >
               {/* Icon with glow effect */}
@@ -1874,7 +1865,7 @@ const HomeScreen = ({ navigation }) => {
                 {chip.text_content}
               </Text>
             </TouchableOpacity>
-          </Animated.View>
+          </View>
         )
       }),
       // Luego agregar el chip de idioma como 4to chip
@@ -1905,11 +1896,11 @@ const HomeScreen = ({ navigation }) => {
       {!loading && showEmptyListText && !showCreatingMessage && (
         <View style={modernStyles.emptyStateContainer}>
           {renderFloatingFoodIcons()}
-  
-          <Animated.View style={[modernStyles.emptyStateContent, { zIndex: 10, position: 'relative', opacity: emptyStateFadeAnim }]}>
+
+          <View style={[modernStyles.emptyStateContent, { zIndex: 10, position: 'relative' }]}>
 
 
-     
+
 
 
             {/* Revolutionary Integrated Hero Section */}
@@ -1926,33 +1917,6 @@ const HomeScreen = ({ navigation }) => {
               elevation: 8,
               backdropFilter: 'blur(20px)',
             }}>
-
-              {/* Animated Gradient Background */}
-              <Animated.View style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                borderRadius: 28,
-                opacity: shimmerAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.3, 0.6]
-                }),
-                transform: [{
-                  rotate: shimmerAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: ['0deg', '360deg']
-                  })
-                }]
-              }}>
-                <View style={{
-                  flex: 1,
-                  borderRadius: 28,
-                  background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.1) 50%, rgba(236, 72, 153, 0.1) 100%)'
-                }} />
-              </Animated.View>
-
 
               {/* Revolutionary Chips Grid */}
               <View style={{
@@ -1975,8 +1939,8 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             {/* Language Selection */}
-     
-          </Animated.View>
+
+          </View>
         </View>
       )}
       {/* Call to Action - Más prominente - No mostrar en iPhone SE */}
@@ -2488,7 +2452,7 @@ const HomeScreen = ({ navigation }) => {
           <View style={modernStyles.welcomeModalContainer}>
             <View style={modernStyles.welcomeModalHeader}>
               <View style={modernStyles.welcomeIconContainer}>
-                <Ionicons name="mic" size={40} color="#ff9500" />
+                <Ionicons name="mic" size={40} color="#10b981" />
               </View>
               <Text style={modernStyles.welcomeModalTitle}>{currentLabelse.title}</Text>
             </View>

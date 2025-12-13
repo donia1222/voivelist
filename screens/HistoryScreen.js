@@ -145,8 +145,8 @@ const HistoryScreen = ({ navigation }) => {
   const [favoritesModalVisible4, setFavoritesModalVisible4] = useState(false)
   const [favoritesModalVisible5, setFavoritesModalVisible5] = useState(false)
   const [showUploadIcon, setShowUploadIcon] = useState(false)
-  const [favoritesFilterVisible, setFavoritesFilterVisible] = useState(false) // Default cerrado
-  const favoritesFilterAnim = useRef(new Animated.Value(0)).current // Empezar cerrado
+  const [favoritesFilterVisible, setFavoritesFilterVisible] = useState(true) // Default abierto
+  const favoritesFilterAnim = useRef(new Animated.Value(1)).current // Empezar abierto
   const [historyListSelectorVisible, setHistoryListSelectorVisible] = useState(false)
   const [selectedFavoriteCategory, setSelectedFavoriteCategory] = useState('')
   const [selectedFavoriteCategoryKey, setSelectedFavoriteCategoryKey] = useState('')
@@ -1894,7 +1894,7 @@ const HistoryScreen = ({ navigation }) => {
                 style={modernStyles.deleteListButton}
                 onPress={() => confirmRemoveListFromHistory(index)}
               >
-                <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                <Ionicons name="trash-outline" size={21} color="#ef4444" />
               </TouchableOpacity>
             ) : (
               <View style={modernStyles.progressBarBackground}>
@@ -2809,22 +2809,24 @@ const HistoryScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-              {/* Set Reminder */}
-              <TouchableOpacity
-                style={modernStyles.actionModalButton}
-                onPress={() => {
-                  openReminderModal(selectedItemIndex)
-                  setActionsModalVisible(false)
-                }}
-              >
-                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#e9d5ff' }]}>
-                  <Ionicons name="notifications-outline" size={20} color="#9333ea" />
-                </View>
-                <View style={modernStyles.actionModalTextContainer}>
-                  <Text style={modernStyles.actionModalButtonText}>{currentLabels.createNotification}</Text>
-                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.createNotificationDesc}</Text>
-                </View>
-              </TouchableOpacity>
+              {/* Set Reminder - Solo iOS */}
+              {Platform.OS === 'ios' && (
+                <TouchableOpacity
+                  style={modernStyles.actionModalButton}
+                  onPress={() => {
+                    openReminderModal(selectedItemIndex)
+                    setActionsModalVisible(false)
+                  }}
+                >
+                  <View style={[modernStyles.actionModalIcon, { backgroundColor: '#e9d5ff' }]}>
+                    <Ionicons name="notifications-outline" size={20} color="#9333ea" />
+                  </View>
+                  <View style={modernStyles.actionModalTextContainer}>
+                    <Text style={modernStyles.actionModalButtonText}>{currentLabels.createNotification}</Text>
+                    <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.createNotificationDesc}</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
 
               {/* Share */}
               <TouchableOpacity

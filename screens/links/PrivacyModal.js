@@ -117,44 +117,8 @@ const privacyData = {
 
 const PrivacyModal = ({ visible, onClose }) => {
     return (
-<Modal
-    animationType="slide"
-    transparent={false}
-    visible={visible}
-    onRequestClose={onClose}
->
-    <GestureHandlerRootView style={styles.container}>
-        <PanGestureHandler
-            onGestureEvent={(event) => {
-                if (event.nativeEvent.translationY > 50 && event.nativeEvent.velocityY > 0) {
-                    onClose();
-                }
-            }}
-            onHandlerStateChange={(event) => {
-                if (event.nativeEvent.state === State.END) {
-                    // Puedes añadir lógica adicional aquí si es necesario
-                }
-            }}
-        >
             <View style={styles.container}>
-                {/* Handle bar */}
-                <View style={styles.handleBar} />
-                
-                {/* Close button */}
-                <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                    <Ionicons name="close" size={24} color="#6b7280" />
-                </TouchableOpacity>
-                
                 <ScrollView contentContainerStyle={styles.modalContent} showsVerticalScrollIndicator={false}>
-                    {/* Header */}
-                    <View style={styles.header}>
-                        <View style={styles.headerIconContainer}>
-                            <Ionicons name="shield-checkmark" size={32} color="#9b59b6" />
-                        </View>
-                        <Text style={styles.headerTitle}>{privacyData.header.title}</Text>
-                        <Text style={styles.headerSubtitle}>{privacyData.header.subtitle}</Text>
-                        <Text style={styles.lastUpdated}>Last updated: {privacyData.header.lastUpdated}</Text>
-                    </View>
 
                     {/* Summary Card */}
                     <View style={styles.summaryCard}>
@@ -196,22 +160,19 @@ const PrivacyModal = ({ visible, onClose }) => {
                     <View style={{ height: 40 }} />
                 </ScrollView>
             </View>
-        </PanGestureHandler>
-    </GestureHandlerRootView>
-</Modal>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f8f9ff', // Fondo lila muy suave
+        backgroundColor: '#e7ead2', // Fondo lila muy suave
         paddingTop: 30
     },
     handleBar: {
         width: 40,
         height: 4,
-        backgroundColor: '#e5e7eb',
+
         borderRadius: 2,
         alignSelf: 'center',
         marginTop: 12,
@@ -219,11 +180,11 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         position: 'absolute',
-        top: 16,
+        top: 26,
         right: 16,
         zIndex: 10,
-        width: 40,
-        height: 40,
+        width: 30,
+        height:30,
         borderRadius: 20,
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         justifyContent: 'center',

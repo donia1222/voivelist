@@ -66,7 +66,9 @@ const texts = {
     voiceListsBenefit4: "🌍 Works in 13 languages",
     benefitsPrincipal: "🎯 Main Benefits:",
     understood: "Got it!",
-    loadingTagline: "🎙️ Shop with your voice"
+    loadingTagline: "🎙️ Shop with your voice",
+    bannerTitle: "Create a shopping list with your voice",
+    bannerTitleManual: "Create a shopping list by hand"
   },
   es: {
     voice: "Voz",
@@ -135,7 +137,9 @@ const texts = {
     voiceListsBenefit4: "🌍 Funciona en 13 idiomas",
     benefitsPrincipal: "🎯 Beneficios Principales:",
     understood: "¡Entendido!",
-    loadingTagline: "🎙️ Compra con tu voz"
+    loadingTagline: "🎙️ Compra con tu voz",
+    bannerTitle: "Crea una lista de la compra con tu voz",
+    bannerTitleManual: "Crea una lista de la compra a mano"
   },
   de: {
     voice: "Stimme",
@@ -204,7 +208,9 @@ const texts = {
     voiceListsBenefit4: "🌍 Funktioniert in 13 Sprachen",
     benefitsPrincipal: "🎯 Hauptvorteile:",
     understood: "Verstanden!",
-    loadingTagline: "🎙️ Einkaufen mit deiner Stimme"
+    loadingTagline: "🎙️ Einkaufen mit deiner Stimme",
+    bannerTitle: "Erstellen Sie eine Einkaufsliste mit Ihrer Stimme",
+    bannerTitleManual: "Erstellen Sie eine Einkaufsliste von Hand"
   },
   it: {
     voice: "Voce",
@@ -272,7 +278,9 @@ const texts = {
     voiceListsBenefit4: "🌍 Funziona in 13 lingue",
     benefitsPrincipal: "🎯 Vantaggi Principali:",
     understood: "Capito!",
-    loadingTagline: "🎙️ Fai shopping con la tua voce"
+    loadingTagline: "🎙️ Fai shopping con la tua voce",
+    bannerTitle: "Crea una lista della spesa con la tua voce",
+    bannerTitleManual: "Crea una lista della spesa a mano"
   },
   fr: {
     voice: "Voix",
@@ -340,7 +348,9 @@ const texts = {
     voiceListsBenefit4: "🌍 Fonctionne en 13 langues",
     benefitsPrincipal: "🎯 Avantages Principaux:",
     understood: "Compris!",
-    loadingTagline: "🎙️ Achetez avec votre voix"
+    loadingTagline: "🎙️ Achetez avec votre voix",
+    bannerTitle: "Créez une liste de courses avec votre voix",
+    bannerTitleManual: "Créez une liste de courses à la main"
   },
   pt: {
     voice: "Voz",
@@ -408,7 +418,9 @@ const texts = {
     voiceListsBenefit4: "🌍 Funciona em 13 idiomas",
     benefitsPrincipal: "🎯 Benefícios Principais:",
     understood: "Entendi!",
-    loadingTagline: "🎙️ Compre com sua voz"
+    loadingTagline: "🎙️ Compre com sua voz",
+    bannerTitle: "Crie uma lista de compras com sua voz",
+    bannerTitleManual: "Crie uma lista de compras à mão"
   },
   ru: {
     voice: "Голос",
@@ -652,7 +664,9 @@ const texts = {
     voiceModalBenefit4: "🌍 13 dilde çalışır",
     benefitsPrincipal: "🎯 Ana Faydalar:",
     understood: "Anladım!",
-    loadingTagline: "🎙️ Sesinle alışveriş yap"
+    loadingTagline: "🎙️ Sesinle alışveriş yap",
+    bannerTitle: "Sesinizle bir alışveriş listesi oluşturun",
+    bannerTitleManual: "Elle bir alışveriş listesi oluşturun"
   },
   hi: {
     voice: "आवाज़",
@@ -711,7 +725,9 @@ const texts = {
     voiceModalBenefit4: "🌍 13 भाषाओं में काम करता है",
     benefitsPrincipal: "🎯 मुख्य लाभ:",
     understood: "समझ गया!",
-    loadingTagline: "🎙️ अपनी आवाज़ से खरीदारी करें"
+    loadingTagline: "🎙️ अपनी आवाज़ से खरीदारी करें",
+    bannerTitle: "अपनी आवाज़ से एक खरीदारी सूची बनाएं",
+    bannerTitleManual: "हाथ से एक खरीदारी सूची बनाएं"
   },
   nl: {
     voice: "Stem",
@@ -768,7 +784,9 @@ const texts = {
     voiceModalBenefit4: "🌍 Werkt in 13 talen",
     benefitsPrincipal: "🎯 Hoofdvoordelen:",
     understood: "Begrepen!",
-    loadingTagline: "🎙️ Winkelen met je stem"
+    loadingTagline: "🎙️ Winkelen met je stem",
+    bannerTitle: "Maak een boodschappenlijst met je stem",
+    bannerTitleManual: "Maak een boodschappenlijst met de hand"
   },
 
   

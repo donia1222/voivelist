@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -1061,7 +1062,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   weekListContainer: {
-    backgroundColor: '#ffffff89',
+    backgroundColor: '#ffffffff',
     marginHorizontal: 16,
     marginTop: 20,
     marginBottom: 10,
@@ -1120,7 +1121,7 @@ const styles = StyleSheet.create({
   
   },
   dayContainer: {
-    backgroundColor: '#ffffffb5',
+ backgroundColor: '#ffffffff',
     marginVertical: 8,
     padding: 16,
     borderRadius: 12,

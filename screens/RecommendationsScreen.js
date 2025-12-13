@@ -932,7 +932,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
       opacity: 0.8,
     },
     cardButton: {
-      backgroundColor: 'rgba(74, 107, 255, 0.15)',
+      backgroundColor: '#4a6bff',
       borderRadius: 20,
       width: 36,
       height: 36,
@@ -1221,7 +1221,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
       marginHorizontal: 2,
     },
     tabButtonActive: {
-      backgroundColor: 'rgba(74, 107, 255, 0.15)',
+      backgroundColor: '#4a6bff',
       shadowColor: '#4a6bff',
       shadowOffset: {
         width: 0,
@@ -1241,7 +1241,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
       textAlign: 'center',
     },
     tabLabelActive: {
-      color: '#4a6bff',
+      color: 'white',
       fontWeight: '700',
     },
     // Estilos para banner dinámico
@@ -1454,7 +1454,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
               <Ionicons
                 name="time-outline"
                 size={16}
-                color={activeTab === 'history' ? "#4a6bff" : theme.textSecondary}
+                color={activeTab === 'history' ? "white" : theme.textSecondary}
                 style={styles.tabIcon}
               />
               <Text style={[styles.tabLabel, activeTab === 'history' && styles.tabLabelActive]}>
@@ -1472,7 +1472,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
               <Ionicons
                 name="leaf-outline"
                 size={16}
-                color={activeTab === 'seasonal' ? "#4a6bff" : theme.textSecondary}
+                color={activeTab === 'seasonal' ? "white" : theme.textSecondary}
                 style={styles.tabIcon}
               />
               <Text style={[styles.tabLabel, activeTab === 'seasonal' && styles.tabLabelActive]}>
@@ -1490,7 +1490,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
               <Ionicons
                 name="nutrition-outline"
                 size={16}
-                color={activeTab === 'diet' ? "#4a6bff" : theme.textSecondary}
+                color={activeTab === 'diet' ? "white" : theme.textSecondary}
                 style={styles.tabIcon}
               />
               <Text style={[styles.tabLabel, activeTab === 'diet' && styles.tabLabelActive]}>
@@ -1885,7 +1885,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
                     <Ionicons
                       name={isAdded ? "checkmark" : "add"}
                       size={22}
-                      color={isAdded ? "white" : "#4a6bff"}
+                      color="white"
                     />
                   </TouchableOpacity>
                 </TouchableOpacity>

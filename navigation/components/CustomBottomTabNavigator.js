@@ -1819,16 +1819,68 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     
 
       {/* Privacy Modal */}
-      <PrivacyModal
+      <Modal
         visible={isPrivacyModalVisible}
-        onClose={() => setPrivacyModalVisible(false)}
-      />
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setPrivacyModalVisible(false)}
+      >
+        <View style={{ flex: 1 }}>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            paddingTop: Platform.OS === 'ios' ? 50 : 20,
+            paddingBottom: 10,
+            backgroundColor: '#f8f9ff',
+            borderBottomWidth: 1,
+            borderBottomColor: '#e5e7eb',
+          }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#111827'
+            }}>Privacy Policy</Text>
+            <TouchableOpacity onPress={() => setPrivacyModalVisible(false)}>
+              <Ionicons name="close" size={28} color="#111827" />
+            </TouchableOpacity>
+          </View>
+          <PrivacyModal visible={true} onClose={() => setPrivacyModalVisible(false)} />
+        </View>
+      </Modal>
 
       {/* Terms & Conditions Modal */}
-      <EulaModal
+      <Modal
         visible={isEulaModalVisible}
-        onClose={() => setEulaModalVisible(false)}
-      />
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setEulaModalVisible(false)}
+      >
+        <View style={{ flex: 1 }}>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            paddingTop: Platform.OS === 'ios' ? 50 : 20,
+            paddingBottom: 10,
+            backgroundColor: '#f0f4ff',
+            borderBottomWidth: 1,
+            borderBottomColor: '#e5e7eb',
+          }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#111827'
+            }}>Terms of Service</Text>
+            <TouchableOpacity onPress={() => setEulaModalVisible(false)}>
+              <Ionicons name="close" size={28} color="#111827" />
+            </TouchableOpacity>
+          </View>
+          <EulaModal visible={true} onClose={() => setEulaModalVisible(false)} />
+        </View>
+      </Modal>
 
       {/* Language Modal */}
       <Modal
@@ -2413,8 +2465,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: 20,
-                marginBottom: 10,
+                marginTop: 5,
+                marginBottom: 20,
                 gap: 6,
               }}>
                 <Text style={{

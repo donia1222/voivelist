@@ -394,28 +394,6 @@ const MySubscriptionScreen = () => {
           </View>
         )}
 
-
-        <View style={styles.linksContainer}>
-          <View style={styles.linksRow}>
-            <TouchableOpacity onPress={handlePrivacyPress} style={styles.linkButton}>
-              <Text style={styles.linkText}>Privacy Policy</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={handleEULAPress} style={styles.linkButton}>
-              <Text style={styles.linkText}>EULA</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.linksRow}>
-            <TouchableOpacity onPress={handleGDPRPress} style={styles.linkButton}>
-              <Text style={styles.linkText}>T&C</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={handleSupportPress} style={[styles.linkButton, styles.supportButton]}>
-              <Text style={[styles.linkText, styles.supportButtonText]}> Support</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
       </ScrollView>
 
       <PrivacyModal 

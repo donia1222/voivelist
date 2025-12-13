@@ -1868,7 +1868,7 @@ const CalendarPlannerScreen = () => {
       // Sin altura fija para que el calendario sea visible
     },
     calendarContainer: {
-      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff6b', // Rojo muy suave, casi rosado
+      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#FFFFFF',
       marginTop: 10,
       marginHorizontal: 10,
       borderRadius: 15,
@@ -3057,36 +3057,40 @@ const CalendarPlannerScreen = () => {
                 </View>
 
                 {/* Switches */}
-                <View style={styles.switchRow}>
-                  <Text style={styles.switchLabel}>{t.remindMe}</Text>
-                  <Switch
-                    value={reminderEnabled}
-                    onValueChange={setReminderEnabled}
-                    trackColor={{ false: '#D1D5DB', true: '#16b038ff' }}
-                    thumbColor={reminderEnabled ? '#fff' : '#f4f3f4'}
-                  />
-                </View>
-
-                {reminderEnabled && (
-                  <View style={styles.inputSection}>
-                    <Text style={styles.inputLabel}>{t.reminderBefore} ({t.minutes})</Text>
-                    <View style={styles.inputWithIcon}>
-                      <TextInput
-                        style={styles.inputWithIconField}
-                        placeholder=""
-                        placeholderTextColor={theme === 'dark' ? '#666' : '#999'}
-                        value={reminderMinutes}
-                        onChangeText={setReminderMinutes}
-                        keyboardType="numeric"
-                      />
-                      <Ionicons
-                        name="notifications-outline"
-                        size={20}
-                        color={theme === 'dark' ? '#888' : '#666'}
-                        style={styles.inputIcon}
+                {Platform.OS === 'ios' && (
+                  <>
+                    <View style={styles.switchRow}>
+                      <Text style={styles.switchLabel}>{t.remindMe}</Text>
+                      <Switch
+                        value={reminderEnabled}
+                        onValueChange={setReminderEnabled}
+                        trackColor={{ false: '#D1D5DB', true: '#16b038ff' }}
+                        thumbColor={reminderEnabled ? '#fff' : '#f4f3f4'}
                       />
                     </View>
-                  </View>
+
+                    {reminderEnabled && (
+                      <View style={styles.inputSection}>
+                        <Text style={styles.inputLabel}>{t.reminderBefore} ({t.minutes})</Text>
+                        <View style={styles.inputWithIcon}>
+                          <TextInput
+                            style={styles.inputWithIconField}
+                            placeholder=""
+                            placeholderTextColor={theme === 'dark' ? '#666' : '#999'}
+                            value={reminderMinutes}
+                            onChangeText={setReminderMinutes}
+                            keyboardType="numeric"
+                          />
+                          <Ionicons
+                            name="notifications-outline"
+                            size={20}
+                            color={theme === 'dark' ? '#888' : '#666'}
+                            style={styles.inputIcon}
+                          />
+                        </View>
+                      </View>
+                    )}
+                  </>
                 )}
 
                 <View style={styles.switchRow}>

@@ -561,6 +561,7 @@ const getModernStyles = (theme) => StyleSheet.create({
     left: 12,
     right: 12,
     paddingHorizontal: 6, // Menos padding horizontal
+    backgroundColor: theme.text === '#ffffff' ? '#374151' : '#e5e7eb',
     paddingVertical: 4, // Menos padding vertical
     borderRadius: 8, // Bordes más pequeños
     alignItems: 'center',
@@ -576,13 +577,9 @@ const getModernStyles = (theme) => StyleSheet.create({
     alignItems: 'center',
 
     paddingHorizontal: 8,
-
+    backgroundColor: theme.text === '#ffffff' ? '#374151' : '#e5e7eb',
     borderRadius: 8,
 
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
     elevation: 1
   },
 
