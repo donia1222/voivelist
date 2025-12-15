@@ -14,7 +14,8 @@ import {
   StyleSheet,
   Switch,
   Linking,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Image
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -90,6 +91,8 @@ const translations = {
     noContent: "No content",
     noSavedLists: "No saved lists",
     createListsFirst: "Create lists in history first",
+    bannerTitle: "Plan your shopping",
+    bannerDescription: "Save lists and schedule your purchases",
     viewLess: "View less",
     viewMore: "View more",
     items: "items",
@@ -172,6 +175,8 @@ const translations = {
     noContent: "Sin contenido",
     noSavedLists: "No hay listas guardadas",
     createListsFirst: "Crea listas en el historial primero",
+    bannerTitle: "Planifica tus compras",
+    bannerDescription: "Guarda listas y programa tus compras",
     viewLess: "Ver menos",
     viewMore: "Ver más",
     items: "artículos",
@@ -245,6 +250,8 @@ const translations = {
     noContent: "Kein Inhalt",
     noSavedLists: "Keine gespeicherten Listen",
     createListsFirst: "Erstellen Sie zuerst Listen im Verlauf",
+    bannerTitle: "Planen Sie Ihre Einkäufe",
+    bannerDescription: "Listen speichern und Einkäufe planen",
     viewLess: "Weniger anzeigen",
     viewMore: "Mehr anzeigen",
     items: "Artikel",
@@ -318,6 +325,8 @@ const translations = {
     noContent: "Nessun contenuto",
     noSavedLists: "Nessuna lista salvata",
     createListsFirst: "Crea prima le liste nella cronologia",
+    bannerTitle: "Pianifica i tuoi acquisti",
+    bannerDescription: "Salva liste e programma i tuoi acquisti",
     viewLess: "Mostra meno",
     viewMore: "Mostra di più",
     items: "articoli",
@@ -391,6 +400,8 @@ const translations = {
     noContent: "Aucun contenu",
     noSavedLists: "Aucune liste enregistrée",
     createListsFirst: "Créez d'abord des listes dans l'historique",
+    bannerTitle: "Planifiez vos courses",
+    bannerDescription: "Enregistrez des listes et planifiez vos achats",
     viewLess: "Voir moins",
     viewMore: "Voir plus",
     items: "articles",
@@ -464,6 +475,8 @@ const translations = {
     noContent: "İçerik yok",
     noSavedLists: "Kayıtlı liste yok",
     createListsFirst: "Önce geçmişte liste oluştur",
+    bannerTitle: "Alışverişinizi planlayın",
+    bannerDescription: "Listeleri kaydedin ve alışverişlerinizi planlayın",
     viewLess: "Daha az göster",
     viewMore: "Daha fazla göster",
     items: "ürün",
@@ -537,6 +550,8 @@ const translations = {
     noContent: "Sem conteúdo",
     noSavedLists: "Sem listas salvas",
     createListsFirst: "Crie listas no histórico primeiro",
+    bannerTitle: "Planeje suas compras",
+    bannerDescription: "Salve listas e agende suas compras",
     viewLess: "Ver menos",
     viewMore: "Ver mais",
     items: "itens",
@@ -619,6 +634,8 @@ const translations = {
     noContent: "Нет содержимого",
     noSavedLists: "Нет сохраненных списков",
     createListsFirst: "Сначала создайте списки в истории",
+    bannerTitle: "Планируйте покупки",
+    bannerDescription: "Сохраняйте списки и планируйте покупки",
     viewLess: "Показать меньше",
     viewMore: "Показать больше",
     items: "товаров",
@@ -692,6 +709,8 @@ const translations = {
     noContent: "لا يوجد محتوى",
     noSavedLists: "لا توجد قوائم محفوظة",
     createListsFirst: "قم بإنشاء قوائم في السجل أولاً",
+    bannerTitle: "خطط لمشترياتك",
+    bannerDescription: "احفظ القوائم وجدول مشترياتك",
     viewLess: "عرض أقل",
     viewMore: "عرض المزيد",
     items: "عناصر",
@@ -765,6 +784,8 @@ const translations = {
     noContent: "Nincs tartalom",
     noSavedLists: "Nincsenek mentett listák",
     createListsFirst: "Először hozz létre listákat az előzményekben",
+    bannerTitle: "Tervezd meg a bevásárlásod",
+    bannerDescription: "Mentsd el a listákat és tervezd meg a vásárlásaidat",
     viewLess: "Kevesebb megjelenítése",
     viewMore: "Több megjelenítése",
     items: "elem",
@@ -838,6 +859,8 @@ const translations = {
     noContent: "コンテンツなし",
     noSavedLists: "保存されたリストはありません",
     createListsFirst: "最初に履歴でリストを作成",
+    bannerTitle: "買い物を計画する",
+    bannerDescription: "リストを保存して買い物を計画",
     viewLess: "表示を減らす",
     viewMore: "もっと見る",
     items: "アイテム",
@@ -911,6 +934,8 @@ const translations = {
     noContent: "कोई सामग्री नहीं",
     noSavedLists: "कोई सहेजी गई सूची नहीं",
     createListsFirst: "पहले इतिहास में सूचियां बनाएं",
+    bannerTitle: "अपनी खरीदारी की योजना बनाएं",
+    bannerDescription: "सूचियां सहेजें और अपनी खरीदारी शेड्यूल करें",
     viewLess: "कम देखें",
     viewMore: "और देखें",
     items: "आइटम",
@@ -984,6 +1009,8 @@ const translations = {
     noContent: "Geen inhoud",
     noSavedLists: "Geen opgeslagen lijsten",
     createListsFirst: "Maak eerst lijsten in geschiedenis",
+    bannerTitle: "Plan je boodschappen",
+    bannerDescription: "Sla lijsten op en plan je aankopen",
     viewLess: "Minder tonen",
     viewMore: "Meer tonen",
     items: "items",
@@ -1012,6 +1039,7 @@ const CalendarPlannerScreen = ({ route }) => {
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const t = translations[deviceLanguage] || translations.en
   const registerAddEventOpener = route?.params?.registerAddEventOpener
+  const onNavigateToHistory = route?.params?.onNavigateToHistory
 
   const [events, setEvents] = useState([])
   const [modalVisible, setModalVisible] = useState(false)
@@ -2621,6 +2649,63 @@ const CalendarPlannerScreen = ({ route }) => {
       marginTop: 4,
       textAlign: 'center'
     },
+    emptyBanner: {
+      backgroundColor: theme === 'dark' ? 'rgba(42, 42, 42, 0.45)' : 'rgba(255, 255, 255, 0.45)',
+      borderRadius: 16,
+      padding: 16,
+      marginHorizontal: 10,
+      marginVertical: 10,
+      borderWidth: 1.5,
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.6)',
+      flexDirection: 'row',
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.05,
+      shadowRadius: 8,
+      elevation: 2,
+    },
+    emptyBannerImage: {
+      width: 60,
+      height: 60,
+      resizeMode: 'contain',
+      marginRight: 14,
+    },
+    emptyBannerContent: {
+      flex: 1,
+    },
+    emptyBannerTitle: {
+      fontSize: 16,
+      fontWeight: '700',
+      color: theme.text,
+      marginBottom: 4,
+    },
+    emptyBannerDescription: {
+      fontSize: 13,
+      color: theme === 'dark' ? '#aaa' : '#666',
+      lineHeight: 18,
+    },
+    emptyBannerIcon: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: 'rgba(22, 163, 74, 0.1)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: 'rgba(22, 163, 74, 0.2)',
+    },
+    emptyBannerIconBelow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 10,
+      gap: 6,
+    },
+    emptyBannerIconText: {
+      fontSize: 13,
+      fontWeight: '600',
+      color: '#16a34a',
+    },
     integratedHeader: {
       paddingHorizontal: 20,
       paddingTop: 15,
@@ -2630,6 +2715,22 @@ const CalendarPlannerScreen = ({ route }) => {
     },
     titleSection: {
       alignItems: 'center'
+    },
+    titleSectionRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    addEventButton: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: 'rgba(22, 163, 74, 0.1)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: 'rgba(22, 163, 74, 0.2)',
     },
     integratedTitle: {
       fontSize: 20,
@@ -2684,11 +2785,17 @@ const CalendarPlannerScreen = ({ route }) => {
           <View style={styles.calendarContainer}>
             {/* Header integrado en el calendario */}
             <View style={styles.integratedHeader}>
-              <View style={styles.titleSection}>
+              <View style={styles.titleSectionRow}>
                 <View style={styles.integratedMonthYear}>
                   <Text style={styles.integratedMonthText}>{currentMonth}</Text>
                   <Text style={styles.integratedYearText}>{currentYear}</Text>
                 </View>
+                <TouchableOpacity
+                  style={styles.addEventButton}
+                  onPress={() => setModalVisible(true)}
+                >
+                  <Ionicons name="add" size={24} color="#16a34a" />
+                </TouchableOpacity>
               </View>
             </View>
             <ScrollView
@@ -2747,7 +2854,7 @@ const CalendarPlannerScreen = ({ route }) => {
             
             {/* Botones de control */}
             <View style={styles.calendarControls}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.controlButton}
                 onPress={() => {
                   setShowExpandedCalendar(true)
@@ -2756,25 +2863,27 @@ const CalendarPlannerScreen = ({ route }) => {
                 <Ionicons name="calendar-outline" size={16} color="#6B7280" />
                 <Text style={styles.controlButtonText}>{t.otherMonths}</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={styles.controlButton}
-                onPress={() => {
-                  // Scroll a la semana actual (índice 0 que es la semana de hoy)
-                  if (scrollViewRef.current) {
-                    scrollViewRef.current.scrollTo({ 
-                      x: 0, 
-                      animated: true 
-                    })
-                    setCurrentWeekIndex(0)
-                    const today = new Date()
-                    updateMonthYear(today)
-                  }
-                }}
-              >
-                <Ionicons name="today-outline" size={16} color="#F59E0B" />
-                <Text style={styles.controlButtonText}>{t.today}</Text>
-              </TouchableOpacity>
+
+              {currentWeekIndex !== 0 && (
+                <TouchableOpacity
+                  style={styles.controlButton}
+                  onPress={() => {
+                    // Scroll a la semana actual (índice 0 que es la semana de hoy)
+                    if (scrollViewRef.current) {
+                      scrollViewRef.current.scrollTo({
+                        x: 0,
+                        animated: true
+                      })
+                      setCurrentWeekIndex(0)
+                      const today = new Date()
+                      updateMonthYear(today)
+                    }
+                  }}
+                >
+                  <Ionicons name="today-outline" size={16} color="#F59E0B" />
+                  <Text style={styles.controlButtonText}>{t.today}</Text>
+                </TouchableOpacity>
+              )}
 
             </View>
           </View>
@@ -2838,10 +2947,16 @@ const CalendarPlannerScreen = ({ route }) => {
                 ))}
               </ScrollView>
             ) : (
-              <View style={styles.emptyUpcomingContainer}>
-                <Ionicons name="list-outline" size={48} color="#9CA3AF" />
-                <Text style={styles.emptyUpcomingText}>{t.emptyList}</Text>
-                <Text style={styles.emptyUpcomingSubtext}>{t.noContent}</Text>
+              <View style={styles.emptyBanner}>
+                <Image
+                  source={require('../assets/images/notifshop.png')}
+                  style={styles.emptyBannerImage}
+                />
+                <View style={styles.emptyBannerContent}>
+                  <Text style={styles.emptyBannerTitle}>{t.bannerTitle}</Text>
+                  <Text style={styles.emptyBannerDescription}>{t.bannerDescription}</Text>
+       
+                </View>
               </View>
             )}
           </View>

@@ -27,6 +27,7 @@ import * as RNLocalize from "react-native-localize"
 import { translations } from "../../translations"
 import texts from "../../screens/translations/texts"
 import mealPlannerTranslations from "../../screens/translations/mealPlannerTranslations"
+import translationsHistorial from "../../screens/translations/translationsHistorial"
 import DeviceInfo from "react-native-device-info"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import PrivacyModal from "../../screens/links/PrivacyModal"
@@ -762,6 +763,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
 
   // Ref para función de CalendarPlanner add event
   const calendarPlannerAddEventRef = useRef(null)
+  const historyToggleFavoritesRef = useRef(null)
+  const [historyFavoritesOpen, setHistoryFavoritesOpen] = useState(true)
   
   // Función para obtener colores basados en la pestaña activa
   const getTabColors = () => {
@@ -948,7 +951,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
     {
       key: "Home",
       label: currentTranslations.createList,
-      icon: "mic",
+      icon: "mic-outline",
       color: "#8B5CF6",
       screen: HomeScreen,
     },
@@ -962,9 +965,16 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
     {
       key: "History",
       label: currentTranslations.saved,
-      icon: "bookmark",
+      icon: "bookmark-outline",
       color: "#34c759",
       screen: HistoryScreen,
+    },
+    {
+      key: "PriceCalculator",
+      label: currentTranslations.priceCalculator || "Price Calculator",
+      icon: "calculator-outline",
+      color: "#dc2626",
+      screen: PriceCalculatorScreen,
     },
     {
       key: "CalendarPlanner",
@@ -972,13 +982,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
       icon: "calendar-outline",
       color: "#8B5CF6",
       screen: CalendarPlannerScreen,
-    },
-    {
-      key: "PriceCalculator",
-      label: currentTranslations.priceCalculator || "Price Calculator",
-      icon: "calculator",
-      color: "#dc2626",
-      screen: PriceCalculatorScreen,
     },
   ]
 
@@ -1233,7 +1236,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
     .failOffsetY([-30, 30])
     .onUpdate((event) => {
       // Only handle swipe for main tabs
-      if (!["Home", "Images", "History", "PriceCalculator"].includes(activeTab)) {
+      if (!["Home", "Images", "History", "PriceCalculator", "CalendarPlanner"].includes(activeTab)) {
         return
       }
       // Update position as finger moves
@@ -1247,7 +1250,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
       const distance = event.translationX
 
       // Only handle swipe for main tabs
-      if (!["Home", "Images", "History", "PriceCalculator"].includes(activeTab)) {
+      if (!["Home", "Images", "History", "PriceCalculator", "CalendarPlanner"].includes(activeTab)) {
         translateX.value = withTiming(0, { duration: 200 })
         return
       }
@@ -1324,7 +1327,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
               name="HistoryScreen"
               component={HistoryScreen}
               initialParams={{
-                onNavigateToHome: () => setActiveTab("Home")
+                onNavigateToHome: () => setActiveTab("Home"),
+                registerToggleFavorites: (fn) => { historyToggleFavoritesRef.current = fn }
               }}
             />
           </Stack.Navigator>
@@ -1336,7 +1340,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
               name="CalendarPlannerScreen"
               component={CalendarPlannerScreen}
               initialParams={{
-                registerAddEventOpener: (fn) => { calendarPlannerAddEventRef.current = fn }
+                registerAddEventOpener: (fn) => { calendarPlannerAddEventRef.current = fn },
+                onNavigateToHistory: () => setActiveTab("History")
               }}
             />
           </Stack.Navigator>
@@ -1348,7 +1353,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
               name="PriceCalculatorScreen"
               component={PriceCalculatorScreen}
               initialParams={{
-                onNavigateToSubscribe: () => setActiveTab("Subscribe")
+                onNavigateToSubscribe: () => setActiveTab("Subscribe"),
+                onNavigateToHistory: () => setActiveTab("History")
               }}
             />
           </Stack.Navigator>
@@ -1642,7 +1648,8 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
               name="CalendarPlannerScreen"
               component={CalendarPlannerScreen}
               initialParams={{
-                registerAddEventOpener: (fn) => { calendarPlannerAddEventRef.current = fn }
+                registerAddEventOpener: (fn) => { calendarPlannerAddEventRef.current = fn },
+                onNavigateToHistory: () => setActiveTab("History")
               }}
             />
           </Stack.Navigator>
@@ -1881,39 +1888,34 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
           </View>
         )}
 
-        {/* Header right icon for CalendarPlanner */}
-        {activeTab === "CalendarPlanner" && (
-          <TouchableOpacity
-            onPress={() => calendarPlannerAddEventRef.current && calendarPlannerAddEventRef.current()}
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              backgroundColor: "rgba(22, 163, 74, 0.1)",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: 12,
-            }}
-          >
-            <Ionicons name="add-circle" size={22} color="#16a34a" />
-          </TouchableOpacity>
-        )}
 
-        {/* Header icon for History */}
+
+        {/* Header icon for History - Chip de favoritos */}
         {activeTab === "History" && (
           <TouchableOpacity
-            onPress={() => setActiveTab("Home")}
+            onPress={() => {
+              if (historyToggleFavoritesRef.current) {
+                historyToggleFavoritesRef.current()
+                setHistoryFavoritesOpen(!historyFavoritesOpen)
+              }
+            }}
             style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              backgroundColor: "#8B5CF615",
-              justifyContent: "center",
-              alignItems: "center",
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingHorizontal: 10,
+              paddingVertical: 6,
+              backgroundColor: 'rgba(107, 114, 128, 0.08)',
+              borderRadius: 16,
+              borderWidth: 1,
+              borderColor: 'rgba(107, 114, 128, 0.2)',
               marginRight: 12,
             }}
           >
-            <Ionicons name="mic" size={20} color="#8B5CF6" />
+            <Ionicons name="heart-outline" size={14} color="#ef4444" style={{ marginRight: 4 }} />
+            <Text style={{ fontSize: 13, fontWeight: '600', color: '#6b7280', marginRight: 4 }}>
+              {(translationsHistorial[RNLocalize.getLocales()[0].languageCode] || translationsHistorial.en).favorites || 'Favorites'}
+            </Text>
+            <Ionicons name={historyFavoritesOpen ? "chevron-up" : "chevron-down"} size={14} color="#6b7280" />
           </TouchableOpacity>
         )}
 

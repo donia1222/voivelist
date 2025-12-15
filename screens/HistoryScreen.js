@@ -44,6 +44,7 @@ const isSmallIPhone = Platform.OS === 'ios' && (screenWidth <= 375 || height <= 
 
 const HistoryScreen = ({ navigation, route }) => {
   const onNavigateToHome = route?.params?.onNavigateToHome;
+  const registerToggleFavorites = route?.params?.registerToggleFavorites;
   const { theme } = useTheme()
   const styles = getStyles(theme)
   const modernStyles = getModernStyles(theme)
@@ -598,6 +599,25 @@ const HistoryScreen = ({ navigation, route }) => {
       useNativeDriver: false,
     }).start()
   }
+
+  // Registrar función de toggle favoritos para el header
+  useEffect(() => {
+    if (registerToggleFavorites) {
+      registerToggleFavorites(() => {
+        const newState = !favoritesFilterVisible
+        const toValue = newState ? 1 : 0
+        setFavoritesFilterVisible(newState)
+
+        AsyncStorage.setItem('@favorites_filter_visible', JSON.stringify(newState))
+
+        Animated.timing(favoritesFilterAnim, {
+          toValue,
+          duration: 300,
+          useNativeDriver: false,
+        }).start()
+      })
+    }
+  }, [registerToggleFavorites, favoritesFilterVisible, favoritesFilterAnim])
 
   // Función para cargar el estado del filtro de favoritos
   const loadFavoritesFilterState = async () => {
@@ -1590,12 +1610,7 @@ const HistoryScreen = ({ navigation, route }) => {
         ) : (
           <View style={modernStyles.titleContainer}>
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-              <Ionicons
-                name="reorder-three-outline"
-                size={20}
-                color="#888"
-                style={{ marginRight: 8 }}
-              />
+     
               <Text style={[modernStyles.cardTitle, isSmallIPhone && {fontSize: 16}, { flex: 1 }]}>{item.name}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -1612,7 +1627,7 @@ const HistoryScreen = ({ navigation, route }) => {
                 }}
                 style={modernStyles.menuButton}
               >
-                <Ionicons name="settings-outline" size={20} color="#4b5563" />
+                <Ionicons name="ellipsis-horizontal-sharp" size={20} color="#4b5563" />
               </TouchableOpacity>
             </View>
           </View>
@@ -1947,33 +1962,6 @@ const HistoryScreen = ({ navigation, route }) => {
       
       {/* Header de favoritos colapsable */}
       <View style={modernStyles.favoritesHeader}>
-        {/* Botón para expandir/colapsar */}
-        <TouchableOpacity
-          onPress={toggleFavoritesFilter}
-          style={modernStyles.favoritesToggleButton}
-        >
-          <View style={modernStyles.favoritesToggleContent}>
-            <View style={modernStyles.heartIconContainer}>
-              <Ionicons name="heart-outline" size={18} color="#ef4444" />
-            </View>
-            <Text style={modernStyles.favoritesToggleText}>
-              {currentLabels.favorites || 'Favoritos'}
-            </Text>
-          </View>
-          <Animated.View
-            style={{
-              transform: [{
-                rotate: favoritesFilterAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['0deg', '180deg'],
-                })
-              }]
-            }}
-          >
-            <Ionicons name="chevron-down" size={20} color="#6b7280" />
-          </Animated.View>
-        </TouchableOpacity>
-
         {/* Filtros colapsables */}
         <Animated.View
           style={[

@@ -13,7 +13,8 @@ import {
   StyleSheet,
   Dimensions,
   Share,
-  Platform
+  Platform,
+  Image
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -32,6 +33,8 @@ const translations = {
     selectList: "Select a List",
     noLists: "No saved lists",
     createListsFirst: "Create lists in history first",
+    bannerTitle: "Calculate the price of your shopping list",
+    bannerDescription: "Select a list from your history and find out how much your shopping would cost in your city",
     calculatePrice: "Calculate Price",
     enterCountry: "Enter Your City",
     country: "Your city",
@@ -55,13 +58,16 @@ const translations = {
     price: "Price",
     calculate: "Calculate",
     calculateAgain: "Calculate again",
-    shareError: "Could not share the list"
+    shareError: "Could not share the list",
+    breakdown: "Breakdown"
   },
   es: {
     title: "Calculadora de Precios",
     selectList: "Seleccionar una Lista",
     noLists: "No hay listas guardadas",
     createListsFirst: "Crea listas en el historial primero",
+    bannerTitle: "Calcula el precio de tu lista de la compra",
+    bannerDescription: "Selecciona una lista de tu historial y descubre cuánto costaría tu compra en tu ciudad",
     calculatePrice: "Calcular Precio",
     enterCountry: "Ingresar tu Ciudad",
     country: "Tu ciudad",
@@ -85,13 +91,16 @@ const translations = {
     price: "Precio",
     calculate: "Calcular",
     calculateAgain: "Calcular de nuevo",
-    shareError: "No se pudo compartir la lista"
+    shareError: "No se pudo compartir la lista",
+    breakdown: "Desglose"
   },
   de: {
     title: "Preisrechner",
     selectList: "Liste auswählen",
     noLists: "Keine gespeicherten Listen",
     createListsFirst: "Erstellen Sie zuerst Listen im Verlauf",
+    bannerTitle: "Berechnen Sie den Preis Ihrer Einkaufsliste",
+    bannerDescription: "Wählen Sie eine Liste aus Ihrem Verlauf und finden Sie heraus, wie viel Ihr Einkauf in Ihrer Stadt kosten würde",
     calculatePrice: "Preis berechnen",
     enterCountry: "Deine Stadt eingeben",
     country: "Deine Stadt",
@@ -114,13 +123,17 @@ const translations = {
     viewPrice: "Preis ansehen",
     price: "Preis",
     calculate: "Berechnen",
-    shareError: "Liste konnte nicht geteilt werden"
+    calculateAgain: "Erneut berechnen",
+    shareError: "Liste konnte nicht geteilt werden",
+    breakdown: "Aufschlüsselung"
   },
   it: {
     title: "Calcolatore di Prezzi",
     selectList: "Seleziona una Lista",
     noLists: "Nessuna lista salvata",
     createListsFirst: "Crea prima le liste nella cronologia",
+    bannerTitle: "Calcola il prezzo della tua lista della spesa",
+    bannerDescription: "Seleziona una lista dalla cronologia e scopri quanto costerebbe la tua spesa nella tua città",
     calculatePrice: "Calcola Prezzo",
     enterCountry: "Inserisci la tua Città",
     country: "La tua città",
@@ -143,13 +156,17 @@ const translations = {
     viewPrice: "Vedi Prezzo",
     price: "Prezzo",
     calculate: "Calcola",
-    shareError: "Impossibile condividere la lista"
+    calculateAgain: "Calcola di nuovo",
+    shareError: "Impossibile condividere la lista",
+    breakdown: "Dettaglio"
   },
   fr: {
     title: "Calculateur de Prix",
     selectList: "Sélectionner une Liste",
     noLists: "Aucune liste enregistrée",
     createListsFirst: "Créez d'abord des listes dans l'historique",
+    bannerTitle: "Calculez le prix de votre liste de courses",
+    bannerDescription: "Sélectionnez une liste de votre historique et découvrez combien coûterait vos courses dans votre ville",
     calculatePrice: "Calculer le Prix",
     enterCountry: "Entrer votre Ville",
     country: "Votre ville",
@@ -172,13 +189,17 @@ const translations = {
     viewPrice: "Voir le prix",
     price: "Prix",
     calculate: "Calculer",
-    shareError: "Impossible de partager la liste"
+    calculateAgain: "Recalculer",
+    shareError: "Impossible de partager la liste",
+    breakdown: "Détail"
   },
   tr: {
     title: "Fiyat Hesaplayıcı",
     selectList: "Bir Liste Seç",
     noLists: "Kayıtlı liste yok",
     createListsFirst: "Önce geçmişte liste oluştur",
+    bannerTitle: "Alışveriş listenizin fiyatını hesaplayın",
+    bannerDescription: "Geçmişinizden bir liste seçin ve şehrinizdeki alışveriş maliyetini öğrenin",
     calculatePrice: "Fiyat Hesapla",
     enterCountry: "Şehrinizi Girin",
     country: "Şehriniz",
@@ -201,13 +222,17 @@ const translations = {
     viewPrice: "Fiyatı Gör",
     price: "Fiyat",
     calculate: "Hesapla",
-    shareError: "Liste paylaşılamadı"
+    calculateAgain: "Tekrar hesapla",
+    shareError: "Liste paylaşılamadı",
+    breakdown: "Ayrıntı"
   },
   pt: {
     title: "Calculadora de Preços",
     selectList: "Selecionar uma Lista",
     noLists: "Sem listas salvas",
     createListsFirst: "Crie listas no histórico primeiro",
+    bannerTitle: "Calcule o preço da sua lista de compras",
+    bannerDescription: "Selecione uma lista do seu histórico e descubra quanto custaria suas compras na sua cidade",
     calculatePrice: "Calcular Preço",
     enterCountry: "Digite sua Cidade",
     country: "Sua cidade",
@@ -230,13 +255,17 @@ const translations = {
     viewPrice: "Ver Preço",
     price: "Preço",
     calculate: "Calcular",
-    shareError: "Não foi possível compartilhar a lista"
+    calculateAgain: "Calcular novamente",
+    shareError: "Não foi possível compartilhar a lista",
+    breakdown: "Detalhamento"
   },
   ru: {
     title: "Калькулятор цен",
     selectList: "Выбрать список",
     noLists: "Нет сохраненных списков",
     createListsFirst: "Сначала создайте списки в истории",
+    bannerTitle: "Рассчитайте цену вашего списка покупок",
+    bannerDescription: "Выберите список из истории и узнайте, сколько будут стоить ваши покупки в вашем городе",
     calculatePrice: "Рассчитать цену",
     enterCountry: "Введите ваш город",
     country: "Ваш город",
@@ -259,13 +288,17 @@ const translations = {
     viewPrice: "Посмотреть цену",
     price: "Цена",
     calculate: "Рассчитать",
-    shareError: "Не удалось поделиться списком"
+    calculateAgain: "Рассчитать снова",
+    shareError: "Не удалось поделиться списком",
+    breakdown: "Разбивка"
   },
   ar: {
     title: "حاسبة الأسعار",
     selectList: "اختر قائمة",
     noLists: "لا توجد قوائم محفوظة",
     createListsFirst: "قم بإنشاء قوائم في السجل أولاً",
+    bannerTitle: "احسب سعر قائمة التسوق الخاصة بك",
+    bannerDescription: "اختر قائمة من سجلك واكتشف تكلفة مشترياتك في مدينتك",
     calculatePrice: "احسب السعر",
     enterCountry: "أدخل مدينتك",
     country: "مدينتك",
@@ -289,13 +322,17 @@ const translations = {
     viewPrice: "عرض السعر",
     price: "السعر",
     calculate: "احسب",
-    shareError: "لم يتمكن من مشاركة القائمة"
+    calculateAgain: "احسب مرة أخرى",
+    shareError: "لم يتمكن من مشاركة القائمة",
+    breakdown: "التفاصيل"
   },
   hu: {
     title: "Árkalkulátor",
     selectList: "Válassz egy listát",
     noLists: "Nincsenek mentett listák",
     createListsFirst: "Először hozz létre listákat az előzményekben",
+    bannerTitle: "Számítsd ki a bevásárlólistád árát",
+    bannerDescription: "Válassz egy listát az előzményekből és tudd meg, mennyibe kerülne a bevásárlásod a városodban",
     calculatePrice: "Ár kiszámítása",
     enterCountry: "Add meg a városod",
     country: "A városod",
@@ -318,13 +355,17 @@ const translations = {
     viewPrice: "Ár megtekintése",
     price: "Ár",
     calculate: "Számítás",
-    shareError: "Nem sikerült megosztani a listát"
+    calculateAgain: "Újraszámítás",
+    shareError: "Nem sikerült megosztani a listát",
+    breakdown: "Részletezés"
   },
   ja: {
     title: "価格計算機",
     selectList: "リストを選択",
     noLists: "保存されたリストはありません",
     createListsFirst: "最初に履歴でリストを作成",
+    bannerTitle: "買い物リストの価格を計算",
+    bannerDescription: "履歴からリストを選択して、あなたの都市での買い物の費用を確認しましょう",
     calculatePrice: "価格を計算",
     enterCountry: "都市を入力",
     country: "あなたの都市",
@@ -347,13 +388,17 @@ const translations = {
     viewPrice: "価格を見る",
     price: "価格",
     calculate: "計算",
-    shareError: "リストを共有できませんでした"
+    calculateAgain: "再計算",
+    shareError: "リストを共有できませんでした",
+    breakdown: "内訳"
   },
   hi: {
     title: "मूल्य कैलकुलेटर",
     selectList: "एक सूची चुनें",
     noLists: "कोई सहेजी गई सूची नहीं",
     createListsFirst: "पहले इतिहास में सूचियां बनाएं",
+    bannerTitle: "अपनी खरीदारी सूची की कीमत की गणना करें",
+    bannerDescription: "अपने इतिहास से एक सूची चुनें और जानें कि आपके शहर में आपकी खरीदारी की लागत कितनी होगी",
     calculatePrice: "मूल्य की गणना करें",
     enterCountry: "अपना शहर दर्ज करें",
     country: "आपका शहर",
@@ -376,13 +421,17 @@ const translations = {
     viewPrice: "मूल्य देखें",
     price: "मूल्य",
     calculate: "गणना करें",
-    shareError: "सूची साझा नहीं कर सके"
+    calculateAgain: "फिर से गणना करें",
+    shareError: "सूची साझा नहीं कर सके",
+    breakdown: "विवरण"
   },
   nl: {
     title: "Prijscalculator",
     selectList: "Selecteer een lijst",
     noLists: "Geen opgeslagen lijsten",
     createListsFirst: "Maak eerst lijsten in geschiedenis",
+    bannerTitle: "Bereken de prijs van je boodschappenlijst",
+    bannerDescription: "Selecteer een lijst uit je geschiedenis en ontdek hoeveel je boodschappen zouden kosten in jouw stad",
     calculatePrice: "Prijs berekenen",
     enterCountry: "Voer uw stad in",
     country: "Uw stad",
@@ -405,7 +454,9 @@ const translations = {
     viewPrice: "Prijs bekijken",
     price: "Prijs",
     calculate: "Berekenen",
-    shareError: "Kon de lijst niet delen"
+    calculateAgain: "Opnieuw berekenen",
+    shareError: "Kon de lijst niet delen",
+    breakdown: "Uitsplitsing"
   }
 }
 
@@ -426,7 +477,7 @@ const costEstimatePrompts = {
 }
 
 const PriceCalculatorScreen = ({ navigation, route }) => {
-  const { onNavigateToSubscribe } = route?.params || {}
+  const { onNavigateToSubscribe, onNavigateToHistory } = route?.params || {}
   const { theme } = useTheme()
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const deviceCurrency = RNLocalize.getCurrencies()[0] || 'USD'
@@ -690,6 +741,18 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
     }
   }
 
+  const deletePriceHistory = async (listId, city) => {
+    try {
+      const historyKey = `${listId}_${city}`
+      const newHistory = { ...priceHistory }
+      delete newHistory[historyKey]
+      setPriceHistory(newHistory)
+      await AsyncStorage.setItem('priceCalculatorHistory', JSON.stringify(newHistory))
+    } catch (error) {
+      console.error('Error deleting price history:', error)
+    }
+  }
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -824,6 +887,52 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
       marginTop: 15,
       textAlign: 'center',
     },
+    emptyBanner: {
+      backgroundColor: theme === 'dark' ? 'rgba(42, 42, 42, 0.45)' : 'rgba(255, 255, 255, 0.45)',
+      borderRadius: 20,
+      padding: 24,
+      marginHorizontal: 10,
+      marginTop: 20,
+      borderWidth: 1.5,
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.6)',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.06,
+      shadowRadius: 15,
+      elevation: 3,
+      alignItems: 'center',
+    },
+    emptyBannerImage: {
+      width: 120,
+      height: 120,
+      marginBottom: 20,
+      resizeMode: 'contain',
+    },
+    emptyBannerTitle: {
+      fontSize: 20,
+      fontWeight: '700',
+      color: theme.text,
+      textAlign: 'center',
+      marginBottom: 12,
+    },
+    emptyBannerDescription: {
+      fontSize: 15,
+      color: theme === 'dark' ? '#aaa' : '#666',
+      textAlign: 'center',
+      lineHeight: 22,
+      paddingHorizontal: 10,
+    },
+    emptyBannerIcon: {
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      backgroundColor: 'rgba(22, 163, 74, 0.1)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 20,
+      borderWidth: 1.5,
+      borderColor: 'rgba(22, 163, 74, 0.2)',
+    },
     modal: {
       flex: 1,
       backgroundColor: 'rgba(0, 0, 0, 0.4)',
@@ -896,85 +1005,127 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
     },
     resultContainer: {
       flex: 1,
-marginTop:-10,
-      padding: 15,
-
+      padding: 16,
     },
-    resultCard: {
-      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff9a',
-      borderRadius: 24,
-      padding: 25,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.12,
-      shadowRadius: 20,
-      elevation: 8,
-      width: '100%',
-      maxHeight: screenHeight * 0.85,
-      borderWidth: 1,
-      borderColor: theme === 'dark' ? '#333' : '#f0f0f0',
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 16,
     },
-    resultTitle: {
-      fontSize: 21,
-      fontWeight: '600',
-      color: '#3e3e3eff',
-      marginBottom: 20,
-      textAlign: 'center',
-    },
-    resultCost: {
-      fontSize: 15,
+    loadingText: {
+      fontSize: 16,
+      color: '#6B7280',
       fontWeight: '500',
-      color: theme.text,
+    },
+    resultScrollContent: {
+      paddingBottom: 100,
+    },
+    resultHeader: {
+      alignItems: 'center',
       marginBottom: 20,
+    },
+    locationBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: 'rgba(37, 99, 235, 0.1)',
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+      borderRadius: 20,
+      gap: 8,
+      borderWidth: 1.5,
+      borderColor: 'rgba(37, 99, 235, 0.2)',
+    },
+    locationText: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: '#2563eb',
+    },
+    totalCard: {
+      backgroundColor: 'rgba(22, 163, 74, 0.1)',
+      borderRadius: 20,
+      padding: 24,
+      alignItems: 'center',
+      marginBottom: 16,
+      borderWidth: 1.5,
+      borderColor: 'rgba(22, 163, 74, 0.2)',
+    },
+    totalLabel: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: '#16a34a',
+      textTransform: 'uppercase',
+      letterSpacing: 1,
+      marginBottom: 8,
+    },
+    totalAmount: {
+      fontSize: 36,
+      fontWeight: '700',
+      color: '#16a34a',
+    },
+    breakdownCard: {
+      backgroundColor: theme === 'dark' ? 'rgba(42, 42, 42, 0.6)' : 'rgba(255, 255, 255, 0.6)',
+      borderRadius: 20,
+      padding: 20,
+      marginBottom: 20,
+      borderWidth: 1.5,
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.8)',
+    },
+    breakdownHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      marginBottom: 16,
+      paddingBottom: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
+    },
+    breakdownTitle: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: theme.text,
+    },
+    breakdownText: {
+      fontSize: 14,
+      color: theme === 'dark' ? '#aaa' : '#4B5563',
       lineHeight: 22,
-      paddingHorizontal: 5,
     },
-    resultCountry: {
-      fontSize: 16,
-     color: '#2a8c32ff',
-      marginBottom: 25,
-      textAlign: 'center',
-      fontWeight: '600',
+    resultButtons: {
+      gap: 12,
     },
-    tryAnotherButton: {
-      backgroundColor: theme === 'dark' ? '#333' : '#f0f0f0',
-      borderRadius: 16,
-      paddingVertical: 14,
-      paddingHorizontal: 28,
-      marginBottom: 12,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 2,
-    },
-    tryAnotherText: {
-      color: theme.text,
-      fontSize: 16,
-      fontWeight: '500',
-    },
-    shareButton: {
-      backgroundColor: '#16a34a',
-      borderRadius: 16,
-      paddingVertical: 14,
-      paddingHorizontal: 28,
+    tryAnotherButtonNew: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      shadowColor: '#16a34a',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      elevation: 4,
-      marginBottom: 80,
+      backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 16,
+      gap: 10,
+      borderWidth: 1.5,
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)',
     },
-    shareIcon: {
-      marginRight: 8,
-    },
-    shareText: {
-      color: '#fff',
+    tryAnotherTextNew: {
       fontSize: 16,
-      fontWeight: '500',
+      fontWeight: '600',
+      color: '#6B7280',
+    },
+    shareButtonNew: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'rgba(22, 163, 74, 0.1)',
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 16,
+      gap: 10,
+      borderWidth: 1.5,
+      borderColor: 'rgba(22, 163, 74, 0.2)',
+    },
+    shareTextNew: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: '#16a34a',
     },
     viewPriceButton: {
       flexDirection: 'row',
@@ -1005,6 +1156,10 @@ marginTop:-10,
       opacity: 0.7,
       marginTop: 2,
     },
+    deletePriceIcon: {
+      padding: 8,
+      marginLeft: 'auto',
+    },
     buttonContainer: {
       flexDirection: 'column',
       alignItems: 'flex-end',
@@ -1029,31 +1184,86 @@ marginTop:-10,
     },
   })
 
+  // Función para extraer el total del resultado
+  const extractTotal = (text) => {
+    const prices = text.match(/[\d]+[.,]?\d*\s*[€$£]|[€$£]\s*[\d]+[.,]?\d*|(CHF|EUR|USD|GBP|CAD)\s*[\d]+[.,]?\d*|[\d]+[.,]?\d*\s*(CHF|EUR|USD|GBP|CAD)/gi);
+    if (prices && prices.length > 0) {
+      return prices[prices.length - 1];
+    }
+    return null;
+  };
+
+  // Función para limpiar el texto del resultado
+  const cleanResultText = (text) => {
+    // Remover caracteres markdown de tablas y formato
+    let cleaned = text
+      .replace(/\|[-]+/g, '') // Remover líneas separadoras de tabla
+      .replace(/\*\*/g, '') // Remover bold markdown
+      .replace(/\|/g, '  •  ') // Reemplazar pipes con bullets
+      .replace(/^\s*•\s*/gm, '') // Remover bullets al inicio de línea
+      .replace(/\s*•\s*$/gm, '') // Remover bullets al final de línea
+      .replace(/•\s*•/g, '•') // Remover dobles bullets
+      .replace(/\n\s*\n\s*\n/g, '\n\n') // Reducir espacios múltiples
+      .trim();
+    return cleaned;
+  };
+
   if (showResult) {
+    const total = extractTotal(estimatedCost);
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.resultContainer}>
           {loading ? (
-            <ActivityIndicator size="large" color="#dc2626" />
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#16a34a" />
+              <Text style={styles.loadingText}>{t.loading}</Text>
+            </View>
           ) : (
-            <ScrollView style={styles.resultCard} showsVerticalScrollIndicator={false}>
-              <Text style={styles.resultTitle}>💰{t.estimatedCost}</Text>
-              <Text style={styles.resultCost}>{estimatedCost}</Text>
-              <Text style={styles.resultCountry}>📍{country}</Text>
-              <TouchableOpacity 
-                style={styles.tryAnotherButton}
-                onPress={resetCalculator}
-              >
-                <Text style={styles.tryAnotherText}>{t.tryAnother}</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={styles.shareButton}
-                onPress={() => shareShoppingList(selectedList)}
-              >
-                <Ionicons name="share-outline" size={18} color="#fff" style={styles.shareIcon} />
-                <Text style={styles.shareText}>{t.shareList}</Text>
-              </TouchableOpacity>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.resultScrollContent}>
+              {/* Header con ubicación */}
+              <View style={styles.resultHeader}>
+                <View style={styles.locationBadge}>
+                  <Ionicons name="location" size={20} color="#2563eb" />
+                  <Text style={styles.locationText}>{country}</Text>
+                </View>
+              </View>
+
+              {/* Card del total */}
+              {total && (
+                <View style={styles.totalCard}>
+                  <Text style={styles.totalLabel}>{t.estimatedCost}</Text>
+                  <Text style={styles.totalAmount}>{total}</Text>
+                </View>
+              )}
+
+              {/* Desglose */}
+              <View style={styles.breakdownCard}>
+                <View style={styles.breakdownHeader}>
+                  <Ionicons name="receipt-outline" size={20} color="#16a34a" />
+                  <Text style={styles.breakdownTitle}>{t.breakdown}</Text>
+                </View>
+                <Text style={styles.breakdownText}>{cleanResultText(estimatedCost)}</Text>
+              </View>
+
+              {/* Botones */}
+              <View style={styles.resultButtons}>
+                <TouchableOpacity
+                  style={styles.tryAnotherButtonNew}
+                  onPress={resetCalculator}
+                >
+                  <Ionicons name="refresh-outline" size={20} color="#6B7280" />
+                  <Text style={styles.tryAnotherTextNew}>{t.tryAnother}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.shareButtonNew}
+                  onPress={() => shareShoppingList(selectedList)}
+                >
+                  <Ionicons name="share-outline" size={20} color="#16a34a" />
+                  <Text style={styles.shareTextNew}>{t.shareList}</Text>
+                </TouchableOpacity>
+              </View>
             </ScrollView>
           )}
         </View>
@@ -1065,22 +1275,22 @@ marginTop:-10,
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         {savedLists.length === 0 ? (
-          <View style={{ flex: 1 }}>
-            <View style={styles.emptyState}>
-              <Ionicons name="list-outline" size={48} color={theme === 'dark' ? '#666' : '#ccc'} />
-              <Text style={styles.emptyText}>{t.noLists}</Text>
-              <Text style={[styles.emptyText, { fontSize: 14 }]}>{t.createListsFirst}</Text>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={styles.emptyBanner}>
+              <Image
+                source={require('../assets/images/carta.png')}
+                style={styles.emptyBannerImage}
+              />
+              <Text style={styles.emptyBannerTitle}>{t.bannerTitle}</Text>
+              <Text style={styles.emptyBannerDescription}>{t.bannerDescription}</Text>
+              <TouchableOpacity
+                style={styles.emptyBannerIcon}
+                onPress={() => onNavigateToHistory && onNavigateToHistory()}
+              >
+                <Ionicons name="bookmark" size={28} color="#16a34a" />
+              </TouchableOpacity>
+              <Text style={[styles.emptyText, { marginTop: 12, fontSize: 14 }]}>{t.createListsFirst}</Text>
             </View>
-            <TouchableOpacity 
-              style={[
-                styles.calculateButton,
-                styles.calculateButtonDisabled
-              ]}
-              disabled={true}
-            >
-
-
-            </TouchableOpacity>
           </View>
         ) : (
           <FlatList
@@ -1155,6 +1365,15 @@ marginTop:-10,
                             })()}
                           </Text>
                         </View>
+                        <TouchableOpacity
+                          style={styles.deletePriceIcon}
+                          onPress={(e) => {
+                            e.stopPropagation();
+                            deletePriceHistory(listId, country);
+                          }}
+                        >
+                          <Ionicons name="trash-outline" size={16} color="#dc2626" />
+                        </TouchableOpacity>
                       </TouchableOpacity>
                     )}
                     <TouchableOpacity

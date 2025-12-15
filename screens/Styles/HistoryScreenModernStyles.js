@@ -20,14 +20,20 @@ const getModernStyles = (theme) => StyleSheet.create({
     shadowRadius: 4,
   },
 
-  // Botón para expandir/colapsar favoritos
+  // Botón para expandir/colapsar favoritos - Estilo Chip
   favoritesToggleButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 14,
     paddingVertical: 8,
-    backgroundColor: theme.background || "#fefefe",
+    marginLeft: 16,
+    marginVertical: 8,
+    backgroundColor: 'rgba(107, 114, 128, 0.08)',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(107, 114, 128, 0.2)',
   },
 
   favoritesToggleContent: {
@@ -36,25 +42,21 @@ const getModernStyles = (theme) => StyleSheet.create({
   },
 
   heartIconContainer: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 4,
-    backgroundColor: 'rgba(239, 68, 68, 0.05)',
+    marginRight: 6,
   },
 
   favoritesToggleText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
-    color: theme.text || '#374151',
+    color: '#6b7280',
+    marginRight: 6,
   },
 
   // Contenedor de filtros colapsables
   favoritesFilterContainer: {
     overflow: 'hidden',
     backgroundColor: theme.background || "#fefefe",
+        marginBottom: -20,
   },
   
 
@@ -72,7 +74,7 @@ const getModernStyles = (theme) => StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fef8e7",
     paddingHorizontal: 24,
-    paddingVertical: 8,
+    paddingVertical: 6,
     borderRadius: 28,
     borderWidth: 0,
     borderColor: "transparent",
@@ -83,6 +85,7 @@ const getModernStyles = (theme) => StyleSheet.create({
     elevation: 2,
     position: "relative",
     marginTop: 8,
+
     minWidth: 140,
   },
 
@@ -141,7 +144,7 @@ const getModernStyles = (theme) => StyleSheet.create({
     backgroundColor: "#ffffff67",
     borderRadius: 24,
     marginHorizontal: 16,
-    marginVertical: 2,
+    marginVertical: -4,
     padding: 12,
     paddingBottom: 40, // Menos espacio para el footer más compacto
     shadowColor: "#a8d5a8",
