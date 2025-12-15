@@ -697,7 +697,53 @@ const getModernStyles = (theme) => StyleSheet.create({
     fontSize: 20,
     color: theme.text || "#2d3748",
     textAlign: "center",
-    marginBottom: 32,
+    marginBottom: 24,
+  },
+
+  emptyStateSubtitle: {
+    fontSize: 16,
+    color: theme.textSecondary || "#718096",
+    textAlign: "center",
+    marginTop: 16,
+  },
+
+  createListBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(76, 175, 80, 0.12)",
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: "rgba(76, 175, 80, 0.25)",
+    maxWidth: 320,
+  },
+
+  createListBannerTextContainer: {
+    marginLeft: 14,
+    flex: 1,
+  },
+
+  createListBannerTitle: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#5a5a5a",
+    marginBottom: 2,
+  },
+
+  createListBannerSubtitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#2E7D32",
+  },
+
+  micIconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "rgba(76, 175, 80, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   createListButton: {

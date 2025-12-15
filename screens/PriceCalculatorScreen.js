@@ -54,6 +54,7 @@ const translations = {
     viewPrice: "View Price",
     price: "Price",
     calculate: "Calculate",
+    calculateAgain: "Calculate again",
     shareError: "Could not share the list"
   },
   es: {
@@ -83,6 +84,7 @@ const translations = {
     viewPrice: "Ver Precio",
     price: "Precio",
     calculate: "Calcular",
+    calculateAgain: "Calcular de nuevo",
     shareError: "No se pudo compartir la lista"
   },
   de: {
@@ -708,11 +710,10 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
       fontWeight: 'bold',
       color: theme.text,
       marginLeft: 15,
-
     },
     content: {
       flex: 1,
-      padding: 20,
+      paddingHorizontal: 10,
       paddingTop: 10,
     },
     sectionTitle: {
@@ -726,36 +727,90 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
     listContainer: {
       flex: 1,
       borderRadius: 15,
-      padding: 10,
+      paddingHorizontal: 0,
+      paddingVertical: 6,
+      marginTop: -5,
     },
     listItem: {
+      backgroundColor: theme === 'dark' ? 'rgba(42, 42, 42, 0.45)' : 'rgba(255, 255, 255, 0.45)',
+      borderRadius: 20,
+      marginBottom: 12,
+      marginHorizontal: 0,
+      padding: 18,
+      borderWidth: 1.5,
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.6)',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.06,
+      shadowRadius: 15,
+      elevation: 3,
+    },
+    listItemHeader: {
       flexDirection: 'row',
-      padding: 15,
-      backgroundColor: theme === 'dark' ? '#333' : '#fff',
-      borderRadius: 12,
-      marginBottom: 10,
       alignItems: 'center',
-      borderWidth: 1,
-      borderColor: 'transparent',
+      marginBottom: 14,
+    },
+    listItemIcon: {
+      width: 56,
+      height: 56,
+      borderRadius: 16,
+      backgroundColor: 'rgba(22, 163, 74, 0.12)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 16,
+      borderWidth: 1.5,
+      borderColor: 'rgba(22, 163, 74, 0.2)',
     },
     listItemContent: {
       flex: 1,
     },
     listItemTitle: {
-      fontSize: 16,
-      fontWeight: '600',
+      fontSize: 18,
+      fontWeight: '700',
       color: theme.text,
-      marginBottom: 4,
+      marginBottom: 6,
+    },
+    listItemMeta: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    },
+    listItemBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+      paddingHorizontal: 10,
+      paddingVertical: 6,
+      borderRadius: 10,
+      gap: 6,
+    },
+    listItemBadgeText: {
+      fontSize: 13,
+      fontWeight: '600',
+      color: theme === 'dark' ? '#aaa' : '#666',
     },
     listItemSubtitle: {
-      fontSize: 12,
+      fontSize: 14,
       color: theme === 'dark' ? '#888' : '#666',
       marginBottom: 4,
     },
     listItemPreview: {
-      fontSize: 12,
-      color: theme === 'dark' ? '#aaa' : '#888',
-      fontStyle: 'italic',
+      fontSize: 15,
+      color: theme === 'dark' ? '#999' : '#6B7280',
+      marginTop: 10,
+      paddingTop: 12,
+      borderTopWidth: 1,
+      borderTopColor: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+    },
+    listItemButtons: {
+      flexDirection: 'row',
+      gap: 10,
+      marginTop: 14,
+    },
+    listItemButtonsColumn: {
+      flexDirection: 'column',
+      gap: 10,
+      marginTop: 14,
     },
     emptyState: {
       flex: 1,
@@ -771,21 +826,23 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
     },
     modal: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
       justifyContent: 'center',
       alignItems: 'center',
       padding: 20,
     },
     modalContent: {
       width: screenWidth * 0.9,
-      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#fff',
-      borderRadius: 20,
+      backgroundColor: theme === 'dark' ? 'rgba(42, 42, 42, 0.95)' : 'rgba(255, 255, 255, 0.92)',
+      borderRadius: 24,
       padding: 25,
+      borderWidth: 1.5,
+      borderColor: theme === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.8)',
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
+      shadowOffset: { width: 0, height: 8 },
       shadowOpacity: 0.25,
-      shadowRadius: 10,
-      elevation: 8,
+      shadowRadius: 16,
+      elevation: 10,
     },
     modalTitle: {
       fontSize: 20,
@@ -920,20 +977,33 @@ marginTop:-10,
       fontWeight: '500',
     },
     viewPriceButton: {
-      backgroundColor: 'rgba(220, 38, 38, 0.3)',
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      borderRadius: 8,
-      marginLeft: 10,
-      width: 80,
-      borderWidth: 1,
-      borderColor: 'rgba(220, 38, 38, 0.5)',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      backgroundColor: 'rgba(37, 99, 235, 0.1)',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderRadius: 14,
+      borderWidth: 1.5,
+      borderColor: 'rgba(37, 99, 235, 0.2)',
+      gap: 10,
     },
     viewPriceText: {
-      color: '#dc2626',
+      color: '#2563eb',
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    viewPriceTextContainer: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      flex: 1,
+    },
+    viewPriceMiniText: {
+      color: '#2563eb',
       fontSize: 11,
-      fontWeight: '700',
-      textAlign: 'center',
+      fontWeight: '500',
+      opacity: 0.7,
+      marginTop: 2,
     },
     buttonContainer: {
       flexDirection: 'column',
@@ -941,20 +1011,21 @@ marginTop:-10,
       marginLeft: 10,
     },
     calculateAgainSmallButton: {
-      backgroundColor: 'rgba(22, 163, 74, 0.3)',
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      borderRadius: 8,
-      marginTop: 4,
-      width: 80,
-      borderWidth: 1,
-      borderColor: 'rgba(22, 163, 74, 0.5)',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'rgba(22, 163, 74, 0.1)',
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      borderRadius: 14,
+      borderWidth: 1.5,
+      borderColor: 'rgba(22, 163, 74, 0.2)',
+      gap: 8,
     },
     calculateAgainSmallText: {
       color: '#16a34a',
-      fontSize: 11,
-      fontWeight: '700',
-      textAlign: 'center',
+      fontSize: 15,
+      fontWeight: '600',
     },
   })
 
@@ -993,10 +1064,6 @@ marginTop:-10,
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {savedLists.length > 0 && (
-          <Text style={styles.sectionTitle}>{t.selectList}</Text>
-        )}
-
         {savedLists.length === 0 ? (
           <View style={{ flex: 1 }}>
             <View style={styles.emptyState}>
@@ -1022,38 +1089,70 @@ marginTop:-10,
             keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
-              const previewItems = item.list?.slice(0, 3).map(listItem => 
+              const previewItems = item.list?.slice(0, 4).map(listItem =>
                 typeof listItem === 'string' ? listItem : listItem.text || listItem.name || String(listItem)
               ) || []
-              
+
               const listId = item.date || item.name || Date.now().toString()
               const hasHistory = country && getHistoryForList(listId, country)
-              
+
               return (
-                <View
-                  style={styles.listItem}
-                >
-                  <View style={styles.listItemContent}>
-                    <Text style={styles.listItemTitle}>
-                      {item.name || `Lista ${index + 1}`}
-                    </Text>
-                    <Text style={styles.listItemSubtitle}>
-                      {new Date(item.date).toLocaleDateString()} • {item.list?.length || 0} {t.items}
-                    </Text>
-                    <Text style={styles.listItemPreview} numberOfLines={1}>
-                      {previewItems.join(', ')}{item.list?.length > 3 ? '...' : ''}
-                    </Text>
+                <View style={styles.listItem}>
+                  {/* Header con icono */}
+                  <View style={styles.listItemHeader}>
+                    <View style={styles.listItemIcon}>
+                      <Ionicons name="cart" size={28} color="#16a34a" />
+                    </View>
+                    <View style={styles.listItemContent}>
+                      <Text style={styles.listItemTitle} numberOfLines={1}>
+                        {item.name || `Lista ${index + 1}`}
+                      </Text>
+                      <View style={styles.listItemMeta}>
+                        <View style={styles.listItemBadge}>
+                          <Ionicons name="calendar-outline" size={14} color="#6B7280" />
+                          <Text style={styles.listItemBadgeText}>
+                            {new Date(item.date).toLocaleDateString()}
+                          </Text>
+                        </View>
+                        <View style={styles.listItemBadge}>
+                          <Ionicons name="list-outline" size={14} color="#6B7280" />
+                          <Text style={styles.listItemBadgeText}>
+                            {item.list?.length || 0} {t.items}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
                   </View>
-                  <View style={styles.buttonContainer}>
+
+                  {/* Preview de productos */}
+                  <Text style={styles.listItemPreview} numberOfLines={1}>
+                    {previewItems.join(' • ')}{item.list?.length > 4 ? ' ...' : ''}
+                  </Text>
+
+                  {/* Botones en columna */}
+                  <View style={styles.listItemButtonsColumn}>
                     {hasHistory && (
                       <TouchableOpacity
                         style={styles.viewPriceButton}
                         onPress={() => showHistoricalPrice(item)}
                       >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                          <Ionicons name="location-outline" size={12} color="#dc2626" />
-                          <Text style={[styles.viewPriceText, { marginLeft: 4 }]} numberOfLines={1} ellipsizeMode="tail">
+                        <Ionicons name="location" size={18} color="#2563eb" />
+                        <View style={styles.viewPriceTextContainer}>
+                          <Text style={styles.viewPriceText} numberOfLines={1} ellipsizeMode="tail">
                             {getHistoryForList(listId, country)?.city}
+                          </Text>
+                          <Text style={styles.viewPriceMiniText} numberOfLines={1} ellipsizeMode="tail">
+                            Total: {(() => {
+                              const historyData = getHistoryForList(listId, country);
+                              if (!historyData?.result) return '---';
+                              const result = historyData.result;
+                              // Buscar cualquier precio con símbolo o código de moneda
+                              const prices = result.match(/[\d]+[.,]?\d*\s*[€$£]|[€$£]\s*[\d]+[.,]?\d*|(CHF|EUR|USD|GBP|CAD)\s*[\d]+[.,]?\d*|[\d]+[.,]?\d*\s*(CHF|EUR|USD|GBP|CAD)/gi);
+                              if (prices && prices.length > 0) {
+                                return prices[prices.length - 1];
+                              }
+                              return '---';
+                            })()}
                           </Text>
                         </View>
                       </TouchableOpacity>
@@ -1062,7 +1161,6 @@ marginTop:-10,
                       style={styles.calculateAgainSmallButton}
                       onPress={() => {
                         setSelectedList(item)
-                        // Use item directly instead of relying on state update
                         if (!item) {
                           Alert.alert(t.error, t.selectListFirst)
                           return
@@ -1070,12 +1168,10 @@ marginTop:-10,
                         setCountryModalVisible(true)
                       }}
                     >
-                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                        <Ionicons name="calculator-outline" size={12} color="#16a34a" />
-                        <Text style={[styles.calculateAgainSmallText, { marginLeft: 4 }]} numberOfLines={1}>
-                          {t.calculate}
-                        </Text>
-                      </View>
+                      <Ionicons name="calculator" size={18} color="#16a34a" />
+                      <Text style={styles.calculateAgainSmallText}>
+                        {hasHistory ? (t.calculateAgain || 'Calcular de nuevo') : t.calculate}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>

@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   Dimensions,
   Platform,
+  Animated,
+  Easing,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -54,6 +56,7 @@ const MealPlannerScreen = ({ route }) => {
 
   const scrollViewRef = useRef(null);
   const dayRefs = useRef({});
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   // Modales de header
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
@@ -114,12 +117,24 @@ const MealPlannerScreen = ({ route }) => {
   };
 
   const scrollToDay = (day) => {
-    setActiveDay(day);
-    const dayIndex = days.indexOf(day);
-    if (dayIndex !== -1 && scrollViewRef.current) {
-      const screenWidth = Dimensions.get('window').width;
-      scrollViewRef.current.scrollTo({ x: dayIndex * screenWidth, animated: true });
-    }
+    if (day === activeDay) return;
+
+    // Fade out
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 150,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start(() => {
+      setActiveDay(day);
+      // Fade in
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        easing: Easing.in(Easing.ease),
+        useNativeDriver: true,
+      }).start();
+    });
   };
 
   const getTodayDay = () => {
@@ -143,7 +158,7 @@ const MealPlannerScreen = ({ route }) => {
     checkSubscriptionStatus();
   }, [currentWeekStart]);
 
-  // Scroll al día de hoy cuando se carga la pantalla
+  // Ir al día de hoy cuando se carga la pantalla
   useEffect(() => {
     const todayDay = getTodayDay();
     // Verificar si el día de hoy está dentro de la semana actual
@@ -151,12 +166,8 @@ const MealPlannerScreen = ({ route }) => {
     const weekStart = MealPlanService.getWeekStart(today);
 
     if (weekStart.getTime() === currentWeekStart.getTime()) {
-      // Solo hacer scroll si estamos en la semana actual
+      // Solo cambiar si estamos en la semana actual
       setActiveDay(todayDay);
-      // Pequeño delay para asegurar que el ScrollView esté renderizado
-      setTimeout(() => {
-        scrollToDay(todayDay);
-      }, 100);
     }
   }, []);
 
@@ -213,13 +224,7 @@ const MealPlannerScreen = ({ route }) => {
       setLoading(true);
       const plan = await MealPlanService.getWeeklyPlan(currentWeekStart);
       setWeekPlan(plan);
-
-      // Si keepCurrentDay es true, mantener el scroll en el día activo
-      if (keepCurrentDay && activeDay) {
-        setTimeout(() => {
-          scrollToDay(activeDay);
-        }, 150);
-      }
+      // El día activo se mantiene automáticamente con el estado
     } catch (error) {
       Alert.alert(t.error, t.errorLoading);
     } finally {
@@ -799,95 +804,69 @@ const MealPlannerScreen = ({ route }) => {
           </ScrollView>
         </View>
 
-      <ScrollView
-        ref={scrollViewRef}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        style={styles.scrollView}
-        snapToInterval={Dimensions.get('window').width}
-        decelerationRate="fast"
-        onScroll={(event) => {
-          const offsetX = event.nativeEvent.contentOffset.x;
-          const screenWidth = Dimensions.get('window').width;
-          const currentIndex = Math.round(offsetX / screenWidth);
-          if (currentIndex >= 0 && currentIndex < days.length) {
-            setActiveDay(days[currentIndex]);
-          }
-        }}
-        scrollEventThrottle={16}
-      >
-
-        
-        {days.map((day) => {
+      <Animated.View style={[styles.scrollView, { opacity: fadeAnim }]}>
+        {(() => {
+          const day = activeDay;
           const dayDate = MealPlanService.getDateForDay(day, currentWeekStart);
           const dayName = getDayName(day);
           const monthName = getMonthName(dayDate.getMonth());
           const formattedDate = `${dayDate.getDate()} ${monthName}`;
 
           return (
-            <View
-              key={day}
-              ref={(ref) => (dayRefs.current[day] = ref)}
-              style={styles.dayContainerHorizontal}
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={styles.dayScrollView}
+              contentContainerStyle={styles.dayScrollContent}
             >
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.dayContainer}>
-                  <View style={styles.dayHeader}>
-                    <Text style={styles.dayName}>{dayName}</Text>
-                    <Text style={styles.dayDate}>{formattedDate}</Text>
-                  </View>
-
-              <MealSlot
-                mealType="breakfast"
-                meal={weekPlan?.plan?.[day]?.breakfast}
-                onPress={() => openMealSelector(day, 'breakfast', weekPlan?.plan?.[day]?.breakfast)}
-                onRemove={() => handleRemoveMeal(day, 'breakfast')}
-                onGenerateWithAI={() => generateSingleMealWithAI(day, 'breakfast')}
-                isGenerating={generatingMeals[`${day}_breakfast`]}
-                translations={t}
-              />
-
-              <MealSlot
-                mealType="lunch"
-                meal={weekPlan?.plan?.[day]?.lunch}
-                onPress={() => openMealSelector(day, 'lunch', weekPlan?.plan?.[day]?.lunch)}
-                onRemove={() => handleRemoveMeal(day, 'lunch')}
-                onGenerateWithAI={() => generateSingleMealWithAI(day, 'lunch')}
-                isGenerating={generatingMeals[`${day}_lunch`]}
-                translations={t}
-              />
-
-              <MealSlot
-                mealType="dinner"
-                meal={weekPlan?.plan?.[day]?.dinner}
-                onPress={() => openMealSelector(day, 'dinner', weekPlan?.plan?.[day]?.dinner)}
-                onRemove={() => handleRemoveMeal(day, 'dinner')}
-                onGenerateWithAI={() => generateSingleMealWithAI(day, 'dinner')}
-                isGenerating={generatingMeals[`${day}_dinner`]}
-                translations={t}
-              />
-
-
-
-              {/* Botón generar lista para este día */}
-              <TouchableOpacity
-                style={styles.generateDayListButton}
-                onPress={() => openListSelectionModal('day', day)}
-              >
-                <Ionicons name="cart-outline" size={16} color="#374151" />
-                <Text style={styles.generateDayListButtonText}>{t.dayShoppingList}</Text>
-              </TouchableOpacity>
+              <View style={styles.dayContainer}>
+                <View style={styles.dayHeader}>
+                  <Text style={styles.dayName}>{dayName}</Text>
+                  <Text style={styles.dayDate}>{formattedDate}</Text>
                 </View>
 
+                <MealSlot
+                  mealType="breakfast"
+                  meal={weekPlan?.plan?.[day]?.breakfast}
+                  onPress={() => openMealSelector(day, 'breakfast', weekPlan?.plan?.[day]?.breakfast)}
+                  onRemove={() => handleRemoveMeal(day, 'breakfast')}
+                  onGenerateWithAI={() => generateSingleMealWithAI(day, 'breakfast')}
+                  isGenerating={generatingMeals[`${day}_breakfast`]}
+                  translations={t}
+                />
 
-              </ScrollView>
-            </View>
+                <MealSlot
+                  mealType="lunch"
+                  meal={weekPlan?.plan?.[day]?.lunch}
+                  onPress={() => openMealSelector(day, 'lunch', weekPlan?.plan?.[day]?.lunch)}
+                  onRemove={() => handleRemoveMeal(day, 'lunch')}
+                  onGenerateWithAI={() => generateSingleMealWithAI(day, 'lunch')}
+                  isGenerating={generatingMeals[`${day}_lunch`]}
+                  translations={t}
+                />
+
+                <MealSlot
+                  mealType="dinner"
+                  meal={weekPlan?.plan?.[day]?.dinner}
+                  onPress={() => openMealSelector(day, 'dinner', weekPlan?.plan?.[day]?.dinner)}
+                  onRemove={() => handleRemoveMeal(day, 'dinner')}
+                  onGenerateWithAI={() => generateSingleMealWithAI(day, 'dinner')}
+                  isGenerating={generatingMeals[`${day}_dinner`]}
+                  translations={t}
+                />
+
+                {/* Botón generar lista para este día */}
+                <TouchableOpacity
+                  style={styles.generateDayListButton}
+                  onPress={() => openListSelectionModal('day', day)}
+                >
+                  <Ionicons name="cart-outline" size={18} color="#2E7D32" />
+                  <Text style={styles.generateDayListButtonText}>{t.dayShoppingList}</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
           );
-        })}
-
-
-      </ScrollView>
+        })()}
+      </Animated.View>
 
       <MealSelectorModal
         visible={modalVisible}
@@ -1093,6 +1072,13 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
+  dayScrollView: {
+    flex: 1,
+  },
+  dayScrollContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 20,
+  },
   dayContainerHorizontal: {
     width: Dimensions.get('window').width,
     paddingHorizontal: 16,
@@ -1153,19 +1139,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.35)',
-    paddingVertical: 11,
-    paddingHorizontal: 16,
-    borderRadius: 12,
+    backgroundColor: 'rgba(76, 175, 80, 0.12)',
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 14,
     marginTop: 10,
     gap: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.35)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(76, 175, 80, 0.25)',
   },
   generateDayListButtonText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#374151',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#2E7D32',
   },
   bottomPadding: {
     height: 40,

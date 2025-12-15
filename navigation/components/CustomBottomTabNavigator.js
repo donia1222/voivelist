@@ -1320,7 +1320,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
       case "History":
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
+            <Stack.Screen
+              name="HistoryScreen"
+              component={HistoryScreen}
+              initialParams={{
+                onNavigateToHome: () => setActiveTab("Home")
+              }}
+            />
           </Stack.Navigator>
         )
       case "CalendarPlanner":

@@ -42,7 +42,8 @@ const screenWidth = Dimensions.get("window").width
 const { width, height } = Dimensions.get("window")
 const isSmallIPhone = Platform.OS === 'ios' && (screenWidth <= 375 || height <= 667)
 
-const HistoryScreen = ({ navigation }) => {
+const HistoryScreen = ({ navigation, route }) => {
+  const onNavigateToHome = route?.params?.onNavigateToHome;
   const { theme } = useTheme()
   const styles = getStyles(theme)
   const modernStyles = getModernStyles(theme)
@@ -147,6 +148,7 @@ const HistoryScreen = ({ navigation }) => {
   const [showUploadIcon, setShowUploadIcon] = useState(false)
   const [favoritesFilterVisible, setFavoritesFilterVisible] = useState(true) // Default abierto
   const favoritesFilterAnim = useRef(new Animated.Value(1)).current // Empezar abierto
+  const micPulseAnim = useRef(new Animated.Value(1)).current
   const [historyListSelectorVisible, setHistoryListSelectorVisible] = useState(false)
   const [selectedFavoriteCategory, setSelectedFavoriteCategory] = useState('')
   const [selectedFavoriteCategoryKey, setSelectedFavoriteCategoryKey] = useState('')
@@ -299,6 +301,30 @@ const HistoryScreen = ({ navigation }) => {
       syncWidgetChanges()
     }
   }, [isFocused])
+
+  // Pulse animation for mic icon when history is empty
+  useEffect(() => {
+    if (history.length === 0) {
+      const pulse = Animated.loop(
+        Animated.sequence([
+          Animated.timing(micPulseAnim, {
+            toValue: 1.15,
+            duration: 800,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+          Animated.timing(micPulseAnim, {
+            toValue: 1,
+            duration: 800,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+        ])
+      )
+      pulse.start()
+      return () => pulse.stop()
+    }
+  }, [history.length, micPulseAnim])
 
   // Listen for app state changes (foreground/background)
   useEffect(() => {
@@ -2001,13 +2027,24 @@ const HistoryScreen = ({ navigation }) => {
 
       {history.length === 0 ? (
         <View style={modernStyles.emptyStateContainer}>
-          <View style={modernStyles.emptyStateContent}>
-            <View style={modernStyles.emptyIconWrapper}>
-              <Image source={require("../assets/images/disminuyendo.png")} style={modernStyles.emptyStateImage} />
+          <TouchableOpacity
+            style={modernStyles.createListBanner}
+            onPress={() => onNavigateToHome && onNavigateToHome()}
+            activeOpacity={0.7}
+          >
+            <Animated.View
+              style={[
+                modernStyles.micIconContainer,
+                { transform: [{ scale: micPulseAnim }] }
+              ]}
+            >
+              <Ionicons name="mic" size={24} color="#2E7D32" />
+            </Animated.View>
+            <View style={modernStyles.createListBannerTextContainer}>
+              <Text style={modernStyles.createListBannerTitle}>{currentLabels.noHistory}</Text>
+              <Text style={modernStyles.createListBannerSubtitle}>{currentLabels.createShoppingList}</Text>
             </View>
-            <Text style={modernStyles.emptyStateTitle}>{currentLabels.noHistory}</Text>
-
-          </View>
+          </TouchableOpacity>
         </View>
       ) : (
         <FlatList
