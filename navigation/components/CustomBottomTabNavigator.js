@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react"
 import {
   View,
   TouchableOpacity,
+  Pressable,
   Text,
   Modal,
   ScrollView,
@@ -460,7 +461,191 @@ const getMenuItemDescription = (icon) => {
   return menuTexts.descriptions[icon] || menuTexts.menuSubtitle
 }
 
-function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home" }) {
+// Componente animado para los tabs
+const AnimatedTabButton = ({ tab, isActive, tabColor, isSmallIPhone, onPress, isCenterTab }) => {
+  const scale = useSharedValue(1)
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }))
+
+  const handlePressIn = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 400 })
+  }
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 400 })
+  }
+
+  if (isCenterTab) {
+    return (
+      <Pressable
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={{
+          flex: 1,
+          alignItems: "center",
+          paddingVertical: isSmallIPhone ? 4 : 8,
+        }}
+      >
+        <ReanimatedAnimated.View
+          style={[
+            {
+              backgroundColor: isActive ? tab.color + "25" : "transparent",
+              paddingHorizontal: isSmallIPhone ? 14 : 18,
+              paddingVertical: isSmallIPhone ? 10 : 12,
+              borderRadius: 18,
+              alignItems: "center",
+              marginTop: -6,
+              borderWidth: isActive ? 1.5 : 0,
+              borderColor: tab.color + "40",
+            },
+            animatedStyle,
+          ]}
+        >
+          <Ionicons
+            name={tab.icon}
+            size={isSmallIPhone ? 24 : 28}
+            color={tab.color}
+          />
+        </ReanimatedAnimated.View>
+      </Pressable>
+    )
+  }
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={{
+        flex: 1,
+        alignItems: "center",
+        paddingVertical: isSmallIPhone ? 4 : 8,
+      }}
+    >
+      <ReanimatedAnimated.View
+        style={[
+          {
+            backgroundColor: isActive ? tab.color + "20" : "transparent",
+            paddingHorizontal: isSmallIPhone ? 12 : 16,
+            paddingVertical: isSmallIPhone ? 6 : 8,
+            borderRadius: isSmallIPhone ? 16 : 20,
+            minWidth: isSmallIPhone ? 40 : 50,
+            alignItems: "center",
+          },
+          animatedStyle,
+        ]}
+      >
+        <Ionicons
+          name={tab.icon}
+          size={isSmallIPhone ? 22 : 28}
+          color={tabColor}
+        />
+      </ReanimatedAnimated.View>
+    </Pressable>
+  )
+}
+
+// Componente animado para el botón de menú
+const AnimatedMenuButton = ({ isSmallIPhone, isMenuScreen, theme, onPress, bar1Anim, bar2Anim, bar3Anim }) => {
+  const scale = useSharedValue(1)
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }))
+
+  const handlePressIn = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 400 })
+  }
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 400 })
+  }
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={{
+        flex: 1,
+        alignItems: "center",
+        paddingVertical: isSmallIPhone ? 4 : 8,
+      }}
+    >
+      <ReanimatedAnimated.View
+        style={[
+          {
+            paddingHorizontal: isSmallIPhone ? 12 : 16,
+            paddingVertical: isSmallIPhone ? 6 : 8,
+            borderRadius: isSmallIPhone ? 16 : 20,
+            minWidth: isSmallIPhone ? 40 : 50,
+            alignItems: "center",
+          },
+          animatedStyle,
+        ]}
+      >
+        <View style={{
+          width: isSmallIPhone ? 20 : 24,
+          height: isSmallIPhone ? 16 : 20,
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+        }}>
+          <Animated.View style={{
+            width: bar1Anim.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: isSmallIPhone ? [20, 16, 18] : [24, 20, 22]
+            }),
+            height: isSmallIPhone ? 2 : 2.5,
+            backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
+            borderRadius: 2,
+            transform: [{
+              translateX: bar1Anim.interpolate({
+                inputRange: [0, 1, 2],
+                outputRange: [0, -2, 2]
+              })
+            }]
+          }} />
+          <Animated.View style={{
+            width: bar2Anim.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: isSmallIPhone ? [14, 16, 18] : [18, 20, 22]
+            }),
+            height: isSmallIPhone ? 2 : 2.5,
+            backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
+            borderRadius: 2,
+            alignSelf: 'flex-end',
+            transform: [{
+              translateX: bar2Anim.interpolate({
+                inputRange: [0, 1, 2],
+                outputRange: [0, -4, -2]
+              })
+            }]
+          }} />
+          <Animated.View style={{
+            width: bar3Anim.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: isSmallIPhone ? [16, 18, 14] : [20, 22, 18]
+            }),
+            height: isSmallIPhone ? 2 : 2.5,
+            backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
+            borderRadius: 2,
+            transform: [{
+              translateX: bar3Anim.interpolate({
+                inputRange: [0, 1, 2],
+                outputRange: [0, 2, -1]
+              })
+            }]
+          }} />
+        </View>
+      </ReanimatedAnimated.View>
+    </Pressable>
+  )
+}
+
+function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "History" }) {
   const { theme } = useTheme()
   const { isRecording } = useRecording()
   const currentTranslations = getCurrentTranslations()
@@ -570,6 +755,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [nameModalVisible, setNameModalVisible] = useState(false)
   const [listName, setListName] = useState("") // Modal de éxito
+
+  // Refs para funciones de MealPlanner modals
+  const mealPlannerCalendarRef = useRef(null)
+  const mealPlannerPreferencesRef = useRef(null)
+
+  // Ref para función de CalendarPlanner add event
+  const calendarPlannerAddEventRef = useRef(null)
   
   // Función para obtener colores basados en la pestaña activa
   const getTabColors = () => {
@@ -757,7 +949,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       key: "Home",
       label: currentTranslations.createList,
       icon: "mic",
-      color: "#4a6bff",
+      color: "#8B5CF6",
       screen: HomeScreen,
     },
     {
@@ -774,7 +966,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       color: "#34c759",
       screen: HistoryScreen,
     },
-
+    {
+      key: "CalendarPlanner",
+      label: currentTranslations.shoppingCalendar || "Calendar",
+      icon: "calendar-outline",
+      color: "#8B5CF6",
+      screen: CalendarPlannerScreen,
+    },
     {
       key: "PriceCalculator",
       label: currentTranslations.priceCalculator || "Price Calculator",
@@ -1125,10 +1323,16 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
             <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
           </Stack.Navigator>
         )
-      case "Calendar":
+      case "CalendarPlanner":
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="CalendarPlannerScreen" component={CalendarPlannerScreen} />
+            <Stack.Screen
+              name="CalendarPlannerScreen"
+              component={CalendarPlannerScreen}
+              initialParams={{
+                registerAddEventOpener: (fn) => { calendarPlannerAddEventRef.current = fn }
+              }}
+            />
           </Stack.Navigator>
         )
       case "PriceCalculator":
@@ -1269,17 +1473,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       onPress: () => {
         modalizeRef.current?.close()
         setActiveTab("MealPlanner")
-      }
-    },
-    {
-      label: currentTranslations.shoppingCalendar || "Shopping Calendar",
-      description: mainItemDescriptions.shoppingCalendar[deviceLanguage] || mainItemDescriptions.shoppingCalendar['en'],
-      icon: "calendar-outline",
-      color: "#8B5CF6",
-      tabKey: "CalendarPlanner",
-      onPress: () => {
-        modalizeRef.current?.close()
-        setActiveTab("CalendarPlanner")
       }
     },
   ];
@@ -1429,7 +1622,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
               component={MealPlannerScreen}
               initialParams={{
                 onNavigateToHistory: () => setActiveTab("History"),
-                onNavigateToSubscribe: () => setActiveTab("Subscribe")
+                onNavigateToSubscribe: () => setActiveTab("Subscribe"),
+                registerCalendarOpener: (fn) => { mealPlannerCalendarRef.current = fn },
+                registerPreferencesOpener: (fn) => { mealPlannerPreferencesRef.current = fn }
               }}
             />
           </Stack.Navigator>
@@ -1437,7 +1632,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
       case "CalendarPlanner":
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="CalendarPlannerScreen" component={CalendarPlannerScreen} />
+            <Stack.Screen
+              name="CalendarPlannerScreen"
+              component={CalendarPlannerScreen}
+              initialParams={{
+                registerAddEventOpener: (fn) => { calendarPlannerAddEventRef.current = fn }
+              }}
+            />
           </Stack.Navigator>
         )
       default:
@@ -1445,10 +1646,10 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
     }
   }
 
-  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact", "HandwrittenList", "Recommendations", "MealPlanner", "CalendarPlanner"].includes(activeTab)
+  const isMenuScreen = ["Subscribe", "Subscription", "Information", "Contact", "HandwrittenList", "Recommendations", "MealPlanner"].includes(activeTab)
 
   // Screens that should open menu modal on back, not go to Home
-  const menuModalScreens = ["HandwrittenList", "Recommendations", "MealPlanner", "CalendarPlanner"]
+  const menuModalScreens = ["HandwrittenList", "Recommendations", "MealPlanner"]
   const shouldOpenMenuOnBack = menuModalScreens.includes(activeTab)
 
   return (
@@ -1641,6 +1842,146 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           </Text>
 
         </View>
+
+        {/* Header right icons for MealPlanner */}
+        {activeTab === "MealPlanner" && (
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginRight: 12 }}>
+            <TouchableOpacity
+              onPress={() => mealPlannerCalendarRef.current && mealPlannerCalendarRef.current()}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                backgroundColor: "rgba(107, 114, 128, 0.1)",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Ionicons name="calendar-outline" size={20} color="#6B7280" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => mealPlannerPreferencesRef.current && mealPlannerPreferencesRef.current()}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                backgroundColor: "rgba(107, 114, 128, 0.1)",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Ionicons name="settings-outline" size={20} color="#6B7280" />
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Header right icon for CalendarPlanner */}
+        {activeTab === "CalendarPlanner" && (
+          <TouchableOpacity
+            onPress={() => calendarPlannerAddEventRef.current && calendarPlannerAddEventRef.current()}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              backgroundColor: "rgba(22, 163, 74, 0.1)",
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: 12,
+            }}
+          >
+            <Ionicons name="add-circle" size={22} color="#16a34a" />
+          </TouchableOpacity>
+        )}
+
+        {/* Header icon for History */}
+        {activeTab === "History" && (
+          <TouchableOpacity
+            onPress={() => setActiveTab("Home")}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              backgroundColor: "#8B5CF615",
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: 12,
+            }}
+          >
+            <Ionicons name="mic" size={20} color="#8B5CF6" />
+          </TouchableOpacity>
+        )}
+
+        {/* Menu button for all screens */}
+        <Pressable
+          onPress={() => {
+            animateMenuBars()
+            modalizeRef.current?.open()
+          }}
+          style={({ pressed }) => ({
+            width: 36,
+            height: 36,
+            borderRadius: 10,
+            backgroundColor: isMenuScreen ? "rgba(139, 92, 246, 0.1)" : "rgba(107, 114, 128, 0.1)",
+            justifyContent: "center",
+            alignItems: "center",
+            transform: [{ scale: pressed ? 0.9 : 1 }],
+            opacity: pressed ? 0.8 : 1,
+          })}
+        >
+          <View style={{
+            width: 18,
+            height: 14,
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+          }}>
+            <Animated.View style={{
+              width: bar1Anim.interpolate({
+                inputRange: [0, 1, 2],
+                outputRange: [18, 14, 16]
+              }),
+              height: 2,
+              backgroundColor: isMenuScreen ? "#8B5CF6" : "#6B7280",
+              borderRadius: 2,
+              transform: [{
+                translateX: bar1Anim.interpolate({
+                  inputRange: [0, 1, 2],
+                  outputRange: [0, -2, 2]
+                })
+              }]
+            }} />
+            <Animated.View style={{
+              width: bar2Anim.interpolate({
+                inputRange: [0, 1, 2],
+                outputRange: [12, 14, 16]
+              }),
+              height: 2,
+              backgroundColor: isMenuScreen ? "#8B5CF6" : "#6B7280",
+              borderRadius: 2,
+              alignSelf: 'flex-end',
+              transform: [{
+                translateX: bar2Anim.interpolate({
+                  inputRange: [0, 1, 2],
+                  outputRange: [0, -4, -2]
+                })
+              }]
+            }} />
+            <Animated.View style={{
+              width: bar3Anim.interpolate({
+                inputRange: [0, 1, 2],
+                outputRange: [14, 16, 12]
+              }),
+              height: 2,
+              backgroundColor: isMenuScreen ? "#8B5CF6" : "#6B7280",
+              borderRadius: 2,
+              transform: [{
+                translateX: bar3Anim.interpolate({
+                  inputRange: [0, 1, 2],
+                  outputRange: [0, 2, -1]
+                })
+              }]
+            }} />
+          </View>
+        </Pressable>
       </View>
 
       {/* Content */}
@@ -1704,115 +2045,21 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
           {mainTabs.map((tab, index) => {
             const isActive = tab.key === activeTab
             const tabColor = isActive ? tab.color : theme.backgroundtres
+            const isCenterTab = index === 2
 
             return (
-              <TouchableOpacity
+              <AnimatedTabButton
                 key={tab.key}
+                tab={tab}
+                isActive={isActive}
+                tabColor={tabColor}
+                isSmallIPhone={isSmallIPhone}
                 onPress={() => handleTabPress(tab)}
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  paddingVertical: isSmallIPhone ? 4 : 8,
-                }}
-              >
-                <View
-                  style={{
-                    backgroundColor: isActive ? tab.color + "20" : "transparent",
-                    paddingHorizontal: isSmallIPhone ? 12 : 16,
-                    paddingVertical: isSmallIPhone ? 6 : 8,
-                    borderRadius: isSmallIPhone ? 16 : 20,
-                    minWidth: isSmallIPhone ? 40 : 50,
-                    alignItems: "center",
-                    position: 'relative',
-                  }}
-                >
-                  <Ionicons
-                    name={tab.icon}
-                    size={isSmallIPhone ? 22 : 28}
-                    color={tabColor}
-                  />
-                </View>
-              </TouchableOpacity>
+                isCenterTab={isCenterTab}
+              />
             )
           })}
 
-          {/* Menu button in bottom tab bar */}
-          <TouchableOpacity
-            onPress={() => {
-              console.log("Menu button pressed from bottom tab")
-              animateMenuBars()
-              modalizeRef.current?.open()
-            }}
-            style={{
-              flex: 1,
-              alignItems: "center",
-              paddingVertical: isSmallIPhone ? 4 : 8,
-            }}
-          >
-            <View
-              style={{
-                paddingHorizontal: isSmallIPhone ? 12 : 16,
-                paddingVertical: isSmallIPhone ? 6 : 8,
-                borderRadius: isSmallIPhone ? 16 : 20,
-                minWidth: isSmallIPhone ? 40 : 50,
-                alignItems: "center",
-              }}
-            >
-              <View style={{
-                width: isSmallIPhone ? 20 : 24,
-                height: isSmallIPhone ? 16 : 20,
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-              }}>
-                <Animated.View style={{
-                  width: bar1Anim.interpolate({
-                    inputRange: [0, 1, 2],
-                    outputRange: isSmallIPhone ? [20, 16, 18] : [24, 20, 22]
-                  }),
-                  height: isSmallIPhone ? 2 : 2.5,
-                  backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
-                  borderRadius: 2,
-                  transform: [{
-                    translateX: bar1Anim.interpolate({
-                      inputRange: [0, 1, 2],
-                      outputRange: [0, -2, 2]
-                    })
-                  }]
-                }} />
-                <Animated.View style={{
-                  width: bar2Anim.interpolate({
-                    inputRange: [0, 1, 2],
-                    outputRange: isSmallIPhone ? [14, 16, 18] : [18, 20, 22]
-                  }),
-                  height: isSmallIPhone ? 2 : 2.5,
-                  backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
-                  borderRadius: 2,
-                  alignSelf: 'flex-end',
-                  transform: [{
-                    translateX: bar2Anim.interpolate({
-                      inputRange: [0, 1, 2],
-                      outputRange: [0, -4, -2]
-                    })
-                  }]
-                }} />
-                <Animated.View style={{
-                  width: bar3Anim.interpolate({
-                    inputRange: [0, 1, 2],
-                    outputRange: isSmallIPhone ? [16, 18, 14] : [20, 22, 18]
-                  }),
-                  height: isSmallIPhone ? 2 : 2.5,
-                  backgroundColor: isMenuScreen ? "#8B5CF6" : theme.backgroundtres,
-                  borderRadius: 2,
-                  transform: [{
-                    translateX: bar3Anim.interpolate({
-                      inputRange: [0, 1, 2],
-                      outputRange: [0, 2, -1]
-                    })
-                  }]
-                }} />
-              </View>
-            </View>
-          </TouchableOpacity>
         </View>
       )}
 
@@ -2323,30 +2570,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home
                         >
                           {item.label}
                         </Text>
-                        {/* Badge "New" for MealPlanner */}
-                        {item.tabKey === "MealPlanner" && (
-                          <View
-                            style={{
-                              backgroundColor: '#8B5CF6',
-                              borderRadius: 6,
-                              paddingHorizontal: 6,
-                              paddingVertical: 2,
-                              marginLeft: 8,
-                              marginBottom: 4,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                color: '#FFFFFF',
-                                fontSize: 9,
-                                fontWeight: '800',
-                                letterSpacing: 0.5,
-                              }}
-                            >
-                              NEW
-                            </Text>
-                          </View>
-                        )}
+             
                       </View>
                       <Text
                         style={{

@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import LinearGradient from 'react-native-linear-gradient';
 import * as RNLocalize from 'react-native-localize';
 import { useTheme } from '../ThemeContext';
 import MealPlanService from '../services/MealPlanService';
@@ -30,6 +31,8 @@ const MealPlannerScreen = ({ route }) => {
   const { theme } = useTheme();
   const onNavigateToHistory = route?.params?.onNavigateToHistory;
   const onNavigateToSubscribe = route?.params?.onNavigateToSubscribe;
+  const registerCalendarOpener = route?.params?.registerCalendarOpener;
+  const registerPreferencesOpener = route?.params?.registerPreferencesOpener;
 
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
   const t = mealPlannerTranslations[deviceLanguage] || mealPlannerTranslations['en'];
@@ -156,6 +159,16 @@ const MealPlannerScreen = ({ route }) => {
       }, 100);
     }
   }, []);
+
+  // Registrar funciones para abrir modales desde el header
+  useEffect(() => {
+    if (registerCalendarOpener) {
+      registerCalendarOpener(() => setCalendarModalVisible(true));
+    }
+    if (registerPreferencesOpener) {
+      registerPreferencesOpener(() => setPreferencesModalVisible(true));
+    }
+  }, [registerCalendarOpener, registerPreferencesOpener]);
 
   // Verificar estado de suscripción
   const checkSubscriptionStatus = async () => {
@@ -742,68 +755,49 @@ const MealPlannerScreen = ({ route }) => {
   };
 
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#8B5CF6" />
-      </SafeAreaView>
-    );
-  }
+
 
   return (
-    <SafeAreaView style={[styles.container]} edges={['top']}>
-      {/* Header con 2 botones grandes estilo tabs */}
-      <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.headerTab}
-            onPress={() => setCalendarModalVisible(true)}
+    <LinearGradient
+      colors={['#e7ead2', '#e7ead2', '#e7ead2']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradientContainer}
+    >
+      <SafeAreaView style={[styles.container]} edges={['top']}>
+        {/* Scroll horizontal de días con glassmorphism */}
+        <View style={styles.daysWrapper}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.daysScrollContainer}
+            contentContainerStyle={styles.daysScrollContent}
           >
-            <Ionicons name="calendar-outline" size={20} color="#414141ff" />
-            <Text style={styles.headerTabText}>{weekPlan?.weekRange || t.currentWeek}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.headerTab}
-            onPress={() => setPreferencesModalVisible(true)}
-          >
-            <Ionicons name="settings-outline" size={20} color="#414141ff" />
-            <Text style={styles.headerTabText}>{t.preferences}</Text>
-          </TouchableOpacity>
+            {days.map((day) => (
+              <TouchableOpacity
+                key={`tab-${day}`}
+                style={[
+                  styles.dayTab,
+                  activeDay === day && styles.dayTabActive
+                ]}
+                onPress={() => scrollToDay(day)}
+              >
+                <Text style={[
+                  styles.dayTabText,
+                  activeDay === day && styles.dayTabTextActive
+                ]}>
+                  {getDayAbbreviation(day)}
+                </Text>
+                {hasMeals(day) && !isDayComplete(day) && (
+                  <View style={styles.dayTabDot} />
+                )}
+                {isDayComplete(day) && (
+                  <Ionicons name="checkmark-circle" size={12} color={activeDay === day ? "#374151" : "#10B981"} style={styles.dayTabCheck} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
-
-         
-      {/* Scroll horizontal de días */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.daysScrollContainer}
-        contentContainerStyle={styles.daysScrollContent}
-      >
-        {days.map((day) => (
-          <TouchableOpacity
-            key={`tab-${day}`}
-            style={[
-              styles.dayTab,
-              activeDay === day && styles.dayTabActive
-            ]}
-            onPress={() => scrollToDay(day)}
-          >
-            <Text style={[
-              styles.dayTabText,
-              activeDay === day && styles.dayTabTextActive
-            ]}>
-              {getDayAbbreviation(day)}
-            </Text>
-            {hasMeals(day) && !isDayComplete(day) && (
-              <View style={styles.dayTabDot} />
-            )}
-            {isDayComplete(day) && (
-              <Ionicons name="checkmark-circle" size={12} color={activeDay === day ? "#fff" : "#10B981"} style={styles.dayTabCheck} />
-            )}
-          </TouchableOpacity>
-        ))}
-        
-      </ScrollView>
 
       <ScrollView
         ref={scrollViewRef}
@@ -881,7 +875,7 @@ const MealPlannerScreen = ({ route }) => {
                 style={styles.generateDayListButton}
                 onPress={() => openListSelectionModal('day', day)}
               >
-                <Ionicons name="cart-outline" size={16} color="#059669" />
+                <Ionicons name="cart-outline" size={16} color="#374151" />
                 <Text style={styles.generateDayListButtonText}>{t.dayShoppingList}</Text>
               </TouchableOpacity>
                 </View>
@@ -960,121 +954,105 @@ const MealPlannerScreen = ({ route }) => {
         type={alertConfig.type}
         buttons={alertConfig.buttons}
       />
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  // Contenedor principal con gradiente
+  gradientContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: "#e7ead2",
+    backgroundColor: 'transparent',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "#e7ead2",
-  },
-  header: {
-    flexDirection: 'row',
-    gap: 8,
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
     backgroundColor: 'transparent',
+  },
+  // Días de la semana con glassmorphism
+  daysWrapper: {
+    marginHorizontal: 16,
+    marginBottom: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    paddingVertical: 8,
   },
   daysScrollContainer: {
-    maxHeight: 40,
+    maxHeight: 44,
     backgroundColor: 'transparent',
-    marginBottom: 8,
   },
   daysScrollContent: {
-    paddingHorizontal: 16,
-    gap: 6,
+    paddingHorizontal: 12,
+    gap: 8,
     justifyContent: 'center',
     alignItems: 'center',
     flexGrow: 1,
   },
   dayTab: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
- 
-    minWidth: 40,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    minWidth: 44,
     alignItems: 'center',
     position: 'relative',
   },
   dayTabActive: {
-     backgroundColor: 'rgba(16, 185, 129, 0.7)',
-
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    borderColor: 'rgba(255, 255, 255, 0.6)',
   },
   dayTabText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#414141ff',
+    fontWeight: '700',
+    color: '#6B7280',
   },
   dayTabTextActive: {
-    color: '#fff',
+    color: '#374151',
   },
   dayTabDate: {
     fontSize: 9,
     fontWeight: '500',
-    color: '#6B7280',
+    color: '#9CA3AF',
     marginTop: 2,
   },
   dayTabDateActive: {
-    color: '#fff',
-    opacity: 0.9,
+    color: '#374151',
   },
   dayTabDot: {
     position: 'absolute',
     top: 2,
     right: 2,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#F59E0B',
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: '#fbbf24',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
   },
   dayTabCheck: {
     position: 'absolute',
     top: 2,
     right: 2,
   },
-  headerTab: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-     backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    paddingVertical: 8,
-    paddingHorizontal: 1,
-    borderRadius: 12,
-    gap: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
-  },
-  headerTabText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#414141ff',
-    textAlign: 'center',
-    flexShrink: 1,
-  },
+  // Contenedor de listas semanales
   weekListContainer: {
-    backgroundColor: '#ffffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     marginHorizontal: 16,
     marginTop: 20,
     marginBottom: 10,
     padding: 16,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   weekListHeader: {
     flexDirection: 'row',
@@ -1088,27 +1066,27 @@ const styles = StyleSheet.create({
   weekListTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#333',
+    color: '#1F2937',
     marginBottom: 4,
   },
   weekListSubtitle: {
     fontSize: 13,
-    color: '#666',
+    color: '#6B7280',
     lineHeight: 18,
   },
   weekListButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: 14,
     gap: 8,
-    borderWidth: 1.5,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   weekListButtonText: {
-    color: '#414141ff',
+    color: '#374151',
     fontSize: 15,
     fontWeight: '700',
   },
@@ -1118,72 +1096,76 @@ const styles = StyleSheet.create({
   dayContainerHorizontal: {
     width: Dimensions.get('window').width,
     paddingHorizontal: 16,
-  
   },
+  // Tarjeta de día con glassmorphism
   dayContainer: {
- backgroundColor: '#ffffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
     marginVertical: 8,
-    padding: 16,
-    borderRadius: 12,
+    padding: 18,
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.35)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
+    elevation: 8,
   },
   dayHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
-    paddingBottom: 8,
+    marginBottom: 14,
+    paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#cbbdbdff',
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
   },
   dayName: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#1F2937',
   },
   dayDate: {
     fontSize: 14,
-    color: '#666',
+    fontWeight: '600',
+    color: '#6B7280',
   },
+  // Botones con glassmorphism
   generateDayButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(139, 92, 246, 0.12)',
+    backgroundColor: 'rgba(139, 92, 246, 0.35)',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 10,
+    borderRadius: 14,
     marginTop: 12,
     gap: 8,
-    borderWidth: 1.5,
-    borderColor: 'rgba(139, 92, 246, 0.3)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.35)',
   },
   generateDayButtonText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#7C3AED',
+    fontWeight: '700',
+    color: '#374151',
   },
   generateDayListButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
-    paddingVertical: 10,
+    backgroundColor: 'rgba(16, 185, 129, 0.35)',
+    paddingVertical: 11,
     paddingHorizontal: 16,
-    borderRadius: 8,
-    marginTop: 8,
-    gap: 6,
-    borderWidth: 1.5,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
+    borderRadius: 12,
+    marginTop: 10,
+    gap: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.35)',
   },
   generateDayListButtonText: {
     fontSize: 13,
-    fontWeight: '600',
-    color: '#059669',
+    fontWeight: '700',
+    color: '#374151',
   },
   bottomPadding: {
     height: 40,

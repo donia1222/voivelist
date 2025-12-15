@@ -211,7 +211,7 @@ export const mealPlannerTranslations = {
   },
 
   es: {
-    title: 'Planificador de Menús',
+    title: 'Planificador',
     currentWeek: 'Semana actual',
     preferences: 'Preferencias',
 
@@ -626,7 +626,7 @@ export const mealPlannerTranslations = {
   },
 
   fr: {
-    title: 'Planificateur de Menus',
+    title: 'Planificateur',
     currentWeek: 'Semaine actuelle',
     preferences: 'Préférences',
 
@@ -830,7 +830,7 @@ export const mealPlannerTranslations = {
   },
 
   it: {
-    title: 'Pianificatore di Menu',
+    title: 'Pianificatore',
     currentWeek: 'Settimana corrente',
     preferences: 'Preferenze',
 

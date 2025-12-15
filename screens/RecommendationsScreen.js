@@ -81,6 +81,14 @@ const RecommendationsScreen = ({ navigation, route }) => {
   const scrollViewRef = useRef(null)
   const hasLoadedRef = useRef(false) // Flag para cargar solo una vez por sesión
 
+  // Animaciones para tabs
+  const tabScaleHistory = useRef(new Animated.Value(1)).current
+  const tabScaleSeasonal = useRef(new Animated.Value(1)).current
+  const tabScaleDiet = useRef(new Animated.Value(1)).current
+
+  // Animación de línea indicadora
+  const tabIndicatorAnim = useRef(new Animated.Value(0)).current
+
   // Traducciones
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const t = recommendationsTranslations[deviceLanguage] || recommendationsTranslations.en
@@ -687,6 +695,33 @@ const RecommendationsScreen = ({ navigation, route }) => {
     ]).start()
   }
 
+  // Función para animar tabs al presionar
+  const animateTabPress = (tabName, scaleAnim) => {
+    // Animación de escala (press feedback)
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 0.92,
+        duration: 80,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        tension: 300,
+        friction: 10,
+        useNativeDriver: true,
+      })
+    ]).start()
+
+    // Animación del indicador
+    const targetValue = tabName === 'history' ? 0 : tabName === 'seasonal' ? 1 : 2
+    Animated.spring(tabIndicatorAnim, {
+      toValue: targetValue,
+      tension: 100,
+      friction: 12,
+      useNativeDriver: true,
+    }).start()
+  }
+
   // Función eliminada - sin tabs
 
   const handleScroll = (event) => {
@@ -707,9 +742,9 @@ const RecommendationsScreen = ({ navigation, route }) => {
       backgroundColor: theme.background,
     },
     header: {
-      paddingHorizontal: 20,
-      paddingTop: 20,
-      paddingBottom: 15,
+      paddingHorizontal: 0,
+      paddingTop: 10,
+      paddingBottom: 5,
     },
     titleContainer: {
       alignItems: 'center',
@@ -762,7 +797,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
     statNumber: {
       fontSize: isSmallIPhone ? 18 : 20,
       fontWeight: 'bold',
-      color: '#4a6bff',
+      color: '#3C3C43',
       marginBottom: 4,
     },
     statLabel: {
@@ -809,24 +844,26 @@ const RecommendationsScreen = ({ navigation, route }) => {
       marginBottom: 32,
     },
     createListButton: {
-      backgroundColor: '#4a6bff',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal: 24,
       paddingVertical: 12,
-      borderRadius: 12,
-      shadowColor: '#4a6bff',
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.7)',
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
-      elevation: 4,
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 3,
     },
     createListButtonIcon: {
       marginRight: 8,
     },
     createListButtonText: {
-      color: 'white',
+      color: '#3C3C43',
       fontSize: 16,
       fontWeight: '600',
     },
@@ -855,30 +892,34 @@ const RecommendationsScreen = ({ navigation, route }) => {
       marginBottom: 24,
     },
     goCreateListButton: {
-      backgroundColor: '#4a6bff',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal: 20,
       paddingVertical: 10,
-      borderRadius: 10,
-      shadowColor: '#4a6bff',
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.7)',
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
-      elevation: 4,
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 3,
     },
     goCreateListButtonIcon: {
       marginRight: 6,
     },
     goCreateListButtonText: {
-      color: 'white',
+      color: '#3C3C43',
       fontSize: 15,
       fontWeight: '600',
     },
     content: {
       flex: 1,
       paddingHorizontal: 20,
+      marginTop: 40,
+
     },
     recommendationsGrid: {
       flexDirection: 'row',
@@ -932,24 +973,26 @@ const RecommendationsScreen = ({ navigation, route }) => {
       opacity: 0.8,
     },
     cardButton: {
-      backgroundColor: '#4a6bff',
+      backgroundColor: 'rgba(255, 255, 255, 0.6)',
       borderRadius: 20,
       width: 36,
       height: 36,
       justifyContent: 'center',
       alignItems: 'center',
-      shadowColor: '#4a6bff',
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.8)',
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      elevation: 3,
+      shadowOpacity: 0.06,
+      shadowRadius: 6,
+      elevation: 2,
     },
     cardButtonAdded: {
       backgroundColor: 'rgba(16, 185, 129, 0.9)',
       shadowColor: '#10b981',
     },
     cardButtonText: {
-      color: 'white',
+      color: '#3C3C43',
       fontSize: isSmallIPhone ? 12 : 13,
       fontWeight: '600',
     },
@@ -957,17 +1000,22 @@ const RecommendationsScreen = ({ navigation, route }) => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#4a6bff15',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
       borderRadius: 15,
       paddingVertical: 12,
       paddingHorizontal: 20,
       marginTop: 20,
       borderWidth: 1,
-      borderColor: '#4a6bff30',
+      borderColor: 'rgba(255, 255, 255, 0.7)',
       marginBottom: 40,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.05,
+      shadowRadius: 6,
+      elevation: 2,
     },
     reloadButtonText: {
-      color: '#4a6bff',
+      color: '#3C3C43',
       fontSize: 14,
       fontWeight: '600',
       marginLeft: 8,
@@ -1057,14 +1105,21 @@ const RecommendationsScreen = ({ navigation, route }) => {
       color: theme.textSecondary,
     },
     currentListButton: {
-      backgroundColor: '#4a6bff',
-      borderRadius: 12,
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      borderRadius: 14,
       paddingVertical: 15,
       alignItems: 'center',
       marginBottom: 15,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.7)',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.06,
+      shadowRadius: 6,
+      elevation: 2,
     },
     currentListButtonText: {
-      color: 'white',
+      color: '#3C3C43',
       fontSize: 16,
       fontWeight: '600',
     },
@@ -1108,10 +1163,10 @@ const RecommendationsScreen = ({ navigation, route }) => {
     tabText: {
       fontSize: isSmallIPhone ? 12 : 12,
       fontWeight: '600',
-      color: '#4a6bff', 
+      color: '#3C3C43',
     },
     activeTabText: {
-      color:  '#4a6bff', 
+      color: '#3C3C43',
       fontSize: isSmallIPhone ? 16 : 16,
     },
     tabIcon: {
@@ -1119,13 +1174,13 @@ const RecommendationsScreen = ({ navigation, route }) => {
     },
     tabSubtitle: {
       fontSize: 12,
-      color:  '#4a6bff', 
+      color: '#3C3C43',
       textAlign: 'center',
       marginTop: 1,
       opacity: 0.7,
     },
     activeTabSubtitle: {
-      color: 'white',
+      color: '#3C3C43',
       opacity: 0.9,
     },
     // Estilos para mensaje sin historial en recomendaciones
@@ -1166,83 +1221,76 @@ const RecommendationsScreen = ({ navigation, route }) => {
       marginBottom: 24,
     },
     createFirstListButton: {
-      backgroundColor: '#4a6bff',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal: 20,
       paddingVertical: 12,
-      borderRadius: 12,
-      shadowColor: '#4a6bff',
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.7)',
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
-      elevation: 4,
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 3,
     },
     createFirstListButtonIcon: {
       marginRight: 8,
     },
     createFirstListButtonText: {
-      color: 'white',
+      color: '#3C3C43',
       fontSize: 15,
       fontWeight: '600',
     },
-    // Estilos mejorados para pestañas de navegación
+    // Estilos mejorados para pestañas de navegación - Compactos con línea inferior
     tabsNavigationContainer: {
-      paddingHorizontal: 8,
-      paddingVertical: 2,
-      marginTop: -45,
+      paddingHorizontal: 20,
+      paddingTop: 8,
+      paddingBottom: 10,
+      marginTop: -10,
     },
     tabsWrapper: {
       flexDirection: 'row',
-      backgroundColor: theme.background,
-      borderRadius: 20,
-      padding: 6,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 12,
-      elevation: 8,
-      borderWidth: 1,
-      borderColor: theme.backgroundtres + '15',
+      backgroundColor: 'transparent',
     },
     tabButton: {
       flex: 1,
-      flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingVertical: 10,
-      paddingHorizontal: 8,
-      borderRadius: 16,
-      backgroundColor: 'transparent',
-      marginHorizontal: 2,
+      paddingVertical: 8,
+      minHeight: 50,
     },
     tabButtonActive: {
-      backgroundColor: '#4a6bff',
-      shadowColor: '#4a6bff',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      elevation: 3,
+    },
+    tabIconContainer: {
+      marginBottom: 4,
     },
     tabIcon: {
-      marginRight: 6,
     },
     tabLabel: {
-      fontSize: isSmallIPhone ? 11 : 12,
-      fontWeight: '600',
-      color: theme.textSecondary,
+      fontSize: isSmallIPhone ? 11 : 13,
+      fontWeight: '500',
+      color: '#8E8E93',
       textAlign: 'center',
+      marginBottom: 6,
     },
     tabLabelActive: {
-      color: 'white',
+      color: '#1C1C1E',
       fontWeight: '700',
+    },
+    tabIndicator: {
+      height: 3,
+      backgroundColor: '#3a5aef',
+      borderRadius: 2,
+      width: 50,
+    },
+    tabIndicatorInactive: {
+      height: 3,
+      backgroundColor: 'transparent',
+      borderRadius: 2,
+      width: 50,
     },
     // Estilos para banner dinámico
     dynamicBannerContainer: {
@@ -1279,7 +1327,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
       borderRadius: 10,
     },
     refreshButtonText: {
-      color: '#4a6bff',
+      color: '#3C3C43',
       fontSize: isSmallIPhone ? 12 : 13,
       fontWeight: '700',
     },
@@ -1337,14 +1385,21 @@ const RecommendationsScreen = ({ navigation, route }) => {
       lineHeight: 20,
     },
     infoModalCloseButton: {
-      backgroundColor: '#4a6bff',
-      borderRadius: 12,
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      borderRadius: 14,
       paddingVertical: 15,
       alignItems: 'center',
       marginTop: 20,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.7)',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.06,
+      shadowRadius: 6,
+      elevation: 2,
     },
     infoModalCloseButtonText: {
-      color: 'white',
+      color: '#3C3C43',
       fontSize: 16,
       fontWeight: '600',
     },
@@ -1401,21 +1456,26 @@ const RecommendationsScreen = ({ navigation, route }) => {
       borderColor: theme.backgroundtres + '20',
     },
     subscriptionButton: {
-      backgroundColor: '#4a6bff15',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal: 24,
       paddingVertical: 12,
       borderRadius: 14,
-      borderWidth: 1.5,
-      borderColor: '#4a6bff40',
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.7)',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 3,
     },
     subscriptionButtonIcon: {
       marginRight: 8,
     },
     subscriptionButtonText: {
-      color: '#3a5aef',
+      color: '#3C3C43',
       fontSize: 16,
       fontWeight: '700',
     },
@@ -1426,77 +1486,83 @@ const RecommendationsScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Animated.View
-          style={[
-            styles.titleContainer,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-
-
-
-        </Animated.View>
-
-
-        {/* Navegación de pestañas mejorada */}
+        {/* Navegación de pestañas mejorada - Compacta con línea inferior */}
         <View style={styles.tabsNavigationContainer}>
           <View style={styles.tabsWrapper}>
-            <TouchableOpacity
-              style={[styles.tabButton, activeTab === 'history' && styles.tabButtonActive]}
-              onPress={() => {
-                triggerHaptic()
-                setActiveTab('history')
-              }}
-            >
-              <Ionicons
-                name="time-outline"
-                size={16}
-                color={activeTab === 'history' ? "white" : theme.textSecondary}
-                style={styles.tabIcon}
-              />
-              <Text style={[styles.tabLabel, activeTab === 'history' && styles.tabLabelActive]}>
-                {t.historyTab || 'Historial'}
-              </Text>
-            </TouchableOpacity>
+            {/* Tab Historial */}
+            <Animated.View style={{ flex: 1, transform: [{ scale: tabScaleHistory }] }}>
+              <TouchableOpacity
+                style={[styles.tabButton, activeTab === 'history' && styles.tabButtonActive]}
+                onPress={() => {
+                  triggerHaptic()
+                  animateTabPress('history', tabScaleHistory)
+                  setActiveTab('history')
+                }}
+                activeOpacity={0.7}
+              >
+                <View style={styles.tabIconContainer}>
+                  <Ionicons
+                    name="time-outline"
+                    size={18}
+                    color={activeTab === 'history' ? "#3a5aef" : theme.textSecondary}
+                  />
+                </View>
+                <Text style={[styles.tabLabel, activeTab === 'history' && styles.tabLabelActive]}>
+                  {t.historyTab || 'Historial'}
+                </Text>
+                <View style={activeTab === 'history' ? styles.tabIndicator : styles.tabIndicatorInactive} />
+              </TouchableOpacity>
+            </Animated.View>
 
-            <TouchableOpacity
-              style={[styles.tabButton, activeTab === 'seasonal' && styles.tabButtonActive]}
-              onPress={() => {
-                triggerHaptic()
-                setActiveTab('seasonal')
-              }}
-            >
-              <Ionicons
-                name="leaf-outline"
-                size={16}
-                color={activeTab === 'seasonal' ? "white" : theme.textSecondary}
-                style={styles.tabIcon}
-              />
-              <Text style={[styles.tabLabel, activeTab === 'seasonal' && styles.tabLabelActive]}>
-                {t.seasonalTab || 'Temporada'}
-              </Text>
-            </TouchableOpacity>
+            {/* Tab Temporada */}
+            <Animated.View style={{ flex: 1, transform: [{ scale: tabScaleSeasonal }] }}>
+              <TouchableOpacity
+                style={[styles.tabButton, activeTab === 'seasonal' && styles.tabButtonActive]}
+                onPress={() => {
+                  triggerHaptic()
+                  animateTabPress('seasonal', tabScaleSeasonal)
+                  setActiveTab('seasonal')
+                }}
+                activeOpacity={0.7}
+              >
+                <View style={styles.tabIconContainer}>
+                  <Ionicons
+                    name="leaf-outline"
+                    size={18}
+                    color={activeTab === 'seasonal' ? "#3a5aef" : theme.textSecondary}
+                  />
+                </View>
+                <Text style={[styles.tabLabel, activeTab === 'seasonal' && styles.tabLabelActive]}>
+                  {t.seasonalTab || 'Temporada'}
+                </Text>
+                <View style={activeTab === 'seasonal' ? styles.tabIndicator : styles.tabIndicatorInactive} />
+              </TouchableOpacity>
+            </Animated.View>
 
-            <TouchableOpacity
-              style={[styles.tabButton, activeTab === 'diet' && styles.tabButtonActive]}
-              onPress={() => {
-                triggerHaptic()
-                setActiveTab('diet')
-              }}
-            >
-              <Ionicons
-                name="nutrition-outline"
-                size={16}
-                color={activeTab === 'diet' ? "white" : theme.textSecondary}
-                style={styles.tabIcon}
-              />
-              <Text style={[styles.tabLabel, activeTab === 'diet' && styles.tabLabelActive]}>
-                {tDiet.tabLabel || 'Nutrición'}
-              </Text>
-            </TouchableOpacity>
+            {/* Tab Nutrición */}
+            <Animated.View style={{ flex: 1, transform: [{ scale: tabScaleDiet }] }}>
+              <TouchableOpacity
+                style={[styles.tabButton, activeTab === 'diet' && styles.tabButtonActive]}
+                onPress={() => {
+                  triggerHaptic()
+                  animateTabPress('diet', tabScaleDiet)
+                  setActiveTab('diet')
+                }}
+                activeOpacity={0.7}
+              >
+                <View style={styles.tabIconContainer}>
+                  <Ionicons
+                    name="nutrition-outline"
+                    size={18}
+                    color={activeTab === 'diet' ? "#3a5aef" : theme.textSecondary}
+                  />
+                </View>
+                <Text style={[styles.tabLabel, activeTab === 'diet' && styles.tabLabelActive]}>
+                  {tDiet.tabLabel || 'Nutrición'}
+                </Text>
+                <View style={activeTab === 'diet' ? styles.tabIndicator : styles.tabIndicatorInactive} />
+              </TouchableOpacity>
+            </Animated.View>
           </View>
         </View>
       </View>
@@ -1514,17 +1580,17 @@ const RecommendationsScreen = ({ navigation, route }) => {
         <View style={styles.dynamicBannerContainer}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
             <View style={{
-              backgroundColor: '#4a6bff15',
+              backgroundColor: 'rgba(255, 255, 255, 0.4)',
               borderRadius: 12,
               padding: 8,
               marginRight: 12,
               borderWidth: 1,
-              borderColor: '#4a6bff30'
+              borderColor: 'rgba(255, 255, 255, 0.6)'
             }}>
               <Ionicons
                 name={activeTab === 'history' ? 'time-outline' : activeTab === 'seasonal' ? 'leaf-outline' : 'nutrition-outline'}
                 size={24}
-                color="#4a6bff"
+                color="#3C3C43"
               />
             </View>
             <Text style={styles.dynamicBannerTitle}>
@@ -1570,14 +1636,14 @@ const RecommendationsScreen = ({ navigation, route }) => {
                 justifyContent: 'center',
                 marginBottom: 4,
               }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#4a6bff' }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#3C3C43' }}>
                   {stats.totalAnalyzedLists || 0}
                 </Text>
               </View>
               <Text style={{
                 fontSize: 10,
                 fontWeight: '700',
-                color: '#4a6bff',
+                color: '#3C3C43',
                 textAlign: 'center',
                 letterSpacing: 0.3,
               }}>{t.analyzedLists}</Text>
@@ -1604,14 +1670,14 @@ const RecommendationsScreen = ({ navigation, route }) => {
                 justifyContent: 'center',
                 marginBottom: 4,
               }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#4a6bff' }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#3C3C43' }}>
                   {stats.uniqueProducts || 0}
                 </Text>
               </View>
               <Text style={{
                 fontSize: 10,
                 fontWeight: '700',
-                color: '#4a6bff',
+                color: '#3C3C43',
                 textAlign: 'center',
                 letterSpacing: 0.3,
               }}>{t.uniqueProducts}</Text>
@@ -1649,12 +1715,12 @@ const RecommendationsScreen = ({ navigation, route }) => {
                 justifyContent: 'center',
                 marginBottom: 4,
               }}>
-                <Ionicons name="location-outline" size={20} color="#4a6bff" />
+                <Ionicons name="location-outline" size={20} color="#3C3C43" />
               </View>
               <Text style={{
                 fontSize: 10,
                 fontWeight: '700',
-                color: '#4a6bff',
+                color: '#3C3C43',
                 textAlign: 'center',
                 letterSpacing: 0.3,
               }}>{seasonalCountry || tSeasonal.currentLocation || 'Ubicación'}</Text>
@@ -1681,12 +1747,12 @@ const RecommendationsScreen = ({ navigation, route }) => {
                 justifyContent: 'center',
                 marginBottom: 4,
               }}>
-                <Ionicons name="calendar-outline" size={20} color="#4a6bff" />
+                <Ionicons name="calendar-outline" size={20} color="#3C3C43" />
               </View>
               <Text style={{
                 fontSize: 10,
                 fontWeight: '700',
-                color: '#4a6bff',
+                color: '#3C3C43',
                 textAlign: 'center',
                 letterSpacing: 0.3,
               }}>
@@ -1704,12 +1770,12 @@ const RecommendationsScreen = ({ navigation, route }) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: '#4a6bff15',
+                backgroundColor: 'rgba(255, 255, 255, 0.4)',
                 borderRadius: 14,
                 paddingVertical: 12,
                 paddingHorizontal: 20,
                 borderWidth: 1.5,
-                borderColor: '#4a6bff40',
+                borderColor: 'rgba(255, 255, 255, 0.7)',
               }}
               onPress={() => {
                 console.log("🔄 BOTÓN REFRESCAR PRESIONADO - Cargando nuevos productos de dieta")
@@ -1737,7 +1803,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
 
         {(activeTab === 'history' && loading) || (activeTab === 'seasonal' && seasonalLoading) || (activeTab === 'diet' && dietLoading) ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#4a6bff" />
+            <ActivityIndicator size="large" color="#3C3C43" />
             <Text style={styles.loadingText}>
               {activeTab === 'history' ? t.loading : activeTab === 'seasonal' ? tSeasonal.loading : tDiet.loading}
             </Text>
@@ -1745,7 +1811,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
         ) : activeTab === 'history' && isSubscribed === false ? (
           // Mostrar componente de suscripción para historial si no está suscrito
           <View style={styles.subscriptionRequiredContainer}>
-            <Ionicons name="lock-closed" size={64} color="#4a6bff" style={styles.subscriptionIcon} />
+            <Ionicons name="lock-closed" size={64} color="#3C3C43" style={styles.subscriptionIcon} />
             <Text style={styles.subscriptionTitle}>{t.subscriptionRequiredTitle}</Text>
             <Text style={styles.subscriptionMessage}>{t.subscriptionRequiredMessage}</Text>
             <Text style={styles.subscriptionBenefits}>{t.subscriptionBenefits}</Text>
@@ -1775,7 +1841,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
                     }
                   }}
                 >
-                  <Ionicons name="add-circle" size={20} color="white" style={styles.createListButtonIcon} />
+                  <Ionicons name="add-circle" size={20} color="#3C3C43" style={styles.createListButtonIcon} />
                   <Text style={styles.createListButtonText}>{t.createFirstList}</Text>
                 </TouchableOpacity>
               </>
@@ -1791,7 +1857,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
         ) : (activeTab === 'seasonal' || activeTab === 'diet') && isSubscribed === false ? (
           // Mostrar componente de suscripción para pestañas premium si no está suscrito
           <View style={styles.subscriptionRequiredContainer}>
-            <Ionicons name="lock-closed" size={64} color="#4a6bff" style={styles.subscriptionIcon} />
+            <Ionicons name="lock-closed" size={64} color="#3C3C43" style={styles.subscriptionIcon} />
             <Text style={styles.subscriptionTitle}>{t.subscriptionRequiredTitle}</Text>
             <Text style={styles.subscriptionMessage}>{t.subscriptionRequiredMessage}</Text>
             <Text style={styles.subscriptionBenefits}>{t.subscriptionBenefits}</Text>
@@ -1845,7 +1911,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
                         }
                       }}
                     >
-                      <Ionicons name="add-circle" size={20} color="white" style={styles.createFirstListButtonIcon} />
+                      <Ionicons name="add-circle" size={20} color="#3C3C43" style={styles.createFirstListButtonIcon} />
                       <Text style={styles.createFirstListButtonText}>{t.createFirstList}</Text>
                     </TouchableOpacity>
                   </View>
@@ -1885,7 +1951,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
                     <Ionicons
                       name={isAdded ? "checkmark" : "add"}
                       size={22}
-                      color="white"
+                      color="#3C3C43"
                     />
                   </TouchableOpacity>
                 </TouchableOpacity>
@@ -1898,7 +1964,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
         {/* Auto-load UI: Loader */}
         {isLoadingMore && (
           <View style={styles.loadingMoreContainer}>
-            <ActivityIndicator size="small" color="#4a6bff" />
+            <ActivityIndicator size="small" color="#3C3C43" />
             <Text style={styles.loadingMoreText}>{t.loadingMore || fallback.loadingMore}</Text>
           </View>
         )}
@@ -1942,7 +2008,7 @@ const RecommendationsScreen = ({ navigation, route }) => {
                     <Ionicons
                       name="list"
                       size={20}
-                      color="#4a6bff"
+                      color="#3C3C43"
                       style={styles.listIcon}
                     />
                     <View style={styles.listInfo}>

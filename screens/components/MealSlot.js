@@ -5,41 +5,32 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 const MealSlot = ({ mealType, meal, onPress, onRemove, onGenerateWithAI, isGenerating, translations }) => {
   const getMealIcon = (type) => {
     const icons = {
-      breakfast: 'sunny',
-      lunch: 'restaurant',
-      dinner: 'moon',
+      breakfast: 'cafe-outline',
+      lunch: 'restaurant-outline',
+      dinner: 'moon-outline',
     };
-    return icons[type] || 'fast-food';
-  };
-
-  const getMealEmoji = (type) => {
-    const emojis = {
-      breakfast: '🌅',
-      lunch: '🍽️',
-      dinner: '🌙',
-    };
-    return emojis[type] || '🍴';
+    return icons[type] || 'fast-food-outline';
   };
 
   const getMealColors = (type) => {
     const colors = {
       breakfast: {
-        bg: '#ffffff',
-        border: '#6B7280',
-        icon: '#6B7280',
-        badge: '#F3F4F6',
+        bg: 'rgba(255, 255, 255, 0.5)',
+        border: 'rgba(0, 0, 0, 0.1)',
+        icon: '#374151',
+        badge: 'rgba(255, 255, 255, 0.6)',
       },
       lunch: {
-        bg: '#ffffff',
-        border: '#6B7280',
-        icon: '#6B7280',
-        badge: '#F3F4F6',
+        bg: 'rgba(255, 255, 255, 0.5)',
+        border: 'rgba(0, 0, 0, 0.1)',
+        icon: '#374151',
+        badge: 'rgba(255, 255, 255, 0.6)',
       },
       dinner: {
-        bg: '#ffffff',
-        border: '#6B7280',
-        icon: '#6B7280',
-        badge: '#F3F4F6',
+        bg: 'rgba(255, 255, 255, 0.5)',
+        border: 'rgba(0, 0, 0, 0.1)',
+        icon: '#374151',
+        badge: 'rgba(255, 255, 255, 0.6)',
       },
     };
     return colors[type] || colors.breakfast;
@@ -69,9 +60,9 @@ const MealSlot = ({ mealType, meal, onPress, onRemove, onGenerateWithAI, isGener
     // Slot vacío con botones
     return (
       <View style={[styles.container, styles.emptyContainer, { backgroundColor: colors.bg, borderColor: colors.border }]}>
-        {/* Badge con emoji */}
+        {/* Badge con icono */}
         <View style={[styles.iconBadge, { backgroundColor: colors.badge }]}>
-          <Text style={styles.emojiText}>{getMealEmoji(mealType)}</Text>
+          <Ionicons name={getMealIcon(mealType)} size={24} color={colors.icon} />
         </View>
 
         <View style={styles.mealInfo}>
@@ -112,9 +103,9 @@ const MealSlot = ({ mealType, meal, onPress, onRemove, onGenerateWithAI, isGener
       onPress={onPress}
       activeOpacity={0.7}
     >
-      {/* Badge con emoji */}
+      {/* Badge con icono */}
       <View style={[styles.iconBadge, { backgroundColor: colors.badge }]}>
-        <Text style={styles.emojiText}>{getMealEmoji(mealType)}</Text>
+        <Ionicons name={getMealIcon(mealType)} size={24} color={colors.icon} />
       </View>
 
       <View style={styles.mealInfo}>
@@ -158,14 +149,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 14,
-    borderRadius: 16,
+    borderRadius: 18,
     marginVertical: 6,
-    borderWidth: 2,
+    borderWidth: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4,
   },
   emptyContainer: {
     borderStyle: 'dashed',
@@ -176,14 +167,8 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  emojiText: {
-    fontSize: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   mealInfo: {
     flex: 1,
@@ -192,7 +177,7 @@ const styles = StyleSheet.create({
   mealLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#999',
+    color: '#6B7280',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 2,
@@ -200,7 +185,7 @@ const styles = StyleSheet.create({
   mealName: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#1f2937',
+    color: '#1F2937',
     marginBottom: 6,
     lineHeight: 20,
   },
@@ -215,8 +200,10 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   detailText: {
     fontSize: 12,
@@ -229,7 +216,7 @@ const styles = StyleSheet.create({
   },
   emptySubtext: {
     fontSize: 12,
-    color: '#999',
+    color: '#6B7280',
     fontStyle: 'italic',
   },
   removeButton: {
@@ -245,16 +232,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 10,
-    borderRadius: 12,
-    borderWidth: 2,
+    borderRadius: 14,
+    borderWidth: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   addAIButton: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 10,
-    borderRadius: 12,
-    borderWidth: 2,
+    borderRadius: 14,
+    borderWidth: 1,
+    backgroundColor: 'rgba(139, 92, 246, 0.2)',
+    borderColor: 'rgba(139, 92, 246, 0.3)',
   },
 });
 

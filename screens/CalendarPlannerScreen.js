@@ -79,7 +79,7 @@ const translations = {
     store: "Store",
     time: "Time",
     fullCalendar: "Full Calendar",
-    expand: "Expand",
+    otherMonths: "Other months",
     today: "Today",
     add: "Add",
     viewList: "View List",
@@ -161,7 +161,7 @@ const translations = {
     store: "Tienda",
     time: "Hora",
     fullCalendar: "Calendario Completo",
-    expand: "Expandir",
+    otherMonths: "Otros meses",
     today: "Hoy",
     add: "Agregar",
     viewList: "Ver Lista",
@@ -234,7 +234,7 @@ const translations = {
     store: "Geschäft",
     time: "Zeit",
     fullCalendar: "Vollständiger Kalender",
-    expand: "Erweitern",
+    otherMonths: "Andere Monate",
     today: "Heute",
     add: "Hinzufügen",
     viewList: "Liste anzeigen",
@@ -307,7 +307,7 @@ const translations = {
     store: "Negozio",
     time: "Ora",
     fullCalendar: "Calendario Completo",
-    expand: "Espandi",
+    otherMonths: "Altri mesi",
     today: "Oggi",
     add: "Aggiungi",
     viewList: "Visualizza Lista",
@@ -380,7 +380,7 @@ const translations = {
     store: "Magasin",
     time: "Heure",
     fullCalendar: "Calendrier Complet",
-    expand: "Développer",
+    otherMonths: "Autres mois",
     today: "Aujourd'hui",
     add: "Ajouter",
     viewList: "Voir la Liste",
@@ -453,7 +453,7 @@ const translations = {
     store: "Mağaza",
     time: "Saat",
     fullCalendar: "Tam Takvim",
-    expand: "Genişlet",
+    otherMonths: "Diğer aylar",
     today: "Bugün",
     add: "Ekle",
     viewList: "Listeyi Görüntüle",
@@ -526,7 +526,7 @@ const translations = {
     store: "Loja",
     time: "Hora",
     fullCalendar: "Calendário Completo",
-    expand: "Expandir",
+    otherMonths: "Outros meses",
     today: "Hoje",
     add: "Adicionar",
     viewList: "Ver Lista",
@@ -608,7 +608,7 @@ const translations = {
     store: "Магазин",
     time: "Время",
     fullCalendar: "Полный календарь",
-    expand: "Развернуть",
+    otherMonths: "Другие месяцы",
     today: "Сегодня",
     add: "Добавить",
     viewList: "Просмотр списка",
@@ -681,7 +681,7 @@ const translations = {
     store: "المتجر",
     time: "الوقت",
     fullCalendar: "التقويم الكامل",
-    expand: "توسيع",
+    otherMonths: "أشهر أخرى",
     today: "اليوم",
     add: "إضافة",
     viewList: "عرض القائمة",
@@ -754,7 +754,7 @@ const translations = {
     store: "Bolt",
     time: "Idő",
     fullCalendar: "Teljes naptár",
-    expand: "Kibővítés",
+    otherMonths: "Más hónapok",
     today: "Ma",
     add: "Hozzáadás",
     viewList: "Lista megtekintése",
@@ -827,7 +827,7 @@ const translations = {
     store: "店舗",
     time: "時間",
     fullCalendar: "フルカレンダー",
-    expand: "展開",
+    otherMonths: "他の月",
     today: "今日",
     add: "追加",
     viewList: "リストを表示",
@@ -900,7 +900,7 @@ const translations = {
     store: "स्टोर",
     time: "समय",
     fullCalendar: "पूर्ण कैलेंडर",
-    expand: "विस्तार",
+    otherMonths: "अन्य महीने",
     today: "आज",
     add: "जोड़ें",
     viewList: "सूची देखें",
@@ -973,7 +973,7 @@ const translations = {
     store: "Winkel",
     time: "Tijd",
     fullCalendar: "Volledige Kalender",
-    expand: "Uitbreiden",
+    otherMonths: "Andere maanden",
     today: "Vandaag",
     add: "Toevoegen",
     viewList: "Lijst Bekijken",
@@ -1007,11 +1007,12 @@ const translations = {
   }
 }
 
-const CalendarPlannerScreen = () => {
+const CalendarPlannerScreen = ({ route }) => {
   const { theme } = useTheme()
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const t = translations[deviceLanguage] || translations.en
-  
+  const registerAddEventOpener = route?.params?.registerAddEventOpener
+
   const [events, setEvents] = useState([])
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedList, setSelectedList] = useState(null)
@@ -1052,6 +1053,17 @@ const CalendarPlannerScreen = () => {
       setCurrentMonth(t.january)
     }
   }, [t, currentMonth])
+
+  // Registrar función para abrir modal desde el header
+  useEffect(() => {
+    if (registerAddEventOpener) {
+      registerAddEventOpener(() => {
+        setReminderMinutes(lastUsedReminderMinutes)
+        setEditingEventId(null)
+        setModalVisible(true)
+      })
+    }
+  }, [registerAddEventOpener, lastUsedReminderMinutes])
 
   // Configurar notificaciones push (solo iOS)
   useEffect(() => {
@@ -1815,7 +1827,7 @@ const CalendarPlannerScreen = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-  backgroundColor: theme.background || "#fefefe",
+      backgroundColor: theme.background || "#fefefe",
     },
     header: {
       flexDirection: 'row',
@@ -1868,17 +1880,19 @@ const CalendarPlannerScreen = () => {
       // Sin altura fija para que el calendario sea visible
     },
     calendarContainer: {
-      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#FFFFFF',
+      backgroundColor: theme === 'dark' ? 'rgba(42, 42, 42, 0.5)' : 'rgba(255, 255, 255, 0.45)',
       marginTop: 10,
       marginHorizontal: 10,
-      borderRadius: 15,
+      borderRadius: 20,
       paddingVertical: 15,
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 3,
-      elevation: 2,
-      minHeight: 200, // Altura mínima para asegurar que sea visible
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.06,
+      shadowRadius: 15,
+      elevation: 3,
+      minHeight: 200,
+      borderWidth: 1.5,
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.6)',
     },
     upcomingSection: {
       flex: 1, // Ocupa todo el espacio restante
@@ -2028,62 +2042,76 @@ const CalendarPlannerScreen = () => {
     },
     modal: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      justifyContent: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.35)',
+      justifyContent: 'flex-end',
       alignItems: 'center',
-      padding: 20
     },
     modalContent: {
-      width: screenWidth * 0.9,
-      maxHeight: screenHeight * 0.8,
-      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#FFFFFF',
-      borderRadius: 20,
-      padding: 20,
+      width: screenWidth,
+      height: screenHeight * 0.92,
+      backgroundColor: theme === 'dark' ? 'rgba(30, 30, 35, 0.95)' : 'rgba(255, 255, 255, 0.92)',
+      borderTopLeftRadius: 32,
+      borderTopRightRadius: 32,
+      padding: 24,
+      paddingTop: 16,
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
+      shadowOffset: { width: 0, height: -8 },
       shadowOpacity: 0.15,
-      shadowRadius: 10,
-      elevation: 8
+      shadowRadius: 20,
+      elevation: 15,
+      borderWidth: 1,
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+      borderBottomWidth: 0,
     },
     modalHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 20
+      marginBottom: 24,
+      paddingBottom: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
     },
     modalTitle: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: theme === 'dark' ? '#fff' : '#4A5568'
+      fontSize: 18,
+      fontWeight: '600',
+      color: theme === 'dark' ? '#fff' : '#1C1C1E',
+      letterSpacing: 0.2,
+      marginLeft: -6,
     },
     closeButton: {
-      padding: 5
+      padding: 10,
+      backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)',
     },
     inputSection: {
-      marginBottom: 20
+      marginBottom: 18
     },
     inputLabel: {
       fontSize: 14,
-      color: theme === 'dark' ? '#888' : '#6B7280',
-      marginBottom: 8,
-      fontWeight: '500'
+      color: theme === 'dark' ? '#aaa' : '#6B7280',
+      marginBottom: 10,
+      fontWeight: '600',
+      letterSpacing: 0.2
     },
     input: {
       borderWidth: 1,
-      borderColor: theme === 'dark' ? '#444' : '#E8E6DB',
-      borderRadius: 12,
-      padding: 12,
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)',
+      borderRadius: 14,
+      padding: 14,
       fontSize: 16,
-      color: theme === 'dark' ? '#fff' : '#4A5568',
-      backgroundColor: theme === 'dark' ? '#333' : '#F9F7F0'
+      color: theme === 'dark' ? '#fff' : '#1C1C1E',
+      backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.6)',
     },
     inputWithIcon: {
       flexDirection: 'row',
       alignItems: 'center',
       borderWidth: 1,
-      borderColor: theme === 'dark' ? '#444' : '#E8E6DB',
-      borderRadius: 12,
-      backgroundColor: theme === 'dark' ? '#333' : '#F9F7F0',
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)',
+      borderRadius: 14,
+      backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.6)',
       paddingRight: 12
     },
     inputWithIconField: {
@@ -2097,13 +2125,13 @@ const CalendarPlannerScreen = () => {
     },
     listSelector: {
       borderWidth: 1,
-      borderColor: theme === 'dark' ? '#444' : '#E8E6DB',
-      borderRadius: 12,
-      padding: 12,
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)',
+      borderRadius: 14,
+      padding: 14,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      backgroundColor: theme === 'dark' ? '#333' : '#F9F7F0'
+      backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.6)',
     },
     listSelectorText: {
       fontSize: 16,
@@ -2164,38 +2192,45 @@ const CalendarPlannerScreen = () => {
     },
     cancelButton: {
       flex: 1,
-      padding: 15,
-      borderRadius: 12,
-      backgroundColor: 'rgba(220, 38, 38, 0.3)',
-      borderWidth: 1,
-      borderColor: 'rgba(220, 38, 38, 0.5)',
-      marginRight: 10,
-      alignItems: 'center'
+      padding: 16,
+      borderRadius: 16,
+      backgroundColor: 'rgba(220, 38, 38, 0.12)',
+      borderWidth: 1.5,
+      borderColor: 'rgba(220, 38, 38, 0.3)',
+      marginRight: 8,
+      alignItems: 'center',
+      shadowColor: '#dc2626',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 6,
+      elevation: 2
     },
     cancelButtonText: {
       fontSize: 16,
       color: '#dc2626',
-      fontWeight: '700'
+      fontWeight: '700',
+      letterSpacing: 0.3
     },
     createButton: {
       flex: 1,
-      padding: 15,
-      borderRadius: 12,
-      backgroundColor: 'rgba(31, 135, 73, 0.3)',
-      borderWidth: 1,
-      borderColor: 'rgba(31, 135, 73, 0.5)',
-      marginLeft: 10,
+      padding: 16,
+      borderRadius: 16,
+      backgroundColor: 'rgba(34, 197, 94, 0.15)',
+      borderWidth: 1.5,
+      borderColor: 'rgba(34, 197, 94, 0.35)',
+      marginLeft: 8,
       alignItems: 'center',
-      shadowColor: '#1f8749',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
+      shadowColor: '#22c55e',
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
       elevation: 4
     },
     createButtonText: {
       fontSize: 16,
-      color: '#1f8749',
-      fontWeight: '700'
+      color: '#16a34a',
+      fontWeight: '700',
+      letterSpacing: 0.3
     },
     listItem: {
       flexDirection: 'row',
@@ -2351,90 +2386,92 @@ const CalendarPlannerScreen = () => {
     },
     calendarControls: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingHorizontal: 20,
-      marginTop: -5,
+
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      marginHorizontal: 10,
+      marginTop: -48,
+      gap: 10
     },
     controlButton: {
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
       paddingHorizontal: 16,
-      paddingVertical: 8,
-      borderRadius: 20,
-      backgroundColor: theme === 'dark' ? '#333' : '#F9F7F0',
+      paddingVertical: 10,
+      borderRadius: 14,
+      backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.5)',
       borderWidth: 1,
-      borderColor: theme === 'dark' ? '#444' : '#E8E6DB'
+      borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.7)',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.05,
+      shadowRadius: 6,
+      elevation: 2
     },
     controlButtonText: {
-      fontSize: 12,
-      color: theme === 'dark' ? '#fff' : '#4A5568',
+      fontSize: 13,
+      color: theme === 'dark' ? '#fff' : '#3C3C43',
       marginLeft: 6,
-      fontWeight: '500'
+      fontWeight: '600',
+      letterSpacing: 0.2
     },
     expandedCalendarModal: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 15
+      backgroundColor: theme === 'dark' ? '#1a1a1a' : '#FAFAFA',
     },
     expandedCalendarContent: {
-      width: screenWidth * 0.92,
-      maxHeight: screenHeight * 0.85,
+      flex: 1,
+      width: screenWidth,
       backgroundColor: theme === 'dark' ? '#1a1a1a' : '#FAFAFA',
-      borderRadius: 25,
-      padding: 25,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 10 },
-      shadowOpacity: 0.25,
-      shadowRadius: 20,
-      elevation: 15
+      paddingHorizontal: 20,
+      paddingTop: Platform.OS === 'ios' ? 60 : 40,
+      paddingBottom: 20,
     },
     expandedCalendarHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 25,
-      paddingBottom: 15,
-      borderBottomWidth: 1,
-      borderBottomColor: theme === 'dark' ? '#333' : '#E8E8E8'
+      marginBottom: 20,
+      paddingBottom: 20,
+      borderBottomWidth: 0,
     },
     monthNavigation: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginBottom: 25,
-      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#F5F5F5',
-      borderRadius: 15,
-      padding: 10
-    },
-    monthNavButton: {
-      padding: 12,
-      borderRadius: 12,
-      backgroundColor: theme === 'dark' ? '#3a3a3a' : '#FFFFFF',
+      marginBottom: 20,
+      backgroundColor: theme === 'dark' ? '#2a2a2a' : '#fff',
+      borderRadius: 20,
+      padding: 8,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 3,
-      elevation: 2
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 3
+    },
+    monthNavButton: {
+      padding: 14,
+      borderRadius: 16,
+      backgroundColor: theme === 'dark' ? '#3a3a3a' : '#F0F0F0',
     },
     monthYearTitle: {
-      fontSize: 16,
-      fontWeight: '600',
+      fontSize: 18,
+      fontWeight: '700',
       color: theme === 'dark' ? '#fff' : '#2D3748',
-      letterSpacing: 0.3
+      letterSpacing: 0.5
     },
     fullCalendarGrid: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       backgroundColor: theme === 'dark' ? '#2a2a2a' : '#FFFFFF',
-      borderRadius: 15,
-      padding: 10,
+      borderRadius: 20,
+      padding: 12,
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.05,
-      shadowRadius: 2,
-      elevation: 1
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.08,
+      shadowRadius: 12,
+      elevation: 3
     },
     calendarDay: {
       width: '14.28%',
@@ -2442,16 +2479,17 @@ const CalendarPlannerScreen = () => {
       justifyContent: 'center',
       alignItems: 'center',
       padding: 4,
-      borderRadius: 10,
-      marginVertical: 2
+      borderRadius: 14,
+      marginVertical: 3
     },
     dayNumber: {
-      fontSize: 16,
+      fontSize: 15,
+      fontWeight: '500',
       color: theme === 'dark' ? '#fff' : '#4A5568',
       textAlign: 'center'
     },
     otherMonthDay: {
-      color: theme === 'dark' ? '#666' : '#ccc'
+      color: theme === 'dark' ? '#555' : '#C0C0C0'
     },
     selectedDay: {
       backgroundColor: '#26923fff',
@@ -2584,9 +2622,11 @@ const CalendarPlannerScreen = () => {
       textAlign: 'center'
     },
     integratedHeader: {
-      paddingHorizontal: 15,
-      paddingTop: 10,
-      paddingBottom: 5
+      paddingHorizontal: 20,
+      paddingTop: 15,
+      paddingBottom: 10,
+      marginHorizontal: 10,
+      marginTop: 5,
     },
     titleSection: {
       alignItems: 'center'
@@ -2602,23 +2642,17 @@ const CalendarPlannerScreen = () => {
       alignItems: 'baseline'
     },
     integratedMonthText: {
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: '700',
-      color: theme === 'dark' ? '#ccc' : '#49484aff',
-      marginRight: 8
+      color: theme === 'dark' ? '#fff' : '#1C1C1E',
+      marginRight: 6,
+      letterSpacing: 0.2
     },
     integratedYearText: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: theme === 'dark' ? '#888' : '#6B7280'
-    },
-    addControlButton: {
-      backgroundColor: 'rgba(34, 197, 94, 0.3)',
-      borderWidth: 1,
-      borderColor: 'rgba(34, 197, 94, 0.5)'
-    },
-    addControlButtonText: {
-      color: '#16a34a'
+      fontSize: 17,
+      fontWeight: '500',
+      color: theme === 'dark' ? '#aaa' : '#8E8E93',
+      letterSpacing: 0.1
     },
     modalSubtitle: {
       fontSize: 14,
@@ -2720,7 +2754,7 @@ const CalendarPlannerScreen = () => {
                 }}
               >
                 <Ionicons name="calendar-outline" size={16} color="#6B7280" />
-                <Text style={styles.controlButtonText}>{t.expand}</Text>
+                <Text style={styles.controlButtonText}>{t.otherMonths}</Text>
               </TouchableOpacity>
               
               <TouchableOpacity 
@@ -2742,17 +2776,6 @@ const CalendarPlannerScreen = () => {
                 <Text style={styles.controlButtonText}>{t.today}</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-                style={[styles.controlButton, styles.addControlButton]}
-                onPress={() => {
-                  setReminderMinutes(lastUsedReminderMinutes) // Usar el último valor guardado
-                  setEditingEventId(null) // Asegurarse de que no estamos editando
-                  setModalVisible(true)
-                }}
-              >
-                <Ionicons name="add-circle" size={18} color="#16a34a" />
-              
-              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -3157,30 +3180,35 @@ const CalendarPlannerScreen = () => {
               <View style={styles.expandedCalendarHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <View style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 12,
-                    backgroundColor: '#6B7280' + '20',
+                    width: 48,
+                    height: 48,
+                    borderRadius: 16,
+                    backgroundColor: '#918e97',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    marginRight: 12
+                    marginRight: 14,
+                    shadowColor: '#918e97',
+                    shadowOffset: { width: 0, height: 4 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 6,
+                    elevation: 4
                   }}>
-                    <Ionicons name="calendar" size={22} color="#6B7280" />
+                    <Ionicons name="calendar" size={24} color="#fff" />
                   </View>
-                  <Text style={[styles.modalTitle, { fontSize: 18, fontWeight: '600' }]}>{t.fullCalendar}</Text>
+                  <Text style={[styles.modalTitle, { fontSize: 18, fontWeight: '500' }]}>{t.fullCalendar}</Text>
                 </View>
-                <TouchableOpacity 
-                  style={[styles.closeButton, {
+                <TouchableOpacity
+                  style={{
                     width: 36,
                     height: 36,
                     borderRadius: 18,
-                    backgroundColor: theme === 'dark' ? '#333' : '#F0F0F0',
+                    backgroundColor: theme === 'dark' ? '#3a3a3a' : '#E8E8E8',
                     justifyContent: 'center',
-                    alignItems: 'center'
-                  }]}
+                    alignItems: 'center',
+                  }}
                   onPress={() => setShowExpandedCalendar(false)}
                 >
-                  <Ionicons name="close" size={22} color={theme === 'dark' ? '#fff' : '#333'} />
+                  <Ionicons name="close" size={20} color={theme === 'dark' ? '#fff' : '#666'} />
                 </TouchableOpacity>
               </View>
 

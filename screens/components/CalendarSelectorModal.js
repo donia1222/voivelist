@@ -110,11 +110,11 @@ const CalendarSelectorModal = ({ visible, onClose, currentWeekStart, onWeekSelec
       <SafeAreaView style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
+          <View style={styles.headerSpacer} />
+          <Text style={styles.headerTitle}>{t.selectWeek || 'Seleccionar Semana'}</Text>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Ionicons name="close" size={28} color="#333" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t.selectWeek || 'Seleccionar Semana'}</Text>
-          <View style={styles.headerSpacer} />
         </View>
 
         {/* Week Navigator */}

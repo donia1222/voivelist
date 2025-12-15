@@ -1570,7 +1570,7 @@ const HistoryScreen = ({ navigation }) => {
                 color="#888"
                 style={{ marginRight: 8 }}
               />
-              <Text style={[modernStyles.cardTitle, isSmallIPhone && {fontSize: 18}, { flex: 1 }]}>{item.name}</Text>
+              <Text style={[modernStyles.cardTitle, isSmallIPhone && {fontSize: 16}, { flex: 1 }]}>{item.name}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TouchableOpacity
