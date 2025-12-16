@@ -656,6 +656,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
   const [activeTab, setActiveTab] = useState(initialTab)
   const [isMenuModalVisible, setMenuModalVisible] = useState(false)
   const [showNewBadge, setShowNewBadge] = useState(false)
+  const [widgetImageIndex, setWidgetImageIndex] = useState(0)
+  const [widgetNextImageIndex, setWidgetNextImageIndex] = useState(1)
+  const widgetImageOpacity = useRef(new Animated.Value(1)).current
   const iconScaleAnim = useRef(new Animated.Value(1)).current
   const modalizeRef = useRef(null)
 
@@ -683,6 +686,26 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
     }
     checkNewBadge()
   }, [])
+
+  // Widget image carousel animation - crossfade
+  useEffect(() => {
+    if (activeTab === "WidgetInfo") {
+      const interval = setInterval(() => {
+        // Crossfade: fade out current image (next image shows underneath)
+        Animated.timing(widgetImageOpacity, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => {
+          // After fade complete, swap indices and reset opacity
+          setWidgetImageIndex(widgetNextImageIndex)
+          setWidgetNextImageIndex(prev => (prev + 1) % 5)
+          widgetImageOpacity.setValue(1)
+        })
+      }, 900)
+      return () => clearInterval(interval)
+    }
+  }, [activeTab, widgetNextImageIndex])
 
   // Debug modal state
   useEffect(() => {
@@ -1359,6 +1382,192 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
             />
           </Stack.Navigator>
         )
+      case "WidgetInfo":
+        return (
+          <ScrollView
+            style={{ flex: 1, backgroundColor: '#e7ead2' }}
+            contentContainerStyle={{ padding: 20, paddingTop: 10 }}
+          >
+            {/* Large Widget Preview Image - Crossfade Carousel */}
+            <View style={{ width: '100%', height: 260, marginTop: -20, marginBottom: -20 }}>
+              {/* Next image (underneath) */}
+              <Image
+                source={
+                  widgetNextImageIndex === 0 ? require('../../assets/images/widget.png') :
+                  widgetNextImageIndex === 1 ? require('../../assets/images/widget2.png') :
+                  widgetNextImageIndex === 2 ? require('../../assets/images/widget3.png') :
+                  widgetNextImageIndex === 3 ? require('../../assets/images/widget4.png') :
+                  require('../../assets/images/widget5.png')
+                }
+                style={{
+                  width: '100%',
+                  height: 260,
+                  borderRadius: 20,
+                  position: 'absolute',
+                }}
+                resizeMode="contain"
+              />
+              {/* Current image (on top, fades out) */}
+              <Animated.Image
+                source={
+                  widgetImageIndex === 0 ? require('../../assets/images/widget.png') :
+                  widgetImageIndex === 1 ? require('../../assets/images/widget2.png') :
+                  widgetImageIndex === 2 ? require('../../assets/images/widget3.png') :
+                  widgetImageIndex === 3 ? require('../../assets/images/widget4.png') :
+                  require('../../assets/images/widget5.png')
+                }
+                style={{
+                  width: '100%',
+                  height: 260,
+                  borderRadius: 20,
+                  position: 'absolute',
+                  opacity: widgetImageOpacity,
+                }}
+                resizeMode="contain"
+              />
+            </View>
+
+            {/* Informative Text */}
+            <Text style={{
+              fontSize: 15,
+              color: '#4b5563',
+              textAlign: 'center',
+              marginBottom: 20,
+              lineHeight: 22,
+              paddingHorizontal: 10,
+            }}>
+              {deviceLanguage === 'es' ?
+                'Accede a tu lista de compras directamente desde la pantalla de inicio sin abrir la app. Marca productos como completados con un solo toque.' :
+               deviceLanguage === 'de' ?
+                'Greifen Sie direkt vom Startbildschirm auf Ihre Einkaufsliste zu, ohne die App zu öffnen. Markieren Sie Produkte mit einem Tippen als erledigt.' :
+               deviceLanguage === 'fr' ?
+                'Accédez à votre liste de courses directement depuis l\'écran d\'accueil sans ouvrir l\'app. Cochez les produits d\'un simple toucher.' :
+               deviceLanguage === 'it' ?
+                'Accedi alla tua lista della spesa direttamente dalla schermata home senza aprire l\'app. Segna i prodotti come completati con un tocco.' :
+               deviceLanguage === 'pt' ?
+                'Acesse sua lista de compras diretamente da tela inicial sem abrir o app. Marque produtos como concluídos com um toque.' :
+               deviceLanguage === 'tr' ?
+                'Uygulamayı açmadan ana ekrandan alışveriş listenize doğrudan erişin. Ürünleri tek dokunuşla tamamlandı olarak işaretleyin.' :
+               deviceLanguage === 'ru' ?
+                'Получите доступ к списку покупок прямо с главного экрана без открытия приложения. Отмечайте товары как выполненные одним касанием.' :
+               deviceLanguage === 'ja' ?
+                'アプリを開かずにホーム画面から買い物リストに直接アクセス。ワンタップで商品を完了としてマーク。' :
+               deviceLanguage === 'ar' ?
+                'الوصول إلى قائمة التسوق مباشرة من الشاشة الرئيسية دون فتح التطبيق. ضع علامة على المنتجات كمكتملة بلمسة واحدة.' :
+               deviceLanguage === 'hu' ?
+                'Érje el bevásárlólistáját közvetlenül a kezdőképernyőről az alkalmazás megnyitása nélkül. Jelölje meg a termékeket egyetlen érintéssel.' :
+               deviceLanguage === 'hi' ?
+                'ऐप खोले बिना होम स्क्रीन से सीधे अपनी शॉपिंग लिस्ट तक पहुंचें। एक टैप से उत्पादों को पूर्ण के रूप में चिह्नित करें।' :
+               deviceLanguage === 'nl' ?
+                'Toegang tot je boodschappenlijst rechtstreeks vanaf het startscherm zonder de app te openen. Markeer producten als voltooid met één tik.' :
+                'Access your shopping list directly from the home screen without opening the app. Mark products as completed with a single tap.'}
+            </Text>
+
+            {/* App Icon Banner */}
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: '#f3f4f6',
+              borderRadius: 16,
+              padding: 16,
+              marginBottom: 24,
+              borderWidth: 1,
+              borderColor: '#e5e7eb',
+            }}>
+              <View style={{
+                width: 70,
+                height: 70,
+                borderRadius: 16,
+                borderWidth: 2,
+                borderColor: '#d1d5db',
+                marginRight: 14,
+                overflow: 'hidden',
+              }}>
+                <Image
+                  source={require('../../assets/images/iconoapp.png')}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  resizeMode="cover"
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 18, fontWeight: '600', color: '#1f2937', marginBottom: 4 }}>
+                  {translationsHistorial[deviceLanguage]?.widgetHoldIcon || 'Mantén presionado'}
+                </Text>
+                <Text style={{ fontSize: 14, color: '#6b7280' }}>
+                  {translationsHistorial[deviceLanguage]?.widgetHoldIconDesc || 'el icono de la app para añadir widgets'}
+                </Text>
+              </View>
+            </View>
+
+            {/* Widget Size Icons */}
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              marginBottom: 20,
+            }}>
+              {/* Small Widget */}
+              <View style={{ alignItems: 'center' }}>
+                <View style={{
+                  width: 60,
+                  height: 60,
+                  backgroundColor: '#f3f4f6',
+                  borderRadius: 14,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 2,
+                  borderColor: '#e5e7eb',
+                }}>
+                  <Ionicons name="grid-outline" size={28} color="#6b7280" />
+                </View>
+                <Text style={{ fontSize: 14, color: '#6b7280', marginTop: 8, fontWeight: '500' }}>
+                  {translationsHistorial[deviceLanguage]?.widgetSmallTitle || 'Pequeño'}
+                </Text>
+              </View>
+
+              {/* Medium Widget */}
+              <View style={{ alignItems: 'center' }}>
+                <View style={{
+                  width: 80,
+                  height: 60,
+                  backgroundColor: '#f3f4f6',
+                  borderRadius: 14,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 2,
+                  borderColor: '#e5e7eb',
+                }}>
+                  <Ionicons name="reader-outline" size={30} color="#6b7280" />
+                </View>
+                <Text style={{ fontSize: 14, color: '#6b7280', marginTop: 8, fontWeight: '500' }}>
+                  {translationsHistorial[deviceLanguage]?.widgetMediumTitle || 'Mediano'}
+                </Text>
+              </View>
+
+              {/* Large Widget */}
+              <View style={{ alignItems: 'center' }}>
+                <View style={{
+                  width: 100,
+                  height: 70,
+                  backgroundColor: '#f3f4f6',
+                  borderRadius: 14,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 2,
+                  borderColor: '#e5e7eb',
+                }}>
+                  <Ionicons name="list-outline" size={32} color="#6b7280" />
+                </View>
+                <Text style={{ fontSize: 14, color: '#6b7280', marginTop: 8, fontWeight: '500' }}>
+                  {translationsHistorial[deviceLanguage]?.widgetLargeTitle || 'Grande'}
+                </Text>
+              </View>
+            </View>
+          </ScrollView>
+        )
       default:
         return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -1414,6 +1623,21 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
       sv: "Planera menyer och generera listor",
       hu: "Tervezze meg menüit és listákat",
       ar: "خطط قوائمك وأنشئ قوائم التسوق"
+    },
+    widget: {
+      es: "Añade widgets a tu pantalla de inicio",
+      en: "Add widgets to your home screen",
+      de: "Fügen Sie Widgets zu Ihrem Startbildschirm hinzu",
+      fr: "Ajoutez des widgets à votre écran d'accueil",
+      it: "Aggiungi widget alla schermata iniziale",
+      tr: "Ana ekranınıza widget'lar ekleyin",
+      pt: "Adicione widgets à sua tela inicial",
+      ru: "Добавьте виджеты на главный экран",
+      zh: "将小部件添加到主屏幕",
+      ja: "ホーム画面にウィジェットを追加",
+      sv: "Lägg till widgets på din hemskärm",
+      hu: "Adjon hozzá widgeteket a kezdőképernyőhöz",
+      ar: "أضف أدوات إلى شاشتك الرئيسية"
     },
     shoppingCalendar: {
       es: "Planea todas tus compras con antelación",
@@ -1487,6 +1711,17 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
         setActiveTab("MealPlanner")
       }
     },
+    ...(Platform.OS === 'ios' ? [{
+      label: "Widgets",
+      description: mainItemDescriptions.widget[deviceLanguage] || mainItemDescriptions.widget['en'],
+      icon: "apps-outline",
+      color: "#8B5CF6",
+      tabKey: "WidgetInfo",
+      onPress: () => {
+        modalizeRef.current?.close()
+        setActiveTab("WidgetInfo")
+      }
+    }] : []),
   ];
 
   const footerMenuItems = [
@@ -1820,6 +2055,12 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
                 size={isSmallIPhone ? 20 : 24}
                 color="#6B7280"
               />
+            ) : activeTab === "WidgetInfo" ? (
+              <Ionicons
+                name="apps-outline"
+                size={isSmallIPhone ? 20 : 24}
+                color="#8B5CF6"
+              />
             ) : (
               <Ionicons
                 name="storefront"
@@ -1851,6 +2092,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
              activeTab === "Recommendations" ? (menuTexts.recommendations || "Recomendaciones") :
              activeTab === "MealPlanner" ? mealPlannerTexts.title :
              activeTab === "CalendarPlanner" ? (currentTranslations.shoppingCalendar || "Shopping Calendar") :
+             activeTab === "WidgetInfo" ? "Widgets" :
              "BuyVoice"}
           </Text>
 
@@ -1911,7 +2153,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
               marginRight: 12,
             }}
           >
-            <Ionicons name="heart-outline" size={14} color="#ef4444" style={{ marginRight: 4 }} />
+            <Ionicons name="heart-outline" size={16} color="#ef4444" style={{ marginRight: 4 }} />
             <Text style={{ fontSize: 13, fontWeight: '600', color: '#6b7280', marginRight: 4 }}>
               {(translationsHistorial[RNLocalize.getLocales()[0].languageCode] || translationsHistorial.en).favorites || 'Favorites'}
             </Text>
@@ -2438,8 +2680,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
           </View>
         </View>
       </Modal>
-
-
 
         {/* Better Menu Modal */}
       <Modalize

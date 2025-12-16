@@ -192,7 +192,7 @@ const HistoryScreen = ({ navigation, route }) => {
           sound: true,
         },
         popInitialNotification: true,
-        requestPermissions: true,
+        requestPermissions: false,
       })
 
       PushNotification.createChannel(
@@ -1613,14 +1613,7 @@ const HistoryScreen = ({ navigation, route }) => {
      
               <Text style={[modernStyles.cardTitle, isSmallIPhone && {fontSize: 16}, { flex: 1 }]}>{item.name}</Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity
-                onPress={() => openExpandedListModal(index)}
-                style={[modernStyles.menuButton, { marginRight: 8 }]}
-              >
-                <Ionicons name="expand-outline" size={20} color="#4b5563" />
-              </TouchableOpacity>
-              <TouchableOpacity
+            <TouchableOpacity
                 onPress={() => {
                   setSelectedItemIndex(index)
                   setActionsModalVisible(true)
@@ -1629,7 +1622,6 @@ const HistoryScreen = ({ navigation, route }) => {
               >
                 <Ionicons name="ellipsis-horizontal-sharp" size={20} color="#4b5563" />
               </TouchableOpacity>
-            </View>
           </View>
         )}
       </View>
@@ -2757,6 +2749,23 @@ const HistoryScreen = ({ navigation, route }) => {
             </View>
             
             <ScrollView style={modernStyles.actionsModalContent}>
+              {/* Expand Action */}
+              <TouchableOpacity
+                style={modernStyles.actionModalButton}
+                onPress={() => {
+                  openExpandedListModal(selectedItemIndex)
+                  setActionsModalVisible(false)
+                }}
+              >
+                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#f3e8ff' }]}>
+                  <Ionicons name="expand-outline" size={20} color="#9333ea" />
+                </View>
+                <View style={modernStyles.actionModalTextContainer}>
+                  <Text style={modernStyles.actionModalButtonText}>{currentLabels.expandList}</Text>
+                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.expandListDesc}</Text>
+                </View>
+              </TouchableOpacity>
+
               {/* Edit Action */}
               <TouchableOpacity
                 style={modernStyles.actionModalButton}
@@ -2774,8 +2783,6 @@ const HistoryScreen = ({ navigation, route }) => {
                   <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.editNameDesc}</Text>
                 </View>
               </TouchableOpacity>
-
-  
 
               {/* Add to Favorites / Already in Favorites */}
               <TouchableOpacity

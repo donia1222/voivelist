@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   View,
   Text,
@@ -14,7 +14,8 @@ import {
   Dimensions,
   Share,
   Platform,
-  Image
+  Image,
+  Animated
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -494,6 +495,26 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
   const [showResult, setShowResult] = useState(false)
   const [subscriptionModalVisible, setSubscriptionModalVisible] = useState(false)
   const [priceHistory, setPriceHistory] = useState({})
+  const countryModalOpacity = useRef(new Animated.Value(0)).current
+
+  const openCountryModal = () => {
+    setCountryModalVisible(true)
+    Animated.timing(countryModalOpacity, {
+      toValue: 1,
+      duration: 250,
+      useNativeDriver: true,
+    }).start()
+  }
+
+  const closeCountryModal = () => {
+    Animated.timing(countryModalOpacity, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      setCountryModalVisible(false)
+    })
+  }
 
   useEffect(() => {
     loadSavedLists()
@@ -588,7 +609,7 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
       Alert.alert(t.error, t.selectListFirst)
       return
     }
-    setCountryModalVisible(true)
+    openCountryModal()
   }
 
   const handleSaveCountry = async () => {
@@ -598,14 +619,14 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
     }
 
     if (!isSubscribed) {
-      setCountryModalVisible(false)
-      setSubscriptionModalVisible(true)
+      closeCountryModal()
+      setTimeout(() => setSubscriptionModalVisible(true), 250)
       return
     }
 
     try {
       await AsyncStorage.setItem('@country', country)
-      setCountryModalVisible(false)
+      closeCountryModal()
       await fetchEstimatedCost()
     } catch (error) {
       console.error('Error saving country:', error)
@@ -1384,7 +1405,7 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
                           Alert.alert(t.error, t.selectListFirst)
                           return
                         }
-                        setCountryModalVisible(true)
+                        openCountryModal()
                       }}
                     >
                       <Ionicons name="calculator" size={18} color="#16a34a" />
@@ -1405,13 +1426,13 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
       <Modal
         visible={countryModalVisible}
         transparent={true}
-        animationType="slide"
-        onRequestClose={() => setCountryModalVisible(false)}
+        animationType="none"
+        onRequestClose={closeCountryModal}
       >
-        <View style={styles.modal}>
+        <Animated.View style={[styles.modal, { opacity: countryModalOpacity }]}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{t.enterCountry}</Text>
-            
+
             <TextInput
               style={styles.input}
               placeholder={t.placeholderExample}
@@ -1422,9 +1443,9 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
             />
 
             <View style={styles.modalButtons}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.cancelButton}
-                onPress={() => setCountryModalVisible(false)}
+                onPress={closeCountryModal}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Ionicons name="close" size={16} color="#dc2626" />
@@ -1447,7 +1468,7 @@ const PriceCalculatorScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </Animated.View>
       </Modal>
 
       {/* Subscription Modal */}
