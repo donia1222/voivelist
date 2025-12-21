@@ -175,7 +175,7 @@ const HistoryScreen = ({ navigation }) => {
   useEffect(() => {
     const initializePurchases = async () => {
       try {
-        await Purchases.setDebugLogsEnabled(true);
+        await Purchases.setDebugLogsEnabled(__DEV__);
         const apiKey = Platform.OS === 'ios'
           ? 'appl_bHxScLAZLsKxfggiOiqVAZTXjJX'  // iOS API key
           : 'goog_kddUeAkPdJXeWtbTBEEnrFLQYdW';  // Android API key

@@ -480,29 +480,22 @@ const HomeScreen = ({ navigation }) => {
         chip_position: 1,
         chip_key: `lightning_fast_${deviceLanguage}`,
         icon_name: 'flash',
-        icon_color: '#10b981',
+        icon_color: '#3b82f6',
         text_content: currentLabels.lightningFast || 'Lightning Fast'
       },
       {
         chip_position: 2,
         chip_key: `ai_powered_${deviceLanguage}`,
         icon_name: 'shield-checkmark',
-        icon_color: '#4a6bff',
+        icon_color: '#f59e0b',
         text_content: currentLabels.aiPowered || 'AI Powered'
       },
       {
         chip_position: 3,
         chip_key: `voice_effortless_${deviceLanguage}`,
         icon_name: showPencilMode ? 'pencil-outline' : 'mic-outline',
-        icon_color: '#f59e0b',
+        icon_color: showPencilMode ? '#10b981' : '#8b5cf6',
         text_content: showPencilMode ? (texts[deviceLanguage]?.manualLists || texts["en"].manualLists || 'Crear listas manuales') : (currentLabels.voiceEffortless || 'Crea listas con tu voz')
-      },
-      {
-        chip_position: 4,
-        chip_key: `super_easy_${deviceLanguage}`,
-        icon_name: 'heart',
-        icon_color: '#ec4899',
-        text_content: currentLabels.superEasy || 'Super Easy'
       }
     ]
 
@@ -776,7 +769,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const initializePurchases = async () => {
       try {
-        await Purchases.setDebugLogsEnabled(true)
+        await Purchases.setDebugLogsEnabled(__DEV__)
         const apiKey = Platform.OS === 'ios'
           ? "appl_bHxScLAZLsKxfggiOiqVAZTXjJX"  // iOS API key
           : "goog_kddUeAkPdJXeWtbTBEEnrFLQYdW";  // Android API key
@@ -1803,74 +1796,64 @@ const HomeScreen = ({ navigation }) => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`
   }
 
-  // Función para renderizar chips dinámicos desde la API
-  const renderDynamicChips = () => {
+  // Muestra info según modo (voz o manual) directamente en pantalla
+  const renderModeInfo = () => {
+    const iconColor = showPencilMode ? '#10b981' : '#8b5cf6'
+    const iconName = showPencilMode ? 'pencil-outline' : 'mic-outline'
+    const title = showPencilMode
+      ? (texts[deviceLanguage]?.voiceModalTitle || texts["en"].voiceModalTitle)
+      : (texts[deviceLanguage]?.voiceListsModalTitle || texts["en"].voiceListsModalTitle)
+    const description = showPencilMode
+      ? (texts[deviceLanguage]?.voiceModalDescription || texts["en"].voiceModalDescription)
+      : (texts[deviceLanguage]?.voiceListsModalDescription || texts["en"].voiceListsModalDescription)
+    const benefits = showPencilMode
+      ? [
+          texts[deviceLanguage]?.voiceModalBenefit1 || texts["en"].voiceModalBenefit1,
+          texts[deviceLanguage]?.voiceModalBenefit2 || texts["en"].voiceModalBenefit2,
+          texts[deviceLanguage]?.voiceModalBenefit3 || texts["en"].voiceModalBenefit3,
+          texts[deviceLanguage]?.voiceModalBenefit4 || texts["en"].voiceModalBenefit4,
+        ]
+      : [
+          texts[deviceLanguage]?.voiceListsBenefit1 || texts["en"].voiceListsBenefit1,
+          texts[deviceLanguage]?.voiceListsBenefit2 || texts["en"].voiceListsBenefit2,
+          texts[deviceLanguage]?.voiceListsBenefit3 || texts["en"].voiceListsBenefit3,
+          texts[deviceLanguage]?.voiceListsBenefit4 || texts["en"].voiceListsBenefit4,
+        ]
 
-    return [
-      // Primero renderizar los 3 chips dinámicos
-      ...dynamicChips.map((chip, index) => {
-        const backgroundColor = hexToRgba(chip.icon_color, 0.15)
-    
-
-        return (
-          <View
-            key={chip.chip_key || `chip_${index}`}
-          >
-            <TouchableOpacity
-              style={{
-                backgroundColor: 'rgba(233, 233, 233, 1)',
-                borderWidth: 2,
-
-                borderColor: backgroundColor,
-                borderRadius: 25,
-                paddingHorizontal: isSmallIPhone ? 16 : 18,
-                paddingVertical: isSmallIPhone ? 8 : 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                shadowColor: chip.icon_color,
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.2,
-                shadowRadius: 8,
-                elevation: 4,
-                backdropFilter: 'blur(10px)',
-                width: '100%',
-                justifyContent: 'flex-start',
-              }}
-              onPress={() => {}}
-              activeOpacity={0.8}
-            >
-              {/* Icon with glow effect */}
-              <View style={{
-                backgroundColor: backgroundColor,
-                borderRadius: 12,
-                padding: 4,
-                marginRight: 6,
-                shadowColor: chip.icon_color,
-                shadowOffset: { width: 0, height: 1 },
-                shadowOpacity: 0.2,
-                shadowRadius: 2,
-              }}>
-                <Ionicons
-                  name={chip.icon_name}
-                  size={isSmallIPhone ? 14 : 16}
-                  color={chip.icon_color}
-                />
-              </View>
-              <Text style={{
-                fontSize: isSmallIPhone ? 12 : 13,
-                color: chip.icon_color,
-                fontWeight: '700',
-                letterSpacing: 0.3,
-              }}>
-                {chip.text_content}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )
-      }),
-      // Luego agregar el chip de idioma como 4to chip
-    
-    ]
+    return (
+      <View style={{ alignItems: 'center', marginTop:40, paddingHorizontal: 5 }}>
+        {/* Icono y título */}
+  
+        {/* Beneficios */}
+        <View style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.45)',
+          borderRadius: 16,
+          padding: 26,
+ 
+          borderLeftWidth: 4,
+          borderLeftColor: iconColor,
+          width: '112%',
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.06,
+          shadowRadius: 10,
+          elevation: 3,
+        }}>
+                 <Text style={{ fontSize: 20, fontWeight: '700', color: '#1f2937', marginBottom: 10, textAlign: 'center' }}>
+            {title}
+          </Text>
+                  <Text style={{ fontSize: 15, color: '#6b7280', textAlign: 'center', marginBottom: 16, lineHeight: 22 }}>
+          {description}
+        </Text>
+          {benefits.map((benefit, index) => (
+            <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: index < 3 ? 10 : 0 }}>
+              <Ionicons name="checkmark-circle" size={18} color="#10b981" style={{ marginRight: 10 }} />
+              <Text style={{ fontSize: 15, color: '#374151', fontWeight: '500' }}>{benefit}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    )
   }
 
   return (
@@ -1905,27 +1888,15 @@ const HomeScreen = ({ navigation }) => {
 
             {/* Revolutionary Integrated Hero Section */}
             <View style={{
-            backgroundColor:  "#e7ead2",
               borderRadius: 28,
               marginHorizontal: 16,
               marginVertical: 20,
               padding: 24,
               marginTop: isSmallIPhone ? 80 : 90,
-              shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.15,
-              shadowRadius: 20,
-              elevation: 8,
-              backdropFilter: 'blur(20px)',
             }}>
 
-              {/* Revolutionary Chips Grid */}
-              <View style={{
-                flexDirection: 'column',
-                alignItems: 'stretch',
-                gap: 16,
-              }}>
-                {renderDynamicChips()}
-              </View>
+              {/* Info del modo actual */}
+              {renderModeInfo()}
 
               {/* Subtle Bottom Accent */}
               <View style={{
@@ -2541,9 +2512,39 @@ const HomeScreen = ({ navigation }) => {
               {texts[deviceLanguage]?.voiceListsModalDescription || texts["en"].voiceListsModalDescription}
             </Text>
 
-     
+            {/* Beneficios */}
+            <View style={modernStyles.chipInfoBenefits}>
+              <Text style={modernStyles.chipInfoBenefitsTitle}>
+                {texts[deviceLanguage]?.benefitsPrincipal || texts["en"].benefitsPrincipal}
+              </Text>
+              <View style={modernStyles.chipInfoBenefitsList}>
+                <View style={modernStyles.chipInfoBenefitItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
+                  <Text style={modernStyles.chipInfoBenefitText}>
+                    {texts[deviceLanguage]?.voiceListsBenefit1 || texts["en"].voiceListsBenefit1}
+                  </Text>
+                </View>
+                <View style={modernStyles.chipInfoBenefitItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
+                  <Text style={modernStyles.chipInfoBenefitText}>
+                    {texts[deviceLanguage]?.voiceListsBenefit2 || texts["en"].voiceListsBenefit2}
+                  </Text>
+                </View>
+                <View style={modernStyles.chipInfoBenefitItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
+                  <Text style={modernStyles.chipInfoBenefitText}>
+                    {texts[deviceLanguage]?.voiceListsBenefit3 || texts["en"].voiceListsBenefit3}
+                  </Text>
+                </View>
+                <View style={modernStyles.chipInfoBenefitItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#10b981" style={modernStyles.chipInfoCheckIcon} />
+                  <Text style={modernStyles.chipInfoBenefitText}>
+                    {texts[deviceLanguage]?.voiceListsBenefit4 || texts["en"].voiceListsBenefit4}
+                  </Text>
+                </View>
+              </View>
+            </View>
 
-    
           </View>
         </View>
       </Modal>

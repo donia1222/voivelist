@@ -1388,6 +1388,31 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
             style={{ flex: 1, backgroundColor: '#e7ead2' }}
             contentContainerStyle={{ padding: 20, paddingTop: 10 }}
           >
+            {/* Available Widgets Title */}
+            <Text style={{
+              fontSize: 25,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}>
+              <Text style={{ color: '#8B5CF6' }}>Widgets </Text>
+              <Text style={{ color: '#1f2937' }}>
+                {deviceLanguage === 'es' ? 'disponibles' :
+                 deviceLanguage === 'de' ? 'verfügbar' :
+                 deviceLanguage === 'fr' ? 'disponibles' :
+                 deviceLanguage === 'it' ? 'disponibili' :
+                 deviceLanguage === 'pt' ? 'disponíveis' :
+                 deviceLanguage === 'tr' ? 'mevcut' :
+                 deviceLanguage === 'ru' ? 'доступные' :
+                 deviceLanguage === 'ar' ? 'متاحة' :
+                 deviceLanguage === 'hu' ? 'elérhetőek' :
+                 deviceLanguage === 'ja' ? '利用可能' :
+                 deviceLanguage === 'hi' ? 'उपलब्ध' :
+                 deviceLanguage === 'nl' ? 'beschikbaar' :
+                 'available'}
+              </Text>
+              {' '}🤗
+            </Text>
+
             {/* Large Widget Preview Image - Crossfade Carousel */}
             <View style={{ width: '100%', height: 260, marginTop: -20, marginBottom: -20 }}>
               {/* Next image (underneath) */}
@@ -2153,11 +2178,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
               marginRight: 12,
             }}
           >
-            <Ionicons name="heart-outline" size={16} color="#ef4444" style={{ marginRight: 4 }} />
-            <Text style={{ fontSize: 13, fontWeight: '600', color: '#6b7280', marginRight: 4 }}>
-              {(translationsHistorial[RNLocalize.getLocales()[0].languageCode] || translationsHistorial.en).favorites || 'Favorites'}
-            </Text>
-            <Ionicons name={historyFavoritesOpen ? "chevron-up" : "chevron-down"} size={14} color="#6b7280" />
+            <Ionicons name="heart-outline" size={19} color="#ef4444" style={{ marginRight: 4 }} />
+
+            <Ionicons name={historyFavoritesOpen ? "chevron-up" : "chevron-down"} size={16} color="#6b7280" />
           </TouchableOpacity>
         )}
 

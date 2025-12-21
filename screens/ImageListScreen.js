@@ -594,6 +594,91 @@ const uiTexts = {
   },
 }
 
+// Floating background food icons component
+const FloatingFoodIcon = ({ icon, index, delay = 0 }) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current
+  const translateYAnim = useRef(new Animated.Value(0)).current
+  const rotateAnim = useRef(new Animated.Value(0)).current
+
+  useEffect(() => {
+    // Aparecer inmediatamente
+    Animated.timing(fadeAnim, {
+      toValue: 0.6,
+      duration: 1000,
+      delay: delay,
+      useNativeDriver: true,
+    }).start()
+
+    // Animación continua de flotación
+    const floatAnimation = () => {
+      Animated.sequence([
+        Animated.timing(translateYAnim, {
+          toValue: -20,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateYAnim, {
+          toValue: 20,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ]).start(() => floatAnimation())
+    }
+
+    // Animación continua de rotación
+    const rotateAnimation = () => {
+      Animated.sequence([
+        Animated.timing(rotateAnim, {
+          toValue: 1,
+          duration: 4000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotateAnim, {
+          toValue: 0,
+          duration: 4000,
+          useNativeDriver: true,
+        }),
+      ]).start(() => rotateAnimation())
+    }
+
+    const floatTimeout = setTimeout(floatAnimation, delay + 500)
+    const rotateTimeout = setTimeout(rotateAnimation, delay + 1000)
+
+    return () => {
+      clearTimeout(floatTimeout)
+      clearTimeout(rotateTimeout)
+    }
+  }, [])
+
+  const rotation = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '15deg'],
+  })
+
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        left: `${25 + (index * 12) % 70}%`,
+        top: `${12 + (index * 8) % 20}%`,
+        opacity: fadeAnim,
+        transform: [
+          { translateY: translateYAnim },
+          { rotate: rotation },
+        ],
+      }}
+    >
+      <Ionicons
+        name={icon}
+        size={28 + (index % 3) * 6}
+        color={index % 3 === 0 ? 'rgba(74, 107, 255, 0.5)' :
+              index % 3 === 1 ? 'rgba(16, 185, 129, 0.5)' :
+                               'rgba(239, 68, 68, 0.5)'}
+      />
+    </Animated.View>
+  )
+}
+
 const ImageListScreen = ({ route }) => {
   const { theme } = useTheme()
   const { triggerHaptic } = useHaptic()
@@ -739,7 +824,7 @@ const ImageListScreen = ({ route }) => {
         }
 
         // Solo verificar si no viene de navegación
-        await Purchases.setDebugLogsEnabled(true)
+        await Purchases.setDebugLogsEnabled(__DEV__)
         const apiKey = Platform.OS === 'ios'
           ? "appl_bHxScLAZLsKxfggiOiqVAZTXjJX"  // iOS API key
           : "goog_kddUeAkPdJXeWtbTBEEnrFLQYdW";  // Android API key
@@ -1234,6 +1319,13 @@ const ImageListScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={modernStyles.container}>
+      {/* Floating Food Icons */}
+      <View style={{ position: 'absolute', top: 20, left: 0, right: 0, height: 120, overflow: 'hidden', zIndex: 0 }}>
+        {['camera-outline', 'images-outline', 'list-outline', 'search-outline', 'document-text-outline'].map((icon, index) => (
+          <FloatingFoodIcon key={index} icon={icon} index={index} delay={index * 200} />
+        ))}
+      </View>
+
       {/* Loading State */}
       {loading && (
         <View style={modernStyles.loadingOverlay}>
@@ -1256,19 +1348,22 @@ const ImageListScreen = ({ route }) => {
           </View>
         </View>
       )}
+      {/* Empty State - Banner Glass */}
 
-      {/* Empty State */}
       {!loading && shoppingList.length === 0 && (
         <Animated.View style={[modernStyles.emptyStateContainer, { opacity: fadeAnim }]}>
-          <View style={modernStyles.emptyStateContent}>
-            <View style={[modernStyles.emptyIconContainer, isSmallIPhone && {width: 90, height: 90}]}>
-              <Image
-                source={require("../assets/images/838080c2-a486-41a7-9ed4-ef7587b48120.png")}
-                style={[modernStyles.emptyStateImage, isSmallIPhone && {width: 160, height: 160}]}
-              />
-            </View>
-            <Text style={[modernStyles.emptyStateTitle, isSmallIPhone && {fontSize: 20}]}>{currentLabels.uploadImageTitle}</Text>
-            <Text style={[modernStyles.emptyStateSubtitle, isSmallIPhone && {fontSize: 13, paddingHorizontal: 10}]}>{uiText.uploadImageDescription}</Text>
+          <View style={[modernStyles.emptyBanner, isSmallIPhone && { padding: 20 }]}>
+            <Image
+              source={require("../assets/images/838080c2-a486-41a7-9ed4-ef7587b48120.png")}
+              style={[modernStyles.emptyBannerImage, isSmallIPhone && { width: 160, height: 90 }]}
+            />
+            <Text style={[modernStyles.emptyBannerTitle, isSmallIPhone && { fontSize: 18 }]}>
+              {uiText.uploadImage}
+            </Text>
+            <Text style={[modernStyles.emptyBannerDescription, isSmallIPhone && { fontSize: 13 }]}>
+              {uiText.uploadImageDescription}
+            </Text>
+
           </View>
         </Animated.View>
       )}
@@ -1353,13 +1448,13 @@ const ImageListScreen = ({ route }) => {
 
       {/* Subscription Banner */}
       {!isSubscribed && (
-        <TouchableOpacity style={[modernStyles.subscriptionBanner, isSmallIPhone && {padding: 8, marginBottom: 12}]} onPress={() => {
+        <TouchableOpacity style={[modernStyles.subscriptionBanner, isSmallIPhone && {padding: 12, marginBottom: 32, maxWidth: isSmallIPhone ? 320 : 320},]} onPress={() => {
           // Navigate to Subscribe screen through route params
           if (route.params?.onNavigateToSubscribe) {
             route.params.onNavigateToSubscribe();
           }
         }}>
-          <Ionicons name="lock-closed" size={isSmallIPhone ? 16 : 20} color="#f79730ff" />
+
           <Text style={[modernStyles.subscriptionBannerText, isSmallIPhone && {fontSize: 12}]}>
             {suscribeButtonTranslations[deviceLanguage] || suscribeButtonTranslations.en}
           </Text>
@@ -1626,15 +1721,66 @@ const modernStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 32,
+    paddingHorizontal: 20,
     position: 'relative',
-    marginTop: -62,
+    marginTop:-20,
   },
 
   emptyStateContent: {
     alignItems: "center",
     maxWidth: 340,
+  },
 
+  // Banner Glass Style
+  emptyBanner: {
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    borderRadius: 24,
+    padding: 28,
+    marginHorizontal: 10,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    elevation: 5,
+    alignItems: 'center',
+  },
+
+  emptyBannerImage: {
+    width: 200,
+    height: 120,
+    marginBottom: 20,
+    resizeMode: 'cover',
+    borderRadius: 16,
+  },
+
+  emptyBannerTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#1e293b',
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+
+  emptyBannerDescription: {
+    fontSize: 15,
+    color: '#64748b',
+    textAlign: 'center',
+    lineHeight: 22,
+    paddingHorizontal: 10,
+  },
+
+  emptyBannerIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: 'rgba(249, 115, 22, 0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    borderWidth: 1.5,
+    borderColor: 'rgba(249, 115, 22, 0.25)',
   },
 
   emptyIconContainer: {
@@ -1921,6 +2067,7 @@ const modernStyles = StyleSheet.create({
     marginLeft: 2,
     fontSize: 12,
     fontWeight: "600",
+    textAlign: "center",
     color: "#f79730ff",
     padding:4,
 
@@ -2076,6 +2223,7 @@ const modernStyles = StyleSheet.create({
   subscriptionBanner: {
     flexDirection: "row",
     alignItems: "center",
+    alignSelf: "center",
     backgroundColor: "#fef2f2",
     padding: 20,
     borderRadius: 12,

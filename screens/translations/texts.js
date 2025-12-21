@@ -68,7 +68,8 @@ const texts = {
     understood: "Got it!",
     loadingTagline: "🎙️ Shop with your voice",
     bannerTitle: "Create a shopping list with your voice",
-    bannerTitleManual: "Create a shopping list by hand"
+    bannerTitleManual: "Create a shopping list by hand",
+    availableWidgets: "Available Widgets"
   },
   es: {
     voice: "Voz",
@@ -139,7 +140,8 @@ const texts = {
     understood: "¡Entendido!",
     loadingTagline: "🎙️ Compra con tu voz",
     bannerTitle: "Crea una lista de la compra con tu voz",
-    bannerTitleManual: "Crea una lista de la compra a mano"
+    bannerTitleManual: "Crea una lista de la compra a mano",
+    availableWidgets: "Widgets disponibles"
   },
   de: {
     voice: "Stimme",
@@ -210,7 +212,8 @@ const texts = {
     understood: "Verstanden!",
     loadingTagline: "🎙️ Einkaufen mit deiner Stimme",
     bannerTitle: "Erstellen Sie eine Einkaufsliste mit Ihrer Stimme",
-    bannerTitleManual: "Erstellen Sie eine Einkaufsliste von Hand"
+    bannerTitleManual: "Erstellen Sie eine Einkaufsliste von Hand",
+    availableWidgets: "Verfügbare Widgets"
   },
   it: {
     voice: "Voce",
@@ -280,7 +283,8 @@ const texts = {
     understood: "Capito!",
     loadingTagline: "🎙️ Fai shopping con la tua voce",
     bannerTitle: "Crea una lista della spesa con la tua voce",
-    bannerTitleManual: "Crea una lista della spesa a mano"
+    bannerTitleManual: "Crea una lista della spesa a mano",
+    availableWidgets: "Widget disponibili"
   },
   fr: {
     voice: "Voix",
@@ -350,7 +354,8 @@ const texts = {
     understood: "Compris!",
     loadingTagline: "🎙️ Achetez avec votre voix",
     bannerTitle: "Créez une liste de courses avec votre voix",
-    bannerTitleManual: "Créez une liste de courses à la main"
+    bannerTitleManual: "Créez une liste de courses à la main",
+    availableWidgets: "Widgets disponibles"
   },
   pt: {
     voice: "Voz",
@@ -420,7 +425,8 @@ const texts = {
     understood: "Entendi!",
     loadingTagline: "🎙️ Compre com sua voz",
     bannerTitle: "Crie uma lista de compras com sua voz",
-    bannerTitleManual: "Crie uma lista de compras à mão"
+    bannerTitleManual: "Crie uma lista de compras à mão",
+    availableWidgets: "Widgets disponíveis"
   },
   ru: {
     voice: "Голос",
@@ -462,11 +468,22 @@ const texts = {
     
     // New Hero Section Translations
     smartVoiceLists: "Voice Lists",
-    heroSubtitle: "Create shopping lists with voice",
-    lightningFast: "Fast",
-    aiPowered: "AI Powered", 
-    superEasy: "Easy",
-    tapButtonStart: "Tap button to start"
+    heroSubtitle: "Создавайте списки покупок голосом",
+    lightningFast: "Молниеносно",
+    aiPowered: "На базе ИИ",
+    voiceEffortless: "Создавайте списки голосом",
+    superEasy: "Очень просто",
+    tapButtonStart: "Нажмите кнопку для начала",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "Голосовые списки без усилий",
+    voiceListsModalDescription: "Создавайте списки покупок мгновенно, просто говоря. Наш продвинутый ИИ понимает вашу речь и автоматически организует товары в идеальный список покупок.",
+    voiceListsBenefit1: "🎤 Естественное распознавание голоса",
+    voiceListsBenefit2: "🤖 ИИ-организация",
+    voiceListsBenefit3: "⚡ Мгновенное создание списка",
+    voiceListsBenefit4: "🌍 Работает на 13 языках",
+    benefitsPrincipal: "🎯 Основные преимущества:",
+    availableWidgets: "Доступные виджеты"
   },
   ar: {
     voice: "صوت",
@@ -505,14 +522,25 @@ const texts = {
     changeLanguage: "إذا كنت ترغب في إنشاء قوائم التسوق بلغة أخرى، يرجى تغيير اللغة في إعدادات جهازك.",
     appLanguageInfo: "واجهة التطبيق متاحة باللغة المحددة. التعرف على الصوت يفهم المنتجات باللغات: الإنجليزية، الإسبانية، الألمانية، الإيطالية، الفرنسية، التركية، البرتغالية، الروسية، العربية، المجرية، اليابانية، الهندية والهولندية.",
     voiceLists: "Voice Lists",
-    
+
     // New Hero Section Translations
     smartVoiceLists: "Voice Lists",
-    heroSubtitle: "Create shopping lists with voice",
-    lightningFast: "Fast",
-    aiPowered: "AI Powered", 
-    superEasy: "Easy",
-    tapButtonStart: "Tap button to start"
+    heroSubtitle: "أنشئ قوائم التسوق بصوتك",
+    lightningFast: "سريع جداً",
+    aiPowered: "مدعوم بالذكاء الاصطناعي",
+    voiceEffortless: "أنشئ قوائم بصوتك",
+    superEasy: "سهل جداً",
+    tapButtonStart: "اضغط على الزر للبدء",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "قوائم صوتية بدون جهد",
+    voiceListsModalDescription: "أنشئ قوائم التسوق فوراً بمجرد التحدث. يفهم الذكاء الاصطناعي المتقدم صوتك وينظم عناصرك تلقائياً في قائمة تسوق مثالية.",
+    voiceListsBenefit1: "🎤 تعرف صوتي طبيعي",
+    voiceListsBenefit2: "🤖 تنظيم بالذكاء الاصطناعي",
+    voiceListsBenefit3: "⚡ إنشاء قائمة فوري",
+    voiceListsBenefit4: "🌍 يعمل بـ 13 لغة",
+    benefitsPrincipal: "🎯 الفوائد الرئيسية:",
+    availableWidgets: "الأدوات المتاحة"
   },
   hu: {
     voice: "Hang",
@@ -551,14 +579,25 @@ const texts = {
     changeLanguage: "Ha más nyelven szeretne bevásárlólistákat létrehozni, kérjük, változtassa meg a nyelvet az eszköz beállításaiban.",
     appLanguageInfo: "Az alkalmazás felülete az Ön által választott nyelven érhető el. A hangfelismerés a következő nyelveken érti a termékeket: angol, spanyol, német, olasz, francia, török, portugál, orosz, arab, magyar, japán, hindi és holland.",
     voiceLists: "Voice Lists",
-    
+
     // New Hero Section Translations
     smartVoiceLists: "Voice Lists",
-    heroSubtitle: "Create shopping lists with voice",
-    lightningFast: "Fast",
-    aiPowered: "AI Powered", 
-    superEasy: "Easy",
-    tapButtonStart: "Tap button to start"
+    heroSubtitle: "Hozzon létre bevásárlólistákat hanggal",
+    lightningFast: "Villámgyors",
+    aiPowered: "MI-alapú",
+    voiceEffortless: "Hozzon létre listákat hanggal",
+    superEasy: "Nagyon egyszerű",
+    tapButtonStart: "Nyomja meg a gombot a kezdéshez",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "Könnyedén hanglisták",
+    voiceListsModalDescription: "Hozzon létre bevásárlólistákat azonnal, egyszerűen beszéléssel. Fejlett MI-nk megérti a hangját és automatikusan rendszerezi a tételeket tökéletes bevásárlólistává.",
+    voiceListsBenefit1: "🎤 Természetes hangfelismerés",
+    voiceListsBenefit2: "🤖 MI-alapú szervezés",
+    voiceListsBenefit3: "⚡ Azonnali lista létrehozás",
+    voiceListsBenefit4: "🌍 13 nyelven működik",
+    benefitsPrincipal: "🎯 Fő előnyök:",
+    availableWidgets: "Elérhető widgetek"
   },
   ja: {
     voice: "声",
@@ -597,14 +636,25 @@ const texts = {
     changeLanguage: "他の言語で買い物リストを作成したい場合は、デバイスの設定で言語を変更してください。",
     appLanguageInfo: "アプリのインターフェースは選択した言語で利用できます。音声認識は以下の言語で製品を理解します：英語、スペイン語、ドイツ語、イタリア語、フランス語、トルコ語、ポルトガル語、ロシア語、アラビア語、ハンガリー語、日本語、ヒンディー語、オランダ語。",
     voiceLists: "Voice Lists",
-    
+
     // New Hero Section Translations
     smartVoiceLists: "Voice Lists",
-    heroSubtitle: "Create shopping lists with voice",
-    lightningFast: "Fast",
-    aiPowered: "AI Powered", 
-    superEasy: "Easy",
-    tapButtonStart: "Tap button to start"
+    heroSubtitle: "声で買い物リストを作成",
+    lightningFast: "超高速",
+    aiPowered: "AI搭載",
+    voiceEffortless: "声でリストを作成",
+    superEasy: "とても簡単",
+    tapButtonStart: "ボタンを押して開始",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "簡単音声リスト",
+    voiceListsModalDescription: "話すだけで買い物リストを即座に作成。高度なAIがあなたの声を理解し、アイテムを完璧な買い物リストに自動整理します。",
+    voiceListsBenefit1: "🎤 自然な音声認識",
+    voiceListsBenefit2: "🤖 AI搭載の整理",
+    voiceListsBenefit3: "⚡ 即座にリスト作成",
+    voiceListsBenefit4: "🌍 13言語対応",
+    benefitsPrincipal: "🎯 主な利点:",
+    availableWidgets: "利用可能なウィジェット"
   },
   tr: {
     voice: "Ses",
@@ -657,16 +707,25 @@ const texts = {
 
     // Voice Effortless Modal
     voiceModalTitle: "Zahmetsiz Sesli Listeler",
-    voiceModalDescription: "Sadece konuşarak anlık alışveriş listeleri oluşturun. Gelişmiş AI’mız sesinizi anlar ve öğelerinizi otomatik olarak mükemmel bir alışveriş listesinde düzenler.",
+    voiceModalDescription: "Sadece konuşarak anlık alışveriş listeleri oluşturun. Gelişmiş AI'mız sesinizi anlar ve öğelerinizi otomatik olarak mükemmel bir alışveriş listesinde düzenler.",
     voiceModalBenefit1: "🎤 Doğal ses tanıma",
     voiceModalBenefit2: "🤖 AI destekli organizasyon",
     voiceModalBenefit3: "⚡ Anlık liste oluşturma",
     voiceModalBenefit4: "🌍 13 dilde çalışır",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "Zahmetsiz Sesli Listeler",
+    voiceListsModalDescription: "Sadece konuşarak anlık alışveriş listeleri oluşturun. Gelişmiş AI'mız sesinizi anlar ve öğelerinizi otomatik olarak mükemmel bir alışveriş listesinde düzenler.",
+    voiceListsBenefit1: "🎤 Doğal ses tanıma",
+    voiceListsBenefit2: "🤖 AI destekli organizasyon",
+    voiceListsBenefit3: "⚡ Anlık liste oluşturma",
+    voiceListsBenefit4: "🌍 13 dilde çalışır",
     benefitsPrincipal: "🎯 Ana Faydalar:",
     understood: "Anladım!",
     loadingTagline: "🎙️ Sesinle alışveriş yap",
     bannerTitle: "Sesinizle bir alışveriş listesi oluşturun",
-    bannerTitleManual: "Elle bir alışveriş listesi oluşturun"
+    bannerTitleManual: "Elle bir alışveriş listesi oluşturun",
+    availableWidgets: "Mevcut Widget'lar"
   },
   hi: {
     voice: "आवाज़",
@@ -723,11 +782,20 @@ const texts = {
     voiceModalBenefit2: "🤖 AI-संचालित व्यवस्था",
     voiceModalBenefit3: "⚡ तुरंत सूची निर्माण",
     voiceModalBenefit4: "🌍 13 भाषाओं में काम करता है",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "आसान वॉयस सूचियां",
+    voiceListsModalDescription: "केवल बोलकर तुरंत खरीदारी सूचियां बनाएं। हमारा उन्नत AI आपकी आवाज़ को समझता है और आपके आइटम्स को आपके एक परफेक्ट खरीदारी की सूची में सवयं व्यवस्थित करता है।",
+    voiceListsBenefit1: "🎤 प्राकृतिक आवाज़ पहचान",
+    voiceListsBenefit2: "🤖 AI-संचालित व्यवस्था",
+    voiceListsBenefit3: "⚡ तुरंत सूची निर्माण",
+    voiceListsBenefit4: "🌍 13 भाषाओं में काम करता है",
     benefitsPrincipal: "🎯 मुख्य लाभ:",
     understood: "समझ गया!",
     loadingTagline: "🎙️ अपनी आवाज़ से खरीदारी करें",
     bannerTitle: "अपनी आवाज़ से एक खरीदारी सूची बनाएं",
-    bannerTitleManual: "हाथ से एक खरीदारी सूची बनाएं"
+    bannerTitleManual: "हाथ से एक खरीदारी सूची बनाएं",
+    availableWidgets: "उपलब्ध विजेट"
   },
   nl: {
     voice: "Stem",
@@ -769,11 +837,12 @@ const texts = {
 
     // New Hero Section Translations
     smartVoiceLists: "Voice Lists",
-    heroSubtitle: "Create shopping lists with voice",
-    lightningFast: "Fast",
-    aiPowered: "AI Powered",
-    superEasy: "Easy",
-    tapButtonStart: "Tap button to start",
+    heroSubtitle: "Maak boodschappenlijsten met je stem",
+    lightningFast: "Razend snel",
+    aiPowered: "AI-aangedreven",
+    voiceEffortless: "Maak lijsten met je stem",
+    superEasy: "Super makkelijk",
+    tapButtonStart: "Druk op de knop om te starten",
 
     // Voice Effortless Modal
     voiceModalTitle: "Moeiteloze Stem Lijsten",
@@ -782,14 +851,23 @@ const texts = {
     voiceModalBenefit2: "🤖 AI-aangedreven organisatie",
     voiceModalBenefit3: "⚡ Directe lijstcreatie",
     voiceModalBenefit4: "🌍 Werkt in 13 talen",
+
+    // Voice Lists Modal
+    voiceListsModalTitle: "Moeiteloze Stem Lijsten",
+    voiceListsModalDescription: "Creëer boodschappenlijsten direct door gewoon te spreken. Onze geavanceerde AI begrijpt je stem en organiseert automatisch je items in een perfecte boodschappenlijst.",
+    voiceListsBenefit1: "🎤 Natuurlijke spraakherkenning",
+    voiceListsBenefit2: "🤖 AI-aangedreven organisatie",
+    voiceListsBenefit3: "⚡ Directe lijstcreatie",
+    voiceListsBenefit4: "🌍 Werkt in 13 talen",
     benefitsPrincipal: "🎯 Hoofdvoordelen:",
     understood: "Begrepen!",
     loadingTagline: "🎙️ Winkelen met je stem",
     bannerTitle: "Maak een boodschappenlijst met je stem",
-    bannerTitleManual: "Maak een boodschappenlijst met de hand"
+    bannerTitleManual: "Maak een boodschappenlijst met de hand",
+    availableWidgets: "Beschikbare widgets"
   },
 
-  
+
 };
 
 export const costEstimatePrompts = {
