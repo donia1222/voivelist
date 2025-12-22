@@ -458,7 +458,17 @@ export const getModernStyles = () => {
       textShadowOffset: { width: 0, height: 2 },
       textShadowRadius: 4,
     },
-    
+
+    // Text below microphone button
+    micButtonText: {
+      marginTop: 20,
+      fontSize: 16,
+      color: "#6b7280",
+      textAlign: "center",
+      fontWeight: "600",
+      letterSpacing: 0.2,
+    },
+
     // Recording status with pulse dot
     recordingStatus: {
       flexDirection: 'row',

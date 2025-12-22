@@ -1782,7 +1782,13 @@ const HomeScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {/* Sin texto debajo del micrófono para diseño más limpio */}
+          {/* Text below microphone button */}
+          <Text style={modernStyles.micButtonText}>
+            {showPencilMode
+              ? (texts[deviceLanguage]?.pressToScanList || texts["en"].pressToScanList)
+              : (texts[deviceLanguage]?.pressToStartSpeaking || texts["en"].pressToStartSpeaking)
+            }
+          </Text>
         </View>
       )
     }

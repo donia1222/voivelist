@@ -947,6 +947,13 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
   // Primeros 3 botones de lista
   const topActionTabs = [
     {
+      key: "voiceCreate",
+      label: currentTranslations.createList || "Crear lista por voz",
+      icon: "mic",
+      color: "#8B5CF6",
+      onPress: () => setActiveTab("Home"),
+    },
+    {
       key: "clear",
       label: currentTranslations.delete || "Borrar",
       icon: "trash-outline",
@@ -1604,6 +1611,21 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
 
   // Descripciones para los 3 ítems principales - 13 idiomas
   const mainItemDescriptions = {
+    voiceCreate: {
+      es: "Crea tu lista de compras usando solo tu voz",
+      en: "Create your shopping list using just your voice",
+      de: "Erstellen Sie Ihre Einkaufsliste nur mit Ihrer Stimme",
+      fr: "Créez votre liste de courses avec votre voix",
+      it: "Crea la tua lista della spesa usando solo la voce",
+      tr: "Sadece sesinizi kullanarak alışveriş listenizi oluşturun",
+      pt: "Crie sua lista de compras usando apenas sua voz",
+      ru: "Создайте список покупок только голосом",
+      zh: "仅使用您的声音创建购物清单",
+      ja: "音声だけで買い物リストを作成",
+      sv: "Skapa din inköpslista med bara din röst",
+      hu: "Hozza létre bevásárlólistáját csak a hangjával",
+      ar: "أنشئ قائمة التسوق باستخدام صوتك فقط"
+    },
     handwritten: {
       es: "Escribe tus listas a mano o añade productos escaneando códigos QR",
       en: "Write your lists by hand or add products by scanning QR codes",
@@ -1699,6 +1721,17 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
   };
 
   const mainMenuItems = [
+    {
+      label: currentTranslations.createList || "Crear lista por voz",
+      description: mainItemDescriptions.voiceCreate[deviceLanguage] || mainItemDescriptions.voiceCreate['en'],
+      icon: "mic",
+      color: "#8B5CF6",
+      tabKey: "Home",
+      onPress: () => {
+        modalizeRef.current?.close()
+        setActiveTab("Home")
+      }
+    },
     {
       label: currentTranslations.manualList || "Manual List",
       description: mainItemDescriptions.handwritten[deviceLanguage] || mainItemDescriptions.handwritten['en'],

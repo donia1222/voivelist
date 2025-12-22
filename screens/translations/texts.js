@@ -46,6 +46,8 @@ const texts = {
     voiceEffortless: "Create lists with your voice",
     superEasy: "Super Easy",
     tapButtonStart: "Tap the button below to start",
+    pressToStartSpeaking: "Press to start speaking",
+    pressToScanList: "Write your lists by hand",
 
     // Manual Lists Modal
     manualLists: "Create manual lists",
@@ -118,6 +120,8 @@ const texts = {
     voiceEffortless: "Crea listas con tu voz",
     superEasy: "Muy Fácil",
     tapButtonStart: "Presiona el botón de abajo para empezar",
+    pressToStartSpeaking: "Presiona para comenzar a hablar",
+    pressToScanList: "Escribe tus listas a mano",
 
     // Manual Lists Modal
     manualLists: "Crear listas manuales",
@@ -190,6 +194,8 @@ const texts = {
     voiceEffortless: "Erstelle Listen mit deiner Stimme",
     superEasy: "Super Einfach",
     tapButtonStart: "Tippe unten auf den Button zum Starten",
+    pressToStartSpeaking: "Drücken Sie, um zu sprechen",
+    pressToScanList: "Schreiben Sie Ihre Listen von Hand",
 
     // Manual Lists Modal
     manualLists: "Manuelle Listen erstellen",
@@ -261,6 +267,8 @@ const texts = {
     voiceEffortless: "Crea liste con la tua voce",
     superEasy: "Super Facile",
     tapButtonStart: "Tocca il pulsante qui sotto per iniziare",
+    pressToStartSpeaking: "Premi per iniziare a parlare",
+    pressToScanList: "Scrivi le tue liste a mano",
 
     // Manual Lists Modal
     manualLists: "Crea liste manuali",
@@ -332,6 +340,8 @@ const texts = {
     voiceEffortless: "Créez des listes avec votre voix",
     superEasy: "Super Facile",
     tapButtonStart: "Appuyez sur le bouton ci-dessous pour commencer",
+    pressToStartSpeaking: "Appuyez pour commencer à parler",
+    pressToScanList: "Écrivez vos listes à la main",
 
     // Manual Lists Modal
     manualLists: "Créer des listes manuelles",
@@ -403,6 +413,8 @@ const texts = {
     voiceEffortless: "Crie listas com sua voz",
     superEasy: "Super Fácil",
     tapButtonStart: "Toque no botão abaixo para começar",
+    pressToStartSpeaking: "Pressione para começar a falar",
+    pressToScanList: "Escreva suas listas à mão",
 
     // Manual Lists Modal
     manualLists: "Criar listas manuais",
@@ -474,6 +486,8 @@ const texts = {
     voiceEffortless: "Создавайте списки голосом",
     superEasy: "Очень просто",
     tapButtonStart: "Нажмите кнопку для начала",
+    pressToStartSpeaking: "Нажмите, чтобы начать говорить",
+    pressToScanList: "Пишите списки от руки",
 
     // Voice Lists Modal
     voiceListsModalTitle: "Голосовые списки без усилий",
@@ -531,6 +545,8 @@ const texts = {
     voiceEffortless: "أنشئ قوائم بصوتك",
     superEasy: "سهل جداً",
     tapButtonStart: "اضغط على الزر للبدء",
+    pressToStartSpeaking: "اضغط لبدء التحدث",
+    pressToScanList: "اكتب قوائمك بخط اليد",
 
     // Voice Lists Modal
     voiceListsModalTitle: "قوائم صوتية بدون جهد",
@@ -588,6 +604,8 @@ const texts = {
     voiceEffortless: "Hozzon létre listákat hanggal",
     superEasy: "Nagyon egyszerű",
     tapButtonStart: "Nyomja meg a gombot a kezdéshez",
+    pressToStartSpeaking: "Nyomja meg a beszéd indításához",
+    pressToScanList: "Írja listáit kézzel",
 
     // Voice Lists Modal
     voiceListsModalTitle: "Könnyedén hanglisták",
@@ -645,6 +663,8 @@ const texts = {
     voiceEffortless: "声でリストを作成",
     superEasy: "とても簡単",
     tapButtonStart: "ボタンを押して開始",
+    pressToStartSpeaking: "押して話し始める",
+    pressToScanList: "手書きでリストを作成",
 
     // Voice Lists Modal
     voiceListsModalTitle: "簡単音声リスト",
@@ -703,6 +723,8 @@ const texts = {
     voiceEffortless: "Sesinizle listeler oluşturun",
     superEasy: "Çok Kolay",
     tapButtonStart: "Başlamak için aşağıdaki düğmeye basın",
+    pressToStartSpeaking: "Konuşmaya başlamak için basın",
+    pressToScanList: "Listelerinizi elle yazın",
     manualLists: "Manuel listeler oluştur",
 
     // Voice Effortless Modal
@@ -774,6 +796,8 @@ const texts = {
     voiceEffortless: "अपनी आवाज़ से सूचियां बनाएं",
     superEasy: "बहुत आसान",
     tapButtonStart: "शुरू करने के लिए नीचे का बटन दबाएं",
+    pressToStartSpeaking: "बोलना शुरू करने के लिए दबाएं",
+    pressToScanList: "अपनी सूचियां हाथ से लिखें",
 
     // Voice Effortless Modal
     voiceModalTitle: "आसान वॉयस सूचियां",
@@ -843,6 +867,8 @@ const texts = {
     voiceEffortless: "Maak lijsten met je stem",
     superEasy: "Super makkelijk",
     tapButtonStart: "Druk op de knop om te starten",
+    pressToStartSpeaking: "Druk om te beginnen met spreken",
+    pressToScanList: "Schrijf je lijsten met de hand",
 
     // Voice Effortless Modal
     voiceModalTitle: "Moeiteloze Stem Lijsten",
