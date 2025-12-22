@@ -947,13 +947,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
   // Primeros 3 botones de lista
   const topActionTabs = [
     {
-      key: "voiceCreate",
-      label: currentTranslations.createList || "Crear lista por voz",
-      icon: "mic",
-      color: "#8B5CF6",
-      onPress: () => setActiveTab("Home"),
-    },
-    {
       key: "clear",
       label: currentTranslations.delete || "Borrar",
       icon: "trash-outline",
@@ -2447,6 +2440,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
             borderRadius: 24,
             padding: 32,
+          
             marginHorizontal: 20,
             maxWidth: 400,
             alignSelf: 'center',
@@ -2740,11 +2734,11 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
         {/* Better Menu Modal */}
       <Modalize
         ref={modalizeRef}
-        adjustToContentHeight
+        modalHeight={Dimensions.get('window').height * 0.85}
         modalStyle={{
           backgroundColor: "#e7ead2",
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
         }}
         overlayStyle={{
           backgroundColor: 'rgba(0,0,0,0.3)',

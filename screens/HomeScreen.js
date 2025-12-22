@@ -1804,59 +1804,113 @@ const HomeScreen = ({ navigation }) => {
 
   // Muestra info según modo (voz o manual) directamente en pantalla
   const renderModeInfo = () => {
-    const iconColor = showPencilMode ? '#10b981' : '#8b5cf6'
-    const iconName = showPencilMode ? 'pencil-outline' : 'mic-outline'
+    const iconColor = showPencilMode ? '#10b981' : '#6366f1'
+    const iconName = showPencilMode ? 'pencil' : 'mic'
     const title = showPencilMode
       ? (texts[deviceLanguage]?.voiceModalTitle || texts["en"].voiceModalTitle)
       : (texts[deviceLanguage]?.voiceListsModalTitle || texts["en"].voiceListsModalTitle)
-    const description = showPencilMode
-      ? (texts[deviceLanguage]?.voiceModalDescription || texts["en"].voiceModalDescription)
-      : (texts[deviceLanguage]?.voiceListsModalDescription || texts["en"].voiceListsModalDescription)
+
+    // Solo 2 beneficios principales para diseño compacto
     const benefits = showPencilMode
       ? [
-          texts[deviceLanguage]?.voiceModalBenefit1 || texts["en"].voiceModalBenefit1,
           texts[deviceLanguage]?.voiceModalBenefit2 || texts["en"].voiceModalBenefit2,
           texts[deviceLanguage]?.voiceModalBenefit3 || texts["en"].voiceModalBenefit3,
-          texts[deviceLanguage]?.voiceModalBenefit4 || texts["en"].voiceModalBenefit4,
         ]
       : [
           texts[deviceLanguage]?.voiceListsBenefit1 || texts["en"].voiceListsBenefit1,
-          texts[deviceLanguage]?.voiceListsBenefit2 || texts["en"].voiceListsBenefit2,
           texts[deviceLanguage]?.voiceListsBenefit3 || texts["en"].voiceListsBenefit3,
-          texts[deviceLanguage]?.voiceListsBenefit4 || texts["en"].voiceListsBenefit4,
         ]
 
     return (
-      <View style={{ alignItems: 'center', marginTop:40, paddingHorizontal: 5 }}>
-        {/* Icono y título */}
-  
-        {/* Beneficios */}
+      <View style={{ alignItems: 'center', marginTop: 30, paddingHorizontal: 20 }}>
+        {/* Modern Glass Morphism Card */}
         <View style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.45)',
-          borderRadius: 16,
-          padding: 26,
- 
-          borderLeftWidth: 4,
-          borderLeftColor: iconColor,
-          width: '112%',
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.06,
-          shadowRadius: 10,
-          elevation: 3,
+          position: 'relative',
+          width: '100%',
+          overflow: 'hidden',
         }}>
-                 <Text style={{ fontSize: 20, fontWeight: '700', color: '#1f2937', marginBottom: 10, textAlign: 'center' }}>
-            {title}
-          </Text>
-                  <Text style={{ fontSize: 15, color: '#6b7280', textAlign: 'center', marginBottom: 16, lineHeight: 22 }}>
-          {description}
-        </Text>
-          {benefits.map((benefit, index) => (
-            <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: index < 3 ? 10 : 0 }}>
-              <Ionicons name="checkmark-circle" size={18} color="#10b981" style={{ marginRight: 10 }} />
-              <Text style={{ fontSize: 15, color: '#374151', fontWeight: '500' }}>{benefit}</Text>
+          {/* Glass effect container */}
+          <View style={{
+            backgroundColor: Platform.OS === 'android' ? 'rgba(255, 255, 255, 0.75)' : 'rgba(255, 255, 255, 0.25)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: 20,
+            padding: 18,
+            borderWidth: 1.5,
+            borderColor: 'rgba(255, 255, 255, 0.5)',
+            shadowColor: iconColor,
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.15,
+            shadowRadius: 20,
+            elevation: 5,
+          }}>
+            {/* Top accent line */}
+            <View style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 3,
+              backgroundColor: iconColor,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              opacity: 0.6,
+            }} />
+
+            {/* Icon and title row */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+              <View style={{
+                width: 40,
+                height: 40,
+                borderRadius: 12,
+                backgroundColor: `${iconColor}20`,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 12,
+              }}>
+                <Ionicons name={iconName} size={22} color={iconColor} />
+              </View>
+              <Text style={{
+                fontSize: 17,
+                fontWeight: '700',
+                color: '#1f2937',
+                flex: 1,
+              }}>
+                {title}
+              </Text>
             </View>
-          ))}
+
+            {/* Benefits chips */}
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {benefits.map((benefit, index) => (
+                <View key={index} style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: Platform.OS === 'android' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.4)',
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                  borderRadius: 12,
+                  borderWidth: 1,
+                  borderColor: 'rgba(255, 255, 255, 0.6)',
+                }}>
+                  <Text style={{ fontSize: 13, color: '#374151', fontWeight: '600' }}>
+                    {benefit}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          {/* Subtle gradient overlay for depth */}
+          <View style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            borderRadius: 20,
+            backgroundColor: `${iconColor}08`,
+            pointerEvents: 'none',
+          }} />
         </View>
       </View>
     )
