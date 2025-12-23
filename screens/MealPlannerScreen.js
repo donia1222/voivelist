@@ -95,6 +95,7 @@ const MealPlannerScreen = ({ route }) => {
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const shimmerAnim = useRef(new Animated.Value(0)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
   // Modales
   const [preferencesModalVisible, setPreferencesModalVisible] = useState(false);
@@ -710,6 +711,26 @@ const MealPlannerScreen = ({ route }) => {
       ])
     ).start();
   }, [shimmerAnim]);
+
+  // Animación pulse para icono de imagen
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.2,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [pulseAnim]);
 
   // Inicializar checkboxes cuando se selecciona una receta
   useEffect(() => {
@@ -1621,9 +1642,21 @@ const MealPlannerScreen = ({ route }) => {
         <View style={styles.recipeImageContainer}>
           <Animated.View style={[styles.recipeImage, styles.skeleton, { opacity }]} />
           <View style={styles.skeletonLoaderContainer}>
-            <Ionicons name="sparkles" size={48} color="#8B5CF6" />
+            <Animated.View
+              style={{
+                transform: [{ scale: progressPercentage >= 50 ? pulseAnim : 1 }]
+              }}
+            >
+              <Ionicons
+                name={progressPercentage >= 50 ? "image-outline" : "sparkles"}
+                size={48}
+                color="#8B5CF6"
+              />
+            </Animated.View>
             <Text style={styles.skeletonLoaderText}>
-              {t.generatingRecipes || 'Generando receta...'}
+              {progressPercentage >= 50
+                ? (t.generatingRecipeImage || 'Generando imagen de receta')
+                : (t.generatingRecipes || 'Generando receta...')}
             </Text>
 
             {/* Barra de progreso */}
@@ -1720,6 +1753,104 @@ const MealPlannerScreen = ({ route }) => {
             </Text>
           </View>
         </View>
+
+        {/* Preferencias usadas (solo para recetas generadas) */}
+        {!recipe.isDefault && preferences && (
+          <View style={styles.recipePreferencesContainer}>
+            <View style={styles.recipePreferencesChips}>
+              {/* Dieta */}
+              {preferences.diet && preferences.diet !== 'normal' && (
+                <View style={styles.recipePreferenceChip}>
+                  <Ionicons name="leaf-outline" size={10} color="#10B981" />
+                  <Text style={styles.recipePreferenceChipText}>
+                    {preferences.diet === 'vegetarian' ? t.vegetarian :
+                     preferences.diet === 'vegan' ? t.vegan :
+                     preferences.diet === 'keto' ? t.keto :
+                     preferences.diet === 'paleo' ? t.paleo : preferences.diet}
+                  </Text>
+                </View>
+              )}
+
+              {/* Tipo de cocina */}
+              {preferences.cuisineType && preferences.cuisineType !== 'varied' && (
+                <View style={styles.recipePreferenceChip}>
+                  <Ionicons name="restaurant-outline" size={10} color="#8B5CF6" />
+                  <Text style={styles.recipePreferenceChipText}>{preferences.cuisineType}</Text>
+                </View>
+              )}
+
+              {/* Restricciones */}
+              {preferences.restrictions && preferences.restrictions.length > 0 && (
+                preferences.restrictions.map((restriction, index) => (
+                  <View key={`restriction-${index}`} style={styles.recipePreferenceChip}>
+                    <Ionicons name="close-circle-outline" size={10} color="#EF4444" />
+                    <Text style={styles.recipePreferenceChipText}>{restriction}</Text>
+                  </View>
+                ))
+              )}
+
+              {/* Restricciones personalizadas */}
+              {preferences.customRestrictions && preferences.customRestrictions.length > 0 && (
+                preferences.customRestrictions.map((restriction, index) => (
+                  <View key={`custom-${index}`} style={styles.recipePreferenceChip}>
+                    <Ionicons name="alert-circle-outline" size={10} color="#F59E0B" />
+                    <Text style={styles.recipePreferenceChipText}>{restriction}</Text>
+                  </View>
+                ))
+              )}
+
+              {/* Presupuesto */}
+              {preferences.budget && (
+                <View style={styles.recipePreferenceChip}>
+                  <Ionicons name="cash-outline" size={10} color="#059669" />
+                  <Text style={styles.recipePreferenceChipText}>
+                    {preferences.budget === 'low' ? t.lowBudget :
+                     preferences.budget === 'medium' ? t.mediumBudget :
+                     preferences.budget === 'high' ? t.highBudget : preferences.budget}
+                  </Text>
+                </View>
+              )}
+
+              {/* Nivel de cocina */}
+              {preferences.cookingLevel && (
+                <View style={styles.recipePreferenceChip}>
+                  <Ionicons name="flame-outline" size={10} color="#F97316" />
+                  <Text style={styles.recipePreferenceChipText}>
+                    {preferences.cookingLevel === 'beginner' ? t.beginner :
+                     preferences.cookingLevel === 'intermediate' ? t.intermediate :
+                     preferences.cookingLevel === 'advanced' ? t.advanced : preferences.cookingLevel}
+                  </Text>
+                </View>
+              )}
+
+              {/* Productos de temporada */}
+              {preferences.seasonalProducts && (
+                <View style={styles.recipePreferenceChip}>
+                  <Ionicons name="calendar-outline" size={10} color="#14B8A6" />
+                  <Text style={styles.recipePreferenceChipText}>{t.seasonalProducts}</Text>
+                </View>
+              )}
+
+              {/* Ayuno intermitente */}
+              {preferences.intermittentFasting && (
+                <View style={styles.recipePreferenceChip}>
+                  <Ionicons name="time-outline" size={10} color="#6366F1" />
+                  <Text style={styles.recipePreferenceChipText}>{t.intermittentFasting}</Text>
+                </View>
+              )}
+
+              {/* Límite de calorías */}
+              {preferences.calorieLimit && (
+                <View style={styles.recipePreferenceChip}>
+                  <Ionicons name="fitness-outline" size={10} color="#EC4899" />
+                  <Text style={styles.recipePreferenceChipText}>
+                    {t.maxCalories} {preferences.calorieLimit} cal
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
 
         {/* Nombre y descripción */}
         <View style={styles.recipeContent}>
@@ -2136,11 +2267,128 @@ const MealPlannerScreen = ({ route }) => {
                 </Text>
               </TouchableOpacity>
 
+              {/* Mostrar preferencias actuales */}
+              {preferences && (
+                <View style={styles.currentPreferencesContainer}>
+                  <Text style={styles.currentPreferencesTitle}>
+                    {t.currentPreferences || 'Preferencias actuales:'}
+                  </Text>
+                  <View style={styles.preferencesChips}>
+                    {/* Dieta */}
+                    {preferences.diet && preferences.diet !== 'normal' && (
+                      <View style={styles.preferenceChip}>
+                        <Ionicons name="leaf-outline" size={12} color="#10B981" />
+                        <Text style={styles.preferenceChipText}>
+                          {preferences.diet === 'vegetarian' ? t.vegetarian :
+                           preferences.diet === 'vegan' ? t.vegan :
+                           preferences.diet === 'keto' ? t.keto :
+                           preferences.diet === 'paleo' ? t.paleo : preferences.diet}
+                        </Text>
+                      </View>
+                    )}
+
+                    {/* Tipo de cocina */}
+                    {preferences.cuisineType && preferences.cuisineType !== 'varied' && (
+                      <View style={styles.preferenceChip}>
+                        <Ionicons name="restaurant-outline" size={12} color="#8B5CF6" />
+                        <Text style={styles.preferenceChipText}>
+                          {preferences.cuisineType}
+                        </Text>
+                      </View>
+                    )}
+
+                    {/* Restricciones */}
+                    {preferences.restrictions && preferences.restrictions.length > 0 && (
+                      preferences.restrictions.map((restriction, index) => (
+                        <View key={`restriction-${index}`} style={styles.preferenceChip}>
+                          <Ionicons name="close-circle-outline" size={12} color="#EF4444" />
+                          <Text style={styles.preferenceChipText}>{restriction}</Text>
+                        </View>
+                      ))
+                    )}
+
+                    {/* Restricciones personalizadas */}
+                    {preferences.customRestrictions && preferences.customRestrictions.length > 0 && (
+                      preferences.customRestrictions.map((restriction, index) => (
+                        <View key={`custom-${index}`} style={styles.preferenceChip}>
+                          <Ionicons name="alert-circle-outline" size={12} color="#F59E0B" />
+                          <Text style={styles.preferenceChipText}>{restriction}</Text>
+                        </View>
+                      ))
+                    )}
+
+                    {/* Presupuesto */}
+                    {preferences.budget && (
+                      <View style={styles.preferenceChip}>
+                        <Ionicons name="cash-outline" size={12} color="#059669" />
+                        <Text style={styles.preferenceChipText}>
+                          {preferences.budget === 'low' ? t.lowBudget :
+                           preferences.budget === 'medium' ? t.mediumBudget :
+                           preferences.budget === 'high' ? t.highBudget : preferences.budget}
+                        </Text>
+                      </View>
+                    )}
+
+                    {/* Nivel de cocina */}
+                    {preferences.cookingLevel && (
+                      <View style={styles.preferenceChip}>
+                        <Ionicons name="flame-outline" size={12} color="#F97316" />
+                        <Text style={styles.preferenceChipText}>
+                          {preferences.cookingLevel === 'beginner' ? t.beginner :
+                           preferences.cookingLevel === 'intermediate' ? t.intermediate :
+                           preferences.cookingLevel === 'advanced' ? t.advanced : preferences.cookingLevel}
+                        </Text>
+                      </View>
+                    )}
+
+                    {/* Productos de temporada */}
+                    {preferences.seasonalProducts && (
+                      <View style={styles.preferenceChip}>
+                        <Ionicons name="calendar-outline" size={12} color="#14B8A6" />
+                        <Text style={styles.preferenceChipText}>{t.seasonalProducts}</Text>
+                      </View>
+                    )}
+
+                    {/* Ayuno intermitente */}
+                    {preferences.intermittentFasting && (
+                      <View style={styles.preferenceChip}>
+                        <Ionicons name="time-outline" size={12} color="#6366F1" />
+                        <Text style={styles.preferenceChipText}>{t.intermittentFasting}</Text>
+                      </View>
+                    )}
+
+                    {/* Límite de calorías */}
+                    {preferences.calorieLimit && (
+                      <View style={styles.preferenceChip}>
+                        <Ionicons name="fitness-outline" size={12} color="#EC4899" />
+                        <Text style={styles.preferenceChipText}>
+                          {t.maxCalories} {preferences.calorieLimit} cal
+                        </Text>
+                      </View>
+                    )}
+
+                    {/* Porciones */}
+                    {preferences.servings && (
+                      <View style={styles.preferenceChip}>
+                        <Ionicons name="people-outline" size={12} color="#3B82F6" />
+                        <Text style={styles.preferenceChipText}>
+                          {preferences.servings} {preferences.servings === 1 ? t.person : t.persons}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              )}
+
               {/* Botones de acción */}
               <View style={styles.generateModalButtons}>
                 <TouchableOpacity
                   style={styles.generateModalCancelButton}
-                  onPress={() => setGenerateConfirmModalVisible(false)}
+                  onPress={() => {
+                    setGenerateConfirmModalVisible(false);
+                    setPendingGenerateCategory(null);
+                    setShouldReopenGenerateModal(false);
+                  }}
                 >
                   <Text style={styles.generateModalCancelButtonText}>
                     {t.cancel || 'Cancelar'}
@@ -2153,6 +2401,8 @@ const MealPlannerScreen = ({ route }) => {
                     setGenerateConfirmModalVisible(false);
                     if (pendingGenerateCategory) {
                       generateRecipesForCategory(pendingGenerateCategory);
+                      setPendingGenerateCategory(null);
+                      setShouldReopenGenerateModal(false);
                     }
                   }}
                 >
@@ -2847,6 +3097,71 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
     color: '#fff',
+  },
+  currentPreferencesContainer: {
+    width: '100%',
+    marginTop: 16,
+    marginBottom: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  currentPreferencesTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#6B7280',
+    marginBottom: 8,
+  },
+  preferencesChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  preferenceChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+  },
+  preferenceChipText: {
+    fontSize: 12,
+    color: '#374151',
+    fontWeight: '500',
+  },
+
+  // ========== PREFERENCIAS EN TARJETAS DE RECETAS ==========
+  recipePreferencesContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  recipePreferencesChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 4,
+  },
+  recipePreferenceChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  recipePreferenceChipText: {
+    fontSize:11,
+    color: '#6B7280',
+    fontWeight: '500',
   },
 });
 
