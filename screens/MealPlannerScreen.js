@@ -50,6 +50,7 @@ const MealPlannerScreen = ({ route }) => {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [detailModalVisible, setDetailModalVisible] = useState(false);
   const [activeCategory, setActiveCategory] = useState('breakfast');
+  const [recentRecipesFilter, setRecentRecipesFilter] = useState('all'); // Filtro para recetas recientes
 
   // Recetas por categoría
   const [recipes, setRecipes] = useState({
@@ -111,7 +112,228 @@ const MealPlannerScreen = ({ route }) => {
   // Estado de suscripción
   const [isSubscribed, setIsSubscribed] = useState(null);
 
-  const categories = ['breakfast', 'lunch', 'dinner', 'snacks'];
+  const categories = ['breakfast', 'lunch', 'dinner',];
+
+  // Recetas predeterminadas por categoría
+  const getDefaultRecipes = () => {
+    const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
+
+    const defaultRecipes = {
+      en: {
+        breakfast: {
+          name: 'Avocado Toast with Poached Egg',
+          description: 'A healthy and delicious breakfast with creamy avocado, perfectly poached egg, and whole grain bread.',
+          time: '15 min',
+          calories: 320,
+          difficulty: 'easy',
+          servings: 2,
+          ingredients: [
+            { item: 'Whole grain bread', quantity: '4', unit: 'slices' },
+            { item: 'Ripe avocado', quantity: '2', unit: 'pieces' },
+            { item: 'Eggs', quantity: '4', unit: 'pieces' },
+            { item: 'Lemon juice', quantity: '1', unit: 'tbsp' },
+            { item: 'Salt', quantity: '1', unit: 'pinch' },
+            { item: 'Black pepper', quantity: '1', unit: 'pinch' }
+          ],
+          instructions: [
+            'Toast the bread slices until golden brown',
+            'Mash the avocados with lemon juice, salt and pepper',
+            'Poach the eggs in simmering water for 3-4 minutes',
+            'Spread avocado on toast and top with poached egg',
+            'Season with extra salt and pepper to taste'
+          ]
+        },
+        lunch: {
+          name: 'Mediterranean Quinoa Salad',
+          description: 'A fresh and nutritious salad with quinoa, vegetables, feta cheese and lemon dressing.',
+          time: '25 min',
+          calories: 450,
+          difficulty: 'easy',
+          servings: 2,
+          ingredients: [
+            { item: 'Quinoa', quantity: '200', unit: 'g' },
+            { item: 'Cherry tomatoes', quantity: '200', unit: 'g' },
+            { item: 'Cucumber', quantity: '1', unit: 'piece' },
+            { item: 'Feta cheese', quantity: '100', unit: 'g' },
+            { item: 'Olive oil', quantity: '3', unit: 'tbsp' },
+            { item: 'Lemon', quantity: '1', unit: 'piece' }
+          ],
+          instructions: [
+            'Cook quinoa according to package instructions',
+            'Dice tomatoes, cucumber and feta cheese',
+            'Mix all ingredients in a large bowl',
+            'Dress with olive oil and lemon juice',
+            'Season with salt and pepper to taste'
+          ]
+        },
+        dinner: {
+          name: 'Grilled Salmon with Roasted Vegetables',
+          description: 'Tender grilled salmon with a medley of colorful roasted vegetables.',
+          time: '35 min',
+          calories: 520,
+          difficulty: 'medium',
+          servings: 2,
+          ingredients: [
+            { item: 'Salmon fillet', quantity: '400', unit: 'g' },
+            { item: 'Broccoli', quantity: '200', unit: 'g' },
+            { item: 'Bell peppers', quantity: '2', unit: 'pieces' },
+            { item: 'Olive oil', quantity: '3', unit: 'tbsp' },
+            { item: 'Garlic', quantity: '2', unit: 'cloves' },
+            { item: 'Lemon', quantity: '1', unit: 'piece' }
+          ],
+          instructions: [
+            'Preheat oven to 200°C (400°F)',
+            'Cut vegetables and toss with olive oil and garlic',
+            'Roast vegetables for 20 minutes',
+            'Season salmon with salt, pepper and lemon',
+            'Grill salmon for 5-6 minutes per side',
+            'Serve salmon with roasted vegetables'
+          ]
+        },
+        snacks: {
+          name: 'Greek Yogurt with Berries and Honey',
+          description: 'A healthy and protein-rich snack with creamy yogurt, fresh berries and natural honey.',
+          time: '5 min',
+          calories: 180,
+          difficulty: 'easy',
+          servings: 2,
+          ingredients: [
+            { item: 'Greek yogurt', quantity: '400', unit: 'g' },
+            { item: 'Mixed berries', quantity: '200', unit: 'g' },
+            { item: 'Honey', quantity: '2', unit: 'tbsp' },
+            { item: 'Granola', quantity: '50', unit: 'g' },
+            { item: 'Almonds', quantity: '30', unit: 'g' }
+          ],
+          instructions: [
+            'Divide yogurt into serving bowls',
+            'Top with fresh berries',
+            'Drizzle with honey',
+            'Sprinkle granola and chopped almonds',
+            'Serve immediately'
+          ]
+        }
+      },
+      es: {
+        breakfast: {
+          name: 'Tostada de Aguacate con Huevo Pochado',
+          description: 'Un desayuno saludable y delicioso con aguacate cremoso, huevo perfectamente pochado y pan integral.',
+          time: '15 min',
+          calories: 320,
+          difficulty: 'fácil',
+          servings: 2,
+          ingredients: [
+            { item: 'Pan integral', quantity: '4', unit: 'rebanadas' },
+            { item: 'Aguacate maduro', quantity: '2', unit: 'piezas' },
+            { item: 'Huevos', quantity: '4', unit: 'piezas' },
+            { item: 'Jugo de limón', quantity: '1', unit: 'cucharada' },
+            { item: 'Sal', quantity: '1', unit: 'pizca' },
+            { item: 'Pimienta negra', quantity: '1', unit: 'pizca' }
+          ],
+          instructions: [
+            'Tostar las rebanadas de pan hasta dorar',
+            'Machacar los aguacates con limón, sal y pimienta',
+            'Pochar los huevos en agua hirviendo por 3-4 minutos',
+            'Untar el aguacate en las tostadas y coronar con huevo',
+            'Sazonar con sal y pimienta extra al gusto'
+          ]
+        },
+        lunch: {
+          name: 'Ensalada Mediterránea de Quinoa',
+          description: 'Una ensalada fresca y nutritiva con quinoa, vegetales, queso feta y aderezo de limón.',
+          time: '25 min',
+          calories: 450,
+          difficulty: 'fácil',
+          servings: 2,
+          ingredients: [
+            { item: 'Quinoa', quantity: '200', unit: 'g' },
+            { item: 'Tomates cherry', quantity: '200', unit: 'g' },
+            { item: 'Pepino', quantity: '1', unit: 'pieza' },
+            { item: 'Queso feta', quantity: '100', unit: 'g' },
+            { item: 'Aceite de oliva', quantity: '3', unit: 'cucharadas' },
+            { item: 'Limón', quantity: '1', unit: 'pieza' }
+          ],
+          instructions: [
+            'Cocinar la quinoa según las instrucciones del paquete',
+            'Cortar en cubos los tomates, pepino y queso feta',
+            'Mezclar todos los ingredientes en un bowl grande',
+            'Aderezar con aceite de oliva y jugo de limón',
+            'Sazonar con sal y pimienta al gusto'
+          ]
+        },
+        dinner: {
+          name: 'Salmón a la Parrilla con Vegetales Asados',
+          description: 'Tierno salmón a la parrilla con una mezcla colorida de vegetales asados.',
+          time: '35 min',
+          calories: 520,
+          difficulty: 'medio',
+          servings: 2,
+          ingredients: [
+            { item: 'Filete de salmón', quantity: '400', unit: 'g' },
+            { item: 'Brócoli', quantity: '200', unit: 'g' },
+            { item: 'Pimientos', quantity: '2', unit: 'piezas' },
+            { item: 'Aceite de oliva', quantity: '3', unit: 'cucharadas' },
+            { item: 'Ajo', quantity: '2', unit: 'dientes' },
+            { item: 'Limón', quantity: '1', unit: 'pieza' }
+          ],
+          instructions: [
+            'Precalentar el horno a 200°C',
+            'Cortar vegetales y mezclar con aceite de oliva y ajo',
+            'Asar vegetales por 20 minutos',
+            'Sazonar el salmón con sal, pimienta y limón',
+            'Asar el salmón 5-6 minutos por lado',
+            'Servir el salmón con los vegetales asados'
+          ]
+        },
+        snacks: {
+          name: 'Yogur Griego con Frutos Rojos y Miel',
+          description: 'Un snack saludable y rico en proteínas con yogur cremoso, frutos rojos frescos y miel natural.',
+          time: '5 min',
+          calories: 180,
+          difficulty: 'fácil',
+          servings: 2,
+          ingredients: [
+            { item: 'Yogur griego', quantity: '400', unit: 'g' },
+            { item: 'Frutos rojos mixtos', quantity: '200', unit: 'g' },
+            { item: 'Miel', quantity: '2', unit: 'cucharadas' },
+            { item: 'Granola', quantity: '50', unit: 'g' },
+            { item: 'Almendras', quantity: '30', unit: 'g' }
+          ],
+          instructions: [
+            'Dividir el yogur en bowls individuales',
+            'Cubrir con frutos rojos frescos',
+            'Rociar con miel',
+            'Espolvorear granola y almendras picadas',
+            'Servir inmediatamente'
+          ]
+        }
+      }
+    };
+
+    const lang = ['es', 'en'].includes(deviceLanguage) ? deviceLanguage : 'en';
+    const recipes = defaultRecipes[lang];
+
+    // Usar imágenes locales diferentes para cada categoría
+    const defaultImages = {
+      breakfast: require('../assets/images/breakfast_default.png'),
+      lunch: require('../assets/images/default2.png'),
+      dinner: require('../assets/images/default3.png'),
+      snacks: require('../assets/images/default4.png')
+    };
+
+    const result = {};
+    Object.keys(recipes).forEach(category => {
+      result[category] = [{
+        ...recipes[category],
+        id: `${category}_default`,
+        category: category,
+        image_url: defaultImages[category],
+        createdAt: new Date().toISOString(),
+        isDefault: true // Marcar como receta por defecto
+      }];
+    });
+
+    return result;
+  };
 
   // URLs de imágenes de Unsplash por categoría
   const RECIPE_IMAGES = {
@@ -300,6 +522,36 @@ const MealPlannerScreen = ({ route }) => {
     return names[day] || day;
   };
 
+  // Obtener las últimas 12 recetas generadas (no las por defecto)
+  const getRecentRecipes = (filter = 'all') => {
+    const allRecipes = [];
+
+    // Recopilar todas las recetas de todas las categorías
+    Object.keys(recipes).forEach(category => {
+      // Filtrar por categoría si no es 'all'
+      if (filter !== 'all' && category !== filter) {
+        return;
+      }
+
+      recipes[category].forEach(recipe => {
+        // Solo incluir recetas generadas (no las por defecto)
+        if (!recipe.isDefault) {
+          allRecipes.push(recipe);
+        }
+      });
+    });
+
+    // Ordenar por fecha de creación (más reciente primero)
+    allRecipes.sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0);
+      const dateB = new Date(b.createdAt || 0);
+      return dateB - dateA;
+    });
+
+    // Retornar solo las últimas 12
+    return allRecipes.slice(0, 12);
+  };
+
   const scrollToCategory = (category) => {
     if (category === activeCategory) return;
 
@@ -319,6 +571,112 @@ const MealPlannerScreen = ({ route }) => {
         useNativeDriver: true,
       }).start();
     });
+  };
+
+  // Renderizar tarjeta pequeña de receta en el footer
+  const renderRecentRecipeCard = (recipe) => {
+    const imageSource = typeof recipe.image_url === 'string'
+      ? { uri: recipe.image_url }
+      : recipe.image_url;
+
+    return (
+      <TouchableOpacity
+        key={recipe.id}
+        style={styles.recentRecipeCard}
+        onPress={() => {
+          setSelectedRecipe(recipe);
+          setDetailModalVisible(true);
+        }}
+        activeOpacity={0.7}
+      >
+        <Image
+          source={imageSource}
+          style={styles.recentRecipeImage}
+          resizeMode="cover"
+        />
+        <View style={styles.recentRecipeOverlay}>
+          <Text style={styles.recentRecipeName} numberOfLines={1}>
+            {recipe.name}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  // Renderizar footer con recetas recientes
+  const renderRecentRecipesFooter = () => {
+    const recentRecipes = getRecentRecipes(recentRecipesFilter);
+
+    // Verificar si hay recetas en total (sin filtro)
+    const totalRecipes = getRecentRecipes('all');
+    if (totalRecipes.length === 0) {
+      return null; // No mostrar footer si no hay recetas generadas
+    }
+
+    const filterCategories = [
+      { key: 'all', label: t.all || 'Todo', icon: 'apps-outline' },
+      { key: 'breakfast', label: t.breakfast || 'Desayuno', icon: 'sunny-outline' },
+      { key: 'lunch', label: t.lunch || 'Comida', icon: 'restaurant-outline' },
+      { key: 'dinner', label: t.dinner || 'Cena', icon: 'moon-outline' },
+    ];
+
+    return (
+      <View style={styles.recentRecipesFooter}>
+        <View style={styles.recentRecipesHeader}>
+          <Ionicons name="time-outline" size={18} color="#374151" />
+          <Text style={styles.recentRecipesTitle}>
+            {t.recentRecipes || 'Recetas Recientes'}
+          </Text>
+        </View>
+
+        {/* Tabs de filtro */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.recentRecipesTabs}
+        >
+          {filterCategories.map(category => (
+            <TouchableOpacity
+              key={category.key}
+              style={[
+                styles.recentRecipeTab,
+                recentRecipesFilter === category.key && styles.recentRecipeTabActive
+              ]}
+              onPress={() => setRecentRecipesFilter(category.key)}
+            >
+              <Ionicons
+                name={category.icon}
+                size={14}
+                color={recentRecipesFilter === category.key ? '#8B5CF6' : '#6B7280'}
+              />
+              <Text style={[
+                styles.recentRecipeTabText,
+                recentRecipesFilter === category.key && styles.recentRecipeTabTextActive
+              ]}>
+                {category.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Grid de recetas */}
+        {recentRecipes.length > 0 ? (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.recentRecipesScroll}
+          >
+            {recentRecipes.map(recipe => renderRecentRecipeCard(recipe))}
+          </ScrollView>
+        ) : (
+          <View style={styles.recentRecipesEmpty}>
+            <Text style={styles.recentRecipesEmptyText}>
+              {t.noRecipesInCategory || 'No hay recetas en esta categoría'}
+            </Text>
+          </View>
+        )}
+      </View>
+    );
   };
 
   useEffect(() => {
@@ -364,9 +722,39 @@ const MealPlannerScreen = ({ route }) => {
       const AsyncStorage = require('@react-native-async-storage/async-storage').default;
       const savedRecipesJson = await AsyncStorage.getItem('@recipe_explorer_v2');
 
+      // Imágenes locales por defecto
+      const defaultImages = {
+        breakfast: require('../assets/images/breakfast_default.png'),
+        lunch: require('../assets/images/default2.png'),
+        dinner: require('../assets/images/default3.png'),
+        snacks: require('../assets/images/default4.png')
+      };
+
       if (savedRecipesJson) {
         const savedRecipes = JSON.parse(savedRecipesJson);
+
+        // Restaurar imágenes locales para recetas por defecto
+        Object.keys(savedRecipes).forEach(category => {
+          savedRecipes[category] = savedRecipes[category].map(recipe => {
+            if (recipe.isDefault === true) {
+              return {
+                ...recipe,
+                image_url: defaultImages[category] // Restaurar imagen local correcta
+              };
+            }
+            return recipe;
+          });
+        });
+
         setRecipes(savedRecipes);
+        console.log('📚 Recetas cargadas desde AsyncStorage (imágenes por defecto restauradas)');
+      } else {
+        // Si no hay recetas guardadas, cargar las predeterminadas
+        const defaultRecipes = getDefaultRecipes();
+        setRecipes(defaultRecipes);
+        // Guardar las recetas predeterminadas
+        await AsyncStorage.setItem('@recipe_explorer_v2', JSON.stringify(defaultRecipes));
+        console.log('🎁 Recetas predeterminadas cargadas por primera vez');
       }
     } catch (error) {
       console.error('Error al cargar recetas:', error);
@@ -838,6 +1226,12 @@ const MealPlannerScreen = ({ route }) => {
 
   // Generar 3 recetas para una categoría
   const generateRecipesForCategory = async (category) => {
+    // Verificar suscripción SIEMPRE antes de generar
+    if (isSubscribed === false) {
+      showSubscriptionAlert();
+      return;
+    }
+
     // Verificar límite de generación
     const { canGenerate, remainingAttempts, hoursLeft } = canGenerateInCategory(category);
 
@@ -848,12 +1242,6 @@ const MealPlannerScreen = ({ route }) => {
         `Has alcanzado el límite de 2 generaciones para ${getCategoryName(category)}. Podrás generar de nuevo en ${hoursLeft} horas.`,
         [{ text: t.ok || 'OK' }]
       );
-      return;
-    }
-
-    // Verificar suscripción antes de generar
-    if (isSubscribed === false) {
-      showSubscriptionAlert();
       return;
     }
 
@@ -928,6 +1316,12 @@ const MealPlannerScreen = ({ route }) => {
 
   // Regenerar la receta de una categoría
   const regenerateSingleRecipe = async (category, recipeIndex = 0) => {
+    // Verificar suscripción SIEMPRE antes de generar
+    if (isSubscribed === false) {
+      showSubscriptionAlert();
+      return;
+    }
+
     // Verificar límite de generación
     const { canGenerate, remainingAttempts, hoursLeft } = canGenerateInCategory(category);
 
@@ -938,12 +1332,6 @@ const MealPlannerScreen = ({ route }) => {
         `Has alcanzado el límite de 2 generaciones para ${getCategoryName(category)}. Podrás generar de nuevo en ${hoursLeft} horas.`,
         [{ text: t.ok || 'OK' }]
       );
-      return;
-    }
-
-    // Verificar suscripción
-    if (isSubscribed === false) {
-      showSubscriptionAlert();
       return;
     }
 
@@ -1190,7 +1578,8 @@ const MealPlannerScreen = ({ route }) => {
     }
   };
 
-  // Renderizar estado vacío (sin recetas)
+  // Renderizar estado vacío (sin recetas) - NO SE DEBERÍA MOSTRAR NUNCA
+  // porque siempre hay recetas por defecto, pero se deja por seguridad
   const renderEmptyState = (category) => {
     return (
       <View style={styles.emptyStateContainer}>
@@ -1199,7 +1588,7 @@ const MealPlannerScreen = ({ route }) => {
           {t.noRecipes || 'No hay recetas aún'}
         </Text>
         <Text style={styles.emptyStateSubtitle}>
-          {t.generateRecipesHint || 'Genera 3 recetas deliciosas con IA'}
+          {t.generateRecipesHint || 'Genera una receta deliciosa con IA'}
         </Text>
         <TouchableOpacity
           style={styles.generateButton}
@@ -1207,7 +1596,7 @@ const MealPlannerScreen = ({ route }) => {
         >
           <Ionicons name="sparkles" size={20} color="#fff" />
           <Text style={styles.generateButtonText}>
-            {t.generateRecipes || 'Generar Recetas'}
+            {t.generateRecipes || 'Generar Receta'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -1226,7 +1615,8 @@ const MealPlannerScreen = ({ route }) => {
     return (
       <View style={styles.recipeCard}>
         {/* Skeleton Imagen con barra de progreso */}
-        <Animated.View style={[styles.recipeImage, styles.skeleton, { opacity }]}>
+        <View style={styles.recipeImageContainer}>
+          <Animated.View style={[styles.recipeImage, styles.skeleton, { opacity }]} />
           <View style={styles.skeletonLoaderContainer}>
             <Ionicons name="sparkles" size={48} color="#8B5CF6" />
             <Text style={styles.skeletonLoaderText}>
@@ -1241,7 +1631,7 @@ const MealPlannerScreen = ({ route }) => {
               <Text style={styles.progressText}>{progressPercentage}%</Text>
             </View>
           </View>
-        </Animated.View>
+        </View>
 
         {/* Skeleton Chips */}
         <View style={styles.recipeChipsContainer}>
@@ -1275,22 +1665,27 @@ const MealPlannerScreen = ({ route }) => {
   const renderRecipeCard = (recipe, index, category) => {
     const isRegenerating = regeneratingRecipeId === recipe.id;
 
+    // Determinar si la imagen es local (require) o remota (URL)
+    const imageSource = typeof recipe.image_url === 'string'
+      ? { uri: recipe.image_url }
+      : recipe.image_url;
+
     return (
-      <TouchableOpacity
-        key={recipe.id}
-        style={styles.recipeCard}
-        onPress={() => {
-          setSelectedRecipe(recipe);
-          setDetailModalVisible(true);
-        }}
-        activeOpacity={0.7}
-      >
+      <View key={recipe.id} style={styles.recipeCard}>
         {/* Imagen */}
-        <Image
-          source={{ uri: recipe.image_url }}
-          style={styles.recipeImage}
-          resizeMode="cover"
-        />
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedRecipe(recipe);
+            setDetailModalVisible(true);
+          }}
+          activeOpacity={0.7}
+        >
+          <Image
+            source={imageSource}
+            style={styles.recipeImage}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
 
         {/* Chips informativos */}
         <View style={styles.recipeChipsContainer}>
@@ -1335,15 +1730,32 @@ const MealPlannerScreen = ({ route }) => {
           )}
         </View>
 
-        {/* Botón regenerar */}
-
-      </TouchableOpacity>
+        {/* Botón Ver Receta */}
+        <TouchableOpacity
+          style={styles.viewRecipeButton}
+          onPress={() => {
+            setSelectedRecipe(recipe);
+            setDetailModalVisible(true);
+          }}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="book-outline" size={18} color="#047857" />
+          <Text style={styles.viewRecipeButtonText}>
+            {t.viewRecipe || 'Ver Receta'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 
   // Renderizar modal de detalle de receta
   const renderRecipeDetailModal = () => {
     if (!selectedRecipe) return null;
+
+    // Determinar si la imagen es local (require) o remota (URL)
+    const imageSource = typeof selectedRecipe.image_url === 'string'
+      ? { uri: selectedRecipe.image_url }
+      : selectedRecipe.image_url;
 
     return (
       <Modal
@@ -1373,7 +1785,7 @@ const MealPlannerScreen = ({ route }) => {
           >
             {/* Imagen grande */}
             <Image
-              source={{ uri: selectedRecipe.image_url }}
+              source={imageSource}
               style={styles.modalRecipeImage}
               resizeMode="cover"
             />
@@ -1468,7 +1880,7 @@ const MealPlannerScreen = ({ route }) => {
                 handleAddIngredientsToShoppingList(selected);
               }}
             >
-              <Ionicons name="cart-outline" size={20} color="#fff" />
+              <Ionicons name="cart-outline" size={20} color="#047857" />
               <Text style={styles.addToListButtonText}>
                 {t.addToShoppingList || 'Añadir a Lista de Compras'}
               </Text>
@@ -1538,11 +1950,7 @@ const MealPlannerScreen = ({ route }) => {
                 ]}>
                   {getCategoryName(category)}
                 </Text>
-                {recipes[category].length > 0 && (
-                  <View style={styles.recipeBadge}>
-                    <Text style={styles.recipeBadgeText}>{recipes[category].length}</Text>
-                  </View>
-                )}
+       
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -1568,6 +1976,10 @@ const MealPlannerScreen = ({ route }) => {
                   {(() => {
                     const { canGenerate, remainingAttempts, hoursLeft } = canGenerateInCategory(activeCategory);
                     const isBlocked = !canGenerate;
+                    const currentRecipe = recipes[activeCategory]?.[0];
+                    const isFirstTime = currentRecipe?.isDefault === true;
+                    const buttonText = isFirstTime ? (t.generateNewRecipe || 'Generar nueva receta') : (t.regenerate || 'Regenerar');
+                    const buttonIcon = isFirstTime ? "sparkles" : "refresh";
 
                     return (
                       <TouchableOpacity
@@ -1586,13 +1998,17 @@ const MealPlannerScreen = ({ route }) => {
                             return;
                           }
 
+                          const confirmMessage = isFirstTime
+                            ? (t.generateConfirm || '¿Quieres generar una nueva receta?')
+                            : (t.regenerateConfirm || '¿Quieres regenerar la receta?');
+
                           Alert.alert(
-                            t.regenerate || 'Regenerar',
-                            `${t.regenerateConfirm || '¿Quieres regenerar la receta?'}\n\n${t.attemptsRemaining || 'Intentos restantes'}: ${remainingAttempts}/2`,
+                            buttonText,
+                            `${confirmMessage}\n\n${t.attemptsRemaining || 'Intentos restantes'}: ${remainingAttempts}/2`,
                             [
                               { text: t.cancel || 'Cancelar', style: 'cancel' },
                               {
-                                text: t.regenerate || 'Regenerar',
+                                text: buttonText,
                                 onPress: () => generateRecipesForCategory(activeCategory)
                               }
                             ]
@@ -1601,7 +2017,7 @@ const MealPlannerScreen = ({ route }) => {
                         disabled={isBlocked}
                       >
                         <Ionicons
-                          name={isBlocked ? "lock-closed" : "refresh"}
+                          name={isBlocked ? "lock-closed" : buttonIcon}
                           size={18}
                           color={isBlocked ? "#9CA3AF" : "#8B5CF6"}
                         />
@@ -1611,7 +2027,7 @@ const MealPlannerScreen = ({ route }) => {
                         ]}>
                           {isBlocked
                             ? `${t.blocked || 'Bloqueado'} (${hoursLeft}h)`
-                            : `${t.regenerate || 'Regenerar'} (${remainingAttempts}/2)`
+                            : `${buttonText} (${remainingAttempts}/2)`
                           }
                         </Text>
                       </TouchableOpacity>
@@ -1629,6 +2045,9 @@ const MealPlannerScreen = ({ route }) => {
                     )
                   )}
                 </View>
+
+                {/* Footer con recetas recientes (dentro del scroll) */}
+                {renderRecentRecipesFooter()}
               </>
             )}
           </ScrollView>
@@ -1689,12 +2108,9 @@ const styles = StyleSheet.create({
   // ========== TABS ==========
   daysWrapper: {
     marginHorizontal: 16,
-    marginTop: 12,
+    marginTop: -4,
     marginBottom: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
+
     paddingVertical: 8,
   },
   daysScrollContainer: {
@@ -1844,9 +2260,14 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 500,
   },
-  recipeImage: {
+  recipeImageContainer: {
+    position: 'relative',
     width: '100%',
     height: 280,
+  },
+  recipeImage: {
+    width: '100%',
+    height: 240,
     backgroundColor: '#E5E7EB',
   },
   recipeChipsContainer: {
@@ -1883,6 +2304,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     lineHeight: 20,
+  },
+  viewRecipeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    paddingVertical: 14,
+    borderRadius: 12,
+    gap: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+  },
+  viewRecipeButtonText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#047857',
   },
   regenerateButton: {
     flexDirection: 'row',
@@ -2028,15 +2467,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#10B981',
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
     paddingVertical: 16,
     borderRadius: 14,
     gap: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
   },
   addToListButtonText: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#fff',
+    color: '#047857',
   },
 
   // ========== SKELETON LOADER ==========
@@ -2110,6 +2551,120 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 16,
     marginBottom: 16,
+  },
+
+  // ========== FOOTER RECETAS RECIENTES ==========
+  recentRecipesFooter: {
+    marginTop: 24,
+    marginBottom: 16,
+    marginLeft: 0,
+    marginRight: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    borderRadius: 16,
+    paddingVertical: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+  },
+  recentRecipesHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    gap: 6,
+  },
+  recentRecipesTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#374151',
+    flex: 1,
+  },
+  recentRecipesBadge: {
+    backgroundColor: '#8B5CF6',
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    minWidth: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  recentRecipesBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  recentRecipesScroll: {
+    paddingHorizontal: 12,
+    paddingLeft: 16,
+    gap: 8,
+  },
+  recentRecipeCard: {
+    width: 100,
+    height: 120,
+    borderRadius: 12,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  recentRecipeImage: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#F3F4F6',
+  },
+  recentRecipeOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  recentRecipeName: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#fff',
+    lineHeight: 13,
+  },
+  recentRecipesTabs: {
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    gap: 8,
+  },
+  recentRecipeTab: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    borderWidth: 1,
+    borderColor: 'rgba(209, 213, 219, 0.5)',
+  },
+  recentRecipeTabActive: {
+    backgroundColor: 'rgba(139, 92, 246, 0.15)',
+    borderColor: 'rgba(139, 92, 246, 0.3)',
+  },
+  recentRecipeTabText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#6B7280',
+  },
+  recentRecipeTabTextActive: {
+    color: '#8B5CF6',
+  },
+  recentRecipesEmpty: {
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  recentRecipesEmptyText: {
+    fontSize: 13,
+    color: '#9CA3AF',
+    fontStyle: 'italic',
   },
 });
 

@@ -1720,29 +1720,26 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
       }
     },
     {
+      label: mealPlannerTexts.dayMenu,
+      description: mainItemDescriptions.mealPlanner[deviceLanguage] || mainItemDescriptions.mealPlanner['en'],
+      icon: "restaurant-outline",
+      color: "#8B5CF6",
+      tabKey: "MealPlanner",
+      badge: "New",
+      onPress: () => {
+        modalizeRef.current?.close()
+        setActiveTab("MealPlanner")
+      }
+    },
+    {
       label: menuTexts.recommendations || "Recomendaciones",
       description: mainItemDescriptions.recommendations[deviceLanguage] || mainItemDescriptions.recommendations['en'],
       icon: "bulb",
       color: "#8B5CF6",
       tabKey: "Recommendations",
-      onPress: async () => {
-        if (showNewBadge) {
-          await AsyncStorage.setItem("@has_seen_recommendations_badge", "true")
-          setShowNewBadge(false)
-        }
-        modalizeRef.current?.close()
-        setActiveTab("Recommendations")
-      }
-    },
-    {
-      label: menuTexts.menuTitle,
-      description: mainItemDescriptions.mealPlanner[deviceLanguage] || mainItemDescriptions.mealPlanner['en'],
-      icon: "restaurant-outline",
-      color: "#8B5CF6",
-      tabKey: "MealPlanner",
       onPress: () => {
         modalizeRef.current?.close()
-        setActiveTab("MealPlanner")
+        setActiveTab("Recommendations")
       }
     },
     ...(Platform.OS === 'ios' ? [{
@@ -2846,7 +2843,25 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
                         >
                           {item.label}
                         </Text>
-             
+                        {item.badge && (
+                          <View style={{
+                            backgroundColor: '#10b981',
+                            paddingHorizontal: 8,
+                            paddingVertical: 3,
+                            borderRadius: 10,
+                            marginLeft: 8,
+                            marginBottom: 6,
+                          }}>
+                            <Text style={{
+                              color: '#ffffff',
+                              fontSize: 10,
+                              fontWeight: '700',
+                              letterSpacing: 0.5,
+                            }}>
+                              {item.badge}
+                            </Text>
+                          </View>
+                        )}
                       </View>
                       <Text
                         style={{

@@ -3,6 +3,7 @@ export const mealPlannerTranslations = {
     title: 'Menu Lists',
     currentWeek: 'Current week',
     preferences: 'Menu Preferences',
+    dayMenu: 'Menu of the day',
 
     // Actions
     generateWithAI: 'Generate with AI',
@@ -219,10 +220,17 @@ export const mealPlannerTranslations = {
     limitReachedMessage: 'You have reached the limit of 2 generations. You can generate again in {{hours}} hours.',
     attemptsRemaining: 'Attempts remaining',
     blocked: 'Blocked',
+    generate: 'Generate',
+    generateNewRecipe: 'Generate new recipe',
+    generateConfirm: 'Do you want to generate a new recipe?',
     regenerateConfirm: 'Do you want to regenerate the recipe?',
     regenerateAll: 'Regenerate',
     regenerateAllConfirm: 'Do you want to regenerate this recipe?',
     regenerate: 'Regenerate',
+    viewRecipe: 'View Recipe',
+    recentRecipes: 'Recent Recipes',
+    all: 'All',
+    noRecipesInCategory: 'No recipes in this category',
     description: 'Description',
     instructions: 'Instructions',
     noIngredientsSelected: 'No ingredients selected',
@@ -250,6 +258,7 @@ export const mealPlannerTranslations = {
     title: 'Planificador',
     currentWeek: 'Semana actual',
     preferences: 'Preferencias de menú',
+    dayMenu: 'Menú del día',
 
     // Actions
     generateWithAI: 'Generar con IA',
@@ -466,10 +475,17 @@ export const mealPlannerTranslations = {
     limitReachedMessage: 'Has alcanzado el límite de 2 generaciones. Podrás generar de nuevo en {{hours}} horas.',
     attemptsRemaining: 'Intentos restantes',
     blocked: 'Bloqueado',
+    generate: 'Generar',
+    generateNewRecipe: 'Generar nueva receta',
+    generateConfirm: '¿Quieres generar una nueva receta?',
     regenerateConfirm: '¿Quieres regenerar la receta?',
     regenerateAll: 'Regenerar',
     regenerateAllConfirm: '¿Quieres regenerar esta receta?',
     regenerate: 'Regenerar',
+    viewRecipe: 'Ver Receta',
+    recentRecipes: 'Recetas Recientes',
+    all: 'Todo',
+    noRecipesInCategory: 'No hay recetas en esta categoría',
     description: 'Descripción',
     instructions: 'Instrucciones',
     noIngredientsSelected: 'Sin ingredientes seleccionados',
@@ -497,6 +513,7 @@ export const mealPlannerTranslations = {
     title: 'Menüplaner',
     currentWeek: 'Aktuelle Woche',
     preferences: 'Menü-Einstellungen',
+    dayMenu: 'Tagesmenü',
 
     // Actions
     generateWithAI: 'Mit KI generieren',
@@ -729,6 +746,7 @@ export const mealPlannerTranslations = {
     title: 'Planificateur',
     currentWeek: 'Semaine actuelle',
     preferences: 'Préférences de menu',
+    dayMenu: 'Menu du jour',
 
     // Actions
     generateWithAI: 'Générer avec IA',
@@ -961,6 +979,7 @@ export const mealPlannerTranslations = {
     title: 'Pianificatore',
     currentWeek: 'Settimana corrente',
     preferences: 'Preferenze menu',
+    dayMenu: 'Menu del giorno',
 
     // Actions
     generateWithAI: 'Genera con IA',
@@ -1193,6 +1212,7 @@ export const mealPlannerTranslations = {
     title: 'Planejador de Cardápios',
     currentWeek: 'Semana atual',
     preferences: 'Preferências de menu',
+    dayMenu: 'Menu do dia',
 
     // Actions
     generateWithAI: 'Gerar com IA',
@@ -1425,6 +1445,7 @@ export const mealPlannerTranslations = {
     title: 'Планировщик Меню',
     currentWeek: 'Текущая неделя',
     preferences: 'Настройки меню',
+    dayMenu: 'Меню дня',
 
     // Actions
     generateWithAI: 'Создать с ИИ',
@@ -1629,6 +1650,7 @@ export const mealPlannerTranslations = {
     title: 'Menü Planlayıcı',
     currentWeek: 'Mevcut hafta',
     preferences: 'Menü tercihleri',
+    dayMenu: 'Günün menüsü',
 
     // Actions
     generateWithAI: 'Yapay Zeka ile Oluştur',
@@ -1833,6 +1855,7 @@ export const mealPlannerTranslations = {
     title: 'مخطط القوائم',
     currentWeek: 'الأسبوع الحالي',
     preferences: 'تفضيلات القائمة',
+    dayMenu: 'قائمة اليوم',
 
     // Actions
     generateWithAI: 'إنشاء بالذكاء الاصطناعي',
@@ -2005,6 +2028,7 @@ export const mealPlannerTranslations = {
     title: 'Menütervező',
     currentWeek: 'Aktuális hét',
     preferences: 'Menü beállítások',
+    dayMenu: 'Napi menü',
 
     // Actions
     generateWithAI: 'Generálás mesterséges intelligenciával',
@@ -2177,6 +2201,7 @@ export const mealPlannerTranslations = {
     title: 'メニュープランナー',
     currentWeek: '今週',
     preferences: 'メニュー設定',
+    dayMenu: '本日のメニュー',
 
     // Actions
     generateWithAI: 'AIで生成',
@@ -2365,6 +2390,7 @@ export const mealPlannerTranslations = {
     title: 'मेनू योजनाकार',
     currentWeek: 'वर्तमान सप्ताह',
     preferences: 'मेनू प्राथमिकताएं',
+    dayMenu: 'दिन का मेनू',
 
     // Actions
     generateWithAI: 'AI से बनाएं',
@@ -2553,6 +2579,7 @@ export const mealPlannerTranslations = {
     title: 'Menuplanner',
     currentWeek: 'Huidige week',
     preferences: 'Menuvoorkeuren',
+    dayMenu: 'Menu van de dag',
 
     // Actions
     generateWithAI: 'Genereren met AI',

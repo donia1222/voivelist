@@ -838,7 +838,8 @@ Example:
       // Recopilar todas las rutas de imágenes usadas
       Object.keys(savedRecipes).forEach(category => {
         savedRecipes[category].forEach(recipe => {
-          if (recipe.image_url && recipe.image_url.startsWith('file://')) {
+          // Verificar que image_url sea un string antes de usar .startsWith()
+          if (recipe.image_url && typeof recipe.image_url === 'string' && recipe.image_url.startsWith('file://')) {
             // Extraer solo el nombre del archivo
             const fileName = recipe.image_url.replace('file://', '').split('/').pop();
             usedImages.add(fileName);
