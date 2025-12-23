@@ -51,6 +51,9 @@ const MealPlannerScreen = ({ route }) => {
   const [detailModalVisible, setDetailModalVisible] = useState(false);
   const [activeCategory, setActiveCategory] = useState('breakfast');
   const [recentRecipesFilter, setRecentRecipesFilter] = useState('all'); // Filtro para recetas recientes
+  const [generateConfirmModalVisible, setGenerateConfirmModalVisible] = useState(false);
+  const [pendingGenerateCategory, setPendingGenerateCategory] = useState(null);
+  const [shouldReopenGenerateModal, setShouldReopenGenerateModal] = useState(false);
 
   // Recetas por categoría
   const [recipes, setRecipes] = useState({
@@ -1998,21 +2001,9 @@ const MealPlannerScreen = ({ route }) => {
                             return;
                           }
 
-                          const confirmMessage = isFirstTime
-                            ? (t.generateConfirm || '¿Quieres generar una nueva receta?')
-                            : (t.regenerateConfirm || '¿Quieres regenerar la receta?');
-
-                          Alert.alert(
-                            buttonText,
-                            `${confirmMessage}\n\n${t.attemptsRemaining || 'Intentos restantes'}: ${remainingAttempts}/2`,
-                            [
-                              { text: t.cancel || 'Cancelar', style: 'cancel' },
-                              {
-                                text: buttonText,
-                                onPress: () => generateRecipesForCategory(activeCategory)
-                              }
-                            ]
-                          );
+                          // Abrir modal de confirmación
+                          setPendingGenerateCategory(activeCategory);
+                          setGenerateConfirmModalVisible(true);
                         }}
                         disabled={isBlocked}
                       >
@@ -2059,7 +2050,16 @@ const MealPlannerScreen = ({ route }) => {
         {/* Modales de configuración y listas */}
         <PreferencesModal
           visible={preferencesModalVisible}
-          onClose={() => setPreferencesModalVisible(false)}
+          onClose={() => {
+            setPreferencesModalVisible(false);
+            // Si se abrió desde el modal de generación, volver a abrirlo
+            if (shouldReopenGenerateModal) {
+              setTimeout(() => {
+                setGenerateConfirmModalVisible(true);
+                setShouldReopenGenerateModal(false);
+              }, 300); // Pequeño delay para mejor animación
+            }
+          }}
           onPreferencesUpdated={handlePreferencesUpdated}
         />
 
@@ -2087,6 +2087,90 @@ const MealPlannerScreen = ({ route }) => {
           buttons={alertConfig.buttons}
           onClose={() => setAlertVisible(false)}
         />
+
+        {/* Modal de confirmación de generación */}
+        <Modal
+          visible={generateConfirmModalVisible}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setGenerateConfirmModalVisible(false)}
+        >
+          <View style={styles.generateModalOverlay}>
+            <View style={styles.generateModalContent}>
+              {/* Icono */}
+              <View style={styles.generateModalIcon}>
+                <Ionicons name="settings-outline" size={48} color="#8B5CF6" />
+              </View>
+
+              {/* Título */}
+              <Text style={styles.generateModalTitle}>
+                {(() => {
+                  const currentRecipe = recipes[pendingGenerateCategory]?.[0];
+                  const isFirstTime = currentRecipe?.isDefault === true;
+                  return isFirstTime
+                    ? (t.generateNewRecipe || 'Generar nueva receta')
+                    : (t.regenerate || 'Regenerar');
+                })()}
+              </Text>
+
+              {/* Mensaje */}
+              <Text style={styles.generateModalMessage}>
+                {(() => {
+                  const { remainingAttempts } = canGenerateInCategory(pendingGenerateCategory || 'breakfast');
+                  return `${t.attemptsRemaining || 'Intentos restantes'}: ${remainingAttempts}/2`;
+                })()}
+              </Text>
+
+              {/* Botón de Preferencias */}
+              <TouchableOpacity
+                style={styles.generateModalPreferencesButton}
+                onPress={() => {
+                  setGenerateConfirmModalVisible(false);
+                  setShouldReopenGenerateModal(true);
+                  setPreferencesModalVisible(true);
+                }}
+              >
+                <Ionicons name="options-outline" size={20} color="#8B5CF6" />
+                <Text style={styles.generateModalPreferencesButtonText}>
+                  {t.recipePreferences || 'Preferencias de Recetas'}
+                </Text>
+              </TouchableOpacity>
+
+              {/* Botones de acción */}
+              <View style={styles.generateModalButtons}>
+                <TouchableOpacity
+                  style={styles.generateModalCancelButton}
+                  onPress={() => setGenerateConfirmModalVisible(false)}
+                >
+                  <Text style={styles.generateModalCancelButtonText}>
+                    {t.cancel || 'Cancelar'}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.generateModalConfirmButton}
+                  onPress={() => {
+                    setGenerateConfirmModalVisible(false);
+                    if (pendingGenerateCategory) {
+                      generateRecipesForCategory(pendingGenerateCategory);
+                    }
+                  }}
+                >
+                  <Ionicons name="sparkles" size={18} color="#fff" />
+                  <Text style={styles.generateModalConfirmButtonText}>
+                    {(() => {
+                      const currentRecipe = recipes[pendingGenerateCategory]?.[0];
+                      const isFirstTime = currentRecipe?.isDefault === true;
+                      return isFirstTime
+                        ? (t.generate || 'Generar')
+                        : (t.regenerate || 'Regenerar');
+                    })()}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -2665,6 +2749,104 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#9CA3AF',
     fontStyle: 'italic',
+  },
+
+  // ========== MODAL DE CONFIRMACIÓN DE GENERACIÓN ==========
+  generateModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  generateModalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  generateModalIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  generateModalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  generateModalMessage: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  generateModalPreferencesButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(139, 92, 246, 0.3)',
+    marginBottom: 20,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  generateModalPreferencesButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#8B5CF6',
+  },
+  generateModalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    width: '100%',
+  },
+  generateModalCancelButton: {
+    flex: 1,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  generateModalCancelButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#6B7280',
+  },
+  generateModalConfirmButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    backgroundColor: '#8B5CF6',
+    borderRadius: 12,
+  },
+  generateModalConfirmButtonText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#fff',
   },
 });
 
