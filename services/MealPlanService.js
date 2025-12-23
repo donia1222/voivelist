@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as RNLocalize from 'react-native-localize';
+import RNFS from 'react-native-fs';
 import {
   PROMPT_COMIDA_INDIVIDUAL,
   PROMPT_DIA_COMPLETO,
@@ -10,6 +11,7 @@ import {
 } from './mealPlannerPromptsClean';
 
 const API_KEY_CHAT = process.env.API_KEY_CHAT;
+const API_KEY_IMAGE_GEN = process.env.API_KEY_IMAGE_GEN;
 const MEAL_PLANS_KEY = '@meal_plans';
 const MEAL_PREFERENCES_KEY = '@meal_preferences';
 
@@ -757,6 +759,113 @@ Example:
     } catch (error) {
       console.error('Error al limpiar planes antiguos:', error);
       return false;
+    }
+  },
+
+  /**
+   * Generar imagen de receta con DALL-E y guardarla localmente
+   */
+  async generateRecipeImage(recipeName, recipeDescription) {
+    try {
+      console.log(`🎨 [generateRecipeImage] Generando imagen para: "${recipeName}"`);
+
+      // Crear prompt descriptivo para DALL-E
+      const prompt = `A professional, appetizing food photography of ${recipeName}. ${recipeDescription}. High quality, well-lit, restaurant-style presentation on a clean plate. Photorealistic, top-down view.`;
+
+      console.log(`📝 [generateRecipeImage] Prompt: "${prompt}"`);
+
+      const response = await axios.post(API_KEY_IMAGE_GEN, {
+        prompt: prompt,
+        model: 'dall-e-3',
+        n: 1,
+        size: '1024x1024',
+        quality: 'standard'
+      });
+
+      console.log(`✅ [generateRecipeImage] Imagen generada exitosamente`);
+
+      if (!response.data || !response.data.data || !response.data.data[0] || !response.data.data[0].url) {
+        console.error('❌ [generateRecipeImage] Respuesta malformada:', response.data);
+        throw new Error('Respuesta del servidor no tiene el formato esperado');
+      }
+
+      const imageUrl = response.data.data[0].url;
+      console.log(`🖼️ [generateRecipeImage] URL temporal de DALL-E: ${imageUrl.substring(0, 100)}...`);
+
+      // 📥 Descargar imagen y guardarla localmente
+      const timestamp = Date.now();
+      const fileName = `recipe_${timestamp}.png`;
+      const localPath = `${RNFS.DocumentDirectoryPath}/${fileName}`;
+
+      console.log(`💾 [generateRecipeImage] Descargando imagen a: ${localPath}`);
+
+      await RNFS.downloadFile({
+        fromUrl: imageUrl,
+        toFile: localPath
+      }).promise;
+
+      console.log(`✅ [generateRecipeImage] Imagen guardada localmente en: ${localPath}`);
+
+      // Retornar ruta local con prefijo file://
+      return `file://${localPath}`;
+    } catch (error) {
+      console.error('❌ [generateRecipeImage] Error generando/guardando imagen:', error);
+
+      // Retornar imagen placeholder en caso de error
+      return 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80';
+    }
+  },
+
+  /**
+   * Limpiar imágenes de recetas antiguas no usadas
+   */
+  async cleanOldRecipeImages() {
+    try {
+      console.log('🧹 [cleanOldRecipeImages] Limpiando imágenes antiguas...');
+
+      // Obtener todas las recetas guardadas
+      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+      const savedRecipesJson = await AsyncStorage.getItem('@recipe_explorer_v2');
+
+      if (!savedRecipesJson) {
+        console.log('🧹 [cleanOldRecipeImages] No hay recetas guardadas');
+        return;
+      }
+
+      const savedRecipes = JSON.parse(savedRecipesJson);
+      const usedImages = new Set();
+
+      // Recopilar todas las rutas de imágenes usadas
+      Object.keys(savedRecipes).forEach(category => {
+        savedRecipes[category].forEach(recipe => {
+          if (recipe.image_url && recipe.image_url.startsWith('file://')) {
+            // Extraer solo el nombre del archivo
+            const fileName = recipe.image_url.replace('file://', '').split('/').pop();
+            usedImages.add(fileName);
+          }
+        });
+      });
+
+      console.log(`🧹 [cleanOldRecipeImages] Imágenes en uso: ${usedImages.size}`);
+
+      // Obtener todos los archivos en el directorio
+      const files = await RNFS.readDir(RNFS.DocumentDirectoryPath);
+
+      // Eliminar archivos de recetas que ya no se usan
+      let deletedCount = 0;
+      for (const file of files) {
+        if (file.name.startsWith('recipe_') && file.name.endsWith('.png')) {
+          if (!usedImages.has(file.name)) {
+            await RNFS.unlink(file.path);
+            deletedCount++;
+            console.log(`🗑️ [cleanOldRecipeImages] Eliminada imagen antigua: ${file.name}`);
+          }
+        }
+      }
+
+      console.log(`✅ [cleanOldRecipeImages] Limpieza completada. ${deletedCount} imágenes eliminadas`);
+    } catch (error) {
+      console.error('❌ [cleanOldRecipeImages] Error limpiando imágenes:', error);
     }
   }
 };

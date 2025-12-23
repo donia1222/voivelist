@@ -62,6 +62,15 @@ const MealPlannerScreen = ({ route }) => {
   // Estados de generación
   const [generatingCategory, setGeneratingCategory] = useState(null);
   const [regeneratingRecipeId, setRegeneratingRecipeId] = useState(null);
+  const [generationProgress, setGenerationProgress] = useState(0);
+
+  // Límites de generación por categoría
+  const [generationLimits, setGenerationLimits] = useState({
+    breakfast: { count: 0, lastGeneration: null },
+    lunch: { count: 0, lastGeneration: null },
+    dinner: { count: 0, lastGeneration: null },
+    snacks: { count: 0, lastGeneration: null }
+  });
 
   // Estado para ingredientes pendientes de añadir
   const [pendingIngredients, setPendingIngredients] = useState([]);
@@ -81,6 +90,7 @@ const MealPlannerScreen = ({ route }) => {
 
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(1)).current;
+  const shimmerAnim = useRef(new Animated.Value(0)).current;
 
   // Modales
   const [preferencesModalVisible, setPreferencesModalVisible] = useState(false);
@@ -155,11 +165,106 @@ const MealPlannerScreen = ({ route }) => {
     ]
   };
 
-  // Obtener imagen aleatoria para una categoría
+  // Mapeo de keywords de comida a URLs específicas de imágenes
+  const FOOD_KEYWORD_MAP = {
+    // Breakfast keywords
+    'pancake': 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&q=80',
+    'oatmeal': 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&q=80',
+    'avena': 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&q=80',
+    'toast': 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&q=80',
+    'tostada': 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&q=80',
+    'egg': 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80',
+    'huevo': 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80',
+    'smoothie': 'https://images.unsplash.com/photo-1547496502-affa22d38842?w=400&q=80',
+    'bowl': 'https://images.unsplash.com/photo-1547496502-affa22d38842?w=400&q=80',
+    'croissant': 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?w=400&q=80',
+    'waffle': 'https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=400&q=80',
+    'yogurt': 'https://images.unsplash.com/photo-1495147466023-ac5c588e2e94?w=400&q=80',
+    'yogur': 'https://images.unsplash.com/photo-1495147466023-ac5c588e2e94?w=400&q=80',
+    'fruit': 'https://images.unsplash.com/photo-1513442542250-854d436a73f2?w=400&q=80',
+    'fruta': 'https://images.unsplash.com/photo-1513442542250-854d436a73f2?w=400&q=80',
+    'berry': 'https://images.unsplash.com/photo-1513442542250-854d436a73f2?w=400&q=80',
+    'chia': 'https://images.unsplash.com/photo-1495147466023-ac5c588e2e94?w=400&q=80',
+    'mango': 'https://images.unsplash.com/photo-1513442542250-854d436a73f2?w=400&q=80',
+    'matcha': 'https://images.unsplash.com/photo-1495147466023-ac5c588e2e94?w=400&q=80',
+    'pudding': 'https://images.unsplash.com/photo-1495147466023-ac5c588e2e94?w=400&q=80',
+    'coconut': 'https://images.unsplash.com/photo-1513442542250-854d436a73f2?w=400&q=80',
+    'coco': 'https://images.unsplash.com/photo-1513442542250-854d436a73f2?w=400&q=80',
+
+    // Lunch keywords
+    'salad': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80',
+    'ensalada': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80',
+    'pasta': 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&q=80',
+    'pizza': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80',
+    'burger': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80',
+    'hamburguesa': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80',
+    'taco': 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=400&q=80',
+    'sushi': 'https://images.unsplash.com/photo-1547584370-2cc98b8b8dc8?w=400&q=80',
+    'curry': 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&q=80',
+    'rice': 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80',
+    'arroz': 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80',
+    'tofu': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80',
+    'noodle': 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&q=80',
+    'fideo': 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&q=80',
+
+    // Dinner keywords
+    'salmon': 'https://images.unsplash.com/photo-1560963805-6c64417e3413?w=400&q=80',
+    'salmón': 'https://images.unsplash.com/photo-1560963805-6c64417e3413?w=400&q=80',
+    'chicken': 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=400&q=80',
+    'pollo': 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=400&q=80',
+    'fish': 'https://images.unsplash.com/photo-1606728035253-49e8a23146de?w=400&q=80',
+    'pescado': 'https://images.unsplash.com/photo-1606728035253-49e8a23146de?w=400&q=80',
+    'vegetable': 'https://images.unsplash.com/photo-1529694157872-4e0c0f3b238b?w=400&q=80',
+    'vegetal': 'https://images.unsplash.com/photo-1529694157872-4e0c0f3b238b?w=400&q=80',
+    'wrap': 'https://images.unsplash.com/photo-1588137378633-dea1336ce1e2?w=400&q=80',
+    'soup': 'https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?w=400&q=80',
+    'sopa': 'https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?w=400&q=80',
+    'meat': 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400&q=80',
+    'carne': 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400&q=80',
+    'steak': 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400&q=80',
+
+    // Snacks keywords
+    'granola': 'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=400&q=80',
+    'nuts': 'https://images.unsplash.com/photo-1519915212116-7cfef71f1d3e?w=400&q=80',
+    'nuez': 'https://images.unsplash.com/photo-1519915212116-7cfef71f1d3e?w=400&q=80',
+    'chip': 'https://images.unsplash.com/photo-1607532941433-304659e8198a?w=400&q=80',
+    'hummus': 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&q=80',
+    'bar': 'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=400&q=80',
+    'barra': 'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=400&q=80',
+    'energy': 'https://images.unsplash.com/photo-1562059392-096320bccc7e?w=400&q=80',
+  };
+
+  // Obtener imagen aleatoria para una categoría (fallback)
   const getRandomRecipeImage = (category) => {
     const images = RECIPE_IMAGES[category] || RECIPE_IMAGES.breakfast;
     const randomIndex = Math.floor(Math.random() * images.length);
     return images[randomIndex];
+  };
+
+  // Obtener imagen basada en el nombre de la receta
+  const getImageForRecipe = (recipeName, category) => {
+    if (!recipeName) {
+      return getRandomRecipeImage(category);
+    }
+
+    // Normalizar el nombre (minúsculas, sin acentos)
+    const normalizedName = recipeName.toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    console.log(`🔍 Buscando imagen para: "${recipeName}" (normalizado: "${normalizedName}")`);
+
+    // Buscar coincidencia de keywords
+    for (const [keyword, imageUrl] of Object.entries(FOOD_KEYWORD_MAP)) {
+      if (normalizedName.includes(keyword)) {
+        console.log(`🎯 Keyword match: "${keyword}" encontrado en "${recipeName}"`);
+        return imageUrl;
+      }
+    }
+
+    // Si no hay match, usar imagen aleatoria de la categoría
+    console.log(`🎲 No hay keyword match para "${recipeName}", usando imagen aleatoria de ${category}`);
+    return getRandomRecipeImage(category);
   };
 
   const getCategoryIcon = (category) => {
@@ -220,7 +325,30 @@ const MealPlannerScreen = ({ route }) => {
     loadAllRecipes();
     loadPreferences();
     checkSubscriptionStatus();
+    loadGenerationLimits();
+    // Limpiar imágenes antiguas al iniciar
+    MealPlanService.cleanOldRecipeImages();
   }, []);
+
+  // Animación shimmer para skeleton
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(shimmerAnim, {
+          toValue: 1,
+          duration: 1200,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(shimmerAnim, {
+          toValue: 0,
+          duration: 1200,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [shimmerAnim]);
 
   // Inicializar checkboxes cuando se selecciona una receta
   useEffect(() => {
@@ -245,6 +373,93 @@ const MealPlannerScreen = ({ route }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Cargar límites de generación desde AsyncStorage
+  const loadGenerationLimits = async () => {
+    try {
+      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+      const limitsJson = await AsyncStorage.getItem('@recipe_generation_limits');
+
+      if (limitsJson) {
+        const limits = JSON.parse(limitsJson);
+        setGenerationLimits(limits);
+        console.log('📊 Límites de generación cargados:', limits);
+      }
+    } catch (error) {
+      console.error('Error al cargar límites de generación:', error);
+    }
+  };
+
+  // Guardar límites de generación en AsyncStorage
+  const saveGenerationLimits = async (limits) => {
+    try {
+      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+      await AsyncStorage.setItem('@recipe_generation_limits', JSON.stringify(limits));
+      setGenerationLimits(limits);
+      console.log('💾 Límites de generación guardados:', limits);
+    } catch (error) {
+      console.error('Error al guardar límites de generación:', error);
+    }
+  };
+
+  // Verificar si puede generar en una categoría
+  const canGenerateInCategory = (category) => {
+    const limit = generationLimits[category];
+
+    if (!limit || !limit.lastGeneration) {
+      return { canGenerate: true, remainingAttempts: 2, hoursLeft: 0 };
+    }
+
+    const now = new Date();
+    const lastGen = new Date(limit.lastGeneration);
+    const hoursSinceLastGen = (now - lastGen) / (1000 * 60 * 60);
+
+    // Si han pasado 24 horas, resetear
+    if (hoursSinceLastGen >= 24) {
+      return { canGenerate: true, remainingAttempts: 2, hoursLeft: 0 };
+    }
+
+    // Si ha usado menos de 2 intentos
+    if (limit.count < 2) {
+      return { canGenerate: true, remainingAttempts: 2 - limit.count, hoursLeft: 0 };
+    }
+
+    // Bloqueado
+    const hoursLeft = Math.ceil(24 - hoursSinceLastGen);
+    return { canGenerate: false, remainingAttempts: 0, hoursLeft };
+  };
+
+  // Incrementar contador de generación
+  const incrementGenerationCount = async (category) => {
+    const now = new Date().toISOString();
+    const currentLimit = generationLimits[category];
+
+    // Verificar si han pasado 24 horas desde la última generación
+    if (currentLimit && currentLimit.lastGeneration) {
+      const lastGen = new Date(currentLimit.lastGeneration);
+      const hoursSinceLastGen = (new Date() - lastGen) / (1000 * 60 * 60);
+
+      if (hoursSinceLastGen >= 24) {
+        // Resetear contador
+        const newLimits = {
+          ...generationLimits,
+          [category]: { count: 1, lastGeneration: now }
+        };
+        await saveGenerationLimits(newLimits);
+        return;
+      }
+    }
+
+    // Incrementar contador
+    const newLimits = {
+      ...generationLimits,
+      [category]: {
+        count: (currentLimit?.count || 0) + 1,
+        lastGeneration: now
+      }
+    };
+    await saveGenerationLimits(newLimits);
   };
 
   // Guardar recetas en AsyncStorage
@@ -601,8 +816,41 @@ const MealPlannerScreen = ({ route }) => {
     }
   };
 
+  // Simular progreso de generación
+  const simulateProgress = (duration = 20000) => {
+    setGenerationProgress(0);
+    const steps = 100;
+    const interval = duration / steps;
+    let currentStep = 0;
+
+    const progressInterval = setInterval(() => {
+      currentStep++;
+      const progress = Math.min(currentStep / steps, 0.95); // Máximo 95% hasta que termine
+      setGenerationProgress(progress);
+
+      if (currentStep >= steps * 0.95) {
+        clearInterval(progressInterval);
+      }
+    }, interval);
+
+    return progressInterval;
+  };
+
   // Generar 3 recetas para una categoría
   const generateRecipesForCategory = async (category) => {
+    // Verificar límite de generación
+    const { canGenerate, remainingAttempts, hoursLeft } = canGenerateInCategory(category);
+
+    if (!canGenerate) {
+      Alert.alert(
+        t.limitReached || 'Límite alcanzado',
+        t.limitReachedMessage?.replace('{{hours}}', hoursLeft) ||
+        `Has alcanzado el límite de 2 generaciones para ${getCategoryName(category)}. Podrás generar de nuevo en ${hoursLeft} horas.`,
+        [{ text: t.ok || 'OK' }]
+      );
+      return;
+    }
+
     // Verificar suscripción antes de generar
     if (isSubscribed === false) {
       showSubscriptionAlert();
@@ -614,53 +862,85 @@ const MealPlannerScreen = ({ route }) => {
       return;
     }
 
+    let progressInterval = null;
+
     try {
-      console.log(`🍽️ Generando 3 recetas para ${category}`);
+      console.log(`🍽️ Generando 1 receta para ${category} con imagen DALL-E`);
+      console.log(`📊 Intentos restantes: ${remainingAttempts}`);
       setGeneratingCategory(category);
 
-      // Generar 3 recetas en paralelo
-      const recipePromises = [];
-      for (let i = 0; i < 3; i++) {
-        recipePromises.push(
-          MealPlanService.suggestMeal(category, preferences, null, null)
-        );
-      }
+      // Iniciar simulación de progreso
+      progressInterval = simulateProgress(20000); // 20 segundos estimados
 
-      const generatedRecipes = await Promise.all(recipePromises);
-      console.log(`✅ Recetas generadas:`, generatedRecipes);
+      // Generar 1 receta
+      const recipe = await MealPlanService.suggestMeal(category, preferences, null, null);
+      console.log(`✅ Receta generada:`, recipe.name);
+      setGenerationProgress(0.6); // 60% al generar receta
 
-      // Agregar ID único e imagen a cada receta
-      const recipesWithMetadata = generatedRecipes.map((recipe, index) => ({
+      // Generar imagen con DALL-E
+      console.log(`🎨 Generando imagen con DALL-E para "${recipe.name}"`);
+      const imageUrl = await MealPlanService.generateRecipeImage(recipe.name, recipe.description);
+      console.log(`✅ Imagen generada:`, imageUrl.substring(0, 100));
+      setGenerationProgress(0.9); // 90% al generar imagen
+
+      // Agregar ID único e imagen a la receta
+      const recipeWithMetadata = {
         ...recipe,
-        id: `${category}_${Date.now()}_${index}`,
+        id: `${category}_${Date.now()}`,
         category: category,
-        image_url: getRandomRecipeImage(category),
+        image_url: imageUrl,
         createdAt: new Date().toISOString()
-      }));
+      };
 
-      // Actualizar estado de recetas
+      // Actualizar estado de recetas (array con 1 receta)
       const newRecipes = {
         ...recipes,
-        [category]: recipesWithMetadata
+        [category]: [recipeWithMetadata]
       };
 
       // Guardar en AsyncStorage
       await saveAllRecipes(newRecipes);
 
-      console.log(`✅ Recetas guardadas para ${category}`);
+      // Incrementar contador de generación
+      await incrementGenerationCount(category);
+
+      // Limpiar imágenes antiguas después de guardar
+      await MealPlanService.cleanOldRecipeImages();
+
+      setGenerationProgress(1); // 100% completado
+
+      console.log(`✅ Receta guardada para ${category}`);
+      console.log(`📊 Generaciones usadas: ${(generationLimits[category]?.count || 0) + 1}/2`);
     } catch (error) {
-      console.error(`❌ Error al generar recetas para ${category}:`, error);
+      console.error(`❌ Error al generar receta para ${category}:`, error);
       Alert.alert(
         t.error || 'Error',
-        `Error al generar recetas: ${error.message}`
+        `Error al generar receta: ${error.message}`
       );
     } finally {
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
       setGeneratingCategory(null);
+      setGenerationProgress(0);
     }
   };
 
-  // Regenerar una receta individual
-  const regenerateSingleRecipe = async (category, recipeIndex) => {
+  // Regenerar la receta de una categoría
+  const regenerateSingleRecipe = async (category, recipeIndex = 0) => {
+    // Verificar límite de generación
+    const { canGenerate, remainingAttempts, hoursLeft } = canGenerateInCategory(category);
+
+    if (!canGenerate) {
+      Alert.alert(
+        t.limitReached || 'Límite alcanzado',
+        t.limitReachedMessage?.replace('{{hours}}', hoursLeft) ||
+        `Has alcanzado el límite de 2 generaciones para ${getCategoryName(category)}. Podrás generar de nuevo en ${hoursLeft} horas.`,
+        [{ text: t.ok || 'OK' }]
+      );
+      return;
+    }
+
     // Verificar suscripción
     if (isSubscribed === false) {
       showSubscriptionAlert();
@@ -672,36 +952,57 @@ const MealPlannerScreen = ({ route }) => {
       return;
     }
 
+    let progressInterval = null;
+
     try {
-      const recipeId = recipes[category][recipeIndex]?.id;
-      console.log(`🔄 Regenerando receta ${recipeIndex} de ${category}`);
+      const recipeId = recipes[category][0]?.id;
+      const oldImageUrl = recipes[category][0]?.image_url;
+      console.log(`🔄 Regenerando receta de ${category} con imagen DALL-E`);
+      console.log(`📊 Intentos restantes: ${remainingAttempts}`);
       setRegeneratingRecipeId(recipeId);
+
+      // Iniciar simulación de progreso
+      progressInterval = simulateProgress(20000);
 
       // Generar nueva receta
       const newRecipe = await MealPlanService.suggestMeal(category, preferences, null, null);
+      console.log(`✅ Nueva receta generada:`, newRecipe.name);
+      setGenerationProgress(0.6);
+
+      // Generar imagen con DALL-E
+      console.log(`🎨 Generando nueva imagen con DALL-E para "${newRecipe.name}"`);
+      const imageUrl = await MealPlanService.generateRecipeImage(newRecipe.name, newRecipe.description);
+      console.log(`✅ Nueva imagen generada`);
+      setGenerationProgress(0.9);
 
       // Agregar metadata
       const recipeWithMetadata = {
         ...newRecipe,
-        id: `${category}_${Date.now()}_${recipeIndex}`,
+        id: `${category}_${Date.now()}`,
         category: category,
-        image_url: getRandomRecipeImage(category),
+        image_url: imageUrl,
         createdAt: new Date().toISOString()
       };
 
-      // Actualizar array de recetas
-      const updatedCategoryRecipes = [...recipes[category]];
-      updatedCategoryRecipes[recipeIndex] = recipeWithMetadata;
-
+      // Actualizar receta (array con 1 receta)
       const newRecipes = {
         ...recipes,
-        [category]: updatedCategoryRecipes
+        [category]: [recipeWithMetadata]
       };
 
       // Guardar
       await saveAllRecipes(newRecipes);
 
-      console.log(`✅ Receta regenerada`);
+      // Incrementar contador de generación
+      await incrementGenerationCount(category);
+
+      // Limpiar imágenes antiguas después de guardar
+      await MealPlanService.cleanOldRecipeImages();
+
+      setGenerationProgress(1);
+
+      console.log(`✅ Receta regenerada para ${category}`);
+      console.log(`📊 Generaciones usadas: ${(generationLimits[category]?.count || 0) + 1}/2`);
     } catch (error) {
       console.error(`❌ Error al regenerar receta:`, error);
       Alert.alert(
@@ -709,7 +1010,11 @@ const MealPlannerScreen = ({ route }) => {
         `Error al regenerar receta: ${error.message}`
       );
     } finally {
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
       setRegeneratingRecipeId(null);
+      setGenerationProgress(0);
     }
   };
 
@@ -909,6 +1214,63 @@ const MealPlannerScreen = ({ route }) => {
     );
   };
 
+  // Renderizar skeleton loader con animación
+  const renderRecipeSkeleton = () => {
+    const opacity = shimmerAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0.3, 0.7],
+    });
+
+    const progressPercentage = Math.round(generationProgress * 100);
+
+    return (
+      <View style={styles.recipeCard}>
+        {/* Skeleton Imagen con barra de progreso */}
+        <Animated.View style={[styles.recipeImage, styles.skeleton, { opacity }]}>
+          <View style={styles.skeletonLoaderContainer}>
+            <Ionicons name="sparkles" size={48} color="#8B5CF6" />
+            <Text style={styles.skeletonLoaderText}>
+              {t.generatingRecipes || 'Generando receta...'}
+            </Text>
+
+            {/* Barra de progreso */}
+            <View style={styles.progressBarContainer}>
+              <View style={styles.progressBarBackground}>
+                <View style={[styles.progressBarFill, { width: `${progressPercentage}%` }]} />
+              </View>
+              <Text style={styles.progressText}>{progressPercentage}%</Text>
+            </View>
+          </View>
+        </Animated.View>
+
+        {/* Skeleton Chips */}
+        <View style={styles.recipeChipsContainer}>
+          {[1, 2, 3, 4].map((item) => (
+            <Animated.View
+              key={item}
+              style={[styles.skeletonChip, { opacity }]}
+            />
+          ))}
+        </View>
+
+        {/* Skeleton Nombre */}
+        <View style={styles.recipeContent}>
+          <Animated.View
+            style={[styles.skeletonTitle, { opacity }]}
+          />
+          <Animated.View
+            style={[styles.skeletonDescription, { opacity }]}
+          />
+        </View>
+
+        {/* Skeleton Botón */}
+        <Animated.View
+          style={[styles.skeletonButton, { opacity }]}
+        />
+      </View>
+    );
+  };
+
   // Renderizar carta de receta
   const renderRecipeCard = (recipe, index, category) => {
     const isRegenerating = regeneratingRecipeId === recipe.id;
@@ -934,19 +1296,30 @@ const MealPlannerScreen = ({ route }) => {
         <View style={styles.recipeChipsContainer}>
           <View style={styles.recipeChip}>
             <Ionicons name="time-outline" size={14} color="#6B7280" />
-            <Text style={styles.recipeChipText}>{recipe.time || '30 min'}</Text>
+            <Text style={styles.recipeChipText}>
+              {recipe.time || `30 ${t.timeUnit || 'min'}`}
+            </Text>
           </View>
           <View style={styles.recipeChip}>
             <Ionicons name="flame-outline" size={14} color="#6B7280" />
-            <Text style={styles.recipeChipText}>{recipe.calories || 450} cal</Text>
+            <Text style={styles.recipeChipText}>
+              {recipe.calories || 450} {t.caloriesUnit || 'cal'}
+            </Text>
           </View>
           <View style={styles.recipeChip}>
             <Ionicons name="star-outline" size={14} color="#6B7280" />
-            <Text style={styles.recipeChipText}>{recipe.difficulty || 'fácil'}</Text>
+            <Text style={styles.recipeChipText}>
+              {recipe.difficulty === 'easy' || recipe.difficulty === 'fácil' || recipe.difficulty === 'facile' ? t.difficultyEasy || 'easy' :
+               recipe.difficulty === 'medium' || recipe.difficulty === 'medio' || recipe.difficulty === 'moyen' ? t.difficultyMedium || 'medium' :
+               recipe.difficulty === 'hard' || recipe.difficulty === 'difícil' || recipe.difficulty === 'difficile' ? t.difficultyHard || 'hard' :
+               recipe.difficulty || t.difficultyMedium || 'medium'}
+            </Text>
           </View>
           <View style={styles.recipeChip}>
             <Ionicons name="people-outline" size={14} color="#6B7280" />
-            <Text style={styles.recipeChipText}>{recipe.servings || 2}</Text>
+            <Text style={styles.recipeChipText}>
+              {recipe.servings || 2} {t.servingsUnit || ''}
+            </Text>
           </View>
         </View>
 
@@ -963,25 +1336,7 @@ const MealPlannerScreen = ({ route }) => {
         </View>
 
         {/* Botón regenerar */}
-        <TouchableOpacity
-          style={styles.regenerateButton}
-          onPress={(e) => {
-            e.stopPropagation();
-            regenerateSingleRecipe(category, index);
-          }}
-          disabled={isRegenerating}
-        >
-          {isRegenerating ? (
-            <ActivityIndicator size="small" color="#8B5CF6" />
-          ) : (
-            <>
-              <Ionicons name="refresh" size={16} color="#8B5CF6" />
-              <Text style={styles.regenerateButtonText}>
-                {t.regenerate || 'Regenerar'}
-              </Text>
-            </>
-          )}
-        </TouchableOpacity>
+
       </TouchableOpacity>
     );
   };
@@ -1200,58 +1555,81 @@ const MealPlannerScreen = ({ route }) => {
             style={styles.dayScrollView}
             contentContainerStyle={styles.dayScrollContent}
           >
-            {/* Loading state */}
-            {generatingCategory === activeCategory && (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#8B5CF6" />
-                <Text style={styles.loadingText}>
-                  {t.generatingRecipes || 'Generando recetas con IA...'}
-                </Text>
-              </View>
-            )}
+            {/* Empty state */}
+            {generatingCategory !== activeCategory && recipes[activeCategory].length === 0 ? (
+              renderEmptyState(activeCategory)
+            ) : (
+              <>
+                {/* Header con botón regenerar todas */}
+                <View style={styles.categoryHeader}>
+                  <Text style={styles.categoryTitle}>
+                    {getCategoryName(activeCategory)}
+                  </Text>
+                  {(() => {
+                    const { canGenerate, remainingAttempts, hoursLeft } = canGenerateInCategory(activeCategory);
+                    const isBlocked = !canGenerate;
 
-            {/* Empty state o recetas */}
-            {generatingCategory !== activeCategory && (
-              recipes[activeCategory].length === 0 ? (
-                renderEmptyState(activeCategory)
-              ) : (
-                <>
-                  {/* Header con botón regenerar todas */}
-                  <View style={styles.categoryHeader}>
-                    <Text style={styles.categoryTitle}>
-                      {getCategoryName(activeCategory)}
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.regenerateAllButton}
-                      onPress={() => {
-                        Alert.alert(
-                          t.regenerateAll || 'Regenerar todas',
-                          t.regenerateAllConfirm || '¿Quieres regenerar las 3 recetas?',
-                          [
-                            { text: t.cancel || 'Cancelar', style: 'cancel' },
-                            {
-                              text: t.regenerate || 'Regenerar',
-                              onPress: () => generateRecipesForCategory(activeCategory)
-                            }
-                          ]
-                        );
-                      }}
-                    >
-                      <Ionicons name="refresh" size={18} color="#8B5CF6" />
-                      <Text style={styles.regenerateAllButtonText}>
-                        {t.regenerateAll || 'Regenerar Todo'}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+                    return (
+                      <TouchableOpacity
+                        style={[
+                          styles.regenerateAllButton,
+                          isBlocked && styles.regenerateAllButtonBlocked
+                        ]}
+                        onPress={() => {
+                          if (isBlocked) {
+                            Alert.alert(
+                              t.limitReached || 'Límite alcanzado',
+                              t.limitReachedMessage?.replace('{{hours}}', hoursLeft) ||
+                              `Has alcanzado el límite de 2 generaciones. Podrás generar de nuevo en ${hoursLeft} horas.`,
+                              [{ text: t.ok || 'OK' }]
+                            );
+                            return;
+                          }
 
-                  {/* Grid de recetas */}
-                  <View style={styles.recipesGrid}>
-                    {recipes[activeCategory].map((recipe, index) =>
+                          Alert.alert(
+                            t.regenerate || 'Regenerar',
+                            `${t.regenerateConfirm || '¿Quieres regenerar la receta?'}\n\n${t.attemptsRemaining || 'Intentos restantes'}: ${remainingAttempts}/2`,
+                            [
+                              { text: t.cancel || 'Cancelar', style: 'cancel' },
+                              {
+                                text: t.regenerate || 'Regenerar',
+                                onPress: () => generateRecipesForCategory(activeCategory)
+                              }
+                            ]
+                          );
+                        }}
+                        disabled={isBlocked}
+                      >
+                        <Ionicons
+                          name={isBlocked ? "lock-closed" : "refresh"}
+                          size={18}
+                          color={isBlocked ? "#9CA3AF" : "#8B5CF6"}
+                        />
+                        <Text style={[
+                          styles.regenerateAllButtonText,
+                          isBlocked && styles.regenerateAllButtonTextBlocked
+                        ]}>
+                          {isBlocked
+                            ? `${t.blocked || 'Bloqueado'} (${hoursLeft}h)`
+                            : `${t.regenerate || 'Regenerar'} (${remainingAttempts}/2)`
+                          }
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })()}
+                </View>
+
+                {/* Grid de recetas o skeleton */}
+                <View style={styles.recipesGrid}>
+                  {generatingCategory === activeCategory ? (
+                    renderRecipeSkeleton()
+                  ) : (
+                    recipes[activeCategory].map((recipe, index) =>
                       renderRecipeCard(recipe, index, activeCategory)
-                    )}
-                  </View>
-                </>
-              )
+                    )
+                  )}
+                </View>
+              </>
             )}
           </ScrollView>
         </Animated.View>
@@ -1403,18 +1781,6 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 
-  // ========== LOADING STATE ==========
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 60,
-  },
-  loadingText: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginTop: 12,
-  },
 
   // ========== HEADER DE CATEGORÍA ==========
   dayScrollView: {
@@ -1445,31 +1811,42 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     gap: 6,
   },
+  regenerateAllButtonBlocked: {
+    backgroundColor: 'rgba(156, 163, 175, 0.1)',
+    opacity: 0.7,
+  },
   regenerateAllButtonText: {
     fontSize: 13,
     fontWeight: '600',
     color: '#8B5CF6',
   },
+  regenerateAllButtonTextBlocked: {
+    color: '#9CA3AF',
+  },
 
   // ========== RECIPE CARDS ==========
   recipesGrid: {
     gap: 16,
+    alignItems: 'center',
+    paddingBottom: 24,
   },
   recipeCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.45)',
-    borderRadius: 20,
+    borderRadius: 24,
     overflow: 'hidden',
     borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.6)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 6,
+    width: '100%',
+    maxWidth: 500,
   },
   recipeImage: {
     width: '100%',
-    height: 180,
+    height: 280,
     backgroundColor: '#E5E7EB',
   },
   recipeChipsContainer: {
@@ -1497,10 +1874,10 @@ const styles = StyleSheet.create({
     paddingTop: 4,
   },
   recipeName: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: '700',
     color: '#1F2937',
-    marginBottom: 6,
+    marginBottom: 8,
   },
   recipeDescription: {
     fontSize: 14,
@@ -1660,6 +2037,79 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#fff',
+  },
+
+  // ========== SKELETON LOADER ==========
+  skeleton: {
+    backgroundColor: '#D1D5DB',
+  },
+  skeletonLoaderContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(209, 213, 219, 0.9)',
+    gap: 16,
+    paddingHorizontal: 24,
+  },
+  skeletonLoaderText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#8B5CF6',
+    marginTop: 8,
+  },
+  progressBarContainer: {
+    width: '100%',
+    maxWidth: 280,
+    alignItems: 'center',
+    gap: 8,
+  },
+  progressBarBackground: {
+    width: '100%',
+    height: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#8B5CF6',
+    borderRadius: 8,
+  },
+  progressText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#8B5CF6',
+  },
+  skeletonChip: {
+    width: 70,
+    height: 26,
+    backgroundColor: '#D1D5DB',
+    borderRadius: 8,
+  },
+  skeletonTitle: {
+    width: '80%',
+    height: 24,
+    backgroundColor: '#D1D5DB',
+    borderRadius: 6,
+    marginBottom: 10,
+  },
+  skeletonDescription: {
+    width: '100%',
+    height: 40,
+    backgroundColor: '#D1D5DB',
+    borderRadius: 6,
+  },
+  skeletonButton: {
+    width: 120,
+    height: 36,
+    backgroundColor: '#D1D5DB',
+    borderRadius: 10,
+    marginHorizontal: 16,
+    marginBottom: 16,
   },
 });
 

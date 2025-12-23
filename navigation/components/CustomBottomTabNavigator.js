@@ -780,8 +780,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
   const [nameModalVisible, setNameModalVisible] = useState(false)
   const [listName, setListName] = useState("") // Modal de éxito
 
-  // Refs para funciones de MealPlanner modals
-  const mealPlannerCalendarRef = useRef(null)
+  // Ref para función de MealPlanner preferences modal
   const mealPlannerPreferencesRef = useRef(null)
 
   // Ref para función de CalendarPlanner add event
@@ -1736,7 +1735,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
       }
     },
     {
-      label: mealPlannerTexts.title,
+      label: menuTexts.menuTitle,
       description: mainItemDescriptions.mealPlanner[deviceLanguage] || mainItemDescriptions.mealPlanner['en'],
       icon: "restaurant-outline",
       color: "#8B5CF6",
@@ -1905,7 +1904,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
               initialParams={{
                 onNavigateToHistory: () => setActiveTab("History"),
                 onNavigateToSubscribe: () => setActiveTab("Subscribe"),
-                registerCalendarOpener: (fn) => { mealPlannerCalendarRef.current = fn },
                 registerPreferencesOpener: (fn) => { mealPlannerPreferencesRef.current = fn }
               }}
             />
@@ -2125,7 +2123,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
              activeTab === "PriceCalculator" ? (currentTranslations.priceCalculatorTitle || "Calculate Prices") :
              activeTab === "HandwrittenList" ? (currentTranslations.manualList || "Manual List") :
              activeTab === "Recommendations" ? (menuTexts.recommendations || "Recomendaciones") :
-             activeTab === "MealPlanner" ? mealPlannerTexts.title :
+             activeTab === "MealPlanner" ? menuTexts.menuTitle :
              activeTab === "CalendarPlanner" ? (currentTranslations.shoppingCalendar || "Shopping Calendar") :
              activeTab === "WidgetInfo" ? "Widgets" :
              "BuyVoice"}
@@ -2133,36 +2131,32 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
 
         </View>
 
-        {/* Header right icons for MealPlanner */}
+        {/* Header right chip for MealPlanner - Preferences */}
         {activeTab === "MealPlanner" && (
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginRight: 12 }}>
-            <TouchableOpacity
-              onPress={() => mealPlannerCalendarRef.current && mealPlannerCalendarRef.current()}
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                backgroundColor: "rgba(107, 114, 128, 0.1)",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Ionicons name="calendar-outline" size={20} color="#6B7280" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => mealPlannerPreferencesRef.current && mealPlannerPreferencesRef.current()}
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                backgroundColor: "rgba(107, 114, 128, 0.1)",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Ionicons name="settings-outline" size={20} color="#6B7280" />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => mealPlannerPreferencesRef.current && mealPlannerPreferencesRef.current()}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingHorizontal: 8,
+              paddingVertical: 4,
+              backgroundColor: 'rgba(107, 114, 128, 0.08)',
+              borderRadius: 12,
+              borderWidth: 1,
+              borderColor: 'rgba(107, 114, 128, 0.2)',
+              marginRight: 12,
+            }}
+          >
+            <Ionicons name="settings-outline" size={16} color="#6B7280" style={{ marginRight: 3 }} />
+            <Text style={{
+              color: '#6b7280',
+              fontSize: 12,
+              fontWeight: '500',
+              marginRight: 1
+            }}>
+              {mealPlannerTexts.preferences}
+            </Text>
+          </TouchableOpacity>
         )}
 
 
