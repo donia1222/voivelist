@@ -7,10 +7,11 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
-  Dimensions,
   Platform,
   Animated,
   Easing,
+  Image,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,9 +20,6 @@ import * as RNLocalize from 'react-native-localize';
 import { useTheme } from '../ThemeContext';
 import MealPlanService from '../services/MealPlanService';
 import ShoppingListConsolidator from '../services/ShoppingListConsolidator';
-import MealSlot from './components/MealSlot';
-import MealSelectorModal from './components/MealSelectorModal';
-import CalendarSelectorModal from './components/CalendarSelectorModal';
 import PreferencesModal from './components/PreferencesModal';
 import ListNameModal from './components/ListNameModal';
 import ListSelectionModal from './components/ListSelectionModal';
@@ -48,23 +46,46 @@ const MealPlannerScreen = ({ route }) => {
   const [generatingMeals, setGeneratingMeals] = useState({});
   const [generatingMenu, setGeneratingMenu] = useState(false);
 
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [selectedMealType, setSelectedMealType] = useState(null);
-  const [selectedMeal, setSelectedMeal] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [activeDay, setActiveDay] = useState('monday');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [detailModalVisible, setDetailModalVisible] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('breakfast');
+
+  // Recetas por categoría
+  const [recipes, setRecipes] = useState({
+    breakfast: [],
+    lunch: [],
+    dinner: [],
+    snacks: []
+  });
+
+  // Estados de generación
+  const [generatingCategory, setGeneratingCategory] = useState(null);
+  const [regeneratingRecipeId, setRegeneratingRecipeId] = useState(null);
+
+  // Estado para ingredientes pendientes de añadir
+  const [pendingIngredients, setPendingIngredients] = useState([]);
+  const [pendingListType, setPendingListType] = useState(null);
+  const [pendingDay, setPendingDay] = useState(null);
+
+  // Estado para checkboxes de ingredientes en el modal
+  const [selectedIngredients, setSelectedIngredients] = useState([]);
+
+  // Estado para límites diarios de generación
+  const [dailyLimits, setDailyLimits] = useState({
+    breakfast: false,
+    lunch: false,
+    dinner: false,
+    snacks: false
+  });
 
   const scrollViewRef = useRef(null);
-  const dayRefs = useRef({});
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  // Modales de header
-  const [calendarModalVisible, setCalendarModalVisible] = useState(false);
+  // Modales
   const [preferencesModalVisible, setPreferencesModalVisible] = useState(false);
   const [listSelectionModalVisible, setListSelectionModalVisible] = useState(false);
   const [listNameModalVisible, setListNameModalVisible] = useState(false);
-  const [pendingListType, setPendingListType] = useState(null); // 'week' o 'day'
-  const [pendingDay, setPendingDay] = useState(null); // para lista de día específico
   const [selectedExistingList, setSelectedExistingList] = useState(null);
   const [selectedExistingListIndex, setSelectedExistingListIndex] = useState(null);
 
@@ -80,23 +101,89 @@ const MealPlannerScreen = ({ route }) => {
   // Estado de suscripción
   const [isSubscribed, setIsSubscribed] = useState(null);
 
-  const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+  const categories = ['breakfast', 'lunch', 'dinner', 'snacks'];
 
-  const getDayAbbreviation = (day) => {
-    const abbreviations = {
-      monday: t.mondayShort || 'Lu',
-      tuesday: t.tuesdayShort || 'Ma',
-      wednesday: t.wednesdayShort || 'Mi',
-      thursday: t.thursdayShort || 'Ju',
-      friday: t.fridayShort || 'Vi',
-      saturday: t.saturdayShort || 'Sá',
-      sunday: t.sundayShort || 'Do'
+  // URLs de imágenes de Unsplash por categoría
+  const RECIPE_IMAGES = {
+    breakfast: [
+      'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&q=80', // Pancakes
+      'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&q=80', // Avena
+      'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&q=80', // Tostadas
+      'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80', // Huevos
+      'https://images.unsplash.com/photo-1547496502-affa22d38842?w=400&q=80', // Smoothie bowl
+      'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?w=400&q=80', // Croissant
+      'https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=400&q=80', // Waffles
+      'https://images.unsplash.com/photo-1495147466023-ac5c588e2e94?w=400&q=80', // Yogurt
+      'https://images.unsplash.com/photo-1568254183919-78a4f43a2877?w=400&q=80', // Toast
+      'https://images.unsplash.com/photo-1513442542250-854d436a73f2?w=400&q=80', // Frutas
+    ],
+    lunch: [
+      'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80', // Ensalada
+      'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&q=80', // Pasta
+      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80', // Pizza
+      'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80', // Hamburguesa
+      'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80', // Bowl
+      'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=400&q=80', // Tacos
+      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80', // Plato preparado
+      'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400&q=80', // Comida
+      'https://images.unsplash.com/photo-1547584370-2cc98b8b8dc8?w=400&q=80', // Sushi
+      'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&q=80', // Curry
+    ],
+    dinner: [
+      'https://images.unsplash.com/photo-1560963805-6c64417e3413?w=400&q=80', // Salmón
+      'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=400&q=80', // Pollo
+      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80', // Ensalada cena
+      'https://images.unsplash.com/photo-1606728035253-49e8a23146de?w=400&q=80', // Pescado
+      'https://images.unsplash.com/photo-1529694157872-4e0c0f3b238b?w=400&q=80', // Vegetales
+      'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&q=80', // Bowl cena
+      'https://images.unsplash.com/photo-1588137378633-dea1336ce1e2?w=400&q=80', // Wrap
+      'https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?w=400&q=80', // Sopas
+      'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=80', // Plato saludable
+      'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400&q=80', // Carne
+    ],
+    snacks: [
+      'https://images.unsplash.com/photo-1559163499-413811fb2344?w=400&q=80', // Snacks saludables
+      'https://images.unsplash.com/photo-1564414734627-5b9b85bc66cb?w=400&q=80', // Frutas snack
+      'https://images.unsplash.com/photo-1519915212116-7cfef71f1d3e?w=400&q=80', // Nueces
+      'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=400&q=80', // Granola
+      'https://images.unsplash.com/photo-1549388604-817d15fa5a44?w=400&q=80', // Smoothie
+      'https://images.unsplash.com/photo-1590080876132-06d5e33fa0e4?w=400&q=80', // Bocadillos
+      'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=400&q=80', // Barras
+      'https://images.unsplash.com/photo-1607532941433-304659e8198a?w=400&q=80', // Chips
+      'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&q=80', // Hummus
+      'https://images.unsplash.com/photo-1562059392-096320bccc7e?w=400&q=80', // Energy balls
+    ]
+  };
+
+  // Obtener imagen aleatoria para una categoría
+  const getRandomRecipeImage = (category) => {
+    const images = RECIPE_IMAGES[category] || RECIPE_IMAGES.breakfast;
+    const randomIndex = Math.floor(Math.random() * images.length);
+    return images[randomIndex];
+  };
+
+  const getCategoryIcon = (category) => {
+    const icons = {
+      breakfast: 'sunny-outline',
+      lunch: 'restaurant-outline',
+      dinner: 'moon-outline',
+      snacks: 'cafe-outline'
     };
-    return abbreviations[day] || day;
+    return icons[category] || 'nutrition-outline';
+  };
+
+  const getCategoryName = (category) => {
+    const names = {
+      breakfast: t.breakfast || 'Desayuno',
+      lunch: t.lunch || 'Comida',
+      dinner: t.dinner || 'Cena',
+      snacks: t.snacks || 'Snacks'
+    };
+    return names[category] || category;
   };
 
   const getDayName = (day) => {
-    const dayNames = {
+    const names = {
       monday: t.monday || 'Lunes',
       tuesday: t.tuesday || 'Martes',
       wednesday: t.wednesday || 'Miércoles',
@@ -105,19 +192,11 @@ const MealPlannerScreen = ({ route }) => {
       saturday: t.saturday || 'Sábado',
       sunday: t.sunday || 'Domingo'
     };
-    return dayNames[day] || day;
+    return names[day] || day;
   };
 
-  const getMonthName = (monthIndex) => {
-    const months = [
-      t.january, t.february, t.march, t.april, t.may, t.june,
-      t.july, t.august, t.september, t.october, t.november, t.december
-    ];
-    return months[monthIndex] || monthIndex + 1;
-  };
-
-  const scrollToDay = (day) => {
-    if (day === activeDay) return;
+  const scrollToCategory = (category) => {
+    if (category === activeCategory) return;
 
     // Fade out
     Animated.timing(fadeAnim, {
@@ -126,7 +205,7 @@ const MealPlannerScreen = ({ route }) => {
       easing: Easing.out(Easing.ease),
       useNativeDriver: true,
     }).start(() => {
-      setActiveDay(day);
+      setActiveCategory(category);
       // Fade in
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -137,49 +216,54 @@ const MealPlannerScreen = ({ route }) => {
     });
   };
 
-  const getTodayDay = () => {
-    const today = new Date();
-    const dayOfWeek = today.getDay(); // 0 = domingo, 1 = lunes, ..., 6 = sábado
-    const dayMapping = {
-      0: 'sunday',
-      1: 'monday',
-      2: 'tuesday',
-      3: 'wednesday',
-      4: 'thursday',
-      5: 'friday',
-      6: 'saturday'
-    };
-    return dayMapping[dayOfWeek];
-  };
-
   useEffect(() => {
-    loadWeekPlan();
+    loadAllRecipes();
     loadPreferences();
     checkSubscriptionStatus();
-  }, [currentWeekStart]);
-
-  // Ir al día de hoy cuando se carga la pantalla
-  useEffect(() => {
-    const todayDay = getTodayDay();
-    // Verificar si el día de hoy está dentro de la semana actual
-    const today = new Date();
-    const weekStart = MealPlanService.getWeekStart(today);
-
-    if (weekStart.getTime() === currentWeekStart.getTime()) {
-      // Solo cambiar si estamos en la semana actual
-      setActiveDay(todayDay);
-    }
   }, []);
+
+  // Inicializar checkboxes cuando se selecciona una receta
+  useEffect(() => {
+    if (selectedRecipe && selectedRecipe.ingredients) {
+      setSelectedIngredients(selectedRecipe.ingredients.map(() => true));
+    }
+  }, [selectedRecipe]);
+
+  // Cargar recetas desde AsyncStorage
+  const loadAllRecipes = async () => {
+    try {
+      setLoading(true);
+      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+      const savedRecipesJson = await AsyncStorage.getItem('@recipe_explorer_v2');
+
+      if (savedRecipesJson) {
+        const savedRecipes = JSON.parse(savedRecipesJson);
+        setRecipes(savedRecipes);
+      }
+    } catch (error) {
+      console.error('Error al cargar recetas:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Guardar recetas en AsyncStorage
+  const saveAllRecipes = async (newRecipes) => {
+    try {
+      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+      await AsyncStorage.setItem('@recipe_explorer_v2', JSON.stringify(newRecipes));
+      setRecipes(newRecipes);
+    } catch (error) {
+      console.error('Error al guardar recetas:', error);
+    }
+  };
 
   // Registrar funciones para abrir modales desde el header
   useEffect(() => {
-    if (registerCalendarOpener) {
-      registerCalendarOpener(() => setCalendarModalVisible(true));
-    }
     if (registerPreferencesOpener) {
       registerPreferencesOpener(() => setPreferencesModalVisible(true));
     }
-  }, [registerCalendarOpener, registerPreferencesOpener]);
+  }, [registerPreferencesOpener]);
 
   // Verificar estado de suscripción
   const checkSubscriptionStatus = async () => {
@@ -256,19 +340,6 @@ const MealPlannerScreen = ({ route }) => {
     return MealPlanService.formatDateKey(currentWeekStart) === MealPlanService.formatDateKey(today);
   };
 
-  const openMealSelector = (day, mealType, existingMeal = null) => {
-    setSelectedDay(day);
-    setSelectedMealType(mealType);
-    setSelectedMeal(existingMeal);
-    setModalVisible(true);
-  };
-
-  const closeMealSelector = () => {
-    setModalVisible(false);
-    setSelectedDay(null);
-    setSelectedMealType(null);
-    setSelectedMeal(null);
-  };
 
   const handleMealAdded = async (meal) => {
     try {
@@ -376,6 +447,11 @@ const MealPlannerScreen = ({ route }) => {
         shoppingList = ShoppingListConsolidator.consolidateIngredients(tempPlan);
         const dayName = getDayName(pendingDay);
         defaultName = listName || `${t.dayList} ${dayName}`;
+      } else if (pendingListType === 'recipe') {
+        // Usar ingredientes pendientes de la receta
+        shoppingList = pendingIngredients;
+        const today = new Date().toLocaleDateString();
+        defaultName = listName || `${t.recipeIngredients || 'Ingredientes de receta'} - ${today}`;
       }
 
       if (!shoppingList || shoppingList.length === 0) {
@@ -525,65 +601,115 @@ const MealPlannerScreen = ({ route }) => {
     }
   };
 
-  const generateSingleMealWithAI = async (day, mealType) => {
+  // Generar 3 recetas para una categoría
+  const generateRecipesForCategory = async (category) => {
     // Verificar suscripción antes de generar
     if (isSubscribed === false) {
       showSubscriptionAlert();
       return;
     }
 
-    const mealKey = `${day}_${mealType}`;
+    if (!preferences) {
+      Alert.alert(t.error || 'Error', t.errorLoadingPreferences || 'Error al cargar preferencias');
+      return;
+    }
 
     try {
-      console.log(`🍽️ [generateSingleMeal] Generando SOLO ${mealType} para ${day}`);
-      console.log(`🍽️ [generateSingleMeal] currentWeekStart:`, currentWeekStart);
+      console.log(`🍽️ Generando 3 recetas para ${category}`);
+      setGeneratingCategory(category);
 
-      if (!preferences) {
-        Alert.alert(t.error, t.errorLoadingPreferences);
-        return;
+      // Generar 3 recetas en paralelo
+      const recipePromises = [];
+      for (let i = 0; i < 3; i++) {
+        recipePromises.push(
+          MealPlanService.suggestMeal(category, preferences, null, null)
+        );
       }
 
-      setGeneratingMeals(prev => ({ ...prev, [mealKey]: true }));
+      const generatedRecipes = await Promise.all(recipePromises);
+      console.log(`✅ Recetas generadas:`, generatedRecipes);
 
-      console.log(`🍽️ [generateSingleMeal] Llamando a suggestMeal para ${mealType}...`);
-      const suggestedMeal = await MealPlanService.suggestMeal(mealType, preferences, weekPlan, day);
-      console.log(`🍽️ [generateSingleMeal] Comida sugerida:`, suggestedMeal);
-      console.log(`🍽️ [generateSingleMeal] Guardando en día: ${day}, tipo: ${mealType}`);
+      // Agregar ID único e imagen a cada receta
+      const recipesWithMetadata = generatedRecipes.map((recipe, index) => ({
+        ...recipe,
+        id: `${category}_${Date.now()}_${index}`,
+        category: category,
+        image_url: getRandomRecipeImage(category),
+        createdAt: new Date().toISOString()
+      }));
 
-      const success = await MealPlanService.addMealToSlot(
-        currentWeekStart,
-        day,
-        mealType,
-        suggestedMeal
-      );
+      // Actualizar estado de recetas
+      const newRecipes = {
+        ...recipes,
+        [category]: recipesWithMetadata
+      };
 
-      console.log(`🍽️ [generateSingleMeal] Guardado exitoso: ${success}`);
+      // Guardar en AsyncStorage
+      await saveAllRecipes(newRecipes);
 
-      if (success) {
-        console.log(`🍽️ [generateSingleMeal] Recargando plan...`);
-        console.log(`🍽️ [generateSingleMeal] Día activo antes de recargar: ${activeDay}`);
-
-        // Recargar el plan manteniendo el día actual
-        await loadWeekPlan(true);
-        console.log(`🍽️ [generateSingleMeal] Plan recargado`);
-
-        // Limpiar estado de generación DESPUÉS de recargar el plan
-        setGeneratingMeals(prev => {
-          const newState = { ...prev };
-          delete newState[mealKey];
-          return newState;
-        });
-      }
+      console.log(`✅ Recetas guardadas para ${category}`);
     } catch (error) {
-      console.error('❌ [generateSingleMeal] Error al generar comida con IA:', error);
-      Alert.alert(t.error, `${t.errorGeneratingMeal}: ${error.message}`);
+      console.error(`❌ Error al generar recetas para ${category}:`, error);
+      Alert.alert(
+        t.error || 'Error',
+        `Error al generar recetas: ${error.message}`
+      );
+    } finally {
+      setGeneratingCategory(null);
+    }
+  };
 
-      // Limpiar estado de generación en caso de error
-      setGeneratingMeals(prev => {
-        const newState = { ...prev };
-        delete newState[mealKey];
-        return newState;
-      });
+  // Regenerar una receta individual
+  const regenerateSingleRecipe = async (category, recipeIndex) => {
+    // Verificar suscripción
+    if (isSubscribed === false) {
+      showSubscriptionAlert();
+      return;
+    }
+
+    if (!preferences) {
+      Alert.alert(t.error || 'Error', t.errorLoadingPreferences || 'Error al cargar preferencias');
+      return;
+    }
+
+    try {
+      const recipeId = recipes[category][recipeIndex]?.id;
+      console.log(`🔄 Regenerando receta ${recipeIndex} de ${category}`);
+      setRegeneratingRecipeId(recipeId);
+
+      // Generar nueva receta
+      const newRecipe = await MealPlanService.suggestMeal(category, preferences, null, null);
+
+      // Agregar metadata
+      const recipeWithMetadata = {
+        ...newRecipe,
+        id: `${category}_${Date.now()}_${recipeIndex}`,
+        category: category,
+        image_url: getRandomRecipeImage(category),
+        createdAt: new Date().toISOString()
+      };
+
+      // Actualizar array de recetas
+      const updatedCategoryRecipes = [...recipes[category]];
+      updatedCategoryRecipes[recipeIndex] = recipeWithMetadata;
+
+      const newRecipes = {
+        ...recipes,
+        [category]: updatedCategoryRecipes
+      };
+
+      // Guardar
+      await saveAllRecipes(newRecipes);
+
+      console.log(`✅ Receta regenerada`);
+    } catch (error) {
+      console.error(`❌ Error al regenerar receta:`, error);
+      Alert.alert(
+        t.error || 'Error',
+        `Error al regenerar receta: ${error.message}`
+      );
+    } finally {
+      setRegeneratingRecipeId(null);
     }
   };
 
@@ -759,8 +885,266 @@ const MealPlannerScreen = ({ route }) => {
     }
   };
 
+  // Renderizar estado vacío (sin recetas)
+  const renderEmptyState = (category) => {
+    return (
+      <View style={styles.emptyStateContainer}>
+        <Ionicons name={getCategoryIcon(category)} size={64} color="#9CA3AF" />
+        <Text style={styles.emptyStateTitle}>
+          {t.noRecipes || 'No hay recetas aún'}
+        </Text>
+        <Text style={styles.emptyStateSubtitle}>
+          {t.generateRecipesHint || 'Genera 3 recetas deliciosas con IA'}
+        </Text>
+        <TouchableOpacity
+          style={styles.generateButton}
+          onPress={() => generateRecipesForCategory(category)}
+        >
+          <Ionicons name="sparkles" size={20} color="#fff" />
+          <Text style={styles.generateButtonText}>
+            {t.generateRecipes || 'Generar Recetas'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
+  // Renderizar carta de receta
+  const renderRecipeCard = (recipe, index, category) => {
+    const isRegenerating = regeneratingRecipeId === recipe.id;
 
+    return (
+      <TouchableOpacity
+        key={recipe.id}
+        style={styles.recipeCard}
+        onPress={() => {
+          setSelectedRecipe(recipe);
+          setDetailModalVisible(true);
+        }}
+        activeOpacity={0.7}
+      >
+        {/* Imagen */}
+        <Image
+          source={{ uri: recipe.image_url }}
+          style={styles.recipeImage}
+          resizeMode="cover"
+        />
+
+        {/* Chips informativos */}
+        <View style={styles.recipeChipsContainer}>
+          <View style={styles.recipeChip}>
+            <Ionicons name="time-outline" size={14} color="#6B7280" />
+            <Text style={styles.recipeChipText}>{recipe.time || '30 min'}</Text>
+          </View>
+          <View style={styles.recipeChip}>
+            <Ionicons name="flame-outline" size={14} color="#6B7280" />
+            <Text style={styles.recipeChipText}>{recipe.calories || 450} cal</Text>
+          </View>
+          <View style={styles.recipeChip}>
+            <Ionicons name="star-outline" size={14} color="#6B7280" />
+            <Text style={styles.recipeChipText}>{recipe.difficulty || 'fácil'}</Text>
+          </View>
+          <View style={styles.recipeChip}>
+            <Ionicons name="people-outline" size={14} color="#6B7280" />
+            <Text style={styles.recipeChipText}>{recipe.servings || 2}</Text>
+          </View>
+        </View>
+
+        {/* Nombre y descripción */}
+        <View style={styles.recipeContent}>
+          <Text style={styles.recipeName} numberOfLines={2}>
+            {recipe.name}
+          </Text>
+          {recipe.description && (
+            <Text style={styles.recipeDescription} numberOfLines={2}>
+              {recipe.description}
+            </Text>
+          )}
+        </View>
+
+        {/* Botón regenerar */}
+        <TouchableOpacity
+          style={styles.regenerateButton}
+          onPress={(e) => {
+            e.stopPropagation();
+            regenerateSingleRecipe(category, index);
+          }}
+          disabled={isRegenerating}
+        >
+          {isRegenerating ? (
+            <ActivityIndicator size="small" color="#8B5CF6" />
+          ) : (
+            <>
+              <Ionicons name="refresh" size={16} color="#8B5CF6" />
+              <Text style={styles.regenerateButtonText}>
+                {t.regenerate || 'Regenerar'}
+              </Text>
+            </>
+          )}
+        </TouchableOpacity>
+      </TouchableOpacity>
+    );
+  };
+
+  // Renderizar modal de detalle de receta
+  const renderRecipeDetailModal = () => {
+    if (!selectedRecipe) return null;
+
+    return (
+      <Modal
+        visible={detailModalVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setDetailModalVisible(false)}
+      >
+        <SafeAreaView style={styles.modalContainer}>
+          {/* Header del modal */}
+          <View style={styles.modalHeader}>
+            <TouchableOpacity
+              onPress={() => setDetailModalVisible(false)}
+              style={styles.modalCloseButton}
+            >
+              <Ionicons name="close" size={28} color="#374151" />
+            </TouchableOpacity>
+            <Text style={styles.modalTitle} numberOfLines={1}>
+              {selectedRecipe.name}
+            </Text>
+            <View style={styles.modalHeaderSpacer} />
+          </View>
+
+          <ScrollView
+            style={styles.modalScrollView}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Imagen grande */}
+            <Image
+              source={{ uri: selectedRecipe.image_url }}
+              style={styles.modalRecipeImage}
+              resizeMode="cover"
+            />
+
+            {/* Chips informativos */}
+            <View style={styles.modalChipsContainer}>
+              <View style={styles.modalChip}>
+                <Ionicons name="time-outline" size={18} color="#6B7280" />
+                <Text style={styles.modalChipText}>{selectedRecipe.time || '30 min'}</Text>
+              </View>
+              <View style={styles.modalChip}>
+                <Ionicons name="flame-outline" size={18} color="#6B7280" />
+                <Text style={styles.modalChipText}>{selectedRecipe.calories || 450} cal</Text>
+              </View>
+              <View style={styles.modalChip}>
+                <Ionicons name="star-outline" size={18} color="#6B7280" />
+                <Text style={styles.modalChipText}>{selectedRecipe.difficulty || 'fácil'}</Text>
+              </View>
+              <View style={styles.modalChip}>
+                <Ionicons name="people-outline" size={18} color="#6B7280" />
+                <Text style={styles.modalChipText}>{selectedRecipe.servings || 2} personas</Text>
+              </View>
+            </View>
+
+            {/* Descripción */}
+            {selectedRecipe.description && (
+              <View style={styles.modalSection}>
+                <Text style={styles.modalSectionTitle}>
+                  {t.description || 'Descripción'}
+                </Text>
+                <Text style={styles.modalDescription}>
+                  {selectedRecipe.description}
+                </Text>
+              </View>
+            )}
+
+            {/* Ingredientes con checkboxes */}
+            <View style={styles.modalSection}>
+              <Text style={styles.modalSectionTitle}>
+                {t.ingredients || 'Ingredientes'}
+              </Text>
+              {selectedRecipe.ingredients?.map((ingredient, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.ingredientRow}
+                  onPress={() => {
+                    const newSelected = [...selectedIngredients];
+                    newSelected[index] = !newSelected[index];
+                    setSelectedIngredients(newSelected);
+                  }}
+                >
+                  <Ionicons
+                    name={selectedIngredients[index] ? 'checkbox' : 'square-outline'}
+                    size={24}
+                    color="#8B5CF6"
+                  />
+                  <Text style={styles.ingredientText}>
+                    {ingredient.item} - {ingredient.quantity} {ingredient.unit}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Instrucciones */}
+            {selectedRecipe.instructions && selectedRecipe.instructions.length > 0 && (
+              <View style={styles.modalSection}>
+                <Text style={styles.modalSectionTitle}>
+                  {t.instructions || 'Instrucciones'}
+                </Text>
+                {selectedRecipe.instructions.map((instruction, index) => (
+                  <View key={index} style={styles.instructionRow}>
+                    <View style={styles.instructionNumber}>
+                      <Text style={styles.instructionNumberText}>{index + 1}</Text>
+                    </View>
+                    <Text style={styles.instructionText}>{instruction}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            <View style={styles.modalBottomPadding} />
+          </ScrollView>
+
+          {/* Footer fijo con botón de añadir a lista */}
+          <View style={styles.modalFooter}>
+            <TouchableOpacity
+              style={styles.addToListButton}
+              onPress={() => {
+                setDetailModalVisible(false);
+                // Filtrar ingredientes seleccionados
+                const selected = selectedRecipe.ingredients?.filter((_, i) => selectedIngredients[i]) || [];
+                handleAddIngredientsToShoppingList(selected);
+              }}
+            >
+              <Ionicons name="cart-outline" size={20} color="#fff" />
+              <Text style={styles.addToListButtonText}>
+                {t.addToShoppingList || 'Añadir a Lista de Compras'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
+    );
+  };
+
+  // Función para añadir ingredientes a la lista de compras
+  const handleAddIngredientsToShoppingList = (ingredients) => {
+    if (!ingredients || ingredients.length === 0) {
+      Alert.alert(
+        t.noIngredientsSelected || 'Sin ingredientes',
+        t.selectIngredients || 'Selecciona al menos un ingrediente'
+      );
+      return;
+    }
+
+    console.log('🛒 Ingredientes a añadir:', ingredients);
+
+    // Guardar ingredientes en estado
+    setPendingIngredients(ingredients);
+    setPendingListType('recipe');
+    setSelectedExistingList(null);
+    setSelectedExistingListIndex(null);
+
+    // Abrir modal de selección de lista
+    setListSelectionModalVisible(true);
+  };
 
   return (
     <LinearGradient
@@ -770,7 +1154,7 @@ const MealPlannerScreen = ({ route }) => {
       style={styles.gradientContainer}
     >
       <SafeAreaView style={[styles.container]} edges={['top']}>
-        {/* Scroll horizontal de días con glassmorphism */}
+        {/* Tabs de categorías */}
         <View style={styles.daysWrapper}>
           <ScrollView
             horizontal
@@ -778,168 +1162,141 @@ const MealPlannerScreen = ({ route }) => {
             style={styles.daysScrollContainer}
             contentContainerStyle={styles.daysScrollContent}
           >
-            {days.map((day) => (
+            {categories.map((category) => (
               <TouchableOpacity
-                key={`tab-${day}`}
+                key={`tab-${category}`}
                 style={[
                   styles.dayTab,
-                  activeDay === day && styles.dayTabActive
+                  activeCategory === category && styles.dayTabActive
                 ]}
-                onPress={() => scrollToDay(day)}
+                onPress={() => scrollToCategory(category)}
               >
+                <Ionicons
+                  name={getCategoryIcon(category)}
+                  size={18}
+                  color={activeCategory === category ? "#374151" : "#6B7280"}
+                  style={styles.tabIcon}
+                />
                 <Text style={[
                   styles.dayTabText,
-                  activeDay === day && styles.dayTabTextActive
+                  activeCategory === category && styles.dayTabTextActive
                 ]}>
-                  {getDayAbbreviation(day)}
+                  {getCategoryName(category)}
                 </Text>
-                {hasMeals(day) && !isDayComplete(day) && (
-                  <View style={styles.dayTabDot} />
-                )}
-                {isDayComplete(day) && (
-                  <Ionicons name="checkmark-circle" size={12} color={activeDay === day ? "#374151" : "#10B981"} style={styles.dayTabCheck} />
+                {recipes[category].length > 0 && (
+                  <View style={styles.recipeBadge}>
+                    <Text style={styles.recipeBadgeText}>{recipes[category].length}</Text>
+                  </View>
                 )}
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
 
-      <Animated.View style={[styles.scrollView, { opacity: fadeAnim }]}>
-        {(() => {
-          const day = activeDay;
-          const dayDate = MealPlanService.getDateForDay(day, currentWeekStart);
-          const dayName = getDayName(day);
-          const monthName = getMonthName(dayDate.getMonth());
-          const formattedDate = `${dayDate.getDate()} ${monthName}`;
-
-          return (
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={styles.dayScrollView}
-              contentContainerStyle={styles.dayScrollContent}
-            >
-              <View style={styles.dayContainer}>
-                <View style={styles.dayHeader}>
-                  <Text style={styles.dayName}>{dayName}</Text>
-                  <Text style={styles.dayDate}>{formattedDate}</Text>
-                </View>
-
-                <MealSlot
-                  mealType="breakfast"
-                  meal={weekPlan?.plan?.[day]?.breakfast}
-                  onPress={() => openMealSelector(day, 'breakfast', weekPlan?.plan?.[day]?.breakfast)}
-                  onRemove={() => handleRemoveMeal(day, 'breakfast')}
-                  onGenerateWithAI={() => generateSingleMealWithAI(day, 'breakfast')}
-                  isGenerating={generatingMeals[`${day}_breakfast`]}
-                  translations={t}
-                />
-
-                <MealSlot
-                  mealType="lunch"
-                  meal={weekPlan?.plan?.[day]?.lunch}
-                  onPress={() => openMealSelector(day, 'lunch', weekPlan?.plan?.[day]?.lunch)}
-                  onRemove={() => handleRemoveMeal(day, 'lunch')}
-                  onGenerateWithAI={() => generateSingleMealWithAI(day, 'lunch')}
-                  isGenerating={generatingMeals[`${day}_lunch`]}
-                  translations={t}
-                />
-
-                <MealSlot
-                  mealType="dinner"
-                  meal={weekPlan?.plan?.[day]?.dinner}
-                  onPress={() => openMealSelector(day, 'dinner', weekPlan?.plan?.[day]?.dinner)}
-                  onRemove={() => handleRemoveMeal(day, 'dinner')}
-                  onGenerateWithAI={() => generateSingleMealWithAI(day, 'dinner')}
-                  isGenerating={generatingMeals[`${day}_dinner`]}
-                  translations={t}
-                />
-
-                {/* Botón generar lista para este día */}
-                <TouchableOpacity
-                  style={styles.generateDayListButton}
-                  onPress={() => openListSelectionModal('day', day)}
-                >
-                  <Ionicons name="cart-outline" size={18} color="#2E7D32" />
-                  <Text style={styles.generateDayListButtonText}>{t.dayShoppingList}</Text>
-                </TouchableOpacity>
+        {/* Contenido de la categoría activa */}
+        <Animated.View style={[styles.scrollView, { opacity: fadeAnim }]}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={styles.dayScrollView}
+            contentContainerStyle={styles.dayScrollContent}
+          >
+            {/* Loading state */}
+            {generatingCategory === activeCategory && (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#8B5CF6" />
+                <Text style={styles.loadingText}>
+                  {t.generatingRecipes || 'Generando recetas con IA...'}
+                </Text>
               </View>
-            </ScrollView>
-          );
-        })()}
-      </Animated.View>
+            )}
 
-      <MealSelectorModal
-        visible={modalVisible}
-        onClose={closeMealSelector}
-        selectedDay={selectedDay ? getDayName(selectedDay) : ''}
-        selectedMealType={selectedMealType}
-        onMealAdded={handleMealAdded}
-        preferences={preferences}
-        existingMeal={selectedMeal}
-        isSubscribed={isSubscribed}
-        onNavigateToSubscribe={onNavigateToSubscribe}
-        onOpenPreferences={() => {
-          closeMealSelector();
-          setPreferencesModalVisible(true);
-        }}
-      />
+            {/* Empty state o recetas */}
+            {generatingCategory !== activeCategory && (
+              recipes[activeCategory].length === 0 ? (
+                renderEmptyState(activeCategory)
+              ) : (
+                <>
+                  {/* Header con botón regenerar todas */}
+                  <View style={styles.categoryHeader}>
+                    <Text style={styles.categoryTitle}>
+                      {getCategoryName(activeCategory)}
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.regenerateAllButton}
+                      onPress={() => {
+                        Alert.alert(
+                          t.regenerateAll || 'Regenerar todas',
+                          t.regenerateAllConfirm || '¿Quieres regenerar las 3 recetas?',
+                          [
+                            { text: t.cancel || 'Cancelar', style: 'cancel' },
+                            {
+                              text: t.regenerate || 'Regenerar',
+                              onPress: () => generateRecipesForCategory(activeCategory)
+                            }
+                          ]
+                        );
+                      }}
+                    >
+                      <Ionicons name="refresh" size={18} color="#8B5CF6" />
+                      <Text style={styles.regenerateAllButtonText}>
+                        {t.regenerateAll || 'Regenerar Todo'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
 
-      <CalendarSelectorModal
-        visible={calendarModalVisible}
-        onClose={() => setCalendarModalVisible(false)}
-        currentWeekStart={currentWeekStart}
-        onWeekSelected={(weekStart) => {
-          setCurrentWeekStart(weekStart);
-        }}
-        onGenerateShoppingList={(weekStart) => {
-          setCurrentWeekStart(weekStart);
-          openListSelectionModal('week');
-        }}
-      />
+                  {/* Grid de recetas */}
+                  <View style={styles.recipesGrid}>
+                    {recipes[activeCategory].map((recipe, index) =>
+                      renderRecipeCard(recipe, index, activeCategory)
+                    )}
+                  </View>
+                </>
+              )
+            )}
+          </ScrollView>
+        </Animated.View>
 
-      <PreferencesModal
-        visible={preferencesModalVisible}
-        onClose={() => setPreferencesModalVisible(false)}
-        onPreferencesUpdated={handlePreferencesUpdated}
-        isSubscribed={isSubscribed}
-        onNavigateToSubscribe={onNavigateToSubscribe}
-      />
+        {/* Modal de detalle de receta */}
+        {renderRecipeDetailModal()}
 
-      <ListSelectionModal
-        visible={listSelectionModalVisible}
-        onClose={() => setListSelectionModalVisible(false)}
-        onCreateNew={handleCreateNewList}
-        onSelectExisting={handleSelectExistingList}
-      />
+        {/* Modales de configuración y listas */}
+        <PreferencesModal
+          visible={preferencesModalVisible}
+          onClose={() => setPreferencesModalVisible(false)}
+          onPreferencesUpdated={handlePreferencesUpdated}
+        />
 
-      <ListNameModal
-        visible={listNameModalVisible}
-        onClose={() => setListNameModalVisible(false)}
-        onConfirm={generateShoppingList}
-        defaultName={
-          pendingListType === 'week'
-            ? `${t.weeklyList} ${weekPlan?.weekRange || ''}`
-            : pendingDay
-            ? `${t.dayList} ${getDayName(pendingDay)}`
-            : t.shopping
-        }
-      />
+        <ListSelectionModal
+          visible={listSelectionModalVisible}
+          onClose={() => setListSelectionModalVisible(false)}
+          onCreateNew={handleCreateNewList}
+          onSelectExisting={handleSelectExistingList}
+        />
 
-      <CustomAlert
-        visible={alertVisible}
-        onClose={() => setAlertVisible(false)}
-        title={alertConfig.title}
-        message={alertConfig.message}
-        type={alertConfig.type}
-        buttons={alertConfig.buttons}
-      />
+        <ListNameModal
+          visible={listNameModalVisible}
+          onClose={() => setListNameModalVisible(false)}
+          onSubmit={(name) => {
+            setListNameModalVisible(false);
+            generateShoppingList(name);
+          }}
+        />
+
+        <CustomAlert
+          visible={alertVisible}
+          title={alertConfig.title}
+          message={alertConfig.message}
+          type={alertConfig.type}
+          buttons={alertConfig.buttons}
+          onClose={() => setAlertVisible(false)}
+        />
       </SafeAreaView>
     </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  // Contenedor principal con gradiente
+  // ========== CONTENEDORES PRINCIPALES ==========
   gradientContainer: {
     flex: 1,
   },
@@ -947,15 +1304,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
   },
-  loadingContainer: {
+  scrollView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
   },
-  // Días de la semana con glassmorphism
+
+  // ========== TABS ==========
   daysWrapper: {
     marginHorizontal: 16,
+    marginTop: 12,
     marginBottom: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 18,
@@ -964,26 +1320,24 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   daysScrollContainer: {
-    maxHeight: 44,
+    maxHeight: 60,
     backgroundColor: 'transparent',
   },
   daysScrollContent: {
     paddingHorizontal: 12,
     gap: 8,
-    justifyContent: 'center',
     alignItems: 'center',
-    flexGrow: 1,
   },
   dayTab: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.3)',
-    minWidth: 44,
-    alignItems: 'center',
-    position: 'relative',
+    gap: 6,
   },
   dayTabActive: {
     backgroundColor: 'rgba(255, 255, 255, 0.45)',
@@ -997,81 +1351,72 @@ const styles = StyleSheet.create({
   dayTabTextActive: {
     color: '#374151',
   },
-  dayTabDate: {
-    fontSize: 9,
-    fontWeight: '500',
-    color: '#9CA3AF',
-    marginTop: 2,
+  tabIcon: {
+    marginRight: 2,
   },
-  dayTabDateActive: {
-    color: '#374151',
+  recipeBadge: {
+    backgroundColor: '#8B5CF6',
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    marginLeft: 4,
   },
-  dayTabDot: {
-    position: 'absolute',
-    top: 2,
-    right: 2,
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: '#fbbf24',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-  },
-  dayTabCheck: {
-    position: 'absolute',
-    top: 2,
-    right: 2,
-  },
-  // Contenedor de listas semanales
-  weekListContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    marginHorizontal: 16,
-    marginTop: 20,
-    marginBottom: 10,
-    padding: 16,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-  },
-  weekListHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 16,
-    gap: 12,
-  },
-  weekListTextContainer: {
-    flex: 1,
-  },
-  weekListTitle: {
-    fontSize: 17,
+  recipeBadgeText: {
+    fontSize: 11,
     fontWeight: '700',
-    color: '#1F2937',
-    marginBottom: 4,
+    color: '#fff',
   },
-  weekListSubtitle: {
-    fontSize: 13,
+
+  // ========== EMPTY STATE ==========
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 32,
+  },
+  emptyStateTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#374151',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptyStateSubtitle: {
+    fontSize: 14,
     color: '#6B7280',
-    lineHeight: 18,
+    textAlign: 'center',
+    marginBottom: 24,
   },
-  weekListButton: {
+  generateButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    paddingVertical: 12,
+    backgroundColor: '#8B5CF6',
+    paddingHorizontal: 24,
+    paddingVertical: 14,
     borderRadius: 14,
     gap: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
   },
-  weekListButtonText: {
-    color: '#374151',
+  generateButtonText: {
     fontSize: 15,
     fontWeight: '700',
+    color: '#fff',
   },
-  scrollView: {
+
+  // ========== LOADING STATE ==========
+  loadingContainer: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 60,
   },
+  loadingText: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginTop: 12,
+  },
+
+  // ========== HEADER DE CATEGORÍA ==========
   dayScrollView: {
     flex: 1,
   },
@@ -1079,82 +1424,242 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
-  dayContainerHorizontal: {
-    width: Dimensions.get('window').width,
-    paddingHorizontal: 16,
-  },
-  // Tarjeta de día con glassmorphism
-  dayContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.22)',
-    marginVertical: 8,
-    padding: 18,
-    borderRadius: 24,
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.35)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  dayHeader: {
+  categoryHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 14,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+    marginBottom: 16,
+    marginTop: 8,
   },
-  dayName: {
-    fontSize: 20,
+  categoryTitle: {
+    fontSize: 24,
     fontWeight: '800',
     color: '#1F2937',
   },
-  dayDate: {
+  regenerateAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+    gap: 6,
+  },
+  regenerateAllButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#8B5CF6',
+  },
+
+  // ========== RECIPE CARDS ==========
+  recipesGrid: {
+    gap: 16,
+  },
+  recipeCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    borderRadius: 20,
+    overflow: 'hidden',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  recipeImage: {
+    width: '100%',
+    height: 180,
+    backgroundColor: '#E5E7EB',
+  },
+  recipeChipsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 12,
+    gap: 8,
+  },
+  recipeChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    gap: 4,
+  },
+  recipeChipText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#6B7280',
+  },
+  recipeContent: {
+    padding: 16,
+    paddingTop: 4,
+  },
+  recipeName: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 6,
+  },
+  recipeDescription: {
+    fontSize: 14,
+    color: '#6B7280',
+    lineHeight: 20,
+  },
+  regenerateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    paddingVertical: 12,
+    borderRadius: 10,
+    gap: 6,
+  },
+  regenerateButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#8B5CF6',
+  },
+
+  // ========== MODAL DE DETALLE ==========
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  modalCloseButton: {
+    padding: 4,
+  },
+  modalTitle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1F2937',
+    textAlign: 'center',
+    marginHorizontal: 16,
+  },
+  modalHeaderSpacer: {
+    width: 36,
+  },
+  modalScrollView: {
+    flex: 1,
+  },
+  modalRecipeImage: {
+    width: '100%',
+    height: 240,
+    backgroundColor: '#E5E7EB',
+  },
+  modalChipsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 16,
+    backgroundColor: '#fff',
+    gap: 12,
+  },
+  modalChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F3F4F6',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+    gap: 6,
+  },
+  modalChipText: {
     fontSize: 14,
     fontWeight: '600',
     color: '#6B7280',
   },
-  // Botones con glassmorphism
-  generateDayButton: {
+  modalSection: {
+    backgroundColor: '#fff',
+    padding: 16,
+    marginTop: 8,
+  },
+  modalSectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 12,
+  },
+  modalDescription: {
+    fontSize: 15,
+    color: '#4B5563',
+    lineHeight: 22,
+  },
+  ingredientRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(139, 92, 246, 0.35)',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 14,
-    marginTop: 12,
-    gap: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.35)',
+    paddingVertical: 10,
+    gap: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
   },
-  generateDayButtonText: {
-    fontSize: 14,
-    fontWeight: '700',
+  ingredientText: {
+    flex: 1,
+    fontSize: 15,
     color: '#374151',
   },
-  generateDayListButton: {
+  instructionRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+    gap: 12,
+  },
+  instructionNumber: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#8B5CF6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  instructionNumberText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  instructionText: {
+    flex: 1,
+    fontSize: 15,
+    color: '#374151',
+    lineHeight: 22,
+  },
+  modalBottomPadding: {
+    height: 100,
+  },
+  modalFooter: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+  },
+  addToListButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(76, 175, 80, 0.12)',
-    paddingVertical: 12,
-    paddingHorizontal: 18,
+    backgroundColor: '#10B981',
+    paddingVertical: 16,
     borderRadius: 14,
-    marginTop: 10,
     gap: 8,
-    borderWidth: 1.5,
-    borderColor: 'rgba(76, 175, 80, 0.25)',
   },
-  generateDayListButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#2E7D32',
-  },
-  bottomPadding: {
-    height: 40,
+  addToListButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#fff',
   },
 });
 

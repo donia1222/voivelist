@@ -1433,23 +1433,7 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
                 resizeMode="contain"
               />
               {/* Current image (on top, fades out) */}
-              <Animated.Image
-                source={
-                  widgetImageIndex === 0 ? require('../../assets/images/widget.png') :
-                  widgetImageIndex === 1 ? require('../../assets/images/widget2.png') :
-                  widgetImageIndex === 2 ? require('../../assets/images/widget3.png') :
-                  widgetImageIndex === 3 ? require('../../assets/images/widget4.png') :
-                  require('../../assets/images/widget5.png')
-                }
-                style={{
-                  width: '100%',
-                  height: 260,
-                  borderRadius: 20,
-                  position: 'absolute',
-                  opacity: widgetImageOpacity,
-                }}
-                resizeMode="contain"
-              />
+
             </View>
 
             {/* Informative Text */}

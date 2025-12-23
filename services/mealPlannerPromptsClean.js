@@ -549,6 +549,14 @@ RESPOND ONLY WITH JSON:
   "name": "Dish name",
   "servings": ${preferences.servings},
   "time": "30 min",
+  "difficulty": "easy",
+  "calories": 450,
+  "description": "Brief and attractive description of the dish in 2-3 lines",
+  "instructions": [
+    "Step 1: Specific action...",
+    "Step 2: Next action...",
+    "Step 3: Cook and serve..."
+  ],
   "ingredients": [
     {"item": "Ingredient", "quantity": "100", "unit": "g"}
   ]
@@ -577,6 +585,14 @@ NUR MIT JSON ANTWORTEN:
   "name": "Gerichtname",
   "servings": ${preferences.servings},
   "time": "30 min",
+  "difficulty": "einfach",
+  "calories": 450,
+  "description": "Kurze und ansprechende Beschreibung des Gerichts in 2-3 Zeilen",
+  "instructions": [
+    "Schritt 1: Spezifische Aktion...",
+    "Schritt 2: Nächste Aktion...",
+    "Schritt 3: Kochen und servieren..."
+  ],
   "ingredients": [
     {"item": "Zutat", "quantity": "100", "unit": "g"}
   ]
@@ -605,6 +621,14 @@ RÉPONDEZ UNIQUEMENT AVEC JSON:
   "name": "Nom du plat",
   "servings": ${preferences.servings},
   "time": "30 min",
+  "difficulty": "facile",
+  "calories": 450,
+  "description": "Description brève et attrayante du plat en 2-3 lignes",
+  "instructions": [
+    "Étape 1: Action spécifique...",
+    "Étape 2: Action suivante...",
+    "Étape 3: Cuire et servir..."
+  ],
   "ingredients": [
     {"item": "Ingrédient", "quantity": "100", "unit": "g"}
   ]
@@ -633,6 +657,14 @@ RISPONDI SOLO CON JSON:
   "name": "Nome del piatto",
   "servings": ${preferences.servings},
   "time": "30 min",
+  "difficulty": "facile",
+  "calories": 450,
+  "description": "Descrizione breve e attraente del piatto in 2-3 righe",
+  "instructions": [
+    "Passo 1: Azione specifica...",
+    "Passo 2: Azione successiva...",
+    "Passo 3: Cuocere e servire..."
+  ],
   "ingredients": [
     {"item": "Ingrediente", "quantity": "100", "unit": "g"}
   ]
@@ -661,6 +693,14 @@ RESPONDA APENAS COM JSON:
   "name": "Nome do prato",
   "servings": ${preferences.servings},
   "time": "30 min",
+  "difficulty": "fácil",
+  "calories": 450,
+  "description": "Descrição breve e atraente do prato em 2-3 linhas",
+  "instructions": [
+    "Passo 1: Ação específica...",
+    "Passo 2: Próxima ação...",
+    "Passo 3: Cozinhar e servir..."
+  ],
   "ingredients": [
     {"item": "Ingrediente", "quantity": "100", "unit": "g"}
   ]
@@ -689,6 +729,14 @@ ANTWOORD ALLEEN MET JSON:
   "name": "Gerechtnaam",
   "servings": ${preferences.servings},
   "time": "30 min",
+  "difficulty": "makkelijk",
+  "calories": 450,
+  "description": "Korte en aantrekkelijke beschrijving van het gerecht in 2-3 regels",
+  "instructions": [
+    "Stap 1: Specifieke actie...",
+    "Stap 2: Volgende actie...",
+    "Stap 3: Koken en serveren..."
+  ],
   "ingredients": [
     {"item": "Ingrediënt", "quantity": "100", "unit": "g"}
   ]
@@ -717,6 +765,14 @@ JSONのみで応答してください:
   "name": "料理名",
   "servings": ${preferences.servings},
   "time": "30分",
+  "difficulty": "簡単",
+  "calories": 450,
+  "description": "2-3行で料理の簡潔で魅力的な説明",
+  "instructions": [
+    "ステップ1: 具体的なアクション...",
+    "ステップ2: 次のアクション...",
+    "ステップ3: 調理して提供..."
+  ],
   "ingredients": [
     {"item": "材料", "quantity": "100", "unit": "g"}
   ]
@@ -745,6 +801,14 @@ ${cuisineRule}${proteinRestrictions}${dishRestrictions}${weeklyDishRestrictions}
   "name": "व्यंजन का नाम",
   "servings": ${preferences.servings},
   "time": "30 मिनट",
+  "difficulty": "आसान",
+  "calories": 450,
+  "description": "2-3 पंक्तियों में व्यंजन का संक्षिप्त और आकर्षक विवरण",
+  "instructions": [
+    "चरण 1: विशिष्ट क्रिया...",
+    "चरण 2: अगली क्रिया...",
+    "चरण 3: पकाएं और परोसें..."
+  ],
   "ingredients": [
     {"item": "सामग्री", "quantity": "100", "unit": "g"}
   ]
@@ -773,6 +837,14 @@ SADECE JSON İLE YANITLAYIN:
   "name": "Yemek adı",
   "servings": ${preferences.servings},
   "time": "30 dakika",
+  "difficulty": "kolay",
+  "calories": 450,
+  "description": "2-3 satırda yemeğin kısa ve çekici açıklaması",
+  "instructions": [
+    "Adım 1: Belirli eylem...",
+    "Adım 2: Sonraki eylem...",
+    "Adım 3: Pişirin ve servis yapın..."
+  ],
   "ingredients": [
     {"item": "Malzeme", "quantity": "100", "unit": "g"}
   ]
@@ -801,6 +873,14 @@ RESPONDE SOLO CON JSON:
   "name": "Nombre del plato",
   "servings": ${preferences.servings},
   "time": "30 min",
+  "difficulty": "fácil",
+  "calories": 450,
+  "description": "Descripción breve y atractiva del plato en 2-3 líneas",
+  "instructions": [
+    "Paso 1: Acción específica...",
+    "Paso 2: Siguiente acción...",
+    "Paso 3: Cocinar y servir..."
+  ],
   "ingredients": [
     {"item": "Ingrediente", "quantity": "100", "unit": "g"}
   ]
