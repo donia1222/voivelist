@@ -37,6 +37,34 @@ import PushNotification from "react-native-push-notification"
 import WidgetService from "../services/WidgetService"
 import ExpandedListModal from "../components/ExpandedListModal"
 import { productTranslations } from "../services/SeasonalProductsData"
+import Voice from "@react-native-community/voice"
+import axios from "axios"
+import { realTimeAnalysisPrompts } from "./translations/homeScreenTranslations"
+
+const API_KEY_ANALIZE = process.env.API_KEY_ANALIZE
+
+const analyzeTextRealTime = async (text) => {
+  const deviceLanguage = RNLocalize.getLocales()[0].languageCode
+  const analysisPrompt = realTimeAnalysisPrompts[deviceLanguage] || realTimeAnalysisPrompts["en"]
+
+  try {
+    const response = await axios.post(API_KEY_ANALIZE, {
+      model: "gpt-4.1",
+      messages: [{ role: "user", content: `${analysisPrompt} "${text}"` }],
+      max_tokens: 50,
+    })
+
+    const result = response.data.choices[0].message.content.trim()
+    if (result === 'NONE' || result === '') {
+      return []
+    }
+
+    return result.split(',').map(item => item.trim().toLowerCase())
+  } catch (error) {
+    console.error("Error analyzing text:", error)
+    return []
+  }
+}
 
 const screenWidth = Dimensions.get("window").width
 const { width, height } = Dimensions.get("window")
@@ -125,6 +153,7 @@ const HistoryScreen = ({ navigation, route }) => {
   const deviceLanguage = RNLocalize.getLocales()[0].languageCode
   const currentLabels = translationsHistorial[deviceLanguage] || translationsHistorial["en"]
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [flatListHeight, setFlatListHeight] = useState(0)
   const [selectedListIndex, setSelectedListIndex] = useState(0)
   const [actionsModalVisible, setActionsModalVisible] = useState(false)
   const [selectedItemIndex, setSelectedItemIndex] = useState(0)
@@ -175,6 +204,16 @@ const HistoryScreen = ({ navigation, route }) => {
   const [editingItemIndex, setEditingItemIndex] = useState(null)
   const [editingListIndex, setEditingListIndex] = useState(null)
   const [editingItemText, setEditingItemText] = useState("")
+
+  // Voice add states
+  const [addMethodModalVisible, setAddMethodModalVisible] = useState(false)
+  const [addMethodIndex, setAddMethodIndex] = useState(null)
+  const [voiceAddModalVisible, setVoiceAddModalVisible] = useState(false)
+  const [voiceStarted, setVoiceStarted] = useState(false)
+  const [voiceDetectedItems, setVoiceDetectedItems] = useState([])
+  const [voiceResults, setVoiceResults] = useState([])
+  const voiceAnalysisTimeoutRef = useRef(null)
+  const voicePulseAnim = useRef(new Animated.Value(1)).current
 
   // Configurar notificaciones push (solo iOS)
   useEffect(() => {
@@ -1314,6 +1353,182 @@ const HistoryScreen = ({ navigation, route }) => {
     setExpandedModalVisible(true)
   }
 
+  // === Voice add functions ===
+  const languageMap = {
+    en: "en-US", es: "es-ES", de: "de-DE", fr: "fr-FR", it: "it-IT",
+    pt: "pt-PT", nl: "nl-NL", ru: "ru-RU", ja: "ja-JP", ar: "ar-SA",
+    tr: "tr-TR", hu: "hu-HU", hi: "hi-IN",
+  }
+
+  const showAddMethodModal = (index) => {
+    setAddMethodIndex(index)
+    setAddMethodModalVisible(true)
+  }
+
+  const handleWrittenOption = () => {
+    setAddMethodModalVisible(false)
+    setAutoOpenAddModal(true)
+    openExpandedListModal(addMethodIndex)
+  }
+
+  const handleSpokenOption = () => {
+    setAddMethodModalVisible(false)
+    setVoiceDetectedItems([])
+    setVoiceResults([])
+    setVoiceAddModalVisible(true)
+    startVoiceRecognition()
+  }
+
+  const startVoiceRecognition = async () => {
+    const lang = RNLocalize.getLocales()[0].languageCode
+    const recognitionLanguage = languageMap[lang] || "en-US"
+
+    // Limpiar listeners y estado previo antes de iniciar
+    try {
+      await Voice.destroy()
+      Voice.removeAllListeners()
+    } catch (e) {}
+
+    Voice.onSpeechStart = () => {
+      setVoiceStarted(true)
+      startVoicePulseAnimation()
+    }
+
+    Voice.onSpeechRecognized = () => {}
+
+    Voice.onSpeechError = (e) => {
+      console.error("Voice error:", e)
+      setVoiceStarted(false)
+      voicePulseAnim.setValue(1)
+    }
+
+    Voice.onSpeechResults = async (e) => {
+      const items = e.value
+      setVoiceResults(items)
+
+      if (voiceAnalysisTimeoutRef.current) {
+        clearTimeout(voiceAnalysisTimeoutRef.current)
+      }
+
+      voiceAnalysisTimeoutRef.current = setTimeout(async () => {
+        if (items.length > 0) {
+          const latestText = items[items.length - 1]
+          const identifiedItems = await analyzeTextRealTime(latestText)
+
+          setVoiceDetectedItems(prevWords => {
+            const newWords = [...prevWords]
+
+            identifiedItems.forEach(newItem => {
+              const newItemLower = newItem.toLowerCase().trim()
+
+              const existingSimilar = newWords.find(existing => {
+                const existingLower = existing.toLowerCase().trim()
+
+                if (existingLower === newItemLower) return true
+
+                if (existingLower.includes(newItemLower) || newItemLower.includes(existingLower)) {
+                  return true
+                }
+
+                if (Math.abs(existingLower.length - newItemLower.length) <= 2) {
+                  let differences = 0
+                  const maxLen = Math.max(existingLower.length, newItemLower.length)
+                  for (let i = 0; i < maxLen; i++) {
+                    if (existingLower[i] !== newItemLower[i]) differences++
+                  }
+                  if (differences <= 2) return true
+                }
+
+                return false
+              })
+
+              if (!existingSimilar) {
+                newWords.push(newItem)
+              } else {
+                const existingIndex = newWords.findIndex(existing =>
+                  existing.toLowerCase().trim() === existingSimilar.toLowerCase().trim()
+                )
+                if (newItemLower.length > existingSimilar.toLowerCase().trim().length) {
+                  newWords[existingIndex] = newItem
+                }
+              }
+            })
+
+            return newWords
+          })
+        }
+      }, 150)
+    }
+
+    try {
+      await Voice.start(recognitionLanguage)
+    } catch (e) {
+      console.error("Error starting voice:", e)
+    }
+  }
+
+  const startVoicePulseAnimation = () => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(voicePulseAnim, {
+          toValue: 1.3,
+          duration: 600,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(voicePulseAnim, {
+          toValue: 1,
+          duration: 600,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start()
+  }
+
+  const stopVoiceAndAddItems = async () => {
+    try {
+      await Voice.stop()
+      Voice.removeAllListeners()
+    } catch (e) {
+      console.error("Error stopping voice:", e)
+    }
+
+    setVoiceStarted(false)
+    voicePulseAnim.setValue(1)
+
+    if (voiceDetectedItems.length > 0 && addMethodIndex !== null) {
+      const newHistory = [...history]
+      voiceDetectedItems.forEach(item => {
+        newHistory[addMethodIndex].list.push(item)
+      })
+      await saveHistory(newHistory)
+    }
+
+    setVoiceAddModalVisible(false)
+    setVoiceDetectedItems([])
+    setVoiceResults([])
+
+    if (voiceAnalysisTimeoutRef.current) {
+      clearTimeout(voiceAnalysisTimeoutRef.current)
+    }
+  }
+
+  const closeVoiceModal = async () => {
+    try {
+      await Voice.stop()
+      Voice.removeAllListeners()
+    } catch (e) {}
+    setVoiceStarted(false)
+    voicePulseAnim.setValue(1)
+    setVoiceAddModalVisible(false)
+    setVoiceDetectedItems([])
+    setVoiceResults([])
+    if (voiceAnalysisTimeoutRef.current) {
+      clearTimeout(voiceAnalysisTimeoutRef.current)
+    }
+  }
+
   // Función para mostrar modal de favoritos específico
   const showFavoritesModal = (category) => {
     setActiveFavoriteCategory(category)
@@ -1578,10 +1793,10 @@ const HistoryScreen = ({ navigation, route }) => {
   }, [successModalVisible])
 
   const renderHistoryItem = ({ item, index }) => (
-    <View style={modernStyles.historyCard}>
-      
+    <View style={{ width: width, height: height - 340 }}>
+    <View style={[modernStyles.historyCard, { flex: 1 }]}>
       <View style={modernStyles.cardHeader}>
-        
+
         {!favoritesModalVisible && editingIndex === index ? (
           <View style={modernStyles.editingContainer}>
             <TextInput
@@ -1610,7 +1825,7 @@ const HistoryScreen = ({ navigation, route }) => {
         ) : (
           <View style={modernStyles.titleContainer}>
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-     
+
               <Text style={[modernStyles.cardTitle, isSmallIPhone && {fontSize: 16}, { flex: 1 }]}>{item.name}</Text>
             </View>
             <TouchableOpacity
@@ -1756,24 +1971,6 @@ const HistoryScreen = ({ navigation, route }) => {
 
           return (
             <View style={[isActive && { opacity: 0.8 }]}>
-              {showCategoryTitle && (
-                <View style={{
-                  paddingHorizontal: 12,
-                  paddingVertical: 4,
-                  marginTop: idx === 0 ? 0 : 8,
-                  marginBottom: 4
-                }}>
-                  <Text style={{
-                    fontSize: 11,
-                    fontWeight: '500',
-                    color: '#9ca3af',
-                    textTransform: 'uppercase',
-                    letterSpacing: 0.5
-                  }}>
-                    {category}
-                  </Text>
-                </View>
-              )}
 
               {editingListIndex === index && editingItemIndex === listItemIndex ? (
                 // Modo edición
@@ -1903,49 +2100,53 @@ const HistoryScreen = ({ navigation, route }) => {
             keyExtractor={(item) => item.key}
             onDragEnd={onDragEnd}
             style={modernStyles.listContent}
+            contentContainerStyle={{ paddingBottom: 60 }}
             showsVerticalScrollIndicator={false}
+            ListFooterComponent={history.length > 1 ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  paddingHorizontal: 8,
+                  paddingTop: 12,
+                  paddingBottom: 4,
+                  alignItems: 'center',
+                }}
+              >
+                {history.map((listItem, chipIndex) => (
+                  <TouchableOpacity
+                    key={chipIndex}
+                    onPress={() => {
+                      flatListRef.current?.scrollToIndex({ index: chipIndex, animated: true })
+                    }}
+                    style={{
+                      paddingHorizontal: 14,
+                      paddingVertical: 7,
+                      borderRadius: 16,
+                      backgroundColor: currentIndex === chipIndex ? '#6366f1' : 'rgba(99, 102, 241, 0.1)',
+                      marginRight: 8,
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={{
+                      fontSize: 13,
+                      fontWeight: '600',
+                      color: currentIndex === chipIndex ? '#fff' : '#6366f1',
+                    }} numberOfLines={1}>
+                      {listItem.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            ) : null}
           />
         )
       })()}
 
 
-      {/* Footer fijo con barra de progreso o botón de eliminar */}
-      {(() => {
-        const currentCompletedItems = completedItems[index] || [];
-        const validCompletedItems = currentCompletedItems.filter(itemIndex =>
-          itemIndex >= 0 && itemIndex < item.list.length
-        );
-        const completedCount = validCompletedItems.length;
-        const totalCount = item.list.length;
-        const allCompleted = totalCount > 0 && completedCount === totalCount;
-        const progress = totalCount > 0 ? completedCount / totalCount : 0;
+      {/* Barra de progreso eliminada */}
 
-        return (
-          <View style={modernStyles.progressBarFooter}>
-            {allCompleted ? (
-              <TouchableOpacity
-                style={modernStyles.deleteListButton}
-                onPress={() => confirmRemoveListFromHistory(index)}
-              >
-                <Ionicons name="trash-outline" size={21} color="#ef4444" />
-              </TouchableOpacity>
-            ) : (
-              <View style={modernStyles.progressBarBackground}>
-                <Animated.View
-                  style={[
-                    modernStyles.progressBarFill,
-                    {
-                      width: `${progress * 100}%`,
-                      opacity: completedCount === 0 ? 0.3 : 1,
-                    }
-                  ]}
-                />
-              </View>
-            )}
-          </View>
-        );
-      })()}
-
+    </View>
     </View>
   )
 
@@ -2027,6 +2228,7 @@ const HistoryScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       ) : (
+        <>
         <FlatList
           data={history}
           renderItem={renderHistoryItem}
@@ -2037,6 +2239,7 @@ const HistoryScreen = ({ navigation, route }) => {
           style={modernStyles.historyList}
           contentContainerStyle={modernStyles.historyListContainer}
           ref={flatListRef}
+          onLayout={(e) => setFlatListHeight(e.nativeEvent.layout.height)}
           getItemLayout={(data, index) => ({ length: width, offset: width * index, index })}
           onScroll={(event) => {
             const offsetX = event.nativeEvent.contentOffset.x
@@ -2079,128 +2282,56 @@ const HistoryScreen = ({ navigation, route }) => {
             }, 100)
           }}
         />
-      )}
 
-      {/* Navigation with Arrows and Dots - Solo mostrar si hay más de 1 item */}
-      {history.length > 1 && (
-        <View style={modernStyles.navigationContainer}>
-          {/* Left Arrow */}
+        {/* Botones fijos abajo */}
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingVertical: 8,
+          paddingHorizontal: 20,
+          gap: 12,
+        }}>
           <TouchableOpacity
-            style={[
-              modernStyles.arrowButton,
-              currentIndex === 0 && modernStyles.arrowButtonDisabled
-            ]}
-            onPress={async () => {
-              if (currentIndex > 0) {
-                const newIndex = currentIndex - 1
-                flatListRef.current?.scrollToIndex({ index: newIndex, animated: true })
-
-                // Update widget immediately
-                const reorderedHistory = [
-                  history[newIndex],
-                  ...history.filter((_, i) => i !== newIndex)
-                ]
-                const reorderedCompletedItems = {
-                  0: completedItems[newIndex] || [],
-                  ...Object.keys(completedItems)
-                    .filter(key => parseInt(key) !== newIndex)
-                    .reduce((acc, key, idx) => {
-                      acc[idx + 1] = completedItems[key]
-                      return acc
-                    }, {})
-                }
-                await WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
-              }
+            onPress={() => showAddMethodModal(currentIndex)}
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(99, 102, 241, 0.1)',
+              borderRadius: 12,
+              paddingVertical: 10,
+              paddingHorizontal: 14,
             }}
-            disabled={currentIndex === 0}
+            activeOpacity={0.7}
           >
-            <Ionicons 
-              name="chevron-back" 
-              size={20} 
-              color={currentIndex === 0 ? "#d1d5db" : "#6b7280"} 
-            />
+            <Ionicons name="add-circle-outline" size={18} color="#6366f1" style={{ marginRight: 6 }} />
+            <Text style={{ fontSize: 13, fontWeight: '600', color: '#6366f1' }} numberOfLines={1}>
+              {currentLabels.addItems || 'Add products'}
+            </Text>
           </TouchableOpacity>
 
-          {/* Dots Container */}
-          <View style={modernStyles.dotsContainer}>
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingHorizontal: 10,
-              }}
-            >
-              {history.map((_, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    modernStyles.dot,
-                    history.length > 8 && modernStyles.smallDot, // Dots más pequeños si hay más de 8
-                    currentIndex === index && modernStyles.activeDot
-                  ]}
-                  onPress={async () => {
-                    flatListRef.current?.scrollToIndex({ index, animated: true })
-
-                    // Update widget immediately
-                    const reorderedHistory = [
-                      history[index],
-                      ...history.filter((_, i) => i !== index)
-                    ]
-                    const reorderedCompletedItems = {
-                      0: completedItems[index] || [],
-                      ...Object.keys(completedItems)
-                        .filter(key => parseInt(key) !== index)
-                        .reduce((acc, key, idx) => {
-                          acc[idx + 1] = completedItems[key]
-                          return acc
-                        }, {})
-                    }
-                    await WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
-                  }}
-                />
-              ))}
-            </ScrollView>
-          </View>
-
-          {/* Right Arrow */}
           <TouchableOpacity
-            style={[
-              modernStyles.arrowButton,
-              currentIndex === history.length - 1 && modernStyles.arrowButtonDisabled
-            ]}
-            onPress={async () => {
-              if (currentIndex < history.length - 1) {
-                const newIndex = currentIndex + 1
-                flatListRef.current?.scrollToIndex({ index: newIndex, animated: true })
-
-                // Update widget immediately
-                const reorderedHistory = [
-                  history[newIndex],
-                  ...history.filter((_, i) => i !== newIndex)
-                ]
-                const reorderedCompletedItems = {
-                  0: completedItems[newIndex] || [],
-                  ...Object.keys(completedItems)
-                    .filter(key => parseInt(key) !== newIndex)
-                    .reduce((acc, key, idx) => {
-                      acc[idx + 1] = completedItems[key]
-                      return acc
-                    }, {})
-                }
-                await WidgetService.updateWidgetShoppingLists(reorderedHistory, reorderedCompletedItems)
-              }
+            onPress={() => confirmRemoveListFromHistory(currentIndex)}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(239, 68, 68, 0.08)',
+              borderRadius: 12,
+              paddingVertical: 10,
+              paddingHorizontal: 14,
             }}
-            disabled={currentIndex === history.length - 1}
+            activeOpacity={0.7}
           >
-            <Ionicons 
-              name="chevron-forward" 
-              size={20} 
-              color={currentIndex === history.length - 1 ? "#d1d5db" : "#6b7280"} 
-            />
+            <Ionicons name="trash-outline" size={18} color="#ef4444" style={{ marginRight: 6 }} />
+            <Text style={{ fontSize: 13, fontWeight: '600', color: '#ef4444' }} numberOfLines={1}>
+              {currentLabels.deleteShort || 'Delete'}
+            </Text>
           </TouchableOpacity>
         </View>
+        </>
       )}
 
       {/* Modales de favoritos mejorados */}
@@ -2749,23 +2880,6 @@ const HistoryScreen = ({ navigation, route }) => {
             </View>
             
             <ScrollView style={modernStyles.actionsModalContent}>
-              {/* Expand Action */}
-              <TouchableOpacity
-                style={modernStyles.actionModalButton}
-                onPress={() => {
-                  openExpandedListModal(selectedItemIndex)
-                  setActionsModalVisible(false)
-                }}
-              >
-                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#f3e8ff' }]}>
-                  <Ionicons name="expand-outline" size={20} color="#9333ea" />
-                </View>
-                <View style={modernStyles.actionModalTextContainer}>
-                  <Text style={modernStyles.actionModalButtonText}>{currentLabels.expandList}</Text>
-                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.expandListDesc}</Text>
-                </View>
-              </TouchableOpacity>
-
               {/* Edit Action */}
               <TouchableOpacity
                 style={modernStyles.actionModalButton}
@@ -2823,24 +2937,6 @@ const HistoryScreen = ({ navigation, route }) => {
                 </View>
               </TouchableOpacity>
 
-              {/* Add Items */}
-              <TouchableOpacity
-                style={modernStyles.actionModalButton}
-                onPress={() => {
-                  setAutoOpenAddModal(true)
-                  openExpandedListModal(selectedItemIndex)
-                  setActionsModalVisible(false)
-                }}
-              >
-                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#fed7aa' }]}>
-                  <Ionicons name="add" size={20} color="#ea580c" />
-                </View>
-                <View style={modernStyles.actionModalTextContainer}>
-                  <Text style={modernStyles.actionModalButtonText}>{currentLabels.addItems}</Text>
-                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.addItemsDesc}</Text>
-                </View>
-              </TouchableOpacity>
-
               {/* Set Reminder - Solo iOS */}
               {Platform.OS === 'ios' && (
                 <TouchableOpacity
@@ -2877,25 +2973,329 @@ const HistoryScreen = ({ navigation, route }) => {
                 </View>
               </TouchableOpacity>
 
-              {/* Delete */}
-              <TouchableOpacity
-                style={[modernStyles.actionModalButton, { borderTopWidth: 1, borderTopColor: '#223b6e64', marginTop: 10, paddingTop: 20 }]}
-                onPress={() => {
-                  confirmRemoveListFromHistory(selectedItemIndex)
-                  setActionsModalVisible(false)
-                }}
-              >
-                <View style={[modernStyles.actionModalIcon, { backgroundColor: '#fef2f2',marginBottom:40 }]}>
-                  <Ionicons name="trash-outline" size={20} color="#dc2626" />
-                </View>
-                <View style={modernStyles.actionModalTextContainer}>
-                  <Text style={[modernStyles.actionModalButtonText, { color: '#dc2626' }]}>{currentLabels.deleteList}</Text>
-                  <Text style={modernStyles.actionModalButtonSubtext}>{currentLabels.deleteListDesc}</Text>
-                </View>
-              </TouchableOpacity>
             </ScrollView>
           </View>
         </View>
+      </Modal>
+
+      {/* Modal de selección: Escrito / Hablado */}
+      <Modal
+        visible={addMethodModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setAddMethodModalVisible(false)}
+      >
+        <View style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <View style={{
+            backgroundColor: theme === 'dark' ? '#1f2937' : '#fff',
+            borderRadius: 20,
+            padding: 24,
+            width: '80%',
+            maxWidth: 320,
+          }}>
+            <Text style={{
+              fontSize: 18,
+              fontWeight: '700',
+              color: theme === 'dark' ? '#f3f4f6' : '#1f2937',
+              textAlign: 'center',
+              marginBottom: 20,
+            }}>
+              {currentLabels.addMethod || 'Add method'}
+            </Text>
+
+            {/* Written option */}
+            <TouchableOpacity
+              onPress={handleWrittenOption}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: theme === 'dark' ? '#374151' : '#f3f4f6',
+                borderRadius: 14,
+                padding: 16,
+                marginBottom: 12,
+              }}
+              activeOpacity={0.7}
+            >
+              <View style={{
+                width: 44,
+                height: 44,
+                borderRadius: 22,
+                backgroundColor: 'rgba(99, 102, 241, 0.15)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 14,
+              }}>
+                <Ionicons name="pencil" size={22} color="#6366f1" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{
+                  fontSize: 16,
+                  fontWeight: '600',
+                  color: theme === 'dark' ? '#f3f4f6' : '#1f2937',
+                }}>
+                  {currentLabels.writtenOption || 'Written'}
+                </Text>
+                <Text style={{
+                  fontSize: 13,
+                  color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                  marginTop: 2,
+                }}>
+                  {currentLabels.writtenOptionDesc || 'Type products manually'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Spoken option */}
+            <TouchableOpacity
+              onPress={handleSpokenOption}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: theme === 'dark' ? '#374151' : '#f3f4f6',
+                borderRadius: 14,
+                padding: 16,
+                marginBottom: 12,
+              }}
+              activeOpacity={0.7}
+            >
+              <View style={{
+                width: 44,
+                height: 44,
+                borderRadius: 22,
+                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 14,
+              }}>
+                <Ionicons name="mic" size={22} color="#ef4444" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{
+                  fontSize: 16,
+                  fontWeight: '600',
+                  color: theme === 'dark' ? '#f3f4f6' : '#1f2937',
+                }}>
+                  {currentLabels.spokenOption || 'Spoken'}
+                </Text>
+                <Text style={{
+                  fontSize: 13,
+                  color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                  marginTop: 2,
+                }}>
+                  {currentLabels.spokenOptionDesc || 'Add products by voice'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Cancel */}
+            <TouchableOpacity
+              onPress={() => setAddMethodModalVisible(false)}
+              style={{
+                alignItems: 'center',
+                paddingVertical: 12,
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={{
+                fontSize: 15,
+                color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                fontWeight: '600',
+              }}>
+                {currentLabels.cancel}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal de voz para añadir productos */}
+      <Modal
+        visible={voiceAddModalVisible}
+        transparent={false}
+        animationType="slide"
+        onRequestClose={closeVoiceModal}
+      >
+        <SafeAreaView style={{
+          flex: 1,
+          backgroundColor: theme === 'dark' ? '#111827' : '#f9fafb',
+        }}>
+          {/* Header */}
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 20,
+            paddingVertical: 14,
+            borderBottomWidth: 1,
+            borderBottomColor: theme === 'dark' ? '#374151' : '#e5e7eb',
+          }}>
+            <Text style={{
+              fontSize: 18,
+              fontWeight: '700',
+              color: theme === 'dark' ? '#f3f4f6' : '#1f2937',
+              flex: 1,
+            }} numberOfLines={1}>
+              {addMethodIndex !== null && history[addMethodIndex]
+                ? history[addMethodIndex].name
+                : ''}
+            </Text>
+            <TouchableOpacity onPress={closeVoiceModal} style={{ padding: 4 }}>
+              <Ionicons name="close" size={24} color={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Current list items */}
+          <View style={{ flex: 1, paddingHorizontal: 20 }}>
+            <Text style={{
+              fontSize: 14,
+              fontWeight: '600',
+              color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+              marginTop: 16,
+              marginBottom: 8,
+            }}>
+              {currentLabels.viewList || 'Current list'}
+            </Text>
+            <ScrollView style={{
+              maxHeight: 180,
+              marginBottom: 12,
+            }}>
+              {addMethodIndex !== null && history[addMethodIndex] && history[addMethodIndex].list.map((item, idx) => {
+                const itemText = typeof item === 'string' ? item : item.text || item.name || String(item)
+                return (
+                  <View key={idx} style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: 6,
+                    paddingHorizontal: 10,
+                  }}>
+                    <View style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: 3,
+                      backgroundColor: theme === 'dark' ? '#6b7280' : '#9ca3af',
+                      marginRight: 10,
+                    }} />
+                    <Text style={{
+                      fontSize: 15,
+                      color: theme === 'dark' ? '#d1d5db' : '#374151',
+                    }}>
+                      {itemText}
+                    </Text>
+                  </View>
+                )
+              })}
+            </ScrollView>
+
+            {/* Separator */}
+            <View style={{
+              height: 1,
+              backgroundColor: theme === 'dark' ? '#374151' : '#e5e7eb',
+              marginVertical: 12,
+            }} />
+
+            {/* Listening section */}
+            <View style={{ alignItems: 'center', paddingVertical: 20 }}>
+              <Animated.View style={{
+                width: 60,
+                height: 60,
+                borderRadius: 30,
+                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transform: [{ scale: voicePulseAnim }],
+              }}>
+                <View style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: 6,
+                  backgroundColor: '#ef4444',
+                }} />
+              </Animated.View>
+              <Text style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: '#ef4444',
+                marginTop: 12,
+              }}>
+                {currentLabels.listening || 'Listening...'}
+              </Text>
+            </View>
+
+            {/* Detected items */}
+            <Text style={{
+              fontSize: 14,
+              fontWeight: '600',
+              color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+              marginBottom: 8,
+            }}>
+              {currentLabels.voiceDetectedItems || 'Detected items'}
+            </Text>
+            <ScrollView style={{ flex: 1, marginBottom: 16 }}>
+              {voiceDetectedItems.length === 0 ? (
+                <Text style={{
+                  fontSize: 14,
+                  color: theme === 'dark' ? '#6b7280' : '#9ca3af',
+                  textAlign: 'center',
+                  paddingVertical: 20,
+                  fontStyle: 'italic',
+                }}>
+                  {currentLabels.noItemsDetected || 'No items detected yet'}
+                </Text>
+              ) : (
+                voiceDetectedItems.map((item, idx) => (
+                  <View key={idx} style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    borderRadius: 10,
+                    paddingVertical: 10,
+                    paddingHorizontal: 14,
+                    marginBottom: 6,
+                  }}>
+                    <Ionicons name="checkmark-circle" size={18} color="#6366f1" style={{ marginRight: 10 }} />
+                    <Text style={{
+                      fontSize: 15,
+                      fontWeight: '500',
+                      color: theme === 'dark' ? '#c7d2fe' : '#4338ca',
+                    }}>
+                      {item}
+                    </Text>
+                  </View>
+                ))
+              )}
+            </ScrollView>
+          </View>
+
+          {/* Stop and add button */}
+          <View style={{
+            paddingHorizontal: 20,
+            paddingBottom: 20,
+          }}>
+            <TouchableOpacity
+              onPress={stopVoiceAndAddItems}
+              style={{
+                backgroundColor: voiceDetectedItems.length > 0 ? '#6366f1' : '#9ca3af',
+                borderRadius: 14,
+                paddingVertical: 16,
+                alignItems: 'center',
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={{
+                fontSize: 16,
+                fontWeight: '700',
+                color: '#fff',
+              }}>
+                {currentLabels.stopAndAdd || 'Stop and add'} {voiceDetectedItems.length > 0 ? `(${voiceDetectedItems.length})` : ''}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
       </Modal>
     </SafeAreaView>
   )
