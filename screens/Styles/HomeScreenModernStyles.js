@@ -134,11 +134,9 @@ export const getModernStyles = () => {
 
     // Floating items container for detected grocery items
     floatingItemsContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginVertical: 12,
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      marginVertical: 8,
       minHeight: 40,
       paddingHorizontal: 4,
     },
@@ -461,12 +459,14 @@ export const getModernStyles = () => {
 
     // Text below microphone button
     micButtonText: {
-      marginTop: 20,
-      fontSize: 16,
-      color: "#6b7280",
+      marginTop: 16,
+      fontSize: 15,
+      color: "#9ca3af",
       textAlign: "center",
-      fontWeight: "600",
-      letterSpacing: 0.2,
+      fontWeight: "500",
+      letterSpacing: 0.3,
+      paddingHorizontal: 40,
+      lineHeight: 22,
     },
 
     // Recording status with pulse dot
@@ -502,13 +502,15 @@ export const getModernStyles = () => {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      paddingHorizontal: 24,
-      paddingVertical: 20,
+      paddingHorizontal: 12,
+      paddingTop: 4,
+      paddingBottom: 8,
       backgroundColor: "transparent",
     },
     emptyStateContent: {
       alignItems: "center",
       width: "100%",
+      flex: 1,
     },
     
     // Modern Hero Section - MÁS COMPACTO

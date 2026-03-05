@@ -265,18 +265,13 @@ const AnimatedFloatingItem = ({ text, index, delay = 0 }) => {
           backgroundColor: bubbleColors[colorIndex],
           borderColor: borderColors[colorIndex],
           borderWidth: 1,
-          borderRadius: 16,
-          paddingHorizontal: 12,
-          paddingVertical: 6,
-          margin: 3,
-          shadowColor: borderColors[colorIndex],
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
+          borderRadius: 14,
+          paddingHorizontal: 16,
+          paddingVertical: 10,
+          marginVertical: 3,
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
         },
         {
           opacity: fadeAnim,
@@ -291,8 +286,8 @@ const AnimatedFloatingItem = ({ text, index, delay = 0 }) => {
         style={{
           color: '#1f2937',
           fontWeight: '600',
-          fontSize: 14,
-          textAlign: 'center',
+          fontSize: 15,
+          flex: 1,
         }}
       >
         {text}
@@ -1176,24 +1171,31 @@ const HomeScreen = ({ navigation }) => {
 
           </ScrollView>
 
-          {/* Fixed pause button at bottom */}
-          <View style={modernStyles.pauseButtonContainer}>
+          {/* Fixed stop button at bottom */}
+          <View style={{ alignItems: 'center', marginTop: 12, paddingHorizontal: 20 }}>
             <TouchableOpacity
               onPress={stopRecognizing}
-              style={modernStyles.pauseButton}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#ef4444',
+                borderRadius: 16,
+                paddingVertical: 14,
+                paddingHorizontal: 28,
+                width: '100%',
+                shadowColor: '#ef4444',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 6,
+              }}
               activeOpacity={0.8}
             >
-              <Animated.View
-                style={[
-                  modernStyles.pauseButtonInner,
-                  { 
-                    opacity: pulseAnim,
-                    transform: [{ scale: pulseAnim }] 
-                  }
-                ]}
-              >
-                <Ionicons name="stop" size={20} color="white" />
-              </Animated.View>
+              <Ionicons name="stop-circle-outline" size={22} color="white" style={{ marginRight: 8 }} />
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '700' }}>
+                {currentLabels.stopRecording || 'Stop · See list'}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1804,116 +1806,7 @@ const HomeScreen = ({ navigation }) => {
 
   // Muestra info según modo (voz o manual) directamente en pantalla
   const renderModeInfo = () => {
-    const iconColor = showPencilMode ? '#10b981' : '#6366f1'
-    const iconName = showPencilMode ? 'pencil' : 'mic'
-    const title = showPencilMode
-      ? (texts[deviceLanguage]?.voiceModalTitle || texts["en"].voiceModalTitle)
-      : (texts[deviceLanguage]?.voiceListsModalTitle || texts["en"].voiceListsModalTitle)
-
-    // Solo 2 beneficios principales para diseño compacto
-    const benefits = showPencilMode
-      ? [
-          texts[deviceLanguage]?.voiceModalBenefit2 || texts["en"].voiceModalBenefit2,
-          texts[deviceLanguage]?.voiceModalBenefit3 || texts["en"].voiceModalBenefit3,
-        ]
-      : [
-          texts[deviceLanguage]?.voiceListsBenefit1 || texts["en"].voiceListsBenefit1,
-          texts[deviceLanguage]?.voiceListsBenefit3 || texts["en"].voiceListsBenefit3,
-        ]
-
-    return (
-      <View style={{ alignItems: 'center', marginTop: 30, paddingHorizontal: 20 }}>
-        {/* Modern Glass Morphism Card */}
-        <View style={{
-          position: 'relative',
-          width: '100%',
-          overflow: 'hidden',
-        }}>
-          {/* Glass effect container */}
-          <View style={{
-            backgroundColor: Platform.OS === 'android' ? 'rgba(255, 255, 255, 0.75)' : 'rgba(255, 255, 255, 0.25)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: 20,
-            padding: 18,
-            borderWidth: 1.5,
-            borderColor: 'rgba(255, 255, 255, 0.5)',
-            shadowColor: iconColor,
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.15,
-            shadowRadius: 20,
-            elevation: 5,
-          }}>
-            {/* Top accent line */}
-            <View style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 3,
-              backgroundColor: iconColor,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              opacity: 0.6,
-            }} />
-
-            {/* Icon and title row */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-              <View style={{
-                width: 40,
-                height: 40,
-                borderRadius: 12,
-                backgroundColor: `${iconColor}20`,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: 12,
-              }}>
-                <Ionicons name={iconName} size={22} color={iconColor} />
-              </View>
-              <Text style={{
-                fontSize: 17,
-                fontWeight: '700',
-                color: '#1f2937',
-                flex: 1,
-              }}>
-                {title}
-              </Text>
-            </View>
-
-            {/* Benefits chips */}
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {benefits.map((benefit, index) => (
-                <View key={index} style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: Platform.OS === 'android' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.4)',
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: 'rgba(255, 255, 255, 0.6)',
-                }}>
-                  <Text style={{ fontSize: 13, color: '#374151', fontWeight: '600' }}>
-                    {benefit}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          </View>
-
-          {/* Subtle gradient overlay for depth */}
-          <View style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            borderRadius: 20,
-            backgroundColor: `${iconColor}08`,
-            pointerEvents: 'none',
-          }} />
-        </View>
-      </View>
-    )
+    return null
   }
 
   return (
@@ -1938,50 +1831,306 @@ const HomeScreen = ({ navigation }) => {
 
       {!loading && showEmptyListText && !showCreatingMessage && (
         <View style={modernStyles.emptyStateContainer}>
-          {renderFloatingFoodIcons()}
 
           <View style={[modernStyles.emptyStateContent, { zIndex: 10, position: 'relative' }]}>
 
-
-
-
-
-            {/* Revolutionary Integrated Hero Section */}
-            <View style={{
-              borderRadius: 28,
-              marginHorizontal: 16,
-              marginVertical: 20,
-              padding: 24,
-              marginTop: isSmallIPhone ? 80 : 90,
-            }}>
-
-              {/* Info del modo actual */}
-              {renderModeInfo()}
-
-              {/* Subtle Bottom Accent */}
+            {history.length > 0 ? (
               <View style={{
-                height: 3,
-                backgroundColor: 'rgba(99, 102, 241, 0.2)',
-                borderRadius: 2,
-                marginTop: 20,
-                alignSelf: 'center',
-                width: '30%',
-              }} />
-            </View>
+                width: '100%',
+                flex: 1,
+                backgroundColor: Platform.OS === 'android' ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.42)',
+                borderRadius: 24,
+                marginHorizontal: 4,
+                paddingTop: 16,
+                paddingHorizontal: 16,
+                borderWidth: 1,
+                borderColor: 'rgba(255,255,255,0.6)',
+                overflow: 'hidden',
+                ...(Platform.OS === 'ios' ? {
+                  shadowColor: 'rgba(0,0,0,0.06)',
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 1,
+                  shadowRadius: 16,
+                } : { elevation: 3 }),
+              }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 14, paddingHorizontal: 4 }}>
+                  <Ionicons name="receipt-outline" size={20} color="#6366f1" style={{ marginRight: 8 }} />
+                  <Text style={{ fontSize: 17, fontWeight: '800', color: '#1f2937', letterSpacing: -0.3 }}>
+                    {currentLabels.myLists || 'My Lists'}
+                  </Text>
+                  <View style={{ flex: 1 }} />
+                  <View style={{ backgroundColor: 'rgba(99, 102, 241, 0.1)', borderRadius: 10, paddingHorizontal: 10, paddingVertical: 4 }}>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: '#6366f1' }}>{history.length}</Text>
+                  </View>
+                </View>
+                <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 10 }}>
+                  {[...history].reverse().map((item, idx) => {
+                    const cardColors = [
+                      { bg: 'rgba(99, 102, 241, 0.08)', border: 'rgba(99, 102, 241, 0.18)', icon: '#6366f1', iconName: 'basket-outline' },
+                      { bg: 'rgba(16, 185, 129, 0.08)', border: 'rgba(16, 185, 129, 0.18)', icon: '#10b981', iconName: 'leaf-outline' },
+                      { bg: 'rgba(245, 158, 11, 0.08)', border: 'rgba(245, 158, 11, 0.18)', icon: '#f59e0b', iconName: 'fast-food-outline' },
+                      { bg: 'rgba(139, 92, 246, 0.08)', border: 'rgba(139, 92, 246, 0.18)', icon: '#8b5cf6', iconName: 'cart-outline' },
+                      { bg: 'rgba(236, 72, 153, 0.08)', border: 'rgba(236, 72, 153, 0.18)', icon: '#ec4899', iconName: 'heart-outline' },
+                    ]
+                    const color = cardColors[idx % cardColors.length]
+                    return (
+                      <TouchableOpacity
+                        key={`hist-preview-${idx}`}
+                        activeOpacity={0.65}
+                        onPress={() => {
+                          if (route.params?.onNavigateToHistory) {
+                            route.params.onNavigateToHistory()
+                          }
+                        }}
+                        style={{
+                          backgroundColor: Platform.OS === 'android' ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.6)',
+                          borderRadius: 18,
+                          padding: 16,
+                          marginBottom: 10,
+                          borderWidth: 1.2,
+                          borderColor: color.border,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          ...(Platform.OS === 'ios' ? {
+                            shadowColor: 'rgba(0,0,0,0.06)',
+                            shadowOffset: { width: 0, height: 3 },
+                            shadowOpacity: 1,
+                            shadowRadius: 10,
+                          } : { elevation: 3 }),
+                        }}
+                      >
+                        <View style={{
+                          width: 44,
+                          height: 44,
+                          borderRadius: 14,
+                          backgroundColor: color.bg,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginRight: 14,
+                        }}>
+                          <Ionicons name={color.iconName} size={22} color={color.icon} />
+                        </View>
+                        <View style={{ flex: 1 }}>
+                          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+                            <Text style={{ fontSize: 15, fontWeight: '700', color: '#1f2937', flex: 1 }} numberOfLines={1}>
+                              {item.name}
+                            </Text>
+                            <View style={{ backgroundColor: 'rgba(107,114,128,0.08)', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2, marginLeft: 8 }}>
+                              <Text style={{ fontSize: 11, color: '#6b7280', fontWeight: '600' }}>
+                                {item.list?.length || 0} {currentLabels.productsCount || 'products'}
+                              </Text>
+                            </View>
+                          </View>
+                          <Text style={{ fontSize: 13, color: '#6b7280', lineHeight: 19 }} numberOfLines={2}>
+                            {(item.list || []).slice(0, 3).join('  ·  ')}
+                          </Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={18} color="#d1d5db" style={{ marginLeft: 8 }} />
+                      </TouchableOpacity>
+                    )
+                  })}
+                </ScrollView>
 
-            {/* Language Selection */}
+                {/* Mic button integrated inside container */}
+                <View style={{ alignItems: 'center', paddingVertical: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.04)', marginTop: 4 }}>
+                  <View style={{ alignItems: 'center' }}>
+                    <View style={modernStyles.voiceFloatingContainer}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          if (showPencilMode) {
+                            triggerHaptic('light')
+                            if (route.params?.onNavigateToHandwrittenList) {
+                              route.params.onNavigateToHandwrittenList()
+                            } else {
+                              navigation.navigate('HandwrittenList')
+                            }
+                          } else {
+                            started ? stopRecognizing() : startRecognizing()
+                          }
+                        }}
+                        style={modernStyles.voiceButtonWrapper}
+                        activeOpacity={0.8}
+                      >
+                        <Animated.View
+                          style={[
+                            modernStyles.voiceButton,
+                            {
+                              width: isSmallIPhone ? 60 : 72,
+                              height: isSmallIPhone ? 60 : 72,
+                              borderRadius: isSmallIPhone ? 30 : 36,
+                              transform: [{ scale: started ? 1.05 : pulseAnim }],
+                              backgroundColor: Platform.OS === 'android' ? '#e7ead2' : (showPencilMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(99, 102, 241, 0.15)'),
+                              borderWidth: 2,
+                              borderColor: showPencilMode ? 'rgba(16, 185, 129, 0.3)' : 'rgba(99, 102, 241, 0.3)',
+                            },
+                            started && { backgroundColor: Platform.OS === 'android' ? '#e7ead2' : 'rgba(239, 68, 68, 0.15)', borderColor: 'rgba(239, 68, 68, 0.3)' }
+                          ]}
+                        >
+                          <View style={modernStyles.micIconContainer}>
+                            {started ? (
+                              <Ionicons name="stop" size={isSmallIPhone ? 22 : 26} color="#ef4444" />
+                            ) : (
+                              showPencilMode ? (
+                                <Ionicons name="pencil" size={isSmallIPhone ? 22 : 26} color="#10b981" />
+                              ) : (
+                                <Ionicons name="mic" size={isSmallIPhone ? 22 : 26} color="#6366f1" />
+                              )
+                            )}
+                          </View>
+                        </Animated.View>
+                      </TouchableOpacity>
+                      {/* Toggle button */}
+                      <TouchableOpacity
+                        style={{
+                          position: 'absolute',
+                          top: -6,
+                          right: -30,
+                          backgroundColor: Platform.OS === 'android' ? '#e7ead2' : (showPencilMode ? 'rgba(99, 102, 241, 0.15)' : 'rgba(16, 185, 129, 0.15)'),
+                          borderWidth: 1.5,
+                          borderColor: showPencilMode ? 'rgba(99, 102, 241, 0.3)' : 'rgba(16, 185, 129, 0.3)',
+                          borderRadius: 52,
+                          width: 28,
+                          height: 28,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        onPress={() => {
+                          triggerHaptic('light')
+                          setShowPencilMode(!showPencilMode)
+                        }}
+                      >
+                        <Ionicons
+                          name={showPencilMode ? "mic" : "pencil"}
+                          size={14}
+                          color={showPencilMode ? '#6366f1' : '#10b981'} />
+                      </TouchableOpacity>
+                    </View>
+                    <Text style={{ marginTop: 10, fontSize: 13, color: '#9ca3af', textAlign: 'center', fontWeight: '500', paddingHorizontal: 20 }}>
+                      {showPencilMode
+                        ? (texts[deviceLanguage]?.pressToScanList || texts["en"].pressToScanList)
+                        : (texts[deviceLanguage]?.pressToStartSpeaking || texts["en"].pressToStartSpeaking)
+                      }
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            ) : (
+              <View
+                style={{
+                  width: '100%',
+                  backgroundColor: Platform.OS === 'android' ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.42)',
+                  borderRadius: 24,
+                  marginHorizontal: 4,
+                  padding: 24,
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: 'rgba(255,255,255,0.6)',
+                  ...(Platform.OS === 'ios' ? {
+                    shadowColor: 'rgba(0,0,0,0.06)',
+                    shadowOffset: { width: 0, height: 4 },
+                    shadowOpacity: 1,
+                    shadowRadius: 16,
+                  } : { elevation: 3 }),
+                }}
+              >
+                <View style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 20,
+                  backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 14,
+                }}>
+                  <Ionicons name="cart-outline" size={30} color="#6366f1" />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '700', color: '#1f2937', textAlign: 'center', lineHeight: 23, marginBottom: 6 }}>
+                  {currentLabels.createFirstList || 'Create your first shopping list!'}
+                </Text>
+                <Text style={{ fontSize: 13, color: '#9ca3af', textAlign: 'center', marginBottom: 20 }}>
+                  {currentLabels.pressToStartSpeaking || 'Tap the mic and start saying your products'}
+                </Text>
+
+                {/* Mic button for empty state */}
+                <View style={{ alignItems: 'center' }}>
+                  <View style={modernStyles.voiceFloatingContainer}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (showPencilMode) {
+                          triggerHaptic('light')
+                          if (route.params?.onNavigateToHandwrittenList) {
+                            route.params.onNavigateToHandwrittenList()
+                          } else {
+                            navigation.navigate('HandwrittenList')
+                          }
+                        } else {
+                          started ? stopRecognizing() : startRecognizing()
+                        }
+                      }}
+                      style={modernStyles.voiceButtonWrapper}
+                      activeOpacity={0.8}
+                    >
+                      <Animated.View
+                        style={[
+                          modernStyles.voiceButton,
+                          {
+                            width: isSmallIPhone ? 60 : 72,
+                            height: isSmallIPhone ? 60 : 72,
+                            borderRadius: isSmallIPhone ? 30 : 36,
+                            transform: [{ scale: started ? 1.05 : pulseAnim }],
+                            backgroundColor: Platform.OS === 'android' ? '#e7ead2' : (showPencilMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(99, 102, 241, 0.15)'),
+                            borderWidth: 2,
+                            borderColor: showPencilMode ? 'rgba(16, 185, 129, 0.3)' : 'rgba(99, 102, 241, 0.3)',
+                          },
+                          started && { backgroundColor: Platform.OS === 'android' ? '#e7ead2' : 'rgba(239, 68, 68, 0.15)', borderColor: 'rgba(239, 68, 68, 0.3)' }
+                        ]}
+                      >
+                        <View style={modernStyles.micIconContainer}>
+                          {started ? (
+                            <Ionicons name="stop" size={isSmallIPhone ? 22 : 26} color="#ef4444" />
+                          ) : (
+                            showPencilMode ? (
+                              <Ionicons name="pencil" size={isSmallIPhone ? 22 : 26} color="#10b981" />
+                            ) : (
+                              <Ionicons name="mic" size={isSmallIPhone ? 22 : 26} color="#6366f1" />
+                            )
+                          )}
+                        </View>
+                      </Animated.View>
+                    </TouchableOpacity>
+                    {/* Toggle button */}
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        top: -6,
+                        right: -30,
+                        backgroundColor: Platform.OS === 'android' ? '#e7ead2' : (showPencilMode ? 'rgba(99, 102, 241, 0.15)' : 'rgba(16, 185, 129, 0.15)'),
+                        borderWidth: 1.5,
+                        borderColor: showPencilMode ? 'rgba(99, 102, 241, 0.3)' : 'rgba(16, 185, 129, 0.3)',
+                        borderRadius: 52,
+                        width: 28,
+                        height: 28,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                      onPress={() => {
+                        triggerHaptic('light')
+                        setShowPencilMode(!showPencilMode)
+                      }}
+                    >
+                      <Ionicons
+                        name={showPencilMode ? "mic" : "pencil"}
+                        size={14}
+                        color={showPencilMode ? '#6366f1' : '#10b981'} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            )}
 
           </View>
         </View>
       )}
-      {/* Call to Action - Más prominente - No mostrar en iPhone SE */}
-              {!isSmallIPhone && (
-                <View style={modernStyles.ctaContainer}>
-                  <Text style={modernStyles.ctaText}>
-                
-                  </Text>
-                </View>
-              )}
       {!loading && showCreatingMessage && (
         <View style={modernStyles.creatingContainer}>
           {/* Solo mostrar el header cuando NO está grabando y NO hay resultados */}
@@ -2066,10 +2215,7 @@ const HomeScreen = ({ navigation }) => {
         />
       )}
 
-      {/* Solo mostrar el botón de voz cuando NO está en modo "creating message" Y NO está grabando Y NO hay loading */}
-      <View style={{ zIndex: 20, position: 'relative' }}>
-        {!showCreatingMessage && !started && !loading && renderVoiceButton()}
-      </View>
+      {/* Voice button is now integrated inside the empty state container */}
       <ConfirmationModal />
 
       {/* Name Modal */}

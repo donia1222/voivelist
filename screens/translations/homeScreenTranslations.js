@@ -1,16 +1,16 @@
 // Prompts para análisis en tiempo real
 export const realTimeAnalysisPrompts = {
-  en: "Extract only the shopping items and quantities from this text. Return them as a comma-separated list. If no shopping items are found, return 'NONE'. Text:",
-  es: "Extrae solo los artículos de compra y cantidades de este texto. Devuélvelos como una lista separada por comas. Si no se encuentran artículos de compra, devuelve 'NONE'. Texto:",
-  de: "Extrahiere nur die Einkaufsartikel und Mengen aus diesem Text. Gib sie als kommagetrennte Liste zurück. Wenn keine Einkaufsartikel gefunden werden, gib 'NONE' zurück. Text:",
-  it: "Estrai solo gli articoli della spesa e le quantità da questo testo. Restituiscili come elenco separato da virgole. Se non vengono trovati articoli della spesa, restituisci 'NONE'. Testo:",
-  fr: "Extrayez uniquement les articles d'achat et les quantités de ce texte. Renvoyez-les sous forme de liste séparée par des virgules. Si aucun article d'achat n'est trouvé, renvoyez 'NONE'. Texte:",
-  pt: "Extraia apenas os itens de compra e quantidades deste texto. Retorne-os como uma lista separada por vírgulas. Se nenhum item de compra for encontrado, retorne 'NONE'. Texto:",
-  ru: "Извлеките только товары для покупок и количества из этого текста. Верните их в виде списка, разделенного запятыми. Если товары для покупок не найдены, верните 'NONE'. Текст:",
-  ar: "استخرج فقط عناصر التسوق والكميات من هذا النص. أرجعها كقائمة مفصولة بفواصل. إذا لم يتم العثور على عناصر تسوق، أرجع 'NONE'. النص:",
-  hu: "Csak a vásárlási tételeket és mennyiségeket vedd ki ebből a szövegből. Add vissza őket vesszővel elválasztott listaként. Ha nem találsz vásárlási tételeket, add vissza a 'NONE'-t. Szöveg:",
-  ja: "このテキストから買い物アイテムと数量のみを抽出してください。カンマ区切りのリストとして返してください。買い物アイテムが見つからない場合は「NONE」を返してください。テキスト:",
-  nl: "Haal alleen de boodschappenartikelen en hoeveelheden uit deze tekst. Geef ze terug als een door komma's gescheiden lijst. Als er geen boodschappenartikelen worden gevonden, geef dan 'NONE' terug. Tekst:",
+  en: "Extract only the shopping items and quantities from this text. Add an emoji before each item. Return them as a comma-separated list. If no shopping items are found, return 'NONE'. Text:",
+  es: "Extrae solo los artículos de compra y cantidades de este texto. Añade un emoji antes de cada artículo. Devuélvelos como una lista separada por comas. Si no se encuentran artículos de compra, devuelve 'NONE'. Texto:",
+  de: "Extrahiere nur die Einkaufsartikel und Mengen aus diesem Text. Füge ein Emoji vor jedem Artikel hinzu. Gib sie als kommagetrennte Liste zurück. Wenn keine Einkaufsartikel gefunden werden, gib 'NONE' zurück. Text:",
+  it: "Estrai solo gli articoli della spesa e le quantità da questo testo. Aggiungi un emoji prima di ogni articolo. Restituiscili come elenco separato da virgole. Se non vengono trovati articoli della spesa, restituisci 'NONE'. Testo:",
+  fr: "Extrayez uniquement les articles d'achat et les quantités de ce texte. Ajoutez un emoji avant chaque article. Renvoyez-les sous forme de liste séparée par des virgules. Si aucun article d'achat n'est trouvé, renvoyez 'NONE'. Texte:",
+  pt: "Extraia apenas os itens de compra e quantidades deste texto. Adicione um emoji antes de cada item. Retorne-os como uma lista separada por vírgulas. Se nenhum item de compra for encontrado, retorne 'NONE'. Texto:",
+  ru: "Извлеките только товары для покупок и количества из этого текста. Добавьте эмодзи перед каждым товаром. Верните их в виде списка, разделенного запятыми. Если товары для покупок не найдены, верните 'NONE'. Текст:",
+  ar: "استخرج فقط عناصر التسوق والكميات من هذا النص. أضف رمزًا تعبيريًا قبل كل عنصر. أرجعها كقائمة مفصولة بفواصل. إذا لم يتم العثور على عناصر تسوق، أرجع 'NONE'. النص:",
+  hu: "Csak a vásárlási tételeket és mennyiségeket vedd ki ebből a szövegből. Adj hozzá egy emojit minden tétel elé. Add vissza őket vesszővel elválasztott listaként. Ha nem találsz vásárlási tételeket, add vissza a 'NONE'-t. Szöveg:",
+  ja: "このテキストから買い物アイテムと数量のみを抽出してください。各アイテムの前に絵文字を追加してください。カンマ区切りのリストとして返してください。買い物アイテムが見つからない場合は「NONE」を返してください。テキスト:",
+  nl: "Haal alleen de boodschappenartikelen en hoeveelheden uit deze tekst. Voeg een emoji toe voor elk artikel. Geef ze terug als een door komma's gescheiden lijst. Als er geen boodschappenartikelen worden gevonden, geef dan 'NONE' terug. Tekst:",
 }
 
 export const modalTexts = {

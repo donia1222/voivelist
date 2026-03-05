@@ -7,7 +7,7 @@ const texts = {
     imagenshoppingList: "Choose an image",
     textshoppingList: "Write your list",
     saveList: "Save",
-    stopRecording: "Stop playback",
+    stopRecording: "Stop · See list",
     list: "Shopping List",
     createShoppingList: "Create Shopping List",
     writeItems: "Write the items of the list",
@@ -46,7 +46,7 @@ const texts = {
     voiceEffortless: "Create lists with your voice",
     superEasy: "Super Easy",
     tapButtonStart: "Tap the button below to start",
-    pressToStartSpeaking: "Press to start speaking",
+    pressToStartSpeaking: "Tap the mic and start saying your products",
     pressToScanList: "Write your lists by hand",
 
     // Manual Lists Modal
@@ -71,7 +71,10 @@ const texts = {
     loadingTagline: "🎙️ Shop with your voice",
     bannerTitle: "Create a shopping list with your voice",
     bannerTitleManual: "Create a shopping list by hand",
-    availableWidgets: "Available Widgets"
+    availableWidgets: "Available Widgets",
+    createFirstList: "Create your first shopping list!",
+    myLists: "My Lists",
+    productsCount: "products",
   },
   es: {
     voice: "Voz",
@@ -81,7 +84,7 @@ const texts = {
     imagenshoppingList: "Elije una imagen",
     textshoppingList: "Escribe tu lista",
     saveList: "Guardar",
-    stopRecording: "Parar reproducción",
+    stopRecording: "Parar · Ver lista",
     list: "Lista de la Compra",
     createShoppingList: "Crear Lista de Compras",
     writeItems: "Escribe los elementos de la lista",
@@ -120,7 +123,7 @@ const texts = {
     voiceEffortless: "Crea listas con tu voz",
     superEasy: "Muy Fácil",
     tapButtonStart: "Presiona el botón de abajo para empezar",
-    pressToStartSpeaking: "Presiona para comenzar a hablar",
+    pressToStartSpeaking: "Pulsa el micro y empieza a decir tus productos",
     pressToScanList: "Escribe tus listas a mano",
 
     // Manual Lists Modal
@@ -145,7 +148,10 @@ const texts = {
     loadingTagline: "🎙️ Compra con tu voz",
     bannerTitle: "Crea una lista de la compra con tu voz",
     bannerTitleManual: "Crea una lista de la compra a mano",
-    availableWidgets: "Widgets disponibles"
+    availableWidgets: "Widgets disponibles",
+    createFirstList: "Crea tu primera lista de la compra!",
+    myLists: "Mis Listas",
+    productsCount: "productos",
   },
   de: {
     voice: "Stimme",
@@ -155,7 +161,7 @@ const texts = {
     imagenshoppingList: "Wähle ein Bild",
     textshoppingList: "Schreibe deine Liste",
     saveList: "Speichern",
-    stopRecording: "Wiedergabe stoppen",
+    stopRecording: "Stopp · Liste ansehen",
     list: "Einkaufsliste",
     createShoppingList: "Einkaufsliste erstellen",
     writeItems: "Schreibe die Elemente der Liste",
@@ -194,7 +200,7 @@ const texts = {
     voiceEffortless: "Erstelle Listen mit deiner Stimme",
     superEasy: "Super Einfach",
     tapButtonStart: "Tippe unten auf den Button zum Starten",
-    pressToStartSpeaking: "Drücken Sie, um zu sprechen",
+    pressToStartSpeaking: "Tippe auf das Mikrofon und nenne deine Produkte",
     pressToScanList: "Schreiben Sie Ihre Listen von Hand",
 
     // Manual Lists Modal
@@ -219,7 +225,10 @@ const texts = {
     loadingTagline: "🎙️ Einkaufen mit deiner Stimme",
     bannerTitle: "Erstellen Sie eine Einkaufsliste mit Ihrer Stimme",
     bannerTitleManual: "Erstellen Sie eine Einkaufsliste von Hand",
-    availableWidgets: "Verfügbare Widgets"
+    availableWidgets: "Verfügbare Widgets",
+    createFirstList: "Erstelle deine erste Einkaufsliste!",
+    myLists: "Meine Listen",
+    productsCount: "Produkte",
   },
   it: {
     voice: "Voce",
@@ -229,7 +238,7 @@ const texts = {
     imagenshoppingList: "Scegli un'immagine",
     textshoppingList: "Scrivi la tua lista",
     saveList: "Salva",
-    stopRecording: "Interrompi la riproduzione",
+    stopRecording: "Stop · Vedi lista",
     list: "Lista della Spesa",
     createShoppingList: "Crea lista della spesa",
     writeItems: "Scrivi gli elementi della lista",
@@ -267,7 +276,7 @@ const texts = {
     voiceEffortless: "Crea liste con la tua voce",
     superEasy: "Super Facile",
     tapButtonStart: "Tocca il pulsante qui sotto per iniziare",
-    pressToStartSpeaking: "Premi per iniziare a parlare",
+    pressToStartSpeaking: "Tocca il microfono e inizia a dire i tuoi prodotti",
     pressToScanList: "Scrivi le tue liste a mano",
 
     // Manual Lists Modal
@@ -292,7 +301,10 @@ const texts = {
     loadingTagline: "🎙️ Fai shopping con la tua voce",
     bannerTitle: "Crea una lista della spesa con la tua voce",
     bannerTitleManual: "Crea una lista della spesa a mano",
-    availableWidgets: "Widget disponibili"
+    availableWidgets: "Widget disponibili",
+    createFirstList: "Crea la tua prima lista della spesa!",
+    myLists: "Le mie Liste",
+    productsCount: "prodotti",
   },
   fr: {
     voice: "Voix",
@@ -302,7 +314,7 @@ const texts = {
     imagenshoppingList: "Choisir une image",
     textshoppingList: "Écrivez votre liste",
     saveList: "Enregistrer",
-    stopRecording: "Arrêter la lecture",
+    stopRecording: "Stop · Voir la liste",
     list: "Liste de Courses",
     createShoppingList: "Créer une liste de courses",
     writeItems: "Écrivez les articles de la liste",
@@ -340,7 +352,7 @@ const texts = {
     voiceEffortless: "Créez des listes avec votre voix",
     superEasy: "Super Facile",
     tapButtonStart: "Appuyez sur le bouton ci-dessous pour commencer",
-    pressToStartSpeaking: "Appuyez pour commencer à parler",
+    pressToStartSpeaking: "Appuie sur le micro et commence à dire tes produits",
     pressToScanList: "Écrivez vos listes à la main",
 
     // Manual Lists Modal
@@ -365,7 +377,10 @@ const texts = {
     loadingTagline: "🎙️ Achetez avec votre voix",
     bannerTitle: "Créez une liste de courses avec votre voix",
     bannerTitleManual: "Créez une liste de courses à la main",
-    availableWidgets: "Widgets disponibles"
+    availableWidgets: "Widgets disponibles",
+    createFirstList: "Creez votre premiere liste de courses!",
+    myLists: "Mes Listes",
+    productsCount: "produits",
   },
   pt: {
     voice: "Voz",
@@ -375,7 +390,7 @@ const texts = {
     imagenshoppingList: "Escolha uma imagem",
     textshoppingList: "Escreva sua lista",
     saveList: "Salvar",
-    stopRecording: "Parar reprodução",
+    stopRecording: "Parar · Ver lista",
     list: "Lista de Compras",
     createShoppingList: "Criar Lista de Compras",
     writeItems: "Escreva os itens da lista",
@@ -413,7 +428,7 @@ const texts = {
     voiceEffortless: "Crie listas com sua voz",
     superEasy: "Super Fácil",
     tapButtonStart: "Toque no botão abaixo para começar",
-    pressToStartSpeaking: "Pressione para começar a falar",
+    pressToStartSpeaking: "Toca no microfone e comece a dizer seus produtos",
     pressToScanList: "Escreva suas listas à mão",
 
     // Manual Lists Modal
@@ -438,7 +453,10 @@ const texts = {
     loadingTagline: "🎙️ Compre com sua voz",
     bannerTitle: "Crie uma lista de compras com sua voz",
     bannerTitleManual: "Crie uma lista de compras à mão",
-    availableWidgets: "Widgets disponíveis"
+    availableWidgets: "Widgets disponíveis",
+    createFirstList: "Crie sua primeira lista de compras!",
+    myLists: "Minhas Listas",
+    productsCount: "produtos",
   },
   ru: {
     voice: "Голос",
@@ -448,7 +466,7 @@ const texts = {
     imagenshoppingList: "Выберите изображение",
     textshoppingList: "Напишите свой список",
     saveList: "Сохранить",
-    stopRecording: "Остановить воспроизведение",
+    stopRecording: "Стоп · Смотреть список",
     list: "Список покупок",
     createShoppingList: "Создать список покупок",
     writeItems: "Напишите элементы списка",
@@ -486,7 +504,7 @@ const texts = {
     voiceEffortless: "Создавайте списки голосом",
     superEasy: "Очень просто",
     tapButtonStart: "Нажмите кнопку для начала",
-    pressToStartSpeaking: "Нажмите, чтобы начать говорить",
+    pressToStartSpeaking: "Нажми на микрофон и начни называть продукты",
     pressToScanList: "Пишите списки от руки",
 
     // Voice Lists Modal
@@ -497,7 +515,10 @@ const texts = {
     voiceListsBenefit3: "⚡ Мгновенное создание списка",
     voiceListsBenefit4: "🌍 Работает на 13 языках",
     benefitsPrincipal: "🎯 Основные преимущества:",
-    availableWidgets: "Доступные виджеты"
+    availableWidgets: "Доступные виджеты",
+    createFirstList: "Создайте свой первый список покупок!",
+    myLists: "Мои Списки",
+    productsCount: "продуктов",
   },
   ar: {
     voice: "صوت",
@@ -507,7 +528,7 @@ const texts = {
     imagenshoppingList: "اختر صورة",
     textshoppingList: "اكتب قائمتك",
     saveList: "حفظ",
-    stopRecording: "إيقاف التشغيل",
+    stopRecording: "إيقاف · عرض القائمة",
     list: "قائمة التسوق",
     createShoppingList: "إنشاء قائمة تسوق",
     writeItems: "اكتب عناصر القائمة",
@@ -545,7 +566,7 @@ const texts = {
     voiceEffortless: "أنشئ قوائم بصوتك",
     superEasy: "سهل جداً",
     tapButtonStart: "اضغط على الزر للبدء",
-    pressToStartSpeaking: "اضغط لبدء التحدث",
+    pressToStartSpeaking: "اضغط على الميكروفون وابدأ بذكر منتجاتك",
     pressToScanList: "اكتب قوائمك بخط اليد",
 
     // Voice Lists Modal
@@ -556,7 +577,10 @@ const texts = {
     voiceListsBenefit3: "⚡ إنشاء قائمة فوري",
     voiceListsBenefit4: "🌍 يعمل بـ 13 لغة",
     benefitsPrincipal: "🎯 الفوائد الرئيسية:",
-    availableWidgets: "الأدوات المتاحة"
+    availableWidgets: "الأدوات المتاحة",
+    createFirstList: "أنشئ قائمة التسوق الأولى الخاصة بك!",
+    myLists: "قوائمي",
+    productsCount: "منتجات",
   },
   hu: {
     voice: "Hang",
@@ -566,7 +590,7 @@ const texts = {
     imagenshoppingList: "Válasszon egy képet",
     textshoppingList: "Írja le a listáját",
     saveList: "Mentés",
-    stopRecording: "Lejátszás leállítása",
+    stopRecording: "Stop · Lista megtekintése",
     list: "Bevásárlólista",
     createShoppingList: "Bevásárlólista létrehozása",
     writeItems: "Írja le a lista elemeit",
@@ -604,7 +628,7 @@ const texts = {
     voiceEffortless: "Hozzon létre listákat hanggal",
     superEasy: "Nagyon egyszerű",
     tapButtonStart: "Nyomja meg a gombot a kezdéshez",
-    pressToStartSpeaking: "Nyomja meg a beszéd indításához",
+    pressToStartSpeaking: "Koppints a mikrofonra és mondd el a termékeidet",
     pressToScanList: "Írja listáit kézzel",
 
     // Voice Lists Modal
@@ -615,7 +639,10 @@ const texts = {
     voiceListsBenefit3: "⚡ Azonnali lista létrehozás",
     voiceListsBenefit4: "🌍 13 nyelven működik",
     benefitsPrincipal: "🎯 Fő előnyök:",
-    availableWidgets: "Elérhető widgetek"
+    availableWidgets: "Elérhető widgetek",
+    createFirstList: "Hozd létre az első bevásárlólistádat!",
+    myLists: "Listáim",
+    productsCount: "termék",
   },
   ja: {
     voice: "声",
@@ -625,7 +652,7 @@ const texts = {
     imagenshoppingList: "画像を選択",
     textshoppingList: "リストを書き込む",
     saveList: "保存",
-    stopRecording: "再生停止",
+    stopRecording: "停止 · リストを見る",
     list: "買い物リスト",
     createShoppingList: "買い物リストを作成",
     writeItems: "リストの項目を書く",
@@ -663,7 +690,7 @@ const texts = {
     voiceEffortless: "声でリストを作成",
     superEasy: "とても簡単",
     tapButtonStart: "ボタンを押して開始",
-    pressToStartSpeaking: "押して話し始める",
+    pressToStartSpeaking: "マイクをタップして商品を言い始めてください",
     pressToScanList: "手書きでリストを作成",
 
     // Voice Lists Modal
@@ -674,7 +701,10 @@ const texts = {
     voiceListsBenefit3: "⚡ 即座にリスト作成",
     voiceListsBenefit4: "🌍 13言語対応",
     benefitsPrincipal: "🎯 主な利点:",
-    availableWidgets: "利用可能なウィジェット"
+    availableWidgets: "利用可能なウィジェット",
+    createFirstList: "最初の買い物リストを作成しましょう！",
+    myLists: "マイリスト",
+    productsCount: "商品",
   },
   tr: {
     voice: "Ses",
@@ -684,7 +714,7 @@ const texts = {
     imagenshoppingList: "Bir görüntü seçin",
     textshoppingList: "Listenizi yazın",
     saveList: "Kaydet",
-    stopRecording: "Oynatmayı durdur",
+    stopRecording: "Durdur · Listeyi gör",
     list: "Alışveriş Listesi",
     createShoppingList: "Alışveriş Listesi Oluştur",
     writeItems: "Liste öğelerini yazın",
@@ -723,7 +753,7 @@ const texts = {
     voiceEffortless: "Sesinizle listeler oluşturun",
     superEasy: "Çok Kolay",
     tapButtonStart: "Başlamak için aşağıdaki düğmeye basın",
-    pressToStartSpeaking: "Konuşmaya başlamak için basın",
+    pressToStartSpeaking: "Mikrofona dokun ve ürünlerini söylemeye başla",
     pressToScanList: "Listelerinizi elle yazın",
     manualLists: "Manuel listeler oluştur",
 
@@ -747,7 +777,10 @@ const texts = {
     loadingTagline: "🎙️ Sesinle alışveriş yap",
     bannerTitle: "Sesinizle bir alışveriş listesi oluşturun",
     bannerTitleManual: "Elle bir alışveriş listesi oluşturun",
-    availableWidgets: "Mevcut Widget'lar"
+    availableWidgets: "Mevcut Widget'lar",
+    createFirstList: "İlk alışveriş listenizi oluşturun!",
+    myLists: "Listelerim",
+    productsCount: "ürün",
   },
   hi: {
     voice: "आवाज़",
@@ -757,7 +790,7 @@ const texts = {
     imagenshoppingList: "एक छवि चुनें",
     textshoppingList: "अपनी सूची लिखें",
     saveList: "सहेजें",
-    stopRecording: "प्लेबैक रोकें",
+    stopRecording: "रोकें · सूची देखें",
     list: "खरीदारी सूची",
     createShoppingList: "खरीदारी सूची बनाएं",
     writeItems: "सूची के आइटम लिखें",
@@ -796,7 +829,7 @@ const texts = {
     voiceEffortless: "अपनी आवाज़ से सूचियां बनाएं",
     superEasy: "बहुत आसान",
     tapButtonStart: "शुरू करने के लिए नीचे का बटन दबाएं",
-    pressToStartSpeaking: "बोलना शुरू करने के लिए दबाएं",
+    pressToStartSpeaking: "माइक पर टैप करें और अपने उत्पाद बोलना शुरू करें",
     pressToScanList: "अपनी सूचियां हाथ से लिखें",
 
     // Voice Effortless Modal
@@ -819,7 +852,10 @@ const texts = {
     loadingTagline: "🎙️ अपनी आवाज़ से खरीदारी करें",
     bannerTitle: "अपनी आवाज़ से एक खरीदारी सूची बनाएं",
     bannerTitleManual: "हाथ से एक खरीदारी सूची बनाएं",
-    availableWidgets: "उपलब्ध विजेट"
+    availableWidgets: "उपलब्ध विजेट",
+    createFirstList: "अपनी पहली खरीदारी सूची बनाएं!",
+    myLists: "मेरी सूचियां",
+    productsCount: "उत्पाद",
   },
   nl: {
     voice: "Stem",
@@ -829,7 +865,7 @@ const texts = {
     imagenshoppingList: "Kies een afbeelding",
     textshoppingList: "Schrijf je lijst",
     saveList: "Opslaan",
-    stopRecording: "Stop met afspelen",
+    stopRecording: "Stop · Lijst bekijken",
     list: "Boodschappenlijst",
     createShoppingList: "Boodschappenlijst maken",
     writeItems: "Schrijf de items van de lijst",
@@ -867,7 +903,7 @@ const texts = {
     voiceEffortless: "Maak lijsten met je stem",
     superEasy: "Super makkelijk",
     tapButtonStart: "Druk op de knop om te starten",
-    pressToStartSpeaking: "Druk om te beginnen met spreken",
+    pressToStartSpeaking: "Tik op de microfoon en begin je producten te noemen",
     pressToScanList: "Schrijf je lijsten met de hand",
 
     // Voice Effortless Modal
@@ -890,7 +926,10 @@ const texts = {
     loadingTagline: "🎙️ Winkelen met je stem",
     bannerTitle: "Maak een boodschappenlijst met je stem",
     bannerTitleManual: "Maak een boodschappenlijst met de hand",
-    availableWidgets: "Beschikbare widgets"
+    availableWidgets: "Beschikbare widgets",
+    createFirstList: "Maak je eerste boodschappenlijst!",
+    myLists: "Mijn Lijsten",
+    productsCount: "producten",
   },
 
 

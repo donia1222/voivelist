@@ -2102,49 +2102,11 @@ const HistoryScreen = ({ navigation, route }) => {
             style={modernStyles.listContent}
             contentContainerStyle={{ paddingBottom: 60 }}
             showsVerticalScrollIndicator={false}
-            ListFooterComponent={history.length > 1 ? (
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{
-                  paddingHorizontal: 8,
-                  paddingTop: 12,
-                  paddingBottom: 4,
-                  alignItems: 'center',
-                }}
-              >
-                {history.map((listItem, chipIndex) => (
-                  <TouchableOpacity
-                    key={chipIndex}
-                    onPress={() => {
-                      flatListRef.current?.scrollToIndex({ index: chipIndex, animated: true })
-                    }}
-                    style={{
-                      paddingHorizontal: 14,
-                      paddingVertical: 7,
-                      borderRadius: 16,
-                      backgroundColor: currentIndex === chipIndex ? '#6366f1' : 'rgba(99, 102, 241, 0.1)',
-                      marginRight: 8,
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={{
-                      fontSize: 13,
-                      fontWeight: '600',
-                      color: currentIndex === chipIndex ? '#fff' : '#6366f1',
-                    }} numberOfLines={1}>
-                      {listItem.name}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            ) : null}
           />
         )
       })()}
 
 
-      {/* Barra de progreso eliminada */}
 
     </View>
     </View>
@@ -2283,14 +2245,18 @@ const HistoryScreen = ({ navigation, route }) => {
           }}
         />
 
-        {/* Botones fijos abajo */}
+        </>
+      )}
+
+      {/* Botones de acción */}
+      {history.length > 0 && (
         <View style={{
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-          paddingVertical: 8,
+          paddingVertical: 6,
           paddingHorizontal: 20,
-          gap: 12,
+          gap: 10,
         }}>
           <TouchableOpacity
             onPress={() => showAddMethodModal(currentIndex)}
@@ -2331,7 +2297,6 @@ const HistoryScreen = ({ navigation, route }) => {
             </Text>
           </TouchableOpacity>
         </View>
-        </>
       )}
 
       {/* Modales de favoritos mejorados */}

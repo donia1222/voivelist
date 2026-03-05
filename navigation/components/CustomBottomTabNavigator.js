@@ -1720,18 +1720,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
       }
     },
     {
-      label: mealPlannerTexts.dayMenu,
-      description: mainItemDescriptions.mealPlanner[deviceLanguage] || mainItemDescriptions.mealPlanner['en'],
-      icon: "restaurant-outline",
-      color: "#8B5CF6",
-      tabKey: "MealPlanner",
-      badge: "New",
-      onPress: () => {
-        modalizeRef.current?.close()
-        setActiveTab("MealPlanner")
-      }
-    },
-    {
       label: menuTexts.recommendations || "Recomendaciones",
       description: mainItemDescriptions.recommendations[deviceLanguage] || mainItemDescriptions.recommendations['en'],
       icon: "bulb",

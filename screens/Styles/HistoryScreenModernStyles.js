@@ -140,13 +140,13 @@ const getModernStyles = (theme) => StyleSheet.create({
   // Tarjetas de historial
   historyCard: {
     width: width - 32,
-    marginBottom: -0,
+    marginBottom: 0,
     backgroundColor: "transparent",
     borderRadius: 24,
     marginHorizontal: 16,
-    marginVertical: -4,
-    padding: 12,
-    paddingBottom: 40,
+    marginVertical: 0,
+    padding: 8,
+    paddingBottom: 0,
     shadowColor: "transparent",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0,
@@ -361,7 +361,7 @@ const getModernStyles = (theme) => StyleSheet.create({
 
   // Contenido de la lista con scroll
   listContent: {
-    marginBottom: 50, // Margen extra para no tocar el footer fijo
+    marginBottom: 0,
     marginTop: 4,
   },
   
