@@ -646,7 +646,7 @@ const AnimatedMenuButton = ({ isSmallIPhone, isMenuScreen, theme, onPress, bar1A
   )
 }
 
-function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "History" }) {
+function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Home" }) {
   const { theme } = useTheme()
   const { isRecording } = useRecording()
   const currentTranslations = getCurrentTranslations()
@@ -1676,6 +1676,51 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
       sv: "Planera alla dina inköp i förväg",
       hu: "Tervezze meg előre minden vásárlását",
       ar: "خطط لجميع مشترياتك مسبقًا"
+    },
+    analyzeImage: {
+      es: "Escanea listas escritas a mano con la cámara",
+      en: "Scan handwritten lists with your camera",
+      de: "Scannen Sie handgeschriebene Listen mit Ihrer Kamera",
+      fr: "Scannez des listes manuscrites avec votre caméra",
+      it: "Scansiona liste scritte a mano con la fotocamera",
+      tr: "El yazısı listelerinizi kameranızla tarayın",
+      pt: "Digitalize listas escritas à mão com sua câmera",
+      ru: "Сканируйте рукописные списки камерой",
+      zh: "用相机扫描手写清单",
+      ja: "カメラで手書きリストをスキャン",
+      sv: "Skanna handskrivna listor med din kamera",
+      hu: "Szkennelj kézzel írt listákat a kamerával",
+      ar: "امسح القوائم المكتوبة بخط اليد بالكاميرا"
+    },
+    savedLists: {
+      es: "Accede a todas tus listas guardadas",
+      en: "Access all your saved lists",
+      de: "Greifen Sie auf alle gespeicherten Listen zu",
+      fr: "Accédez à toutes vos listes sauvegardées",
+      it: "Accedi a tutte le tue liste salvate",
+      tr: "Kaydedilmiş tüm listelerinize erişin",
+      pt: "Acesse todas as suas listas salvas",
+      ru: "Доступ ко всем сохранённым спискам",
+      zh: "访问所有已保存的清单",
+      ja: "保存済みリストにアクセス",
+      sv: "Få tillgång till alla sparade listor",
+      hu: "Hozzáférés az összes mentett listához",
+      ar: "الوصول إلى جميع قوائمك المحفوظة"
+    },
+    priceCalc: {
+      es: "Calcula el precio estimado de tu lista",
+      en: "Calculate the estimated price of your list",
+      de: "Berechnen Sie den geschätzten Preis Ihrer Liste",
+      fr: "Calculez le prix estimé de votre liste",
+      it: "Calcola il prezzo stimato della tua lista",
+      tr: "Listenizin tahmini fiyatını hesaplayın",
+      pt: "Calcule o preço estimado da sua lista",
+      ru: "Рассчитайте примерную стоимость списка",
+      zh: "计算清单的估计价格",
+      ja: "リストの推定価格を計算",
+      sv: "Beräkna det uppskattade priset för din lista",
+      hu: "Számítsa ki listája becsült árát",
+      ar: "احسب السعر التقديري لقائمتك"
     }
   };
 
@@ -1717,6 +1762,50 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
       onPress: () => {
         modalizeRef.current?.close()
         setActiveTab("HandwrittenList")
+      }
+    },
+    {
+      label: currentTranslations.analyzeList || currentTranslations.imageList,
+      description: mainItemDescriptions.analyzeImage[deviceLanguage] || mainItemDescriptions.analyzeImage['en'],
+      icon: "scan",
+      color: "#ff9500",
+      tabKey: "Images",
+      onPress: () => {
+        modalizeRef.current?.close()
+        setActiveTab("Images")
+      }
+    },
+    {
+      label: currentTranslations.saved,
+      description: mainItemDescriptions.savedLists[deviceLanguage] || mainItemDescriptions.savedLists['en'],
+      icon: "bookmark-outline",
+      color: "#34c759",
+      tabKey: "History",
+      onPress: () => {
+        modalizeRef.current?.close()
+        setActiveTab("History")
+      }
+    },
+    {
+      label: currentTranslations.priceCalculator || "Price Calculator",
+      description: mainItemDescriptions.priceCalc[deviceLanguage] || mainItemDescriptions.priceCalc['en'],
+      icon: "calculator-outline",
+      color: "#dc2626",
+      tabKey: "PriceCalculator",
+      onPress: () => {
+        modalizeRef.current?.close()
+        setActiveTab("PriceCalculator")
+      }
+    },
+    {
+      label: currentTranslations.shoppingCalendar || "Calendar",
+      description: mainItemDescriptions.shoppingCalendar[deviceLanguage] || mainItemDescriptions.shoppingCalendar['en'],
+      icon: "calendar-outline",
+      color: "#8B5CF6",
+      tabKey: "CalendarPlanner",
+      onPress: () => {
+        modalizeRef.current?.close()
+        setActiveTab("CalendarPlanner")
       }
     },
     {
@@ -1938,155 +2027,47 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
           flex: 1,
         }}>
 
-          {/* Icon for all screens including menu screens */}
-          <View
-            style={{
-              width: isSmallIPhone ? 32 : 40,
-              height: isSmallIPhone ? 32 : 40,
-              borderRadius: isSmallIPhone ? 8 : 10,
-              backgroundColor: activeTab === "Images" ? "#ff950020" :
-                              activeTab === "History" ? "#34c75920" :
-                              activeTab === "Calendar" ? "#6B728020" :
-                              activeTab === "PriceCalculator" ? "#dc262620" :
-                              activeTab === "HandwrittenList" ? "#8B5CF620" :
-                              activeTab === "Recommendations" ? "#4a6bff20" :
-                              activeTab === "MealPlanner" ? "#34c75920" :
-                              activeTab === "CalendarPlanner" ? "#6B728020" :
-                              "#4a6bff20",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: isSmallIPhone ? 8 : 12,
-            }}
-          >
-            {activeTab === "Home" ? (
+          {/* Icon: app logo on Home, back arrow on all other screens */}
+          {activeTab === "Home" ? (
+            <View
+              style={{
+                width: isSmallIPhone ? 32 : 40,
+                height: isSmallIPhone ? 32 : 40,
+                borderRadius: isSmallIPhone ? 8 : 10,
+                backgroundColor: "#4a6bff20",
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: isSmallIPhone ? 8 : 12,
+              }}
+            >
               <Animated.View style={{ transform: [{ scale: iconScaleAnim }] }}>
                 <Image
                   source={require("../../assets/images/icono34.png")}
                   style={{ width: isSmallIPhone ? 24 : 30, height: isSmallIPhone ? 24 : 30 }}
                 />
               </Animated.View>
-            ) : activeTab === "Images" ? (
-              <View style={{ position: 'relative' }}>
-                <Ionicons
-                  name="scan"
-                  size={isSmallIPhone ? 20 : 24}
-                  color="#ff9500"
-                />
-                <View style={{
-                  position: 'absolute',
-                  top: -4,
-                  right: -6,
-                  backgroundColor: '#ff9500',
-                  borderRadius: 8,
-                  padding: 2,
-                }}>
-                  <Ionicons
-                    name="image"
-                    size={10}
-                    color="white"
-                  />
-                </View>
-              </View>
-            ) : activeTab === "History" ? (
-              <View style={{ position: 'relative' }}>
-                <Ionicons
-                  name="list"
-                  size={isSmallIPhone ? 20 : 24}
-                  color="#34c759"
-                />
-                <View style={{
-                  position: 'absolute',
-                  top: -4,
-                  right: -6,
-                  backgroundColor: '#34c759',
-                  borderRadius: 8,
-                  padding: 2,
-                }}>
-                  <Ionicons
-                    name="checkmark"
-                    size={10}
-                    color="white"
-                  />
-                </View>
-              </View>
-            ) : activeTab === "Calendar" ? (
-              <View style={{ position: 'relative' }}>
-                <Ionicons
-                  name="calendar"
-                  size={isSmallIPhone ? 20 : 24}
-                  color="#6B7280"
-                />
-                <View style={{
-                  position: 'absolute',
-                  top: -4,
-                  right: -6,
-                  backgroundColor: '#6B7280',
-                  borderRadius: 8,
-                  padding: 2,
-                }}>
-                  <Ionicons
-                    name="cart"
-                    size={10}
-                    color="white"
-                  />
-                </View>
-              </View>
-            ) : activeTab === "PriceCalculator" ? (
-              <View style={{ position: 'relative' }}>
-                <Ionicons
-                  name="calculator"
-                  size={isSmallIPhone ? 20 : 24}
-                  color="#dc2626"
-                />
-                <View style={{
-                  position: 'absolute',
-                  top: -4,
-                  right: -6,
-                  backgroundColor: '#dc2626',
-                  borderRadius: 8,
-                  padding: 2,
-                }}>
-                  <Text style={{ fontSize: 10, color: "white", fontWeight: "bold" }}>$</Text>
-                </View>
-              </View>
-            ) : activeTab === "HandwrittenList" ? (
+            </View>
+          ) : (
+            <Pressable
+              onPress={() => setActiveTab("Home")}
+              style={({ pressed }) => ({
+                width: isSmallIPhone ? 32 : 40,
+                height: isSmallIPhone ? 32 : 40,
+                borderRadius: isSmallIPhone ? 8 : 10,
+                backgroundColor: pressed ? "rgba(107, 114, 128, 0.15)" : "rgba(107, 114, 128, 0.08)",
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: isSmallIPhone ? 8 : 12,
+                transform: [{ scale: pressed ? 0.9 : 1 }],
+              })}
+            >
               <Ionicons
-                name="pencil"
-                size={isSmallIPhone ? 20 : 24}
-                color="#8B5CF6"
-              />
-            ) : activeTab === "Recommendations" ? (
-              <Ionicons
-                name="bulb"
-                size={isSmallIPhone ? 20 : 24}
-                color="#4a6bff"
-              />
-            ) : activeTab === "MealPlanner" ? (
-              <Ionicons
-                name="restaurant-outline"
-                size={isSmallIPhone ? 20 : 24}
-                color="#34c759"
-              />
-            ) : activeTab === "CalendarPlanner" ? (
-              <Ionicons
-                name="calendar-outline"
+                name="chevron-back"
                 size={isSmallIPhone ? 20 : 24}
                 color="#6B7280"
               />
-            ) : activeTab === "WidgetInfo" ? (
-              <Ionicons
-                name="apps-outline"
-                size={isSmallIPhone ? 20 : 24}
-                color="#8B5CF6"
-              />
-            ) : (
-              <Ionicons
-                name="storefront"
-                size={isSmallIPhone ? 16 : 18}
-                color="#4a6bff"
-              />
-            )}
-          </View>
+            </Pressable>
+          )}
           <Text
             style={{
               fontSize: isSmallIPhone ? 16 : 21,
@@ -2173,6 +2154,30 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
           </TouchableOpacity>
         )}
 
+        {/* History button - only on Home screen */}
+        {activeTab === "Home" && (
+          <Pressable
+            onPress={() => setActiveTab("History")}
+            style={({ pressed }) => ({
+              width: 44,
+              height: 44,
+              borderRadius: 12,
+              backgroundColor: "rgba(52, 199, 89, 0.1)",
+              justifyContent: "center",
+              alignItems: "center",
+              transform: [{ scale: pressed ? 0.9 : 1 }],
+              opacity: pressed ? 0.8 : 1,
+              marginRight: 10,
+            })}
+          >
+            <Ionicons
+              name="bookmark-outline"
+              size={22}
+              color="#34c759"
+            />
+          </Pressable>
+        )}
+
         {/* Menu button for all screens */}
         <Pressable
           onPress={() => {
@@ -2180,10 +2185,10 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
             modalizeRef.current?.open()
           }}
           style={({ pressed }) => ({
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            backgroundColor: isMenuScreen ? "rgba(139, 92, 246, 0.1)" : "rgba(107, 114, 128, 0.1)",
+            width: 44,
+            height: 44,
+            borderRadius: 12,
+            backgroundColor: "rgba(107, 114, 128, 0.12)",
             justifyContent: "center",
             alignItems: "center",
             transform: [{ scale: pressed ? 0.9 : 1 }],
@@ -2191,18 +2196,18 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
           })}
         >
           <View style={{
-            width: 18,
-            height: 14,
+            width: 22,
+            height: 16,
             justifyContent: 'space-between',
-            alignItems: 'flex-start',
+            alignItems: 'center',
           }}>
             <Animated.View style={{
               width: bar1Anim.interpolate({
                 inputRange: [0, 1, 2],
-                outputRange: [18, 14, 16]
+                outputRange: [20, 15, 18]
               }),
-              height: 2,
-              backgroundColor: isMenuScreen ? "#8B5CF6" : "#6B7280",
+              height: 2.5,
+              backgroundColor: '#374151',
               borderRadius: 2,
               transform: [{
                 translateX: bar1Anim.interpolate({
@@ -2214,12 +2219,11 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
             <Animated.View style={{
               width: bar2Anim.interpolate({
                 inputRange: [0, 1, 2],
-                outputRange: [12, 14, 16]
+                outputRange: [14, 17, 20]
               }),
-              height: 2,
-              backgroundColor: isMenuScreen ? "#8B5CF6" : "#6B7280",
+              height: 2.5,
+              backgroundColor: '#374151',
               borderRadius: 2,
-              alignSelf: 'flex-end',
               transform: [{
                 translateX: bar2Anim.interpolate({
                   inputRange: [0, 1, 2],
@@ -2230,10 +2234,10 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
             <Animated.View style={{
               width: bar3Anim.interpolate({
                 inputRange: [0, 1, 2],
-                outputRange: [14, 16, 12]
+                outputRange: [17, 20, 14]
               }),
-              height: 2,
-              backgroundColor: isMenuScreen ? "#8B5CF6" : "#6B7280",
+              height: 2.5,
+              backgroundColor: '#374151',
               borderRadius: 2,
               transform: [{
                 translateX: bar3Anim.interpolate({
@@ -2253,11 +2257,9 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
         </ReanimatedAnimated.View>
       </GestureDetector>
 
-      {/* Custom Bottom Tab Bar */}
-      {activeTab === "Home" && hasActiveList ? (
-        // Barra de botones de acción con estilo moderno
+      {/* Action buttons when there's an active list on Home */}
+      {activeTab === "Home" && hasActiveList && (
         <View style={modernStyles.actionButtonsContainer}>
-          {/* Primeros 3 botones en fila */}
           <View style={[modernStyles.buttonRow, { marginBottom: 20 }]}>
             {topActionTabs.map((tab, index) => (
               <TouchableOpacity
@@ -2282,46 +2284,6 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
               </TouchableOpacity>
             ))}
           </View>
-        </View>
-      ) : (
-        // Barra de navegación normal
-        <View
-          style={{
-            flexDirection: "row",
-            backgroundColor: theme.background,
-            paddingBottom: isSmallIPhone ? 15 : 20,
-            paddingTop: isSmallIPhone ? 6 : 10,
-            paddingHorizontal: isSmallIPhone ? 10 : 20,
-            borderTopWidth: 1,
-            borderTopColor: theme.backgroundtres + "20",
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: -2,
-            },
-            shadowOpacity: 0.1,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-        >
-          {mainTabs.map((tab, index) => {
-            const isActive = tab.key === activeTab
-            const tabColor = isActive ? tab.color : theme.backgroundtres
-            const isCenterTab = index === 2
-
-            return (
-              <AnimatedTabButton
-                key={tab.key}
-                tab={tab}
-                isActive={isActive}
-                tabColor={tabColor}
-                isSmallIPhone={isSmallIPhone}
-                onPress={() => handleTabPress(tab)}
-                isCenterTab={isCenterTab}
-              />
-            )
-          })}
-
         </View>
       )}
 
@@ -2780,146 +2742,89 @@ function CustomBottomTabNavigator({ navigation, isSubscribed, initialTab = "Hist
             paddingTop: 4,
           }}
         >
-              {/* Main Items - 3 principales estilo header full width */}
-              {mainMenuItems.map((item, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    item.onPress()
-                  }}
-                  style={{
-                    paddingVertical: 22,
-                    paddingHorizontal: 20,
-                    marginBottom: 0,
-                    backgroundColor: 'transparent',
-                    borderTopWidth: index === 0 ? 1 : 0,
-                    borderBottomWidth: 1,
-                    borderColor: '#d4d8c0',
-                    position: 'relative',
-                    overflow: 'hidden',
-                  }}
-                  disabled={item.comingSoon}
-                  activeOpacity={0.7}
-                >
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <View
+              {/* Main Items - Grid de cartas 2x columnas */}
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 16, paddingTop: 8 }}>
+                {mainMenuItems.map((item, index) => {
+                  const isActive = item.tabKey && activeTab === item.tabKey
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => item.onPress()}
+                      disabled={item.comingSoon}
+                      activeOpacity={0.7}
                       style={{
-                        backgroundColor: item.color + "15",
-                        padding: 14,
+                        width: '48%',
+                        backgroundColor: isActive ? item.color + '12' : 'rgba(0,0,0,0.03)',
                         borderRadius: 16,
-                        marginRight: 16,
-                        borderWidth: 1.5,
-                        borderColor: item.color + '30',
+                        padding: 16,
+                        borderWidth: isActive ? 1.5 : 1,
+                        borderColor: isActive ? item.color + '40' : 'rgba(0,0,0,0.06)',
                       }}
                     >
-                      <Ionicons
-                        name={item.icon}
-                        size={28}
-                        color={item.color}
-                      />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text
-                          style={{
-                            color: "#1f2937",
-                            fontSize: 17,
-                            fontWeight: "700",
-                            marginBottom: 6,
-                            letterSpacing: -0.3,
-                          }}
-                        >
-                          {item.label}
-                        </Text>
-                        {item.badge && (
-                          <View style={{
-                            backgroundColor: '#10b981',
-                            paddingHorizontal: 8,
-                            paddingVertical: 3,
-                            borderRadius: 10,
-                            marginLeft: 8,
-                            marginBottom: 6,
-                          }}>
-                            <Text style={{
-                              color: '#ffffff',
-                              fontSize: 10,
-                              fontWeight: '700',
-                              letterSpacing: 0.5,
-                            }}>
-                              {item.badge}
-                            </Text>
-                          </View>
-                        )}
+                      <View style={{
+                        backgroundColor: item.color + '15',
+                        width: 44,
+                        height: 44,
+                        borderRadius: 12,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginBottom: 10,
+                        borderWidth: 1,
+                        borderColor: item.color + '25',
+                      }}>
+                        <Ionicons name={item.icon} size={22} color={item.color} />
                       </View>
                       <Text
                         style={{
-                          color: "#6b7280",
-                          fontSize: 13,
-                          fontWeight: "500",
-                          lineHeight: 19,
-                          marginBottom: item.comingSoon ? 6 : 0,
+                          color: "#1f2937",
+                          fontSize: 14,
+                          fontWeight: "700",
+                          marginBottom: 4,
+                          letterSpacing: -0.2,
                         }}
+                        numberOfLines={2}
+                      >
+                        {item.label}
+                      </Text>
+                      <Text
+                        style={{
+                          color: "#9ca3af",
+                          fontSize: 11,
+                          fontWeight: "500",
+                          lineHeight: 15,
+                        }}
+                        numberOfLines={2}
                       >
                         {item.description}
                       </Text>
-
-                      {/* Banner "Disponible a partir de Noviembre" */}
-                      {item.comingSoon && (
-                        <View
-                          style={{
-                            backgroundColor: '#f3f4f6',
-                            borderRadius: 8,
-                            paddingHorizontal: 8,
-                            paddingVertical: 4,
-                            marginTop: 4,
-                            alignSelf: 'flex-start',
-                            borderWidth: 1,
-                            borderColor: '#e5e7eb',
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: '#6b7280',
-                              fontSize: 10,
-                              fontWeight: '700',
-                              letterSpacing: 0.3,
-                            }}
-                          >
-                            {comingSoonTexts[deviceLanguage] || comingSoonTexts['en']}
-                          </Text>
+                      {item.badge && (
+                        <View style={{
+                          backgroundColor: '#10b981',
+                          paddingHorizontal: 6,
+                          paddingVertical: 2,
+                          borderRadius: 8,
+                          alignSelf: 'flex-start',
+                          marginTop: 6,
+                        }}>
+                          <Text style={{ color: '#fff', fontSize: 9, fontWeight: '700' }}>{item.badge}</Text>
                         </View>
                       )}
-                    </View>
-                    {!item.comingSoon && (
-                      item.tabKey && activeTab === item.tabKey ? (
-                        <View
-                          style={{
-                            backgroundColor: item.color + '15',
-                            borderRadius: 20,
-                            padding: 8,
-                            marginLeft: 8,
-                            borderWidth: 1.5,
-                            borderColor: item.color + '30',
-                          }}
-                        >
-                          <Ionicons
-                            name="checkmark"
-                            size={20}
-                            color={item.color}
-                          />
+                      {isActive && (
+                        <View style={{
+                          position: 'absolute',
+                          top: 12,
+                          right: 12,
+                          backgroundColor: item.color + '20',
+                          borderRadius: 10,
+                          padding: 4,
+                        }}>
+                          <Ionicons name="checkmark" size={14} color={item.color} />
                         </View>
-                      ) : (
-                        <Ionicons
-                          name="chevron-forward"
-                          size={22}
-                          color="#9ca3af"
-                          style={{ marginLeft: 8 }}
-                        />
-                      )
-                    )}
-                  </View>
-                </TouchableOpacity>
-              ))}
+                      )}
+                    </TouchableOpacity>
+                  )
+                })}
+              </View>
 
               {/* Footer Items Container - Grid 3x2 */}
               <View

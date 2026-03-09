@@ -1838,13 +1838,12 @@ const HomeScreen = ({ navigation }) => {
               <View style={{
                 width: '100%',
                 flex: 1,
-                backgroundColor: Platform.OS === 'android' ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.42)',
+               
                 borderRadius: 24,
                 marginHorizontal: 4,
                 paddingTop: 16,
                 paddingHorizontal: 16,
-                borderWidth: 1,
-                borderColor: 'rgba(255,255,255,0.6)',
+    
                 overflow: 'hidden',
                 ...(Platform.OS === 'ios' ? {
                   shadowColor: 'rgba(0,0,0,0.06)',
@@ -1883,12 +1882,11 @@ const HomeScreen = ({ navigation }) => {
                           }
                         }}
                         style={{
-                          backgroundColor: Platform.OS === 'android' ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.6)',
+                          backgroundColor: Platform.OS === 'android' ? 'rgba(255, 255, 255, 0.58)' : 'rgba(255, 255, 255, 0.49)',
                           borderRadius: 18,
                           padding: 16,
                           marginBottom: 10,
-                          borderWidth: 1.2,
-                          borderColor: color.border,
+
                           flexDirection: 'row',
                           alignItems: 'center',
                           ...(Platform.OS === 'ios' ? {
@@ -1984,13 +1982,13 @@ const HomeScreen = ({ navigation }) => {
                         style={{
                           position: 'absolute',
                           top: -6,
-                          right: -30,
+                          right: -60,
                           backgroundColor: Platform.OS === 'android' ? '#e7ead2' : (showPencilMode ? 'rgba(99, 102, 241, 0.15)' : 'rgba(16, 185, 129, 0.15)'),
                           borderWidth: 1.5,
                           borderColor: showPencilMode ? 'rgba(99, 102, 241, 0.3)' : 'rgba(16, 185, 129, 0.3)',
                           borderRadius: 52,
-                          width: 28,
-                          height: 28,
+                          width: 32,
+                          height: 32,
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}
@@ -2001,7 +1999,7 @@ const HomeScreen = ({ navigation }) => {
                       >
                         <Ionicons
                           name={showPencilMode ? "mic" : "pencil"}
-                          size={14}
+                          size={18}
                           color={showPencilMode ? '#6366f1' : '#10b981'} />
                       </TouchableOpacity>
                     </View>
